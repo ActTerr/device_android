@@ -7,9 +7,16 @@
 
     tools:context="mac.yk.devicemanagement.controller.activity.tongjiActivity">
 <TextView
-    android:text="预警信息"
+    android:text="统计信息"
     android:id="@+id/text"
     android:textSize="30sp"
     android:layout_width="match_parent"
     android:layout_height="wrap_content" />
+    <Button
+        android:onClick="refresh"
+        android:text="刷新"
+        android:layout_centerInParent="true"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
 </RelativeLayout>

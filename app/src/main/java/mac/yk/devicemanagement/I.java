@@ -5,4 +5,10 @@ package mac.yk.devicemanagement;
  */
 
 public interface I {
+    String YUJING="yujing";
+    String TONGJI="tongji";
+    String CHAXUN="chaxun";
+    String SAOMA="saoma";
+    String SERVER_ROOT="";
+    String SAVE="save";
 }

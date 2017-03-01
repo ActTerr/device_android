@@ -1,5 +1,4 @@
 apply plugin: 'com.android.application'
-
 android {
     compileSdkVersion 25
     buildToolsVersion "24.0.3"
@@ -29,4 +28,5 @@ dependencies {
     compile 'com.squareup.okhttp3:okhttp:3.4.1'
     compile 'com.squareup.okio:okio:1.11.0'
     compile 'com.google.code.gson:gson:2.7'
+    compile project(path: ':libzxing')
 }
