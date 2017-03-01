@@ -16,9 +16,11 @@ public interface IModel {
 
     void getTongji(Context context,OkHttpUtils.OnCompleteListener<Result> callback);
 
-    void chaxun(Context context,String s, OkHttpUtils.OnCompleteListener<Result> callback);
+    void chaxun(Context context,boolean t,String s, OkHttpUtils.OnCompleteListener<Result> callback);
 
-    void saoma(Context context,boolean t,String s,OkHttpUtils.OnCompleteListener<Result> callback);
+    void saoma(Context context,boolean t,String s,String vid,OkHttpUtils.OnCompleteListener<Result> callback);
 
     void saveDevice(Context context,Device device,OkHttpUtils.OnCompleteListener<Result>  callback);
+
+    void Login(Context context, String name, String passwd, OkHttpUtils.OnCompleteListener<Result> callback);
 }

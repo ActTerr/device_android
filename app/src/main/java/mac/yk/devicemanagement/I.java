@@ -11,4 +11,11 @@ public interface I {
     String SAOMA="saoma";
     String SERVER_ROOT="";
     String SAVE="save";
+    String ID="id";
+    String Device="device";
+    String ISDIANCHI="isDianchi";
+    String USERNAME="userName";
+    String PASSWD="passwd";
+    int SUCCESS=0;
+    String CREQ="controlReq";
 }

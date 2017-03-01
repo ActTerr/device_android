@@ -31,21 +31,23 @@ public class Model implements IModel {
     }
 
     @Override
-    public void chaxun(Context context, String s, OkHttpUtils.OnCompleteListener<Result> callback) {
+    public void chaxun(Context context, boolean b,String s, OkHttpUtils.OnCompleteListener<Result> callback) {
         OkHttpUtils<Result> OK=new OkHttpUtils<>(context);
         OK.setRequestUrl(I.CHAXUN)
-                .addFormParam("id",s)
+                .addFormParam(I.ID,s)
+                .addFormParam(I.ISDIANCHI, String.valueOf(b))
                 .targetClass(Result.class)
                 .execute(callback);
 
     }
 
     @Override
-    public void saoma(Context context,boolean b, String s, OkHttpUtils.OnCompleteListener<Result> callback) {
+    public void saoma(Context context,boolean b, String s,String c, OkHttpUtils.OnCompleteListener<Result> callback) {
         OkHttpUtils<Result> OK=new OkHttpUtils<>(context);
         OK.setRequestUrl(I.SAOMA)
-                .addFormParam("id",s)
-                .addFormParam("dianchi", String.valueOf(b))
+                .addFormParam(I.ID,s)
+                .addFormParam(I.ISDIANCHI, String.valueOf(b))
+                .addFormParam(I.CREQ,c)
                 .targetClass(Result.class)
                 .execute(callback);
     }
@@ -54,7 +56,17 @@ public class Model implements IModel {
     public void saveDevice(Context context, Device device, OkHttpUtils.OnCompleteListener<Result> callback) {
         OkHttpUtils<Result> OK=new OkHttpUtils<>(context);
         OK.setRequestUrl(I.SAVE)
-                .addFormParam("device", device.toString())
+                .addFormParam(I.Device, device.toString())
+                .targetClass(Result.class)
+                .execute(callback);
+    }
+
+    @Override
+    public void Login(Context context, String name, String passwd, OkHttpUtils.OnCompleteListener<Result> callback) {
+        OkHttpUtils<Result> OK=new OkHttpUtils<>(context);
+        OK.setRequestUrl(I.SAVE)
+                .addFormParam(I.USERNAME,name)
+                .addFormParam(I.PASSWD,passwd)
                 .targetClass(Result.class)
                 .execute(callback);
     }
