@@ -20,7 +20,7 @@
         <activity android:name=".controller.activity.DeviceActivity" />
         <activity android:name=".controller.activity.Splash" />
         <activity android:name=".controller.activity.LoginActivity" />
-        <activity android:name=".controller.activity.MessageActivity"></activity>
+        <activity android:name=".controller.activity.RecordActivity"></activity>
     </application>
 
 </manifest>

@@ -5,7 +5,7 @@ import android.content.Intent;
 
 import mac.yk.devicemanagement.bean.Device;
 import mac.yk.devicemanagement.controller.activity.DeviceActivity;
-import mac.yk.devicemanagement.controller.activity.MessageActivity;
+import mac.yk.devicemanagement.controller.activity.RecordActivity;
 
 /**
  * Created by mac-yk on 2017/3/2.
@@ -23,7 +23,7 @@ public class MFGT {
         context.startActivity(intent);
     }
     public static void gotoMessageActivity(Context context,int id){
-        Intent intent=new Intent(context,MessageActivity.class);
+        Intent intent=new Intent(context,RecordActivity.class);
         intent.putExtra("id",id);
         context.startActivity(intent);
     }

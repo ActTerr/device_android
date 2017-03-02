@@ -5,6 +5,7 @@ import android.content.Context;
 
 import mac.yk.devicemanagement.bean.Device;
 import mac.yk.devicemanagement.bean.Result;
+import mac.yk.devicemanagement.bean.Weixiu;
 import mac.yk.devicemanagement.util.OkHttpUtils;
 
 /**
@@ -23,4 +24,8 @@ public interface IModel {
     void saveDevice(Context context,Device device,OkHttpUtils.OnCompleteListener<Result>  callback);
 
     void Login(Context context, String name, String passwd, OkHttpUtils.OnCompleteListener<Result> callback);
+
+    void downloadWeixiu(Context context, int id, int page, OkHttpUtils.OnCompleteListener<Weixiu[]> callback);
+
+    void downloadXunjian(Context context,int id,int page,OkHttpUtils.OnCompleteListener<String[]> callback);
 }
