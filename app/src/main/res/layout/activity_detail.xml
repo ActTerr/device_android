@@ -21,18 +21,19 @@
         android:text="设备信息请点击查询"
         android:layout_marginTop="60dp"
         android:layout_width="match_parent"
-        android:layout_height="120dp" />
+        android:layout_height="150dp" />
     <Button
-        android:id="@+id/chaxun"
-        android:layout_marginTop="180dp"
-        android:text="查询"
-        android:layout_width="match_parent"
+        android:id="@+id/refresh"
+        android:layout_marginTop="450dp"
+        android:text="刷新"
+        android:layout_marginLeft="230dp"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content" />
     <Button
         android:id="@+id/daiyong"
         android:text="待用"
         android:layout_marginTop="240dp"
-        android:layout_marginLeft="50dp"
+        android:layout_marginLeft="60dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" />
     <Button
@@ -47,7 +48,7 @@
         android:id="@+id/baofei"
         android:text="报废"
         android:layout_marginTop="310dp"
-        android:layout_marginLeft="50dp"
+        android:layout_marginLeft="60dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" />
     <Button
@@ -63,7 +64,7 @@
         android:id="@+id/xiujun"
         android:text="修竣"
         android:layout_marginTop="380dp"
-        android:layout_marginLeft="50dp"
+        android:layout_marginLeft="60dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" />
     <Button
@@ -73,6 +74,12 @@
         android:layout_marginLeft="230dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" />
-
+    <Button
+        android:text="记录"
+        android:id="@+id/jilu"
+        android:layout_marginTop="450dp"
+        android:layout_marginLeft="60dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
 
 </RelativeLayout>

@@ -31,18 +31,17 @@ public class Model implements IModel {
     }
 
     @Override
-    public void chaxun(Context context, boolean b,String s, OkHttpUtils.OnCompleteListener<Result> callback) {
+    public void chaxun(Context context, int id, OkHttpUtils.OnCompleteListener<Result> callback) {
         OkHttpUtils<Result> OK=new OkHttpUtils<>(context);
         OK.setRequestUrl(I.CHAXUN)
-                .addFormParam(I.ID,s)
-                .addFormParam(I.ISDIANCHI, String.valueOf(b))
+                .addFormParam(I.ID, String.valueOf(id))
                 .targetClass(Result.class)
                 .execute(callback);
 
     }
 
     @Override
-    public void saoma(Context context,boolean b, String s,String c, OkHttpUtils.OnCompleteListener<Result> callback) {
+    public void control(Context context,boolean b, String s,String c, OkHttpUtils.OnCompleteListener<Result> callback) {
         OkHttpUtils<Result> OK=new OkHttpUtils<>(context);
         OK.setRequestUrl(I.SAOMA)
                 .addFormParam(I.ID,s)

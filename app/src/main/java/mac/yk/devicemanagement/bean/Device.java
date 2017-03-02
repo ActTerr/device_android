@@ -1,12 +1,13 @@
 package mac.yk.devicemanagement.bean;
 
+import java.io.Serializable;
 import java.util.Observable;
 
 /**
  * Created by mac-yk on 2017/3/1.
  */
 
-public class Device extends Observable{
+public class Device extends Observable implements Serializable{
     String id,name,xunjian,chuchang,zhuangtai;
 
     public Device() {

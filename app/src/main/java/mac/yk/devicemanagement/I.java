@@ -18,4 +18,9 @@ public interface I {
     String PASSWD="passwd";
     int SUCCESS=0;
     String CREQ="controlReq";
+
+    interface SCAN{
+        int QUERY=1111;
+        int SAVE=3333;
+    }
 }
