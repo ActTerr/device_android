@@ -1,0 +1,47 @@
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="mac.yk.devicemanagement.controller.fragment.frag_main">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="5dp"
+        android:gravity="center"
+        android:paddingLeft="30dp"
+        android:paddingRight="30dp"
+        android:text="车务自管设备管理移动终端"
+        android:textSize="37sp" />
+
+    <Button
+        android:id="@+id/saoma"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="扫码操作设备" />
+
+    <Button
+        android:id="@+id/tongji"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="50dp"
+        android:layout_marginTop="320dp"
+        android:text="统计" />
+
+    <Button
+        android:id="@+id/yujing"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="230dp"
+        android:layout_marginTop="320dp"
+        android:text="预警" />
+
+    <Button
+        android:id="@+id/luru"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="400dp"
+        android:text="录入" />
+
+</FrameLayout>
