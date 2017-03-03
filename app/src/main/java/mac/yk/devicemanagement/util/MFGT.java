@@ -4,7 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 
 import mac.yk.devicemanagement.bean.Device;
-import mac.yk.devicemanagement.controller.activity.DeviceActivity;
+import mac.yk.devicemanagement.controller.activity.SaveActivity;
 import mac.yk.devicemanagement.controller.activity.RecordActivity;
 
 /**
@@ -13,12 +13,12 @@ import mac.yk.devicemanagement.controller.activity.RecordActivity;
 
 public class MFGT {
     public static void gotoDetailActivity(Context context, Device device){
-        Intent intent=new Intent(context,DeviceActivity.class);
+        Intent intent=new Intent(context,SaveActivity.class);
         intent.putExtra("device",device);
         context.startActivity(intent);
     }
     public static void gotoSaveActivity(Context context,int id){
-        Intent intent=new Intent(context,DeviceActivity.class);
+        Intent intent=new Intent(context,SaveActivity.class);
         intent.putExtra("id",id);
         context.startActivity(intent);
     }

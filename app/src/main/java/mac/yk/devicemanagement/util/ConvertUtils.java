@@ -17,5 +17,8 @@ public class ConvertUtils {
         int density = (int) context.getResources().getDisplayMetrics().density;
         return px/density;
     }
-
+    public static int dp2px(Context context, float dpValue) {
+        float scale = context.getResources().getDisplayMetrics().density;
+        return (int) (dpValue * scale + 0.5f);
+    }
 }

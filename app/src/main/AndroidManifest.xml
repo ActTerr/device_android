@@ -17,7 +17,7 @@
         </activity>
         <activity android:name=".controller.activity.DetailActivity" />
         <activity android:name=".controller.activity.tongjiActivity" />
-        <activity android:name=".controller.activity.DeviceActivity" />
+        <activity android:name=".controller.activity.SaveActivity" />
         <activity android:name=".controller.activity.Splash" />
         <activity android:name=".controller.activity.LoginActivity" />
         <activity android:name=".controller.activity.RecordActivity"></activity>
