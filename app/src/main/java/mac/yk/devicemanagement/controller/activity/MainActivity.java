@@ -22,8 +22,8 @@ import mac.yk.devicemanagement.MyApplication;
 import mac.yk.devicemanagement.R;
 import mac.yk.devicemanagement.bean.Device;
 import mac.yk.devicemanagement.bean.Result;
-import mac.yk.devicemanagement.controller.fragment.frag_main;
-import mac.yk.devicemanagement.controller.fragment.frag_main2;
+import mac.yk.devicemanagement.controller.fragment.fragMain;
+import mac.yk.devicemanagement.controller.fragment.fragMain2;
 import mac.yk.devicemanagement.model.IModel;
 import mac.yk.devicemanagement.model.Model;
 import mac.yk.devicemanagement.util.ActivityUtils;
@@ -47,7 +47,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_currency);
         ButterKnife.bind(this);
         model = Model.getInstance();
         progressDialog = new ProgressDialog(this);
@@ -62,7 +62,7 @@ public class MainActivity extends AppCompatActivity {
                         dialog.dismiss();
                     }
                 });
-        ActivityUtils.addFragmentToActivity(getSupportFragmentManager(), new frag_main(), R.id.frag_main);
+        ActivityUtils.addFragmentToActivity(getSupportFragmentManager(), new fragMain(), R.id.frame);
         progressDialog = new ProgressDialog(this);
         if (navView != null) {
             setUpNavView(navView);
@@ -106,7 +106,7 @@ public class MainActivity extends AppCompatActivity {
                         });
                         break;
                     case R.id.tongji:
-                        ActivityUtils.changeFragment(getSupportFragmentManager(), new frag_main2(), R.id.frag_main);
+                        ActivityUtils.changeFragment(getSupportFragmentManager(), new fragMain2(), R.id.frag_main);
                         break;
                 }
                 item.setChecked(true);

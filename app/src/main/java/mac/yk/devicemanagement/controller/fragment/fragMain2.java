@@ -20,7 +20,7 @@ import mac.yk.devicemanagement.util.OkHttpUtils;
  * Created by mac-yk on 2017/3/3.
  */
 
-public class frag_main2 extends Fragment {
+public class fragMain2 extends Fragment {
 
     Model model;
     Context context;
@@ -30,7 +30,7 @@ public class frag_main2 extends Fragment {
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.frag_main2, container, false);
+        View view = inflater.inflate(R.layout.frag_tongji, container, false);
         ButterKnife.bind(this, view);
         model = Model.getInstance();
         context = getContext();

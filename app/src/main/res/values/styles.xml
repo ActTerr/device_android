@@ -8,4 +8,12 @@
         <item name="colorAccent">@color/colorAccent</item>
     </style>
     <style name="Toolbar" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
+
+    <declare-styleable name="zhishiqiView">
+        <attr name="space" format="dimension"/>
+        <attr name="length" format="dimension"/>
+        <attr name="count" format="integer"/>
+        <attr name="normalColor" format="reference|color"/>
+        <attr name="focusColor" format="reference|color"/>
+    </declare-styleable>
 </resources>

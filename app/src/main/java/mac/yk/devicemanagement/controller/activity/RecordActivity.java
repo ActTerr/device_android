@@ -1,67 +1,91 @@
 package mac.yk.devicemanagement.controller.activity;
 
-import android.graphics.Color;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
+import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
-import android.view.View;
-import android.widget.Button;
+import android.support.v7.widget.Toolbar;
+import android.view.MenuItem;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import butterknife.OnClick;
 import mac.yk.devicemanagement.R;
 import mac.yk.devicemanagement.controller.fragment.fragList;
 import mac.yk.devicemanagement.util.ActivityUtils;
 
 public class RecordActivity extends AppCompatActivity {
 
-    @BindView(R.id.weixiu)
-    Button weixiu;
-    @BindView(R.id.xunjian)
-    Button xunjian;
     Fragment fragment1;
     Fragment fragment2;
+    @BindView(R.id.toolBar)
+    Toolbar toolBar;
+    @BindView(R.id.nav_view)
+    NavigationView navView;
+    @BindView(R.id.drawLayout)
+    DrawerLayout drawLayout;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_message);
+        setContentView(R.layout.activity_currency);
         ButterKnife.bind(this);
+
+
         int id = getIntent().getIntExtra("id", 0);
         if (id == 0) {
             finish();
         } else {
-            fragment1= new fragList();
+            init();
+            fragment1 = new fragList();
             Bundle bundle = new Bundle();
             bundle.putInt("id", id);
-            bundle.putBoolean("flag",true);
+            bundle.putBoolean("flag", true);
             fragment1.setArguments(bundle);
-            ActivityUtils.addFragmentToActivity(getSupportFragmentManager(), fragment1, R.id.fl);
+            ActivityUtils.addFragmentToActivity(getSupportFragmentManager(), fragment1, R.id.frame);
 
-            fragment2= new fragList();
+            fragment2 = new fragList();
             Bundle bundle1 = new Bundle();
             bundle1.putInt("id", id);
-            bundle1.putBoolean("flag",true);
+            bundle1.putBoolean("flag", true);
             fragment2.setArguments(bundle1);
-            ActivityUtils.addFragmentToActivity(getSupportFragmentManager(), fragment2, R.id.fl);
+            ActivityUtils.addFragmentToActivity(getSupportFragmentManager(), fragment2, R.id.frame);
         }
 
     }
 
-
-    @OnClick({R.id.weixiu, R.id.xunjian})
-    public void onClick(View view) {
-        switch (view.getId()) {
-            case R.id.weixiu:
-                weixiu.setBackgroundColor(getResources().getColor(R.color.colorAccent));
-                xunjian.setBackgroundColor(Color.GRAY);
-                ActivityUtils.changeFragment(getSupportFragmentManager(),fragment1,R.id.fl);
-                break;
-            case R.id.xunjian:
-                xunjian.setBackgroundColor(getResources().getColor(R.color.colorAccent));
-                weixiu.setBackgroundColor(Color.GRAY);
-                ActivityUtils.changeFragment(getSupportFragmentManager(),fragment2,R.id.fl);
-                break;
+    private void init() {
+        setSupportActionBar(toolBar);
+        ActionBar ab=getSupportActionBar();
+        ab.setHomeAsUpIndicator(R.drawable.ic_menu);
+        ab.setDisplayHomeAsUpEnabled(true);
+        if (navView != null) {
+            setUpNavView(navView);
+            navView.inflateMenu(R.menu.menu_record);
         }
     }
+
+    private void setUpNavView(final NavigationView navView) {
+        navView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
+            @Override
+            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+                switch (item.getItemId()){
+                    case R.id.weixiu:
+                        ActivityUtils.changeFragment(getSupportFragmentManager(), fragment1, R.id.fl);
+                        break;
+                    case R.id.xunjian:
+                        ActivityUtils.changeFragment(getSupportFragmentManager(), fragment2, R.id.fl);
+                        break;
+                }
+                item.setChecked(true);
+                drawLayout.closeDrawers();
+                return true;
+            }
+        });
+    }
+
+
+
 }

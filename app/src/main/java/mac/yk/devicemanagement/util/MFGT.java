@@ -34,4 +34,10 @@ public class MFGT {
         Intent intent=new Intent(mainActivity, LoginActivity.class);
         mainActivity.startActivity(intent);
     }
+
+    public static void gotoRecordActivity(Context context,int id){
+        Intent intent=new Intent(context,RecordActivity.class);
+        intent.putExtra("id",id);
+        context.startActivity(intent);
+    }
 }

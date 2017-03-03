@@ -17,10 +17,10 @@ import mac.yk.devicemanagement.R;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class frag_main extends Fragment {
+public class fragMain extends Fragment {
 
 
-    public frag_main() {
+    public fragMain() {
     }
 
 
