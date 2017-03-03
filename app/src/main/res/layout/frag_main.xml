@@ -23,23 +23,9 @@
         android:layout_height="wrap_content"
         android:text="扫码操作设备" />
 
-    <Button
-        android:id="@+id/tongji"
-        android:layout_marginTop="280dp"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="50dp"
-        android:layout_marginRight="50dp"
-        android:text="统计信息" />
 
-    <Button
-        android:id="@+id/yujing"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="50dp"
-        android:layout_marginRight="50dp"
-        android:layout_marginTop="360dp"
-        android:text="预警提示" />
+
+
 
     <!--<Button-->
         <!--android:id="@+id/luru"-->

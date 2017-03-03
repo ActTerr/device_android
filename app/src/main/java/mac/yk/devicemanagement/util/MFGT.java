@@ -4,6 +4,8 @@ import android.content.Context;
 import android.content.Intent;
 
 import mac.yk.devicemanagement.bean.Device;
+import mac.yk.devicemanagement.controller.activity.LoginActivity;
+import mac.yk.devicemanagement.controller.activity.MainActivity;
 import mac.yk.devicemanagement.controller.activity.SaveActivity;
 import mac.yk.devicemanagement.controller.activity.RecordActivity;
 
@@ -26,5 +28,10 @@ public class MFGT {
         Intent intent=new Intent(context,RecordActivity.class);
         intent.putExtra("id",id);
         context.startActivity(intent);
+    }
+
+    public static void gotoLoginActivity(MainActivity mainActivity) {
+        Intent intent=new Intent(mainActivity, LoginActivity.class);
+        mainActivity.startActivity(intent);
     }
 }

@@ -5,6 +5,7 @@ import android.content.Context;
 import mac.yk.devicemanagement.I;
 import mac.yk.devicemanagement.bean.Device;
 import mac.yk.devicemanagement.bean.Result;
+import mac.yk.devicemanagement.bean.Weixiu;
 import mac.yk.devicemanagement.util.OkHttpUtils;
 
 /**
@@ -12,8 +13,10 @@ import mac.yk.devicemanagement.util.OkHttpUtils;
  */
 
 public class Model implements IModel {
-
-
+    static Model INSTANCE=new Model();
+    public static Model getInstance(){
+        return INSTANCE;
+    }
     @Override
     public void getYujing(Context context, OkHttpUtils.OnCompleteListener<Result> callback) {
         OkHttpUtils<Result> OK=new OkHttpUtils<>(context);
@@ -68,5 +71,15 @@ public class Model implements IModel {
                 .addFormParam(I.PASSWD,passwd)
                 .targetClass(Result.class)
                 .execute(callback);
+    }
+
+    @Override
+    public void downloadWeixiu(Context context, int id, int page, OkHttpUtils.OnCompleteListener<Weixiu[]> callback) {
+
+    }
+
+    @Override
+    public void downloadXunjian(Context context, int id, int page, OkHttpUtils.OnCompleteListener<String[]> callback) {
+
     }
 }

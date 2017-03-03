@@ -18,7 +18,7 @@
         android:id="@+id/detail"
         android:gravity="center"
         android:textSize="30sp"
-        android:text="设备信息请点击查询"
+        android:text="设备信息"
         android:layout_marginTop="60dp"
         android:layout_width="match_parent"
         android:layout_height="150dp" />

@@ -25,6 +25,8 @@ public interface IModel {
 
     void Login(Context context, String name, String passwd, OkHttpUtils.OnCompleteListener<Result> callback);
 
+    void LogOut(Context context,String name,OkHttpUtils.OnCompleteListener<Result> callback);
+
     void downloadWeixiu(Context context, int id, int page, OkHttpUtils.OnCompleteListener<Weixiu[]> callback);
 
     void downloadXunjian(Context context,int id,int page,OkHttpUtils.OnCompleteListener<String[]> callback);
