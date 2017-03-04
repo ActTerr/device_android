@@ -74,12 +74,10 @@ public class Device extends Observable implements Serializable{
 
     @Override
     public String toString() {
-        return "Device{" +
-                "id='" + id + '\'' +
-                ", name='" + name + '\'' +
-                ", xunjian='" + xunjian + '\'' +
-                ", chuchang='" + chuchang + '\'' +
-                ", zhuangtai='" + zhuangtai + '\'' +
-                '}';
+        return
+                "ID:" + id + "\n" +
+                "当前状态:"+zhuangtai+"\n"+
+                        "出厂日期:"+chuchang+"\n"+
+                        "上次巡检日期:"+xunjian;
     }
 }

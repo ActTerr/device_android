@@ -49,12 +49,27 @@
             android:text="出厂时间："
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
-        <EditText
+
+        <TextView
+            android:layout_weight="1"
             android:id="@+id/chuchang"
             android:hint="请输入出厂时间"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
+        <ImageView
+            android:id="@+id/chuchangBtn"
+            android:src="@mipmap/ic_launcher"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
     </LinearLayout>
+    <CalendarView
+        android:visibility="gone"
+        android:id="@+id/chuchangCal"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+
+    </CalendarView>
     <View
         android:layout_marginLeft="10dp"
         android:layout_marginRight="10dp"
@@ -79,6 +94,13 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
     </LinearLayout>
+    <CalendarView
+        android:visibility="gone"
+        android:id="@+id/xunjianCal"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+
+    </CalendarView>
     <View
         android:layout_marginLeft="10dp"
         android:layout_marginRight="10dp"
@@ -103,6 +125,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
     </LinearLayout>
+
     <View
         android:layout_marginLeft="10dp"
         android:layout_marginRight="10dp"
