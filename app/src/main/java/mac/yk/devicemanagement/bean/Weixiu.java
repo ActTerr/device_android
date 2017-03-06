@@ -10,13 +10,13 @@ public class Weixiu implements Serializable {
     String wxDate;
     String xjData;
     String controlUser;
-
-    public Weixiu(String wxDate, String xjData, String controlUser) {
+    String remark;
+    public Weixiu(String wxDate, String xjData, String controlUser, String remark) {
         this.wxDate = wxDate;
         this.xjData = xjData;
         this.controlUser = controlUser;
+        this.remark = remark;
     }
-
     public Weixiu() {
     }
 
@@ -42,5 +42,13 @@ public class Weixiu implements Serializable {
 
     public void setControlUser(String controlUser) {
         this.controlUser = controlUser;
+    }
+
+    public String getRemark() {
+        return remark;
+    }
+
+    public void setRemark(String remark) {
+        this.remark = remark;
     }
 }

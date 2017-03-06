@@ -24,6 +24,10 @@ public class WxViewHolder extends RecyclerView.ViewHolder {
     @BindView(R.id.name)
             public
     TextView wxUser;
+
+    @BindView(R.id.remark)
+    public
+    TextView wxRemark;
     public WxViewHolder(View itemView) {
         super(itemView);
         ButterKnife.bind(this, itemView);

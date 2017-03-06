@@ -82,6 +82,7 @@ public class MyAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
             wxViewHolder.xjDate.setText(weixiu.getXjData());
             wxViewHolder.wxDate.setText(weixiu.getWxDate());
             wxViewHolder.wxUser.setText(weixiu.getControlUser());
+            wxViewHolder.wxRemark.setText(weixiu.getRemark());
         }else {
             XjViewHolder xjViewHolder= (XjViewHolder) holder;
           Xunjian xunjian=xjlist.get(position);
