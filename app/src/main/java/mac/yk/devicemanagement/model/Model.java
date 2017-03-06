@@ -88,22 +88,48 @@ public class Model implements IModel {
 
     @Override
     public void downloadWeixiu(Context context, int id, int page, OkHttpUtils.OnCompleteListener<Weixiu[]> callback) {
-            
+       OkHttpUtils<Weixiu[]> ok=new OkHttpUtils<>(context);
+        ok.setRequestUrl(I.REQUEST.DOWNWEIXIU)
+                .addFormParam(I.PARAM.Device, String.valueOf(id))
+                .addFormParam(I.PARAM.PAGE, String.valueOf(page))
+                .addFormParam(I.PARAM.SIZE, String.valueOf(10))
+                .targetClass(Weixiu[].class)
+                .execute(callback);
     }
 
     @Override
     public void downloadXunjian(Context context, int id, int page, OkHttpUtils.OnCompleteListener<Xunjian[]> callback) {
-
+        OkHttpUtils<Xunjian[]> ok =new OkHttpUtils<>(context);
+        ok.setRequestUrl(I.REQUEST.DOWNXUNJIAN)
+                .addFormParam(I.PARAM.Device, String.valueOf(id))
+                .addFormParam(I.PARAM.Device, String.valueOf(page))
+                .addFormParam(I.PARAM.SIZE, String.valueOf(10))
+                .targetClass(Xunjian[].class)
+                .execute(callback);
     }
 
     @Override
     public void xunjian(Context context, String userName, boolean t, int id, String remark, OkHttpUtils.OnCompleteListener<Result> callback) {
-
+        OkHttpUtils<Result> ok=new OkHttpUtils<>(context);
+        ok.setRequestUrl(I.REQUEST.XUNJIAN)
+                .addFormParam(I.PARAM.USERNAME,userName)
+                .addFormParam(I.PARAM.ISDIANCHI, String.valueOf(t))
+                .addFormParam(I.PARAM.Device, String.valueOf(id))
+                .addFormParam(I.PARAM.REMARK,remark)
+                .targetClass(Result.class)
+                .execute(callback);
     }
 
     @Override
     public void xiujun(Context context, String userName, boolean t, int id, String remark, OkHttpUtils.OnCompleteListener<Result> callback) {
-
+        OkHttpUtils<Result> ok=new OkHttpUtils<>(context);
+        ok.setRequestUrl(I.REQUEST.XIUJUN)
+                .addFormParam(I.PARAM.USERNAME,userName)
+                .addFormParam(I.PARAM.ISDIANCHI, String.valueOf(t))
+                .addFormParam(I.PARAM.Device, String.valueOf(id))
+                .addFormParam(I.PARAM.REMARK,remark)
+                .targetClass(Result.class)
+                .execute(callback);
     }
 
 

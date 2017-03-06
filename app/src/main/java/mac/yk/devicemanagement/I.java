@@ -7,7 +7,8 @@ package mac.yk.devicemanagement;
 public interface I {
 
     interface REQUEST{
-
+        String DOWNWEIXIU="downloadWeiXiu";
+        String DOWNXUNJIAN="downloadXunJian";
         String YUJING="yujing";
         String TONGJI="tongji";
         String CHAXUN="chaxun";
@@ -15,15 +16,19 @@ public interface I {
         String SAVE="save";
         String LOGOUT="logOut";
         String SERVER_ROOT="";
+        String XUNJIAN="xunjian";
+        String XIUJUN="xiujun";
     }
     interface PARAM{
-
+        String SIZE="size";
+        String PAGE="page";
         String ID="id";
         String Device="device";
         String ISDIANCHI="isDianchi";
         String USERNAME="userName";
         String PASSWD="passwd";
         String CREQ="controlReq";
+        String REMARK="remark";
     }
     interface RESULT{
 
