@@ -19,6 +19,7 @@ import mac.yk.devicemanagement.bean.Result;
 import mac.yk.devicemanagement.model.Model;
 import mac.yk.devicemanagement.util.MFGT;
 import mac.yk.devicemanagement.util.OkHttpUtils;
+import mac.yk.devicemanagement.util.SpUtil;
 
 public class SetActivity extends AppCompatActivity {
 
@@ -63,6 +64,7 @@ public class SetActivity extends AppCompatActivity {
                         pd.dismiss();
                         if (result!=null&&result.getRetCode()== I.SUCCESS){
                              MyApplication.getInstance().setUserName(null);
+                            SpUtil.rmLoginUser(context);
                             MFGT.gotoLoginActivity(context);
                             finish();
                         }else {

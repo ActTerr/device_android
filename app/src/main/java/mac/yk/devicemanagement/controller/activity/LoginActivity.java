@@ -2,7 +2,6 @@ package mac.yk.devicemanagement.controller.activity;
 
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
@@ -17,6 +16,7 @@ import mac.yk.devicemanagement.bean.Result;
 import mac.yk.devicemanagement.model.IModel;
 import mac.yk.devicemanagement.model.Model;
 import mac.yk.devicemanagement.util.OkHttpUtils;
+import mac.yk.devicemanagement.util.SpUtil;
 
 public class LoginActivity extends AppCompatActivity {
     Context context;
@@ -39,8 +39,7 @@ public class LoginActivity extends AppCompatActivity {
             @Override
             public void onSuccess(Result result) {
                 if (result != null && result.getRetCode() == I.SUCCESS) {
-                    SharedPreferences sharedPreferences = getSharedPreferences("user", MODE_PRIVATE);
-                    sharedPreferences.edit().putString("name", name.getText().toString()).apply();
+                    SpUtil.saveLoginUser(context,name.getText().toString());
                     Intent intent = new Intent(context, MainActivity.class);
                     startActivity(intent);
                     finish();
