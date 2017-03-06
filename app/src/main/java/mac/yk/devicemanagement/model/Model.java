@@ -6,6 +6,7 @@ import mac.yk.devicemanagement.I;
 import mac.yk.devicemanagement.bean.Device;
 import mac.yk.devicemanagement.bean.Result;
 import mac.yk.devicemanagement.bean.Weixiu;
+import mac.yk.devicemanagement.bean.Xunjian;
 import mac.yk.devicemanagement.util.OkHttpUtils;
 
 /**
@@ -20,7 +21,7 @@ public class Model implements IModel {
     @Override
     public void getYujing(Context context, OkHttpUtils.OnCompleteListener<Result> callback) {
         OkHttpUtils<Result> OK=new OkHttpUtils<>(context);
-        OK.setRequestUrl(I.YUJING)
+        OK.setRequestUrl(I.REQUEST.YUJING)
                 .targetClass(Result.class)
                 .execute(callback);
     }
@@ -28,7 +29,7 @@ public class Model implements IModel {
     @Override
     public void getTongji(Context context, OkHttpUtils.OnCompleteListener<Result> callback) {
         OkHttpUtils<Result> OK=new OkHttpUtils<>(context);
-        OK.setRequestUrl(I.TONGJI)
+        OK.setRequestUrl(I.REQUEST.TONGJI)
                 .targetClass(Result.class)
                 .execute(callback);
     }
@@ -36,50 +37,74 @@ public class Model implements IModel {
     @Override
     public void chaxun(Context context, int id, OkHttpUtils.OnCompleteListener<Result> callback) {
         OkHttpUtils<Result> OK=new OkHttpUtils<>(context);
-        OK.setRequestUrl(I.CHAXUN)
-                .addFormParam(I.ID, String.valueOf(id))
+        OK.setRequestUrl(I.REQUEST.CHAXUN)
+                .addFormParam(I.PARAM.ID, String.valueOf(id))
                 .targetClass(Result.class)
                 .execute(callback);
 
     }
 
     @Override
-    public void control(Context context,boolean b, String s,String c, OkHttpUtils.OnCompleteListener<Result> callback) {
+    public void control(Context context, boolean t, String userName, String vid, int id, OkHttpUtils.OnCompleteListener<Result> callback) {
         OkHttpUtils<Result> OK=new OkHttpUtils<>(context);
-        OK.setRequestUrl(I.SAOMA)
-                .addFormParam(I.ID,s)
-                .addFormParam(I.ISDIANCHI, String.valueOf(b))
-                .addFormParam(I.CREQ,c)
+        OK.setRequestUrl(I.REQUEST.CONTROL)
+                .addFormParam(I.PARAM.ID,userName)
+                .addFormParam(I.PARAM.ISDIANCHI, String.valueOf(t))
+                .addFormParam(I.PARAM.CREQ,vid)
+                .addFormParam(I.PARAM.Device, String.valueOf(id))
                 .targetClass(Result.class)
                 .execute(callback);
     }
 
     @Override
-    public void saveDevice(Context context, Device device, OkHttpUtils.OnCompleteListener<Result> callback) {
+    public void saveDevice(Context context, String name, Device device, OkHttpUtils.OnCompleteListener<Result> callback) {
         OkHttpUtils<Result> OK=new OkHttpUtils<>(context);
-        OK.setRequestUrl(I.SAVE)
-                .addFormParam(I.Device, device.toString())
+        OK.setRequestUrl(I.REQUEST.SAVE)
+                .addFormParam(I.PARAM.Device, device.toString())
+                .addFormParam(I.PARAM.USERNAME,name)
                 .targetClass(Result.class)
                 .execute(callback);
     }
+
 
     @Override
     public void Login(Context context, String name, String passwd, OkHttpUtils.OnCompleteListener<Result> callback) {
         OkHttpUtils<Result> OK=new OkHttpUtils<>(context);
-        OK.setRequestUrl(I.SAVE)
-                .addFormParam(I.USERNAME,name)
-                .addFormParam(I.PASSWD,passwd)
+        OK.setRequestUrl(I.REQUEST.SAVE)
+                .addFormParam(I.PARAM.USERNAME,name)
+                .addFormParam(I.PARAM.PASSWD,passwd)
+                .targetClass(Result.class)
+                .execute(callback);
+    }
+
+    @Override
+    public void LogOut(Context context, String name, OkHttpUtils.OnCompleteListener<Result> callback) {
+        OkHttpUtils<Result> ok=new OkHttpUtils<>(context);
+        ok.setRequestUrl(I.REQUEST.LOGOUT)
+                .addFormParam(I.PARAM.USERNAME,name)
                 .targetClass(Result.class)
                 .execute(callback);
     }
 
     @Override
     public void downloadWeixiu(Context context, int id, int page, OkHttpUtils.OnCompleteListener<Weixiu[]> callback) {
+            
+    }
+
+    @Override
+    public void downloadXunjian(Context context, int id, int page, OkHttpUtils.OnCompleteListener<Xunjian[]> callback) {
 
     }
 
     @Override
-    public void downloadXunjian(Context context, int id, int page, OkHttpUtils.OnCompleteListener<String[]> callback) {
+    public void xunjian(Context context, String userName, boolean t, int id, String remark, OkHttpUtils.OnCompleteListener<Result> callback) {
 
     }
+
+    @Override
+    public void xiujun(Context context, String userName, boolean t, int id, String remark, OkHttpUtils.OnCompleteListener<Result> callback) {
+
+    }
+
+
 }

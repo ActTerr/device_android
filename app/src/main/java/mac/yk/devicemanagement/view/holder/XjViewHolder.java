@@ -17,6 +17,17 @@ public class XjViewHolder extends RecyclerView.ViewHolder {
     public
     TextView xJianDate;
 
+    @BindView(R.id.xjUser)
+            public
+    TextView xjUser;
+
+    @BindView(R.id.cause)
+            public
+    TextView cause;
+
+    @BindView(R.id.status)
+            public
+    TextView status;
     public XjViewHolder(View itemView) {
         super(itemView);
         ButterKnife.bind(this, itemView);

@@ -10,6 +10,7 @@ import java.util.List;
 
 import mac.yk.devicemanagement.R;
 import mac.yk.devicemanagement.bean.Weixiu;
+import mac.yk.devicemanagement.bean.Xunjian;
 import mac.yk.devicemanagement.view.holder.WxViewHolder;
 import mac.yk.devicemanagement.view.holder.XjViewHolder;
 
@@ -20,17 +21,16 @@ import mac.yk.devicemanagement.view.holder.XjViewHolder;
 public class MyAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     List<Weixiu> weixius;
     Context context;
-    List<String> xjlist;
+    List<Xunjian> xjlist;
     boolean isWexiu;
-    boolean isMore;
 
-    public MyAdapter(Context context, List<Weixiu> weixius, List<String> xjlist) {
+    public MyAdapter(Context context, List<Weixiu> weixius, List<Xunjian> xjlist) {
         this.weixius = weixius;
         this.context = context;
         this.xjlist = xjlist;
         isWexiu=weixius==null?false:true;
     }
-    public void initxData(ArrayList<String> list ){
+    public void initxData(ArrayList<Xunjian> list ){
         if (xjlist!=null){
             xjlist.clear();
         }
@@ -38,7 +38,7 @@ public class MyAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         notifyDataSetChanged();
     }
 
-    public void addxData(ArrayList<String> list){
+    public void addxData(ArrayList<Xunjian> list){
         xjlist.addAll(list);
         notifyDataSetChanged();
     }
@@ -81,10 +81,19 @@ public class MyAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
             Weixiu weixiu=weixius.get(position);
             wxViewHolder.xjDate.setText(weixiu.getXjData());
             wxViewHolder.wxDate.setText(weixiu.getWxDate());
+            wxViewHolder.wxUser.setText(weixiu.getControlUser());
         }else {
             XjViewHolder xjViewHolder= (XjViewHolder) holder;
-            String s=xjlist.get(position);
-            xjViewHolder.xJianDate.setText(s);
+          Xunjian xunjian=xjlist.get(position);
+            xjViewHolder.xJianDate.setText(xunjian.getXjDate());
+            xjViewHolder.xjUser.setText(xunjian.getXjUser());
+            xjViewHolder.status.setText(xunjian.getStatus());
+            if (xunjian.getStatus().equals("异常")){
+                xjViewHolder.cause.setText(xunjian.getCause());
+            }else {
+                xjViewHolder.cause.setVisibility(View.GONE);
+            }
+
         }
 
     }

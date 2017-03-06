@@ -5,19 +5,31 @@ package mac.yk.devicemanagement;
  */
 
 public interface I {
-    String YUJING="yujing";
-    String TONGJI="tongji";
-    String CHAXUN="chaxun";
-    String SAOMA="saoma";
-    String SERVER_ROOT="";
-    String SAVE="save";
-    String ID="id";
-    String Device="device";
-    String ISDIANCHI="isDianchi";
-    String USERNAME="userName";
-    String PASSWD="passwd";
-    int SUCCESS=0;
-    String CREQ="controlReq";
+
+    interface REQUEST{
+
+        String YUJING="yujing";
+        String TONGJI="tongji";
+        String CHAXUN="chaxun";
+        String CONTROL="saoma";
+        String SAVE="save";
+        String LOGOUT="logOut";
+        String SERVER_ROOT="";
+    }
+    interface PARAM{
+
+        String ID="id";
+        String Device="device";
+        String ISDIANCHI="isDianchi";
+        String USERNAME="userName";
+        String PASSWD="passwd";
+        String CREQ="controlReq";
+    }
+    interface RESULT{
+
+        int SUCCESS=0;
+
+    }
 
     interface SCAN{
         int QUERY=1111;

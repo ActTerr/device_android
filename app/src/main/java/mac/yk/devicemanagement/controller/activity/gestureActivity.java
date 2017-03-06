@@ -11,11 +11,8 @@ public class GestureActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_gesture);
         isStart= SpUtil.getFlag(this);
-        if (isStart){
-            setContentView(R.layout.activity_gesture_start);
-        }else {
-            setContentView(R.layout.activity_gesture_close);
-        }
+
     }
 }

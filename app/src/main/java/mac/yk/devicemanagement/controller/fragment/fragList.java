@@ -24,6 +24,7 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import mac.yk.devicemanagement.R;
 import mac.yk.devicemanagement.bean.Weixiu;
+import mac.yk.devicemanagement.bean.Xunjian;
 import mac.yk.devicemanagement.controller.adapter.MyAdapter;
 import mac.yk.devicemanagement.model.IModel;
 import mac.yk.devicemanagement.util.ConvertUtils;
@@ -60,7 +61,7 @@ public class fragList extends Fragment {
     @BindView(R.id.srl)
     SwipeRefreshLayout srl;
     ArrayList<Weixiu> wxList=new ArrayList<>();
-    ArrayList<String> xiujunList=new ArrayList<>();
+    ArrayList<Xunjian> xiujunList=new ArrayList<>();
     boolean isWeixiu;
 
     public fragList() {
@@ -163,11 +164,11 @@ public class fragList extends Fragment {
     }
 
     private void downloadxunjian(final int Action) {
-        model.downloadXunjian(context, id, page, new OkHttpUtils.OnCompleteListener<String[]>() {
+        model.downloadXunjian(context, id, page, new OkHttpUtils.OnCompleteListener<Xunjian[]>() {
             @Override
-            public void onSuccess(String[] result) {
+            public void onSuccess(Xunjian[] result) {
                 if (result!=null){
-                    ArrayList<String> xunjianList= ConvertUtils.array2List(result);
+                    ArrayList<Xunjian> xunjianList= ConvertUtils.array2List(result);
                     if (Action==ACTION_ADD){
                         adapter.addxData(xunjianList);
                     }else {

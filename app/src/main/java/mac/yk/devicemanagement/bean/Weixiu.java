@@ -9,10 +9,12 @@ import java.io.Serializable;
 public class Weixiu implements Serializable {
     String wxDate;
     String xjData;
+    String controlUser;
 
-    public Weixiu(String wxDate, String xjData) {
+    public Weixiu(String wxDate, String xjData, String controlUser) {
         this.wxDate = wxDate;
         this.xjData = xjData;
+        this.controlUser = controlUser;
     }
 
     public Weixiu() {
@@ -32,5 +34,13 @@ public class Weixiu implements Serializable {
 
     public void setXjData(String xjData) {
         this.xjData = xjData;
+    }
+
+    public String getControlUser() {
+        return controlUser;
+    }
+
+    public void setControlUser(String controlUser) {
+        this.controlUser = controlUser;
     }
 }

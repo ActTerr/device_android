@@ -36,11 +36,16 @@ public class fragDetail extends Fragment {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.frag_detail, container, false);
         ButterKnife.bind(this, view);
+
+        return view;
+    }
+
+    @Override
+    public void onResume() {
         device= (Device) getArguments().getSerializable("device");
         deviceName.setText(device.getName());
         detail.setText(device.toString());
         lunbo.startPlay(zhishi);
-        return view;
+        super.onResume();
     }
-
 }

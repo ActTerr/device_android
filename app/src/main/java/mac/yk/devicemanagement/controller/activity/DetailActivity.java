@@ -1,5 +1,6 @@
 package mac.yk.devicemanagement.controller.activity;
 
+import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.os.Bundle;
@@ -11,17 +12,25 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.CheckBox;
+import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
+import mac.yk.devicemanagement.I;
+import mac.yk.devicemanagement.MyApplication;
 import mac.yk.devicemanagement.R;
 import mac.yk.devicemanagement.bean.Device;
+import mac.yk.devicemanagement.bean.Result;
 import mac.yk.devicemanagement.controller.fragment.fragDetail;
 import mac.yk.devicemanagement.model.IModel;
 import mac.yk.devicemanagement.model.Model;
 import mac.yk.devicemanagement.util.ActivityUtils;
 import mac.yk.devicemanagement.util.MFGT;
+import mac.yk.devicemanagement.util.OkHttpUtils;
 
 import static android.R.attr.id;
 
@@ -33,7 +42,7 @@ public class DetailActivity extends AppCompatActivity {
     Context context;
     boolean isDianchi = false;
     fragDetail fragD;
-
+    Dialog dialog = new Dialog(context);
     @BindView(R.id.toolBar)
     Toolbar toolBar;
     @BindView(R.id.nav_view)
@@ -41,6 +50,19 @@ public class DetailActivity extends AppCompatActivity {
     @BindView(R.id.drawLayout)
     DrawerLayout activityDetail;
 
+    /**
+     * dialog
+     */
+    @BindView(R.id.cb_good)
+    CheckBox cbGood;
+    @BindView(R.id.cb_abnormal)
+    CheckBox cbAbnormal;
+    @BindView(R.id.remark)
+    EditText remark;
+    @BindView(R.id.cb_no)
+    CheckBox cbNo;
+    @BindView(R.id.cb_yes)
+    CheckBox cbYes;
 
 
     @Override
@@ -49,6 +71,7 @@ public class DetailActivity extends AppCompatActivity {
         setContentView(R.layout.activity_currency);
         ButterKnife.bind(this);
         progressDialog = new ProgressDialog(this);
+        model = Model.getInstance();
         device = (Device) getIntent().getSerializableExtra("device");
         if (device == null) {
             finish();
@@ -58,16 +81,15 @@ public class DetailActivity extends AppCompatActivity {
             }
         }
         setSupportActionBar(toolBar);
-        ActionBar ab=getSupportActionBar();
+        ActionBar ab = getSupportActionBar();
         ab.setHomeAsUpIndicator(R.drawable.ic_menu);
         ab.setDisplayHomeAsUpEnabled(true);
-        fragD=new fragDetail();
+        fragD = new fragDetail();
         ActivityUtils.addFragmentToActivity(getSupportFragmentManager(), fragD, R.id.frame);
-        model = Model.getInstance();
         if (navView != null) {
             setUpNavView(navView);
             navView.inflateMenu(R.menu.menu_detail);
-            ImageView imageView= (ImageView) navView.getHeaderView(0).findViewById(R.id.avatar);
+            ImageView imageView = (ImageView) navView.getHeaderView(0).findViewById(R.id.avatar);
             imageView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -76,13 +98,18 @@ public class DetailActivity extends AppCompatActivity {
                 }
             });
         }
-       setArguments();
+        if (isDianchi) {
+            navView.getMenu().getItem(3).setTitle("用后");
+            navView.getMenu().getItem(4).setTitle("充电");
+        }
+        setArguments();
     }
+
 
     private void setArguments() {
         setArguments();
-        Bundle bundle=new Bundle();
-        bundle.putSerializable("device",device);
+        Bundle bundle = new Bundle();
+        bundle.putSerializable("device", device);
         fragD.setArguments(bundle);
     }
 
@@ -90,24 +117,21 @@ public class DetailActivity extends AppCompatActivity {
         navView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-                switch (item.getItemId()){
+                switch (item.getItemId()) {
                     case R.id.daiyong:
                     case R.id.yunxing:
-                    case R.id.xiujun:
-                    case R.id.xunjian:
-                        if (isDianchi){
-                            item.setTitle("用后");
-                        }
-                        break;
-                    case R.id.weixiu:
-                        if (isDianchi){
-                            item.setTitle("充电");
-                        }
-                        break;
                     case R.id.baofei:
+                    case R.id.weixiu:
+                        postControl(item.getItemId());
+                        break;
+                    case R.id.xunjian:
+                        postxunjian();
+                        break;
+                    case R.id.xiujun:
+                        postXiujun();
                         break;
                     case R.id.record:
-                        MFGT.gotoRecordActivity(context,id);
+                        MFGT.gotoRecordActivity(context, id);
                         break;
                 }
                 item.setChecked(true);
@@ -115,6 +139,110 @@ public class DetailActivity extends AppCompatActivity {
                 return true;
             }
         });
+    }
+
+    private void postControl(int Cid) {
+        progressDialog.show();
+        model.control(context, isDianchi, MyApplication.getInstance().getUserName(), String.valueOf(Cid), id, new OkHttpUtils.OnCompleteListener<Result>() {
+            @Override
+            public void onSuccess(Result result) {
+                progressDialog.dismiss();
+                if (result != null && result.getRetCode() == I.SUCCESS) {
+                    device = (Device) result.getRetData();
+                    setArguments();
+                } else {
+                    Toast.makeText(context, "请求失败！", Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onError(String error) {
+                progressDialog.dismiss();
+                Toast.makeText(context, "检查网络", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    private void postXiujun() {
+        View v = View.inflate(context, R.layout.dialog_xiujun, null);
+        dialog.setContentView(v);
+        dialog.setTitle(null);
+        dialog.show();
+    }
+
+    private void postxunjian() {
+
+        View v = View.inflate(context, R.layout.dialog_xunjian, null);
+        dialog.setContentView(v);
+        dialog.setTitle(null);
+        dialog.show();
+    }
+
+
+    @OnClick({R.id.cb_good, R.id.cb_abnormal, R.id.btn_commit,R.id.cb_no, R.id.cb_yes, R.id.btn_commit2})
+    public void onClick(View view) {
+        switch (view.getId()) {
+            case R.id.cb_good:
+                cbGood.setChecked(true);
+                cbAbnormal.setChecked(false);
+                break;
+            case R.id.cb_abnormal:
+                cbAbnormal.setChecked(true);
+                cbGood.setChecked(false);
+                break;
+            case R.id.btn_commit:
+                dialog.dismiss();
+                progressDialog.show();
+                model.xunjian(context, MyApplication.getInstance().getUserName(), isDianchi, id, remark.getText().toString(), new OkHttpUtils.OnCompleteListener<Result>() {
+                    @Override
+                    public void onSuccess(Result result) {
+                        progressDialog.dismiss();
+                        if (result != null && result.getRetCode() == I.SUCCESS) {
+                            device = (Device) result.getRetData();
+                            setArguments();
+                        } else {
+                            Toast.makeText(context, "请求失败！", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+
+                    @Override
+                    public void onError(String error) {
+                        progressDialog.dismiss();
+                        Toast.makeText(context, "检查网络", Toast.LENGTH_SHORT).show();
+                    }
+                });
+                break;
+            case R.id.cb_no:
+                cbNo.setChecked(true);
+                cbYes.setChecked(false);
+                break;
+            case R.id.cb_yes:
+                cbYes.setChecked(true);
+                cbNo.setChecked(false);
+                break;
+            case R.id.btn_commit2:
+                dialog.dismiss();
+                progressDialog.show();
+                model.xiujun(context, MyApplication.getInstance().getUserName(), isDianchi, id, remark.getText().toString(), new OkHttpUtils.OnCompleteListener<Result>() {
+                    @Override
+                    public void onSuccess(Result result) {
+                        progressDialog.dismiss();
+                        if (result != null && result.getRetCode() == I.SUCCESS) {
+                            device = (Device) result.getRetData();
+                            setArguments();
+                        } else {
+                            Toast.makeText(context, "请求失败！", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+
+                    @Override
+                    public void onError(String error) {
+                        progressDialog.dismiss();
+                        Toast.makeText(context, "检查网络", Toast.LENGTH_SHORT).show();
+                    }
+                });
+                break;
+        }
     }
 
 

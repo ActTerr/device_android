@@ -20,7 +20,6 @@ import android.widget.Toast;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import mac.yk.devicemanagement.I;
-import mac.yk.devicemanagement.MyApplication;
 import mac.yk.devicemanagement.R;
 import mac.yk.devicemanagement.bean.Device;
 import mac.yk.devicemanagement.bean.Result;
@@ -97,23 +96,6 @@ public class MainActivity extends AppCompatActivity {
                 switch (item.getItemId()) {
                     case R.id.yujing:
                         getYujing();
-                        break;
-                    case R.id.back:
-                        model.LogOut(MainActivity.this, MyApplication.getInstance().getUserName(), new OkHttpUtils.OnCompleteListener<Result>() {
-                            @Override
-                            public void onSuccess(Result result) {
-                                if (result != null && result.getRetCode() == I.SUCCESS) {
-                                    MFGT.gotoLoginActivity(MainActivity.this);
-                                } else {
-                                    Toast.makeText(MainActivity.this, "登出失败，请重试", Toast.LENGTH_SHORT).show();
-                                }
-                            }
-
-                            @Override
-                            public void onError(String error) {
-                                Toast.makeText(MainActivity.this, "请检查网络状态", Toast.LENGTH_SHORT).show();
-                            }
-                        });
                         break;
                     case R.id.tongji:
                         ActivityUtils.changeFragment(getSupportFragmentManager(), new fragMain2(), R.id.frag_main);

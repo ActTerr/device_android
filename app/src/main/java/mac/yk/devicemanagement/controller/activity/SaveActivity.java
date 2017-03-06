@@ -14,6 +14,7 @@ import android.widget.Toast;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import mac.yk.devicemanagement.MyApplication;
 import mac.yk.devicemanagement.R;
 import mac.yk.devicemanagement.bean.Device;
 import mac.yk.devicemanagement.bean.Result;
@@ -58,7 +59,7 @@ public class SaveActivity extends AppCompatActivity {
         final ProgressDialog progressDialog = new ProgressDialog(this);
         progressDialog.show();
         model = new Model();
-        model.saveDevice(this, device, new OkHttpUtils.OnCompleteListener<Result>() {
+        model.saveDevice(this, MyApplication.getInstance().getUserName(),device, new OkHttpUtils.OnCompleteListener<Result>() {
             @Override
             public void onSuccess(Result result) {
                 progressDialog.dismiss();
