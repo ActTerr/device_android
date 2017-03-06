@@ -10,6 +10,8 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.ImageView;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -65,6 +67,14 @@ public class DetailActivity extends AppCompatActivity {
         if (navView != null) {
             setUpNavView(navView);
             navView.inflateMenu(R.menu.menu_detail);
+            ImageView imageView= (ImageView) navView.getHeaderView(0).findViewById(R.id.avatar);
+            imageView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    MFGT.gotoSetActivity(context);
+                    finish();
+                }
+            });
         }
        setArguments();
     }

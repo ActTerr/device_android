@@ -13,6 +13,8 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import butterknife.BindView;
@@ -66,6 +68,14 @@ public class MainActivity extends AppCompatActivity {
         progressDialog = new ProgressDialog(this);
         if (navView != null) {
             setUpNavView(navView);
+            ImageView imageView= (ImageView) navView.getHeaderView(0).findViewById(R.id.avatar);
+            imageView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    MFGT.gotoSetActivity(MainActivity.this);
+                    finish();
+                }
+            });
         }
         getYujing();
     }

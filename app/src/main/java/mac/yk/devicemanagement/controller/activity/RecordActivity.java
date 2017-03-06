@@ -1,5 +1,6 @@
 package mac.yk.devicemanagement.controller.activity;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
@@ -9,12 +10,15 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.ImageView;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import mac.yk.devicemanagement.R;
 import mac.yk.devicemanagement.controller.fragment.fragList;
 import mac.yk.devicemanagement.util.ActivityUtils;
+import mac.yk.devicemanagement.util.MFGT;
 
 public class RecordActivity extends AppCompatActivity {
 
@@ -26,13 +30,14 @@ public class RecordActivity extends AppCompatActivity {
     NavigationView navView;
     @BindView(R.id.drawLayout)
     DrawerLayout drawLayout;
+    Context context;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_currency);
         ButterKnife.bind(this);
-
+        context=this;
 
         int id = getIntent().getIntExtra("id", 0);
         if (id == 0) {
@@ -64,6 +69,14 @@ public class RecordActivity extends AppCompatActivity {
         if (navView != null) {
             setUpNavView(navView);
             navView.inflateMenu(R.menu.menu_record);
+            ImageView imageView= (ImageView) navView.getHeaderView(0).findViewById(R.id.avatar);
+            imageView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    MFGT.gotoSetActivity(context);
+                    finish();
+                }
+            });
         }
     }
 

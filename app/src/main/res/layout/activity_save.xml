@@ -46,14 +46,14 @@
         android:orientation="horizontal">
         <TextView
             android:textSize="30sp"
-            android:text="出厂时间："
+            android:text="出厂日期："
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
 
         <TextView
             android:layout_weight="1"
             android:id="@+id/chuchang"
-            android:hint="请输入出厂时间"
+            android:hint="请输入出厂日期"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
         <ImageView
@@ -85,12 +85,12 @@
         android:orientation="horizontal">
         <TextView
             android:textSize="30sp"
-            android:text="巡检时间："
+            android:text="巡检日期："
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
         <EditText
             android:id="@+id/xunjian"
-            android:hint="请输入巡检时间"
+            android:hint="请输入巡检日期"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
     </LinearLayout>
@@ -138,5 +138,5 @@
         android:text="保存"
         android:layout_gravity="center"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />d
+        android:layout_height="wrap_content" />
 </LinearLayout>
