@@ -38,7 +38,7 @@ public class LoginActivity extends AppCompatActivity {
         model.Login(this, name.getText().toString(), passwd.getText().toString(), new OkHttpUtils.OnCompleteListener<Result>() {
             @Override
             public void onSuccess(Result result) {
-                if (result != null && result.getRetCode() == I.SUCCESS) {
+                if (result != null && result.getRetCode() == I.RESULT.SUCCESS) {
                     SpUtil.saveLoginUser(context,name.getText().toString());
                     Intent intent = new Intent(context, MainActivity.class);
                     startActivity(intent);

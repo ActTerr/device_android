@@ -147,7 +147,7 @@ public class DetailActivity extends AppCompatActivity {
             @Override
             public void onSuccess(Result result) {
                 progressDialog.dismiss();
-                if (result != null && result.getRetCode() == I.SUCCESS) {
+                if (result != null && result.getRetCode() == I.RESULT.SUCCESS) {
                     device = (Device) result.getRetData();
                     setArguments();
                 } else {
@@ -197,7 +197,7 @@ public class DetailActivity extends AppCompatActivity {
                     @Override
                     public void onSuccess(Result result) {
                         progressDialog.dismiss();
-                        if (result != null && result.getRetCode() == I.SUCCESS) {
+                        if (result != null && result.getRetCode() == I.RESULT.SUCCESS) {
                             device = (Device) result.getRetData();
                             setArguments();
                         } else {
@@ -227,7 +227,7 @@ public class DetailActivity extends AppCompatActivity {
                     @Override
                     public void onSuccess(Result result) {
                         progressDialog.dismiss();
-                        if (result != null && result.getRetCode() == I.SUCCESS) {
+                        if (result != null && result.getRetCode() == I.RESULT.SUCCESS) {
                             device = (Device) result.getRetData();
                             setArguments();
                         } else {

@@ -33,9 +33,6 @@ import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
 
-import static android.icu.lang.UCharacter.GraphemeClusterBreak.L;
-import static mac.yk.devicemanagement.util.L.e;
-
 
 /**
  * Created by yao on 2016/9/16.
@@ -220,7 +217,7 @@ public class OkHttpUtils<T> {
 
     public OkHttpUtils<T> setRequestUrl(String request) {
         //http://120.26.242.249:8080/SuperWeChatServerV2.0/register?m_user_name=aaaaaa&m_user_nick=aaaaaa&m_user_password=aaaaaa
-        mUrl = new StringBuilder(I.SERVER_ROOT);
+        mUrl = new StringBuilder(I.REQUEST.SERVER_ROOT);
         mUrl.append(request);
 //        Log.e("okhttp","1 murl="+ mUrl.toString());
         return this;

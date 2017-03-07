@@ -62,7 +62,7 @@ public class SetActivity extends AppCompatActivity {
                     @Override
                     public void onSuccess(Result result) {
                         pd.dismiss();
-                        if (result!=null&&result.getRetCode()== I.SUCCESS){
+                        if (result!=null&&result.getRetCode()== I.RESULT.SUCCESS){
                              MyApplication.getInstance().setUserName(null);
                             SpUtil.rmLoginUser(context);
                             MFGT.gotoLoginActivity(context);

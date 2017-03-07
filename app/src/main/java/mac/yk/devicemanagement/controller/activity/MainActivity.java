@@ -98,7 +98,7 @@ public class MainActivity extends AppCompatActivity {
                         getYujing();
                         break;
                     case R.id.tongji:
-                        ActivityUtils.changeFragment(getSupportFragmentManager(), new fragMain2(), R.id.frag_main);
+                        ActivityUtils.changeFragment(getSupportFragmentManager(), new fragMain2(), R.id.frame);
                         break;
                 }
                 item.setChecked(true);
@@ -124,7 +124,7 @@ public class MainActivity extends AppCompatActivity {
                         @Override
                         public void onSuccess(Result result) {
                             progressDialog.dismiss();
-                            if (result != null && result.getRetCode() == I.SUCCESS) {
+                            if (result != null && result.getRetCode() == I.RESULT.SUCCESS) {
                                 Device device = (Device) result.getRetData();
                                 MFGT.gotoDetailActivity(MainActivity.this, device);
                             } else {
@@ -149,7 +149,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onSuccess(Result result) {
                 progressDialog.dismiss();
-                if (result != null && result.getRetCode() == I.SUCCESS) {
+                if (result != null && result.getRetCode() == I.RESULT.SUCCESS) {
                     String yujing = (String) result.getRetData();
                     builder.setMessage(yujing).show();
                 } else {
