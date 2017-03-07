@@ -9,15 +9,17 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity android:name=".controller.activity.MainActivity">
+
+        </activity>
+        <activity android:name=".controller.activity.DetailActivity" />
+        <activity android:name=".controller.activity.SaveActivity" />
+        <activity android:name=".controller.activity.Splash" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".controller.activity.DetailActivity" />
-        <activity android:name=".controller.activity.SaveActivity" />
-        <activity android:name=".controller.activity.Splash" />
         <activity android:name=".controller.activity.LoginActivity" />
         <activity android:name=".controller.activity.RecordActivity" />
         <activity android:name=".controller.activity.SetActivity" />

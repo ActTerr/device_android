@@ -9,7 +9,7 @@ import android.preference.PreferenceManager;
  */
 
 public class SpUtil {
-    public static String rmLoginUser(Context context){
+    public static String getLoginUser(Context context){
         return getDefault(context).getString("name","");
     }
 

@@ -2,12 +2,12 @@ package mac.yk.devicemanagement.controller.activity;
 
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 
 import mac.yk.devicemanagement.MyApplication;
 import mac.yk.devicemanagement.R;
+import mac.yk.devicemanagement.util.SpUtil;
 
 public class Splash extends AppCompatActivity {
 
@@ -24,8 +24,7 @@ public class Splash extends AppCompatActivity {
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
-                SharedPreferences sp=getSharedPreferences("user",MODE_PRIVATE);
-                String name=sp.getString("name",null);
+                String name=SpUtil.getLoginUser(context);
                 if (name==null){
                     Intent intent=new Intent(context,LoginActivity.class);
                     startActivity(intent);
@@ -34,6 +33,7 @@ public class Splash extends AppCompatActivity {
                     MyApplication.getInstance().setUserName(name);
                     Intent intent=new Intent(context,MainActivity.class);
                     startActivity(intent);
+                    finish();
                 }
             }
         }).start();

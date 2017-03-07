@@ -64,7 +64,7 @@ public class SetActivity extends AppCompatActivity {
                         pd.dismiss();
                         if (result!=null&&result.getRetCode()== I.RESULT.SUCCESS){
                              MyApplication.getInstance().setUserName(null);
-                            SpUtil.rmLoginUser(context);
+                            SpUtil.saveLoginUser(context,null);
                             MFGT.gotoLoginActivity(context);
                             finish();
                         }else {

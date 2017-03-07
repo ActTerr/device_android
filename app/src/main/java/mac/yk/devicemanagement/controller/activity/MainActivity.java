@@ -26,17 +26,17 @@ import mac.yk.devicemanagement.bean.Result;
 import mac.yk.devicemanagement.controller.fragment.fragMain;
 import mac.yk.devicemanagement.controller.fragment.fragMain2;
 import mac.yk.devicemanagement.model.IModel;
-import mac.yk.devicemanagement.model.Model;
 import mac.yk.devicemanagement.util.ActivityUtils;
 import mac.yk.devicemanagement.util.MFGT;
 import mac.yk.devicemanagement.util.OkHttpUtils;
+import mac.yk.devicemanagement.util.TestUtil;
 
 public class MainActivity extends AppCompatActivity {
     IModel model;
     int id;
     ProgressDialog progressDialog;
 
-    AlertDialog.Builder builder = new AlertDialog.Builder(this);
+    AlertDialog.Builder builder ;
     @BindView(R.id.toolBar)
     Toolbar toolBar;
     @BindView(R.id.nav_view)
@@ -50,7 +50,8 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_currency);
         ButterKnife.bind(this);
-        model = Model.getInstance();
+        builder= new AlertDialog.Builder(this);
+        model = TestUtil.getData();
         progressDialog = new ProgressDialog(this);
         setSupportActionBar(toolBar);
         ActionBar ab=getSupportActionBar();

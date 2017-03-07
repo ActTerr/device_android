@@ -32,7 +32,7 @@ public interface IModel {
 
     void downloadXunjian(Context context,int id,int page,OkHttpUtils.OnCompleteListener<Xunjian[]> callback);
 
-    void xunjian(Context context,String userName,boolean t,int id,String remark,OkHttpUtils.OnCompleteListener<Result> callback);
+    void xunjian(Context context,String userName,boolean t,int id,String zhuangtai,String remark,OkHttpUtils.OnCompleteListener<Result> callback);
 
     void xiujun(Context context,String userName,boolean t,int id,String remark,OkHttpUtils.OnCompleteListener<Result> callback);
 }

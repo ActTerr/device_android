@@ -27,10 +27,10 @@ import mac.yk.devicemanagement.bean.Device;
 import mac.yk.devicemanagement.bean.Result;
 import mac.yk.devicemanagement.controller.fragment.fragDetail;
 import mac.yk.devicemanagement.model.IModel;
-import mac.yk.devicemanagement.model.Model;
 import mac.yk.devicemanagement.util.ActivityUtils;
 import mac.yk.devicemanagement.util.MFGT;
 import mac.yk.devicemanagement.util.OkHttpUtils;
+import mac.yk.devicemanagement.util.TestUtil;
 
 import static android.R.attr.id;
 
@@ -71,7 +71,7 @@ public class DetailActivity extends AppCompatActivity {
         setContentView(R.layout.activity_currency);
         ButterKnife.bind(this);
         progressDialog = new ProgressDialog(this);
-        model = Model.getInstance();
+        model = TestUtil.getData();
         device = (Device) getIntent().getSerializableExtra("device");
         if (device == null) {
             finish();
@@ -193,7 +193,13 @@ public class DetailActivity extends AppCompatActivity {
             case R.id.btn_commit:
                 dialog.dismiss();
                 progressDialog.show();
-                model.xunjian(context, MyApplication.getInstance().getUserName(), isDianchi, id, remark.getText().toString(), new OkHttpUtils.OnCompleteListener<Result>() {
+                String zhuangtai;
+                if (cbAbnormal.isChecked()){
+                    zhuangtai="正常";
+                }else {
+                    zhuangtai="异常";
+                }
+                model.xunjian(context, MyApplication.getInstance().getUserName(), isDianchi, id, zhuangtai,remark.getText().toString(), new OkHttpUtils.OnCompleteListener<Result>() {
                     @Override
                     public void onSuccess(Result result) {
                         progressDialog.dismiss();

@@ -109,13 +109,14 @@ public class Model implements IModel {
     }
 
     @Override
-    public void xunjian(Context context, String userName, boolean t, int id, String remark, OkHttpUtils.OnCompleteListener<Result> callback) {
+    public void xunjian(Context context, String userName, boolean t, int id,String zhuangtai, String remark, OkHttpUtils.OnCompleteListener<Result> callback) {
         OkHttpUtils<Result> ok=new OkHttpUtils<>(context);
         ok.setRequestUrl(I.REQUEST.XUNJIAN)
                 .addFormParam(I.PARAM.USERNAME,userName)
                 .addFormParam(I.PARAM.ISDIANCHI, String.valueOf(t))
                 .addFormParam(I.PARAM.Device, String.valueOf(id))
                 .addFormParam(I.PARAM.REMARK,remark)
+                .addFormParam(I.PARAM.ZHUANGTAI,zhuangtai)
                 .targetClass(Result.class)
                 .execute(callback);
     }

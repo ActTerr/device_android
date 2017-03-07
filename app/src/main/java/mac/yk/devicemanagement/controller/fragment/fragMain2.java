@@ -13,8 +13,9 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import mac.yk.devicemanagement.R;
 import mac.yk.devicemanagement.bean.Result;
-import mac.yk.devicemanagement.model.Model;
+import mac.yk.devicemanagement.model.IModel;
 import mac.yk.devicemanagement.util.OkHttpUtils;
+import mac.yk.devicemanagement.util.TestUtil;
 
 /**
  * Created by mac-yk on 2017/3/3.
@@ -22,7 +23,7 @@ import mac.yk.devicemanagement.util.OkHttpUtils;
 
 public class fragMain2 extends Fragment {
 
-    Model model;
+    IModel model;
     Context context;
     @BindView(R.id.tongji)
     TextView tongji;
@@ -32,7 +33,7 @@ public class fragMain2 extends Fragment {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.frag_tongji, container, false);
         ButterKnife.bind(this, view);
-        model = Model.getInstance();
+        model = TestUtil.getData();
         context = getContext();
         getMessage();
         return view;

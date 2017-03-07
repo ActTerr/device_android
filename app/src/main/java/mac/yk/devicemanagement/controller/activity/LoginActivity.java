@@ -14,9 +14,9 @@ import mac.yk.devicemanagement.I;
 import mac.yk.devicemanagement.R;
 import mac.yk.devicemanagement.bean.Result;
 import mac.yk.devicemanagement.model.IModel;
-import mac.yk.devicemanagement.model.Model;
 import mac.yk.devicemanagement.util.OkHttpUtils;
 import mac.yk.devicemanagement.util.SpUtil;
+import mac.yk.devicemanagement.util.TestUtil;
 
 public class LoginActivity extends AppCompatActivity {
     Context context;
@@ -24,17 +24,17 @@ public class LoginActivity extends AppCompatActivity {
     EditText name;
     @BindView(R.id.passwd)
     EditText passwd;
-
+    IModel model;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
         ButterKnife.bind(this);
         context = this;
+        model= TestUtil.getData();
     }
 
     public void onLogin(View view) {
-        IModel model = new Model();
         model.Login(this, name.getText().toString(), passwd.getText().toString(), new OkHttpUtils.OnCompleteListener<Result>() {
             @Override
             public void onSuccess(Result result) {

@@ -86,10 +86,10 @@ public class RecordActivity extends AppCompatActivity {
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
                 switch (item.getItemId()){
                     case R.id.weixiu:
-                        ActivityUtils.changeFragment(getSupportFragmentManager(), fragment1, R.id.fl);
+                        ActivityUtils.changeFragment(getSupportFragmentManager(), fragment1, R.id.frame);
                         break;
                     case R.id.xunjian:
-                        ActivityUtils.changeFragment(getSupportFragmentManager(), fragment2, R.id.fl);
+                        ActivityUtils.changeFragment(getSupportFragmentManager(), fragment2, R.id.frame);
                         break;
                 }
                 item.setChecked(true);

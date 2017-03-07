@@ -64,7 +64,7 @@ public class SaveActivity extends AppCompatActivity {
             public void onSuccess(Result result) {
                 progressDialog.dismiss();
                 if (result != null && result.getRetCode() == 0) {
-
+                    Toast.makeText(SaveActivity.this, "保存成功", Toast.LENGTH_SHORT).show();
                 } else {
                     Toast.makeText(SaveActivity.this, "保存失败", Toast.LENGTH_SHORT).show();
                 }

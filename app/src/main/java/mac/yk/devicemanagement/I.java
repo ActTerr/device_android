@@ -29,6 +29,7 @@ public interface I {
         String PASSWD="passwd";
         String CREQ="controlReq";
         String REMARK="remark";
+        String ZHUANGTAI ="zhuangtai" ;
     }
     interface RESULT{
 
