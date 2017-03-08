@@ -51,7 +51,7 @@ public class zhishiqiView extends View {
         if (!CountIsChange){
             return;
         }
-        super.onMeasure(configWidth(widthMeasureSpec),configHeight(heightMeasureSpec));
+        setMeasuredDimension(configWidth(widthMeasureSpec),configHeight(heightMeasureSpec));
     }
 
     private int configHeight(int heightMeasureSpec) {

@@ -5,6 +5,7 @@ import android.os.Handler;
 import android.os.Message;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
@@ -29,8 +30,8 @@ public class lunboView extends ViewPager{
     Handler handler;
     String [] images;
     Timer mTimer;
-    public lunboView(Context context) {
-        super(context);
+    public lunboView(Context context, AttributeSet attributeSet) {
+        super(context,attributeSet);
 
     }
 

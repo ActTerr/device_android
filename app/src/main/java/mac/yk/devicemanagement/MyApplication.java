@@ -13,8 +13,8 @@ public class MyApplication extends Application {
     public static MyApplication getInstance(){
         return instance;
     }
-    private   Device device=new Device();
-    private   Device getDevice(){
+   public static Device device=new Device();
+    public static   Device getDevice(){
         return  device;
     }
     private String userName;
