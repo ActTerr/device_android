@@ -5,8 +5,8 @@ import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.design.internal.NavigationMenu;
 import android.support.design.widget.NavigationView;
+import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
@@ -49,7 +49,7 @@ public class DetailActivity extends AppCompatActivity {
     @BindView(R.id.nav_view)
     NavigationView navView;
     @BindView(R.id.drawLayout)
-    DrawerLayout activityDetail;
+    DrawerLayout drawLayout;
 
     xiujunHoler xiujunHoler;
     xunjianHolder xunjianHolder;
@@ -87,8 +87,6 @@ public class DetailActivity extends AppCompatActivity {
         fragD = new fragDetail();
         ActivityUtils.addFragmentToActivity(getSupportFragmentManager(), fragD, R.id.frame);
         if (navView != null) {
-            NavigationMenu menu= (NavigationMenu) navView.getMenu();
-            menu=new NavigationMenu(this);
             navView.inflateMenu(R.menu.menu_detail);
             setUpNavView(navView);
             ImageView imageView = (ImageView) navView.getHeaderView(0).findViewById(R.id.avatar);
@@ -138,11 +136,21 @@ public class DetailActivity extends AppCompatActivity {
                         break;
                 }
                 item.setChecked(true);
-                activityDetail.closeDrawers();
-                return true;
+                drawLayout.closeDrawers();
+                return false;
             }
         });
     }
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                drawLayout.openDrawer(GravityCompat.START);
+                return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
 
     private void postControl(int Cid) {
         progressDialog.show();

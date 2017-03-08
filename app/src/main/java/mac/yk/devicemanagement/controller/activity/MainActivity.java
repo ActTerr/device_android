@@ -68,6 +68,7 @@ public class MainActivity extends AppCompatActivity {
         ActivityUtils.addFragmentToActivity(getSupportFragmentManager(), new fragMain(), R.id.frame);
         progressDialog = new ProgressDialog(this);
         if (navView != null) {
+            navView.inflateMenu(R.menu.menu_main);
             setUpNavView(navView);
             ImageView imageView = (ImageView) navView.getHeaderView(0).findViewById(R.id.avatar);
             imageView.setOnClickListener(new View.OnClickListener() {

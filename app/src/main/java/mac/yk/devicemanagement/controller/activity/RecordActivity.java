@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
+import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
@@ -67,8 +68,8 @@ public class RecordActivity extends AppCompatActivity {
         ab.setHomeAsUpIndicator(R.drawable.ic_menu);
         ab.setDisplayHomeAsUpEnabled(true);
         if (navView != null) {
-            setUpNavView(navView);
             navView.inflateMenu(R.menu.menu_record);
+            setUpNavView(navView);
             ImageView imageView= (ImageView) navView.getHeaderView(0).findViewById(R.id.avatar);
             imageView.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -94,11 +95,20 @@ public class RecordActivity extends AppCompatActivity {
                 }
                 item.setChecked(true);
                 drawLayout.closeDrawers();
-                return true;
+                return false;
             }
         });
     }
 
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                drawLayout.openDrawer(GravityCompat.START);
+                return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
 
 
 }
