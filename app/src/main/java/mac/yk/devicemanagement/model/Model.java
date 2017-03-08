@@ -70,7 +70,7 @@ public class Model implements IModel {
     @Override
     public void Login(Context context, String name, String passwd, OkHttpUtils.OnCompleteListener<Result> callback) {
         OkHttpUtils<Result> OK=new OkHttpUtils<>(context);
-        OK.setRequestUrl(I.REQUEST.SAVE)
+        OK.setRequestUrl(I.REQUEST.LOGIN)
                 .addFormParam(I.PARAM.USERNAME,name)
                 .addFormParam(I.PARAM.PASSWD,passwd)
                 .targetClass(Result.class)

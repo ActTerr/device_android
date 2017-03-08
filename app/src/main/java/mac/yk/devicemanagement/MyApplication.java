@@ -1,10 +1,7 @@
 package mac.yk.devicemanagement;
 
 import android.app.Application;
-import android.support.v4.app.Fragment;
-
-import java.util.ArrayList;
-import java.util.Observer;
+import android.content.Context;
 
 import mac.yk.devicemanagement.bean.Device;
 
@@ -13,6 +10,7 @@ import mac.yk.devicemanagement.bean.Device;
  */
 
 public class MyApplication extends Application {
+    public static Context context;
     public static MyApplication instance=new MyApplication();
     public static MyApplication getInstance(){
         return instance;
@@ -27,12 +25,12 @@ public class MyApplication extends Application {
     }
 
     private static Device device=new Device();
-    static ArrayList<Observer> observers;
-    public static void addObserver(Fragment fragment){
-        Observer observer= (Observer) fragment;
-        observers.add(observer);
-        device.addObserver(observer);
-    }
+//    static ArrayList<Observer> observers;
+//    public static void addObserver(Fragment fragment){
+//        Observer observer= (Observer) fragment;
+//        observers.add(observer);
+//        device.addObserver(observer);
+//    }
 
 
 
@@ -44,5 +42,9 @@ public class MyApplication extends Application {
 
     public void setUserName(String userName) {
         this.userName = userName;
+    }
+    public static Context getContext(){
+        context=getContext();
+        return context;
     }
 }

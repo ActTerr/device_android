@@ -91,7 +91,7 @@ public class DetailActivity extends AppCompatActivity {
             navView.inflateMenu(R.menu.menu_detail);
             setUpNavView(navView);
             ImageView imageView = (ImageView) navView.getHeaderView(0).findViewById(R.id.avatar);
-            TextView textView= (TextView) navView.getHeaderView(1).findViewById(R.id.nav_name);
+            TextView textView= (TextView) navView.getHeaderView(0).findViewById(R.id.nav_name);
             textView.setText(MyApplication.getInstance().getUserName());
             imageView.setOnClickListener(new View.OnClickListener() {
                 @Override

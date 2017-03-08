@@ -92,13 +92,17 @@ public class Data implements IModel {
 
     @Override
     public void downloadWeixiu(Context context, String id, int page, OkHttpUtils.OnCompleteListener<Weixiu[]> callback) {
-        Weixiu [] weixius=new Weixiu[]{weixiu};
+        weixiu=new Weixiu("11","22","fafa","aaf");
+        Weixiu weixiu1=new Weixiu("fa","fa","f","f");
+        Weixiu [] weixius=new Weixiu[]{weixiu,weixiu1};
         callback.onSuccess(weixius);
     }
 
     @Override
     public void downloadXunjian(Context context, String id, int page, OkHttpUtils.OnCompleteListener<Xunjian[]> callback) {
-        Xunjian [] xunjien=new Xunjian[]{xunjian};
+        xunjian=new Xunjian("11","22","fafa","aaf");
+        Xunjian xunjian1=new Xunjian("afaf","faf","fa","fa");
+        Xunjian [] xunjien=new Xunjian[]{xunjian,xunjian1};
         callback.onSuccess(xunjien);
     }
 

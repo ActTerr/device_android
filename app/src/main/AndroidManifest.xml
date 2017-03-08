@@ -3,6 +3,7 @@
     package="mac.yk.devicemanagement">
 
     <application
+        android:name=".MyApplication"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
@@ -14,14 +15,15 @@
         <activity android:name=".controller.activity.DetailActivity" />
         <activity android:name=".controller.activity.SaveActivity" />
         <activity android:name=".controller.activity.Splash" >
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
         </activity>
         <activity android:name=".controller.activity.LoginActivity" />
-        <activity android:name=".controller.activity.RecordActivity" />
+        <activity android:name=".controller.activity.RecordActivity">
+        <intent-filter>
+            <action android:name="android.intent.action.MAIN" />
+
+            <category android:name="android.intent.category.LAUNCHER" />
+        </intent-filter>
+        </activity>
         <activity android:name=".controller.activity.SetActivity" />
         <activity android:name=".controller.activity.GestureActivity">
 

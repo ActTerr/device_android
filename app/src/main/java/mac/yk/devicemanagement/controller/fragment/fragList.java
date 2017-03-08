@@ -1,6 +1,7 @@
 package mac.yk.devicemanagement.controller.fragment;
 
 import android.app.Activity;
+import android.content.Context;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -14,7 +15,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -25,10 +25,13 @@ import butterknife.OnClick;
 import mac.yk.devicemanagement.R;
 import mac.yk.devicemanagement.bean.Weixiu;
 import mac.yk.devicemanagement.bean.Xunjian;
-import mac.yk.devicemanagement.controller.adapter.MyAdapter;
+import mac.yk.devicemanagement.controller.adapter.weixiuAdapter;
+import mac.yk.devicemanagement.controller.adapter.xunjianAdapter;
 import mac.yk.devicemanagement.model.IModel;
 import mac.yk.devicemanagement.util.ConvertUtils;
+import mac.yk.devicemanagement.util.L;
 import mac.yk.devicemanagement.util.OkHttpUtils;
+import mac.yk.devicemanagement.util.TestUtil;
 import mac.yk.devicemanagement.widget.MyItemDecoration;
 
 /**
@@ -36,42 +39,42 @@ import mac.yk.devicemanagement.widget.MyItemDecoration;
  */
 
 public class fragList extends Fragment {
+
+
     Handler handler=new Handler(){
         @Override
         public void handleMessage(Message msg) {
             super.handleMessage(msg);
-            tvRefresh.setVisibility(View.INVISIBLE);
+           if (msg.what==1){
+               L.e("main","执行download");
+               Download(ACTION_DOWNLOAD);
+           }else {
+
+               tvRefresh.setVisibility(View.GONE);
+           }
         }
     };
     final static int ACTION_ADD=1;
     final static int ACTION_DOWNLOAD=2;
     IModel model;
    String id;
-    Activity context;
+   Context context;
     int page=1;
-    MyAdapter adapter;
-    LinearLayoutManager llm=new LinearLayoutManager(context);
+    RecyclerView.Adapter adapter;
+    LinearLayoutManager llm;
     boolean isMore=true;
     @BindView(R.id.tvRefresh)
     TextView tvRefresh;
     @BindView(R.id.rv)
+            public
     RecyclerView rv;
     @BindView(R.id.goTop)
     Button goTop;
     @BindView(R.id.srl)
     SwipeRefreshLayout srl;
-    ArrayList<Weixiu> wxList=new ArrayList<>();
-    ArrayList<Xunjian> xiujunList=new ArrayList<>();
+    ArrayList<Weixiu> wxList;
+    ArrayList<Xunjian> xiujunList;
     boolean isWeixiu;
-
-    public fragList() {
-        context= (Activity) getContext();
-        id=getArguments().getString("id");
-        if (id==null){
-            context.finish();
-        }
-        isWeixiu=getArguments().getBoolean("flag");
-    }
 
 
 
@@ -80,18 +83,32 @@ public class fragList extends Fragment {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.frag_currency, container, false);
         ButterKnife.bind(this, view);
+        L.e("main","frag解析完布局");
         init();
         return view;
     }
 
     private void init() {
-        if (isWeixiu){
-            adapter=new MyAdapter(context,wxList,null);
+        context= getContext();
+        model= TestUtil.getData();
+        wxList=new ArrayList<>();
+        xiujunList=new ArrayList<>();
 
-        }else {
-            adapter=new MyAdapter(context,null,xiujunList);
-
+        id=getArguments().getString("id");
+        if (id==null){
+            Activity a= (Activity) context;
+            a.finish();
         }
+        isWeixiu=getArguments().getBoolean("flag");
+        llm=new LinearLayoutManager(context);
+        L.e("main","是否维修:"+isWeixiu);
+        if (isWeixiu){
+
+            adapter=new weixiuAdapter(context);
+        }else {
+            adapter=new xunjianAdapter(context);
+        }
+
         srl.setColorSchemeColors(
                 getResources().getColor(R.color.google_blue),
                 getResources().getColor(R.color.google_green),
@@ -102,6 +119,7 @@ public class fragList extends Fragment {
         rv.setLayoutManager(llm);
         rv.addItemDecoration(new MyItemDecoration(12));
         rv.setHasFixedSize(true);
+        Download(ACTION_DOWNLOAD);
         setListener();
     }
 
@@ -121,7 +139,7 @@ public class fragList extends Fragment {
                     page++;
                     Download(ACTION_ADD);
                 }else {
-                    Toast.makeText(context, "没有更多数据！", Toast.LENGTH_SHORT).show();
+                    L.e("main","没有更多数据");
                 }
             }
 
@@ -155,10 +173,23 @@ public class fragList extends Fragment {
         srl.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
+                srl.setRefreshing(true);
                 tvRefresh.setVisibility(View.VISIBLE);
                 tvRefresh.setText("刷新中");
                 page=1;
-               Download(ACTION_DOWNLOAD);
+                new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        try {
+                            Thread.sleep(2000);
+                            handler.sendEmptyMessage(1);
+
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }).start();
+
             }
         });
     }
@@ -167,12 +198,16 @@ public class fragList extends Fragment {
         model.downloadXunjian(context, id, page, new OkHttpUtils.OnCompleteListener<Xunjian[]>() {
             @Override
             public void onSuccess(Xunjian[] result) {
+                srl.setRefreshing(false);
+                L.e("main","xunjianl:"+result.length);
+                xunjianAdapter adapter1= (xunjianAdapter) adapter;
                 if (result!=null){
                     ArrayList<Xunjian> xunjianList= ConvertUtils.array2List(result);
                     if (Action==ACTION_ADD){
-                        adapter.addxData(xunjianList);
+
+                        adapter1.addxData(xunjianList);
                     }else {
-                        adapter.initxData(xunjianList);
+                        adapter1.initxData(xunjianList);
                     }
                     tvRefresh.setText("刷新成功");
 
@@ -185,6 +220,7 @@ public class fragList extends Fragment {
 
             @Override
             public void onError(String error) {
+                srl.setRefreshing(false);
                 tvRefresh.setText("刷新失败");
                 delayToInvisible();
             }
@@ -195,12 +231,15 @@ public class fragList extends Fragment {
         model.downloadWeixiu(context, id, page, new OkHttpUtils.OnCompleteListener<Weixiu[]>() {
             @Override
             public void onSuccess(Weixiu[] result) {
-                if (result!=null){
+               weixiuAdapter adapter1= (weixiuAdapter) adapter;
+                srl.setRefreshing(false);
+                L.e("main","weixiul:"+result.length);
+                if (result!=null&&result.length>0){
                   ArrayList<Weixiu> weixius= ConvertUtils.array2List(result);
                     if (Action==ACTION_ADD){
-                        adapter.addwData(weixius);
+                        adapter1.addwData(weixius);
                     }else {
-                        adapter.initwData(weixius);
+                        adapter1.initwData(weixius);
                     }
                     tvRefresh.setText("刷新成功");
 
@@ -212,6 +251,7 @@ public class fragList extends Fragment {
 
             @Override
             public void onError(String error) {
+                srl.setRefreshing(false);
                 tvRefresh.setText("刷新失败");
                 delayToInvisible();
             }

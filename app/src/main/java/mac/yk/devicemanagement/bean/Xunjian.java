@@ -51,4 +51,14 @@ public class Xunjian {
     public void setCause(String cause) {
         this.cause = cause;
     }
+
+    @Override
+    public String toString() {
+        return "Xunjian{" +
+                "xjDate='" + xjDate + '\'' +
+                ", xjUser='" + xjUser + '\'' +
+                ", status='" + status + '\'' +
+                ", cause='" + cause + '\'' +
+                '}';
+    }
 }

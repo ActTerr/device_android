@@ -18,6 +18,7 @@ public interface I {
         String SERVER_ROOT="";
         String XUNJIAN="xunjian";
         String XIUJUN="xiujun";
+        String LOGIN="login";
     }
     interface PARAM{
         String SIZE="size";
