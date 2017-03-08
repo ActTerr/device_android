@@ -54,6 +54,7 @@ public class Data implements IModel {
 
     @Override
     public void saveDevice(Context context, String name, Device device, OkHttpUtils.OnCompleteListener<Result> callback) {
+        device=new Device("1111","电台","11111","11111","备用");
         this.device=device;
         Result result=new Result(0,true,"chenggong");
         callback.onSuccess(result);

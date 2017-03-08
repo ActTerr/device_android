@@ -28,11 +28,12 @@ import mac.yk.devicemanagement.bean.Result;
 import mac.yk.devicemanagement.controller.fragment.fragDetail;
 import mac.yk.devicemanagement.model.IModel;
 import mac.yk.devicemanagement.util.ActivityUtils;
+import mac.yk.devicemanagement.util.L;
 import mac.yk.devicemanagement.util.MFGT;
 import mac.yk.devicemanagement.util.OkHttpUtils;
 import mac.yk.devicemanagement.util.TestUtil;
 
-import static android.R.attr.id;
+import static mac.yk.devicemanagement.R.id.remark;
 
 
 public class DetailActivity extends AppCompatActivity {
@@ -42,7 +43,7 @@ public class DetailActivity extends AppCompatActivity {
     Context context;
     boolean isDianchi = false;
     fragDetail fragD;
-    Dialog dialog = new Dialog(context);
+    Dialog dialog;
     @BindView(R.id.toolBar)
     Toolbar toolBar;
     @BindView(R.id.nav_view)
@@ -53,30 +54,25 @@ public class DetailActivity extends AppCompatActivity {
     /**
      * dialog
      */
-    @BindView(R.id.cb_good)
-    CheckBox cbGood;
-    @BindView(R.id.cb_abnormal)
-    CheckBox cbAbnormal;
-    @BindView(R.id.remark)
-    EditText remark;
-    @BindView(R.id.cb_no)
-    CheckBox cbNo;
-    @BindView(R.id.cb_yes)
-    CheckBox cbYes;
 
     String id;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_currency);
         ButterKnife.bind(this);
-        progressDialog = new ProgressDialog(this);
+        context = this;
+        progressDialog = new ProgressDialog(context);
+        dialog = new Dialog(context);
         model = TestUtil.getData();
         device = (Device) getIntent().getSerializableExtra("device");
+        L.e("main", device.toString());
         if (device == null) {
             finish();
         } else {
-            id=device.getId();
+            id = device.getId();
             if (device.getName().equals("电池")) {
                 isDianchi = true;
             }
@@ -164,9 +160,37 @@ public class DetailActivity extends AppCompatActivity {
         });
     }
 
+
+    private class xiujunHoler{
+        @BindView(R.id.cb_no)
+        CheckBox cbNo;
+        @BindView(R.id.cb_yes)
+        CheckBox cbYes;
+
+
+        View v;
+        public xiujunHoler() {
+            v = View.inflate(context, R.layout.dialog_xiujun, null);
+            ButterKnife.bind(v);
+        }
+
+        public View getV() {
+            return v;
+        }
+    }
+
+    private class xunjianHolder{
+        @BindView(R.id.cb_good)
+        CheckBox cbGood;
+        @BindView(R.id.cb_abnormal)
+        CheckBox cbAbnormal;
+        @BindView(R.id.remark)
+        EditText remark;
+
+    }
     private void postXiujun() {
-        View v = View.inflate(context, R.layout.dialog_xiujun, null);
-        dialog.setContentView(v);
+        xiujunHoler xiujunHoler=new xiujunHoler();
+        dialog.setContentView(xiujunHoler.getV());
         dialog.setTitle(null);
         dialog.show();
     }
@@ -174,13 +198,14 @@ public class DetailActivity extends AppCompatActivity {
     private void postxunjian() {
 
         View v = View.inflate(context, R.layout.dialog_xunjian, null);
+        ButterKnife.bind(v);
         dialog.setContentView(v);
         dialog.setTitle(null);
         dialog.show();
     }
 
 
-    @OnClick({R.id.cb_good, R.id.cb_abnormal, R.id.btn_commit,R.id.cb_no, R.id.cb_yes, R.id.btn_commit2})
+    @OnClick({R.id.cb_good, R.id.cb_abnormal, R.id.btn_commit, R.id.cb_no, R.id.cb_yes, R.id.btn_commit2})
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.cb_good:
@@ -195,12 +220,12 @@ public class DetailActivity extends AppCompatActivity {
                 dialog.dismiss();
                 progressDialog.show();
                 String zhuangtai;
-                if (cbAbnormal.isChecked()){
-                    zhuangtai="正常";
-                }else {
-                    zhuangtai="异常";
+                if (cbAbnormal.isChecked()) {
+                    zhuangtai = "正常";
+                } else {
+                    zhuangtai = "异常";
                 }
-                model.xunjian(context, MyApplication.getInstance().getUserName(), isDianchi, id, zhuangtai,remark.getText().toString(), new OkHttpUtils.OnCompleteListener<Result>() {
+                model.xunjian(context, MyApplication.getInstance().getUserName(), isDianchi, id, zhuangtai, remark.getText().toString(), new OkHttpUtils.OnCompleteListener<Result>() {
                     @Override
                     public void onSuccess(Result result) {
                         progressDialog.dismiss();

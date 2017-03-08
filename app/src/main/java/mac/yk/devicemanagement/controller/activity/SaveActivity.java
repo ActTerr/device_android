@@ -19,9 +19,10 @@ import mac.yk.devicemanagement.R;
 import mac.yk.devicemanagement.bean.Device;
 import mac.yk.devicemanagement.bean.Result;
 import mac.yk.devicemanagement.model.IModel;
-import mac.yk.devicemanagement.model.Model;
 import mac.yk.devicemanagement.util.ConvertUtils;
+import mac.yk.devicemanagement.util.MFGT;
 import mac.yk.devicemanagement.util.OkHttpUtils;
+import mac.yk.devicemanagement.util.TestUtil;
 
 import static android.view.View.inflate;
 import static mac.yk.devicemanagement.R.id.jikongqi;
@@ -47,6 +48,7 @@ public class SaveActivity extends AppCompatActivity implements View.OnClickListe
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_save);
         ButterKnife.bind(this);
+        model= TestUtil.getData();
         id = getIntent().getStringExtra("id");
         if (id == null) {
             finish();
@@ -63,16 +65,18 @@ public class SaveActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     public void onSave(View view) {
-        Device device = new Device(id, name.getText().toString(), xunjian.getText().toString(), chuchang.getText().toString(), zhuangtai.getText().toString());
+        final Device device = new Device(id, name.getText().toString(), xunjian.getText().toString(), chuchang.getText().toString(), zhuangtai.getText().toString());
         final ProgressDialog progressDialog = new ProgressDialog(this);
         progressDialog.show();
-        model = new Model();
+
         model.saveDevice(this, MyApplication.getInstance().getUserName(),device, new OkHttpUtils.OnCompleteListener<Result>() {
             @Override
             public void onSuccess(Result result) {
                 progressDialog.dismiss();
                 if (result != null && result.getRetCode() == 0) {
                     Toast.makeText(SaveActivity.this, "保存成功", Toast.LENGTH_SHORT).show();
+                    MFGT.gotoDetailActivity(SaveActivity.this,device);
+                    finish();
                 } else {
                     Toast.makeText(SaveActivity.this, "保存失败", Toast.LENGTH_SHORT).show();
                 }
@@ -98,6 +102,7 @@ public class SaveActivity extends AppCompatActivity implements View.OnClickListe
         pop.setFocusable(true);
         pop.setBackgroundDrawable(new BitmapDrawable());
         pop.showAsDropDown(select);
+
     }
 
 
