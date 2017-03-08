@@ -23,7 +23,9 @@
         <activity android:name=".controller.activity.LoginActivity" />
         <activity android:name=".controller.activity.RecordActivity" />
         <activity android:name=".controller.activity.SetActivity" />
-        <activity android:name=".controller.activity.GestureActivity"></activity>
+        <activity android:name=".controller.activity.GestureActivity">
+
+        </activity>
     </application>
 
 </manifest>

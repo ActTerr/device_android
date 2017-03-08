@@ -18,9 +18,9 @@ public interface IModel {
 
     void getTongji(Context context,OkHttpUtils.OnCompleteListener<Result> callback);
 
-    void chaxun(Context context,int id, OkHttpUtils.OnCompleteListener<Result> callback);
+    void chaxun(Context context,String Did, OkHttpUtils.OnCompleteListener<Result> callback);
 
-    void control(Context context,boolean t,String userName,String vid,int id,OkHttpUtils.OnCompleteListener<Result> callback);
+    void control(Context context,boolean t,String userName,String vid,String Did,OkHttpUtils.OnCompleteListener<Result> callback);
 
     void saveDevice(Context context,String name,Device device,OkHttpUtils.OnCompleteListener<Result>  callback);
 
@@ -28,11 +28,11 @@ public interface IModel {
 
     void LogOut(Context context,String name,OkHttpUtils.OnCompleteListener<Result> callback);
 
-    void downloadWeixiu(Context context, int id, int page, OkHttpUtils.OnCompleteListener<Weixiu[]> callback);
+    void downloadWeixiu(Context context, String Did, int page, OkHttpUtils.OnCompleteListener<Weixiu[]> callback);
 
-    void downloadXunjian(Context context,int id,int page,OkHttpUtils.OnCompleteListener<Xunjian[]> callback);
+    void downloadXunjian(Context context,String Did,int page,OkHttpUtils.OnCompleteListener<Xunjian[]> callback);
 
-    void xunjian(Context context,String userName,boolean t,int id,String zhuangtai,String remark,OkHttpUtils.OnCompleteListener<Result> callback);
+    void xunjian(Context context,String userName,boolean t,String Did,String zhuangtai,String remark,OkHttpUtils.OnCompleteListener<Result> callback);
 
-    void xiujun(Context context,String userName,boolean t,int id,String remark,OkHttpUtils.OnCompleteListener<Result> callback);
+    void xiujun(Context context,String userName,boolean t,String Did,String remark,OkHttpUtils.OnCompleteListener<Result> callback);
 }

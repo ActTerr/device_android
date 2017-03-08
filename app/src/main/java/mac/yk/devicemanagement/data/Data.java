@@ -14,13 +14,18 @@ import mac.yk.devicemanagement.util.OkHttpUtils;
  */
 
 public class Data implements IModel {
-    Device device;
+    Device device=new Device();
     Xunjian xunjian;
     Weixiu weixiu;
     private static Data INSTANCE=new Data();
     public static Data getInstance(){
         return INSTANCE;
     }
+
+    public Data() {
+        device.setName("空");
+    }
+
     @Override
     public void getYujing(Context context, OkHttpUtils.OnCompleteListener<Result> callback) {
         Result result=new Result(0,true,"来自测试数据的预警信息！");
@@ -34,13 +39,14 @@ public class Data implements IModel {
     }
 
     @Override
-    public void chaxun(Context context, int id, OkHttpUtils.OnCompleteListener<Result> callback) {
+    public void chaxun(Context context, String id, OkHttpUtils.OnCompleteListener<Result> callback) {
+        device.setId(id);
         Result result=new Result(0,true,device);
         callback.onSuccess(result);
     }
 
     @Override
-    public void control(Context context, boolean t, String userName, String vid, int id, OkHttpUtils.OnCompleteListener<Result> callback) {
+    public void control(Context context, boolean t, String userName, String vid, String id, OkHttpUtils.OnCompleteListener<Result> callback) {
         device.setZhuangtai(String.valueOf(vid));
         Result result=new Result(0,true,device);
         callback.onSuccess(result);
@@ -66,19 +72,19 @@ public class Data implements IModel {
     }
 
     @Override
-    public void downloadWeixiu(Context context, int id, int page, OkHttpUtils.OnCompleteListener<Weixiu[]> callback) {
+    public void downloadWeixiu(Context context, String id, int page, OkHttpUtils.OnCompleteListener<Weixiu[]> callback) {
         Weixiu [] weixius=new Weixiu[]{weixiu};
         callback.onSuccess(weixius);
     }
 
     @Override
-    public void downloadXunjian(Context context, int id, int page, OkHttpUtils.OnCompleteListener<Xunjian[]> callback) {
+    public void downloadXunjian(Context context, String id, int page, OkHttpUtils.OnCompleteListener<Xunjian[]> callback) {
         Xunjian [] xunjien=new Xunjian[]{xunjian};
         callback.onSuccess(xunjien);
     }
 
     @Override
-    public void xunjian(Context context, String userName, boolean t, int id,String zhuangtai, String remark, OkHttpUtils.OnCompleteListener<Result> callback) {
+    public void xunjian(Context context, String userName, boolean t, String id,String zhuangtai, String remark, OkHttpUtils.OnCompleteListener<Result> callback) {
         device.setZhuangtai("巡检");
         xunjian.setCause(remark);
         xunjian.setStatus(zhuangtai);
@@ -89,7 +95,7 @@ public class Data implements IModel {
     }
 
     @Override
-    public void xiujun(Context context, String userName, boolean t, int id, String remark, OkHttpUtils.OnCompleteListener<Result> callback) {
+    public void xiujun(Context context, String userName, boolean t, String id, String remark, OkHttpUtils.OnCompleteListener<Result> callback) {
         device.setZhuangtai("修竣");
         weixiu.setControlUser(userName);
         weixiu.setRemark(remark);

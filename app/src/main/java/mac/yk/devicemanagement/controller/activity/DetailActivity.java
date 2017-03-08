@@ -64,7 +64,7 @@ public class DetailActivity extends AppCompatActivity {
     @BindView(R.id.cb_yes)
     CheckBox cbYes;
 
-
+    String id;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -76,6 +76,7 @@ public class DetailActivity extends AppCompatActivity {
         if (device == null) {
             finish();
         } else {
+            id=device.getId();
             if (device.getName().equals("电池")) {
                 isDianchi = true;
             }

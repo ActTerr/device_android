@@ -39,21 +39,21 @@ public class RecordActivity extends AppCompatActivity {
         ButterKnife.bind(this);
         context=this;
 
-        int id = getIntent().getIntExtra("id", 0);
-        if (id == 0) {
+        String id = getIntent().getStringExtra("id");
+        if (id ==null) {
             finish();
         } else {
             init();
             fragment1 = new fragList();
             Bundle bundle = new Bundle();
-            bundle.putInt("id", id);
+            bundle.putString("id", id);
             bundle.putBoolean("flag", true);
             fragment1.setArguments(bundle);
             ActivityUtils.addFragmentToActivity(getSupportFragmentManager(), fragment1, R.id.frame);
 
             fragment2 = new fragList();
             Bundle bundle1 = new Bundle();
-            bundle1.putInt("id", id);
+            bundle1.putString("id", id);
             bundle1.putBoolean("flag", true);
             fragment2.setArguments(bundle1);
             ActivityUtils.addFragmentToActivity(getSupportFragmentManager(), fragment2, R.id.frame);

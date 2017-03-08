@@ -20,7 +20,7 @@ public class MFGT {
         intent.putExtra("device",device);
         context.startActivity(intent);
     }
-    public static void gotoSaveActivity(Context context,int id){
+    public static void gotoSaveActivity(Context context,String id){
         Intent intent=new Intent(context,SaveActivity.class);
         intent.putExtra("id",id);
         context.startActivity(intent);
@@ -31,7 +31,7 @@ public class MFGT {
         context.startActivity(intent);
     }
 
-    public static void gotoRecordActivity(Context context,int id){
+    public static void gotoRecordActivity(Context context,String id){
         Intent intent=new Intent(context,RecordActivity.class);
         intent.putExtra("id",id);
         context.startActivity(intent);

@@ -35,7 +35,7 @@ public class Model implements IModel {
     }
 
     @Override
-    public void chaxun(Context context, int id, OkHttpUtils.OnCompleteListener<Result> callback) {
+    public void chaxun(Context context, String id, OkHttpUtils.OnCompleteListener<Result> callback) {
         OkHttpUtils<Result> OK=new OkHttpUtils<>(context);
         OK.setRequestUrl(I.REQUEST.CHAXUN)
                 .addFormParam(I.PARAM.ID, String.valueOf(id))
@@ -45,7 +45,7 @@ public class Model implements IModel {
     }
 
     @Override
-    public void control(Context context, boolean t, String userName, String vid, int id, OkHttpUtils.OnCompleteListener<Result> callback) {
+    public void control(Context context, boolean t, String userName, String vid, String id, OkHttpUtils.OnCompleteListener<Result> callback) {
         OkHttpUtils<Result> OK=new OkHttpUtils<>(context);
         OK.setRequestUrl(I.REQUEST.CONTROL)
                 .addFormParam(I.PARAM.ID,userName)
@@ -87,7 +87,7 @@ public class Model implements IModel {
     }
 
     @Override
-    public void downloadWeixiu(Context context, int id, int page, OkHttpUtils.OnCompleteListener<Weixiu[]> callback) {
+    public void downloadWeixiu(Context context, String id, int page, OkHttpUtils.OnCompleteListener<Weixiu[]> callback) {
        OkHttpUtils<Weixiu[]> ok=new OkHttpUtils<>(context);
         ok.setRequestUrl(I.REQUEST.DOWNWEIXIU)
                 .addFormParam(I.PARAM.Device, String.valueOf(id))
@@ -98,7 +98,7 @@ public class Model implements IModel {
     }
 
     @Override
-    public void downloadXunjian(Context context, int id, int page, OkHttpUtils.OnCompleteListener<Xunjian[]> callback) {
+    public void downloadXunjian(Context context, String id, int page, OkHttpUtils.OnCompleteListener<Xunjian[]> callback) {
         OkHttpUtils<Xunjian[]> ok =new OkHttpUtils<>(context);
         ok.setRequestUrl(I.REQUEST.DOWNXUNJIAN)
                 .addFormParam(I.PARAM.Device, String.valueOf(id))
@@ -109,7 +109,7 @@ public class Model implements IModel {
     }
 
     @Override
-    public void xunjian(Context context, String userName, boolean t, int id,String zhuangtai, String remark, OkHttpUtils.OnCompleteListener<Result> callback) {
+    public void xunjian(Context context, String userName, boolean t, String id,String zhuangtai, String remark, OkHttpUtils.OnCompleteListener<Result> callback) {
         OkHttpUtils<Result> ok=new OkHttpUtils<>(context);
         ok.setRequestUrl(I.REQUEST.XUNJIAN)
                 .addFormParam(I.PARAM.USERNAME,userName)
@@ -122,7 +122,7 @@ public class Model implements IModel {
     }
 
     @Override
-    public void xiujun(Context context, String userName, boolean t, int id, String remark, OkHttpUtils.OnCompleteListener<Result> callback) {
+    public void xiujun(Context context, String userName, boolean t, String id, String remark, OkHttpUtils.OnCompleteListener<Result> callback) {
         OkHttpUtils<Result> ok=new OkHttpUtils<>(context);
         ok.setRequestUrl(I.REQUEST.XIUJUN)
                 .addFormParam(I.PARAM.USERNAME,userName)

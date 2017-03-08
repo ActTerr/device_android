@@ -16,10 +16,11 @@ import mac.yk.devicemanagement.I;
 import mac.yk.devicemanagement.MyApplication;
 import mac.yk.devicemanagement.R;
 import mac.yk.devicemanagement.bean.Result;
-import mac.yk.devicemanagement.model.Model;
+import mac.yk.devicemanagement.model.IModel;
 import mac.yk.devicemanagement.util.MFGT;
 import mac.yk.devicemanagement.util.OkHttpUtils;
 import mac.yk.devicemanagement.util.SpUtil;
+import mac.yk.devicemanagement.util.TestUtil;
 
 public class SetActivity extends AppCompatActivity {
 
@@ -35,13 +36,22 @@ public class SetActivity extends AppCompatActivity {
     ImageView rightBtn;
 
     Context context;
-    ProgressDialog pd=new ProgressDialog(this);
+    ProgressDialog pd;
+//    @BindView(R.id.toolBar)
+//    Toolbar toolBar;
+    IModel model;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_set);
         ButterKnife.bind(this);
-        context=this;
+        context = this;
+        pd = new ProgressDialog(context);
+        model= TestUtil.getData();
+//        setSupportActionBar(toolBar);
+//        ActionBar ab=getSupportActionBar();
+//        ab.setDisplayHomeAsUpEnabled(true);
     }
 
     @OnClick({R.id.rlUser, R.id.rlName, R.id.rlPasswd, R.id.logOut})
@@ -58,16 +68,16 @@ public class SetActivity extends AppCompatActivity {
                 break;
             case R.id.logOut:
                 pd.show();
-                Model.getInstance().LogOut(context, MyApplication.getInstance().getUserName(), new OkHttpUtils.OnCompleteListener<Result>() {
+                model.LogOut(context, MyApplication.getInstance().getUserName(), new OkHttpUtils.OnCompleteListener<Result>() {
                     @Override
                     public void onSuccess(Result result) {
                         pd.dismiss();
-                        if (result!=null&&result.getRetCode()== I.RESULT.SUCCESS){
-                             MyApplication.getInstance().setUserName(null);
-                            SpUtil.saveLoginUser(context,null);
+                        if (result != null && result.getRetCode() == I.RESULT.SUCCESS) {
+                            MyApplication.getInstance().setUserName(null);
+                            SpUtil.saveLoginUser(context, null);
                             MFGT.gotoLoginActivity(context);
                             finish();
-                        }else {
+                        } else {
                             Toast.makeText(context, "退出失败，请重试", Toast.LENGTH_SHORT).show();
                         }
                     }

@@ -12,6 +12,7 @@ import com.xys.libzxing.zxing.activity.CaptureActivity;
 
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import mac.yk.devicemanagement.I;
 import mac.yk.devicemanagement.R;
 
 /**
@@ -37,11 +38,11 @@ public class fragMain extends Fragment {
 
 
     public void scan(int id) {
-        startActivityForResult(new Intent(getContext(), CaptureActivity.class), id);
+        getActivity().startActivityForResult(new Intent(getActivity(), CaptureActivity.class), id);
     }
 
     @OnClick(R.id.saoma)
     public void onClick() {
-        scan(R.id.saoma);
+        scan(I.CONTROL.START);
     }
 }

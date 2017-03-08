@@ -27,16 +27,17 @@ import mac.yk.devicemanagement.controller.fragment.fragMain;
 import mac.yk.devicemanagement.controller.fragment.fragMain2;
 import mac.yk.devicemanagement.model.IModel;
 import mac.yk.devicemanagement.util.ActivityUtils;
+import mac.yk.devicemanagement.util.L;
 import mac.yk.devicemanagement.util.MFGT;
 import mac.yk.devicemanagement.util.OkHttpUtils;
 import mac.yk.devicemanagement.util.TestUtil;
 
 public class MainActivity extends AppCompatActivity {
     IModel model;
-    int id;
+    String id;
     ProgressDialog progressDialog;
 
-    AlertDialog.Builder builder ;
+    AlertDialog.Builder builder;
     @BindView(R.id.toolBar)
     Toolbar toolBar;
     @BindView(R.id.nav_view)
@@ -50,11 +51,11 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_currency);
         ButterKnife.bind(this);
-        builder= new AlertDialog.Builder(this);
+        builder = new AlertDialog.Builder(this);
         model = TestUtil.getData();
         progressDialog = new ProgressDialog(this);
         setSupportActionBar(toolBar);
-        ActionBar ab=getSupportActionBar();
+        ActionBar ab = getSupportActionBar();
         ab.setHomeAsUpIndicator(R.drawable.ic_menu);
         ab.setDisplayHomeAsUpEnabled(true);
         builder.setTitle("预警信息")
@@ -68,7 +69,7 @@ public class MainActivity extends AppCompatActivity {
         progressDialog = new ProgressDialog(this);
         if (navView != null) {
             setUpNavView(navView);
-            ImageView imageView= (ImageView) navView.getHeaderView(0).findViewById(R.id.avatar);
+            ImageView imageView = (ImageView) navView.getHeaderView(0).findViewById(R.id.avatar);
             imageView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -82,7 +83,7 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()){
+        switch (item.getItemId()) {
             case android.R.id.home:
                 drawLayout.openDrawer(GravityCompat.START);
                 return true;
@@ -113,34 +114,44 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onActivityResult(final int requestCode, int resultCode, final Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == RESULT_OK) {
+        L.e("main", "resultCode:" + resultCode);
+        if (resultCode == RESULT_OK) {
             Bundle bundle = data.getExtras();
             if (bundle != null) {
-                id = Integer.parseInt(bundle.getString("result"));
-                if (requestCode == I.SCAN.SAVE) {
-                    MFGT.gotoSaveActivity(this, id);
-                } else {
-                    progressDialog.show();
-                    model.chaxun(this, id, new OkHttpUtils.OnCompleteListener<Result>() {
-                        @Override
-                        public void onSuccess(Result result) {
-                            progressDialog.dismiss();
-                            if (result != null && result.getRetCode() == I.RESULT.SUCCESS) {
-                                Device device = (Device) result.getRetData();
-                                MFGT.gotoDetailActivity(MainActivity.this, device);
-                            } else {
-                                MFGT.gotoSaveActivity(MainActivity.this, id);
-                            }
-                        }
+                id = (bundle.getString("result"));
+                L.e("main", id + "");
+                progressDialog.show();
+                model.chaxun(this, id, new OkHttpUtils.OnCompleteListener<Result>() {
+                    @Override
+                    public void onSuccess(Result result) {
+                        progressDialog.dismiss();
+                        if (result != null && result.getRetCode() == I.RESULT.SUCCESS) {
+                            Device device = (Device) result.getRetData();
 
-                        @Override
-                        public void onError(String error) {
-                            progressDialog.dismiss();
-                            Toast.makeText(MainActivity.this, "请求失败！", Toast.LENGTH_SHORT).show();
+                            if (device.getName().equals("空")) {
+                                L.e("main","gotoSave");
+                                MFGT.gotoSaveActivity(MainActivity.this, id);
+                            } else {
+                                L.e("main","gotoDetail");
+                                MFGT.gotoDetailActivity(MainActivity.this, device);
+
+                            }
+
+
+                        } else {
+                            L.e("main","gotoSave");
+                            MFGT.gotoSaveActivity(MainActivity.this, id);
                         }
-                    });
-                }
+                    }
+
+                    @Override
+                    public void onError(String error) {
+                        progressDialog.dismiss();
+                        Toast.makeText(MainActivity.this, "请求失败！", Toast.LENGTH_SHORT).show();
+                    }
+                });
             }
+
         }
     }
 

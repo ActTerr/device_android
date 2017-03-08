@@ -4,7 +4,7 @@
     <color name="colorPrimaryDark">@color/black2</color>
     <color name="colorAccent">@color/tab_def_selected_color</color>
     <color name="windows_color">#F5F5F5</color>
-
+    <color name="Mydark">#263238</color>
     <color name="line_color">#dbdbdb</color>
     <color name="transparent">#00000000</color>
     <color name="white">#ffffff</color>

@@ -24,8 +24,9 @@ import mac.yk.devicemanagement.util.ConvertUtils;
 import mac.yk.devicemanagement.util.OkHttpUtils;
 
 import static android.view.View.inflate;
+import static mac.yk.devicemanagement.R.id.jikongqi;
 
-public class SaveActivity extends AppCompatActivity {
+public class SaveActivity extends AppCompatActivity implements View.OnClickListener{
     String id;
     IModel model;
     @BindView(R.id.name)
@@ -51,7 +52,14 @@ public class SaveActivity extends AppCompatActivity {
             finish();
         }
         v = inflate(this, R.layout.item_popu, null);
-
+        TextView diantai= (TextView) v.findViewById(R.id.diantai);
+        TextView jikongqi= (TextView) v.findViewById(R.id.jikongqi);
+                TextView   qukongqi= (TextView) v.findViewById(R.id.qukongqi);
+        TextView dianchi= (TextView) v.findViewById(R.id.dianchi);
+        diantai.setOnClickListener(this);
+        jikongqi.setOnClickListener(this);
+        qukongqi.setOnClickListener(this);
+        dianchi.setOnClickListener(this);
     }
 
     public void onSave(View view) {
@@ -92,21 +100,23 @@ public class SaveActivity extends AppCompatActivity {
         pop.showAsDropDown(select);
     }
 
-    @OnClick({R.id.diantai, R.id.jikongqi, R.id.qukongqi, R.id.dianchi})
-    public void onClick(View view) {
-        switch (view.getId()) {
-            case R.id.diantai:
-                name.setText("电台");
-                break;
-            case R.id.jikongqi:
-                name.setText("机控器");
-                break;
-            case R.id.qukongqi:
-                name.setText("区控器");
-                break;
-            case R.id.dianchi:
-                name.setText("电池");
-                break;
+
+
+        public void onClick(View view) {
+            switch (view.getId()) {
+                case R.id.diantai:
+                    name.setText("电台");
+                    break;
+                case jikongqi:
+                    name.setText("机控器");
+                    break;
+                case R.id.qukongqi:
+                    name.setText("区控器");
+                    break;
+                case R.id.dianchi:
+                    name.setText("电池");
+                    break;
+            }
         }
-    }
+
 }

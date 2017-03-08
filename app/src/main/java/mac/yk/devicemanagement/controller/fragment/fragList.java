@@ -46,7 +46,7 @@ public class fragList extends Fragment {
     final static int ACTION_ADD=1;
     final static int ACTION_DOWNLOAD=2;
     IModel model;
-    int id=0;
+   String id;
     Activity context;
     int page=1;
     MyAdapter adapter;
@@ -66,8 +66,8 @@ public class fragList extends Fragment {
 
     public fragList() {
         context= (Activity) getContext();
-        id=getArguments().getInt("id");
-        if (id==0){
+        id=getArguments().getString("id");
+        if (id==null){
             context.finish();
         }
         isWeixiu=getArguments().getBoolean("flag");
