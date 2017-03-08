@@ -1,7 +1,9 @@
 package mac.yk.devicemanagement.data;
 
 import android.content.Context;
+import android.util.Log;
 
+import mac.yk.devicemanagement.R;
 import mac.yk.devicemanagement.bean.Device;
 import mac.yk.devicemanagement.bean.Result;
 import mac.yk.devicemanagement.bean.Weixiu;
@@ -41,15 +43,31 @@ public class Data implements IModel {
     @Override
     public void chaxun(Context context, String id, OkHttpUtils.OnCompleteListener<Result> callback) {
         device.setId(id);
+        Log.e("main",device.toString());
         Result result=new Result(0,true,device);
         callback.onSuccess(result);
     }
 
     @Override
     public void control(Context context, boolean t, String userName, String vid, String id, OkHttpUtils.OnCompleteListener<Result> callback) {
-        device.setZhuangtai(String.valueOf(vid));
+        device.setZhuangtai(getZhuangtai(vid));
         Result result=new Result(0,true,device);
         callback.onSuccess(result);
+    }
+
+    private String getZhuangtai(String vid) {
+        int id= Integer.parseInt(vid);
+        switch (id){
+            case R.id.daiyong:
+                return "待用";
+            case R.id.yunxing:
+                return "运行";
+            case R.id.baofei:
+                return "报废";
+            case R.id.weixiu:
+                return "维修";
+        }
+        return "";
     }
 
     @Override

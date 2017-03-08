@@ -106,7 +106,7 @@ public class MainActivity extends AppCompatActivity {
                 }
                 item.setChecked(true);
                 drawLayout.closeDrawers();
-                return false;
+                return true;
             }
         });
     }

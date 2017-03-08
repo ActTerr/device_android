@@ -69,9 +69,9 @@ public class DetailActivity extends AppCompatActivity {
         progressDialog = new ProgressDialog(context);
         dialog = new Dialog(context);
         model = TestUtil.getData();
-        device=MyApplication.getDevice();
         device = (Device) getIntent().getSerializableExtra("device");
-        L.e("main", device.toString());
+        MyApplication.setDevice(device);
+        L.e("main","detail:"+ device.toString());
         if (device == null) {
             finish();
         } else {
@@ -160,6 +160,7 @@ public class DetailActivity extends AppCompatActivity {
                 progressDialog.dismiss();
                 if (result != null && result.getRetCode() == I.RESULT.SUCCESS) {
                     device = (Device) result.getRetData();
+                    MyApplication.getDevice().setZhuangtai(device.getZhuangtai());
 //                    setArguments();
                 } else {
                     Toast.makeText(context, "请求失败！", Toast.LENGTH_SHORT).show();
@@ -173,6 +174,8 @@ public class DetailActivity extends AppCompatActivity {
             }
         });
     }
+
+
 
 
     public class xiujunHoler {
@@ -214,6 +217,7 @@ public class DetailActivity extends AppCompatActivity {
                             progressDialog.dismiss();
                             if (result != null && result.getRetCode() == I.RESULT.SUCCESS) {
                                 device = (Device) result.getRetData();
+                                MyApplication.getDevice().setZhuangtai(device.getZhuangtai());
 //                                setArguments();
                             } else {
                                 Toast.makeText(context, "请求失败！", Toast.LENGTH_SHORT).show();
@@ -275,6 +279,7 @@ public class DetailActivity extends AppCompatActivity {
                             progressDialog.dismiss();
                             if (result != null && result.getRetCode() == I.RESULT.SUCCESS) {
                                 device = (Device) result.getRetData();
+                                MyApplication.getDevice().setZhuangtai(device.getZhuangtai());
 //                                setArguments();
                             } else {
                                 Toast.makeText(context, "请求失败！", Toast.LENGTH_SHORT).show();

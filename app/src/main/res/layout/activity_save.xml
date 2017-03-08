@@ -7,6 +7,7 @@
     android:orientation="vertical"
     tools:context="mac.yk.devicemanagement.controller.activity.SaveActivity">
 <LinearLayout
+    android:paddingBottom="20dp"
     android:layout_marginLeft="10dp"
     android:layout_marginRight="10dp"
     android:layout_marginTop="20dp"
@@ -32,6 +33,7 @@
         android:layout_height="wrap_content" />
 </LinearLayout>
     <View
+        android:layout_marginTop="20dp"
         android:layout_marginLeft="10dp"
         android:layout_marginRight="10dp"
         android:background="@color/gray"

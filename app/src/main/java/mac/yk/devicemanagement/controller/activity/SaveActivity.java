@@ -4,6 +4,7 @@ import android.app.ProgressDialog;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -20,6 +21,7 @@ import mac.yk.devicemanagement.bean.Device;
 import mac.yk.devicemanagement.bean.Result;
 import mac.yk.devicemanagement.model.IModel;
 import mac.yk.devicemanagement.util.ConvertUtils;
+import mac.yk.devicemanagement.util.L;
 import mac.yk.devicemanagement.util.MFGT;
 import mac.yk.devicemanagement.util.OkHttpUtils;
 import mac.yk.devicemanagement.util.TestUtil;
@@ -66,6 +68,7 @@ public class SaveActivity extends AppCompatActivity implements View.OnClickListe
 
     public void onSave(View view) {
         final Device device = new Device(id, name.getText().toString(), xunjian.getText().toString(), chuchang.getText().toString(), zhuangtai.getText().toString());
+        Log.e("main","save:"+name.getText().toString());
         final ProgressDialog progressDialog = new ProgressDialog(this);
         progressDialog.show();
 
@@ -76,6 +79,7 @@ public class SaveActivity extends AppCompatActivity implements View.OnClickListe
                 if (result != null && result.getRetCode() == 0) {
                     Toast.makeText(SaveActivity.this, "保存成功", Toast.LENGTH_SHORT).show();
                     MFGT.gotoDetailActivity(SaveActivity.this,device);
+                    L.e("main",device.toString());
                     finish();
                 } else {
                     Toast.makeText(SaveActivity.this, "保存失败", Toast.LENGTH_SHORT).show();
@@ -96,7 +100,7 @@ public class SaveActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     private void showPopuWindow(View v) {
-        pop = new PopupWindow(v, ConvertUtils.dp2px(this, 50), ConvertUtils.px2dp(this, 100));
+        pop = new PopupWindow(v, ConvertUtils.dp2px(this, 550), ConvertUtils.px2dp(this, 1000));
         pop.setOutsideTouchable(true);
         pop.setTouchable(true);
         pop.setFocusable(true);
