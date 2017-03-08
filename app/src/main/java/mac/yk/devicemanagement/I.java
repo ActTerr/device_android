@@ -37,18 +37,10 @@ public interface I {
 
     }
 
-//    interface SCAN{
-//        int QUERY=1;
-//        int SAVE=2;
-//    }
+
 
     interface CONTROL{
         int START=0;
-       int DAIYONG=1;
-        int XUNJIAN=2;
-        int BAOFEI=3;
-        int WEIXIU=4;
-        int XIUJUN=5;
-        int YUNXING=6;
+
     }
 }

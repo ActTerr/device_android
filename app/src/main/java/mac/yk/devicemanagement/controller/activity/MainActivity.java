@@ -15,11 +15,13 @@ import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import mac.yk.devicemanagement.I;
+import mac.yk.devicemanagement.MyApplication;
 import mac.yk.devicemanagement.R;
 import mac.yk.devicemanagement.bean.Device;
 import mac.yk.devicemanagement.bean.Result;
@@ -70,7 +72,10 @@ public class MainActivity extends AppCompatActivity {
         if (navView != null) {
             navView.inflateMenu(R.menu.menu_main);
             setUpNavView(navView);
+
             ImageView imageView = (ImageView) navView.getHeaderView(0).findViewById(R.id.avatar);
+            TextView textView= (TextView) navView.getHeaderView(1).findViewById(R.id.nav_name);
+            textView.setText(MyApplication.getInstance().getUserName());
             imageView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {

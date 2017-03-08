@@ -13,9 +13,11 @@ import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import mac.yk.devicemanagement.MyApplication;
 import mac.yk.devicemanagement.R;
 import mac.yk.devicemanagement.controller.fragment.fragList;
 import mac.yk.devicemanagement.util.ActivityUtils;
@@ -71,6 +73,8 @@ public class RecordActivity extends AppCompatActivity {
             navView.inflateMenu(R.menu.menu_record);
             setUpNavView(navView);
             ImageView imageView= (ImageView) navView.getHeaderView(0).findViewById(R.id.avatar);
+            TextView textView= (TextView) navView.getHeaderView(1).findViewById(R.id.nav_name);
+            textView.setText(MyApplication.getInstance().getUserName());
             imageView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
