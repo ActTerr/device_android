@@ -202,19 +202,22 @@ public class DetailActivity extends AppCompatActivity {
 
         @OnClick({R.id.cb_no, R.id.cb_yes, R.id.btn_commit2})
         public void onClick(View view) {
+            boolean translate=false;
             switch (view.getId()) {
                 case R.id.cb_no:
                     cbNo.setChecked(true);
                     cbYes.setChecked(false);
+                    translate=false;
                     break;
                 case R.id.cb_yes:
                     cbYes.setChecked(true);
                     cbNo.setChecked(false);
+                    translate=true;
                     break;
                 case R.id.btn_commit2:
                     dialog.dismiss();
                     progressDialog.show();
-                    model.xiujun(context, MyApplication.getInstance().getUserName(), isDianchi, id, remark.getText().toString(), new OkHttpUtils.OnCompleteListener<Result>() {
+                    model.xiujun(context, MyApplication.getInstance().getUserName(), isDianchi, id, translate,remark.getText().toString(), new OkHttpUtils.OnCompleteListener<Result>() {
                         @Override
                         public void onSuccess(Result result) {
                             progressDialog.dismiss();

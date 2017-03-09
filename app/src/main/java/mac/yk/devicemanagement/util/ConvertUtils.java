@@ -2,6 +2,8 @@ package mac.yk.devicemanagement.util;
 
 import android.content.Context;
 
+import com.google.gson.Gson;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -20,5 +22,11 @@ public class ConvertUtils {
     public static int dp2px(Context context, float dpValue) {
         float scale = context.getResources().getDisplayMetrics().density;
         return (int) (dpValue * scale + 0.5f);
+    }
+    public static String getjson(Object object){
+        Gson gson=new Gson();
+       String json= gson.toJson(object);
+
+        return json;
     }
 }

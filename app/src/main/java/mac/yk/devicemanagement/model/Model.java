@@ -3,10 +3,12 @@ package mac.yk.devicemanagement.model;
 import android.content.Context;
 
 import mac.yk.devicemanagement.I;
+import mac.yk.devicemanagement.R;
 import mac.yk.devicemanagement.bean.Device;
 import mac.yk.devicemanagement.bean.Result;
 import mac.yk.devicemanagement.bean.Weixiu;
 import mac.yk.devicemanagement.bean.Xunjian;
+import mac.yk.devicemanagement.util.ConvertUtils;
 import mac.yk.devicemanagement.util.OkHttpUtils;
 
 /**
@@ -47,20 +49,36 @@ public class Model implements IModel {
     @Override
     public void control(Context context, boolean t, String userName, String vid, String id, OkHttpUtils.OnCompleteListener<Result> callback) {
         OkHttpUtils<Result> OK=new OkHttpUtils<>(context);
+        String status=getZhuangtai(vid);
         OK.setRequestUrl(I.REQUEST.CONTROL)
                 .addFormParam(I.PARAM.ID,userName)
                 .addFormParam(I.PARAM.ISDIANCHI, String.valueOf(t))
-                .addFormParam(I.PARAM.CREQ,vid)
+                .addFormParam(I.PARAM.CREQ,status)
                 .addFormParam(I.PARAM.Device, String.valueOf(id))
                 .targetClass(Result.class)
                 .execute(callback);
+    }
+    private String getZhuangtai(String vid) {
+        int id= Integer.parseInt(vid);
+        switch (id){
+            case R.id.daiyong:
+                return "待用";
+            case R.id.yunxing:
+                return "运行";
+            case R.id.baofei:
+                return "报废";
+            case R.id.weixiu:
+                return "维修";
+        }
+        return "";
     }
 
     @Override
     public void saveDevice(Context context, String name, Device device, OkHttpUtils.OnCompleteListener<Result> callback) {
         OkHttpUtils<Result> OK=new OkHttpUtils<>(context);
+        String json=ConvertUtils.getjson(device);
         OK.setRequestUrl(I.REQUEST.SAVE)
-                .addFormParam(I.PARAM.Device, device.toString())
+                .addFormParam(I.PARAM.Device, json)
                 .addFormParam(I.PARAM.USERNAME,name)
                 .targetClass(Result.class)
                 .execute(callback);
@@ -122,7 +140,7 @@ public class Model implements IModel {
     }
 
     @Override
-    public void xiujun(Context context, String userName, boolean t, String id, String remark, OkHttpUtils.OnCompleteListener<Result> callback) {
+    public void xiujun(Context context, String userName, boolean t, String id, boolean translate,String remark, OkHttpUtils.OnCompleteListener<Result> callback) {
         OkHttpUtils<Result> ok=new OkHttpUtils<>(context);
         ok.setRequestUrl(I.REQUEST.XIUJUN)
                 .addFormParam(I.PARAM.USERNAME,userName)

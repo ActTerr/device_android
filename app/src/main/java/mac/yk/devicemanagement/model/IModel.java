@@ -20,7 +20,7 @@ public interface IModel {
 
     void chaxun(Context context,String Did, OkHttpUtils.OnCompleteListener<Result> callback);
 
-    void control(Context context,boolean t,String userName,String vid,String Did,OkHttpUtils.OnCompleteListener<Result> callback);
+    void control(Context context,boolean isDianchi,String userName,String vid,String Did,OkHttpUtils.OnCompleteListener<Result> callback);
 
     void saveDevice(Context context,String name,Device device,OkHttpUtils.OnCompleteListener<Result>  callback);
 
@@ -32,7 +32,7 @@ public interface IModel {
 
     void downloadXunjian(Context context,String Did,int page,OkHttpUtils.OnCompleteListener<Xunjian[]> callback);
 
-    void xunjian(Context context,String userName,boolean t,String Did,String zhuangtai,String remark,OkHttpUtils.OnCompleteListener<Result> callback);
+    void xunjian(Context context,String userName,boolean isDianchi,String Did,String zhuangtai,String remark,OkHttpUtils.OnCompleteListener<Result> callback);
 
-    void xiujun(Context context,String userName,boolean t,String Did,String remark,OkHttpUtils.OnCompleteListener<Result> callback);
+    void xiujun(Context context,String userName,boolean isDianchi,String Did,boolean translate,String remark,OkHttpUtils.OnCompleteListener<Result> callback);
 }

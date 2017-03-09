@@ -67,7 +67,16 @@ public class weixiuAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
             wxViewHolder.wxDate.setText(weixiu.getWxDate());
             wxViewHolder.wxUser.setText(weixiu.getControlUser());
             wxViewHolder.wxRemark.setText(weixiu.getRemark());
+            wxViewHolder.translate.setText(getTranText(weixiu.isTranslate()));
 
+    }
+
+    private String getTranText(boolean translate) {
+        if (translate){
+            return "已更换";
+        }else {
+            return "未更换";
+        }
     }
 
     @Override

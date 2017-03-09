@@ -118,7 +118,7 @@ public class Data implements IModel {
     }
 
     @Override
-    public void xiujun(Context context, String userName, boolean t, String id, String remark, OkHttpUtils.OnCompleteListener<Result> callback) {
+    public void xiujun(Context context, String userName, boolean t, String id,boolean translate, String remark, OkHttpUtils.OnCompleteListener<Result> callback) {
         device.setZhuangtai("修竣");
         weixiu.setControlUser(userName);
         weixiu.setRemark(remark);

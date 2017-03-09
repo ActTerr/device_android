@@ -11,11 +11,13 @@ public class Weixiu implements Serializable {
     String xjData;
     String controlUser;
     String remark;
-    public Weixiu(String wxDate, String xjData, String controlUser, String remark) {
+    boolean translate;
+    public Weixiu(String wxDate, String xjData, String controlUser, String remark,boolean translate) {
         this.wxDate = wxDate;
         this.xjData = xjData;
         this.controlUser = controlUser;
         this.remark = remark;
+        this.translate=translate;
     }
     public Weixiu() {
     }
@@ -50,5 +52,13 @@ public class Weixiu implements Serializable {
 
     public void setRemark(String remark) {
         this.remark = remark;
+    }
+
+    public boolean isTranslate() {
+        return translate;
+    }
+
+    public void setTranslate(boolean translate) {
+        this.translate = translate;
     }
 }

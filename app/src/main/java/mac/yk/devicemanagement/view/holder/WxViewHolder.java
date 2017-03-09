@@ -28,6 +28,10 @@ public class WxViewHolder extends RecyclerView.ViewHolder {
     @BindView(R.id.remark)
     public
     TextView wxRemark;
+
+    @BindView(R.id.translate)
+    public
+    TextView translate;
     public WxViewHolder(View itemView) {
         super(itemView);
         ButterKnife.bind(this, itemView);

@@ -31,6 +31,7 @@ public interface I {
         String CREQ="controlReq";
         String REMARK="remark";
         String ZHUANGTAI ="zhuangtai" ;
+        String TRANSLATE="translate";
     }
     interface RESULT{
 
