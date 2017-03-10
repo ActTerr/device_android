@@ -1,64 +1,49 @@
 package mac.yk.devicemanagement.bean;
 
-/**
- * Created by mac-yk on 2017/3/6.
- */
+import java.io.Serializable;
+import java.sql.Date;
 
-public class Xunjian {
-    String xjDate;
+public class Xunjian implements Serializable {
+    Date xjDate;
     String xjUser;
-    String status;
+    int status;
     String cause;
-
-    public Xunjian(String xjDate, String xjUser, String status, String cause) {
+    public Xunjian(Date xjDate, String xjUser, int status, String cause) {
+        super();
         this.xjDate = xjDate;
         this.xjUser = xjUser;
         this.status = status;
         this.cause = cause;
     }
+    public Xunjian(){
 
-    public Xunjian() {
     }
-
-    public String getXjDate() {
+    public Date getXjDate() {
         return xjDate;
     }
-
-    public void setXjDate(String xjDate) {
+    public void setXjDate(Date xjDate) {
         this.xjDate = xjDate;
     }
 
     public String getXjUser() {
         return xjUser;
     }
-
     public void setXjUser(String xjUser) {
         this.xjUser = xjUser;
     }
-
-    public String getStatus() {
+    public int getStatus() {
         return status;
     }
-
-    public void setStatus(String status) {
+    public void setStatus(int status) {
         this.status = status;
     }
-
     public String getCause() {
         return cause;
     }
-
     public void setCause(String cause) {
         this.cause = cause;
     }
 
-    @Override
-    public String toString() {
-        return "Xunjian{" +
-                "xjDate='" + xjDate + '\'' +
-                ", xjUser='" + xjUser + '\'' +
-                ", status='" + status + '\'' +
-                ", cause='" + cause + '\'' +
-                '}';
-    }
+
+
 }

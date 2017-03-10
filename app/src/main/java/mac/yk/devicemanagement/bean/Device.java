@@ -1,6 +1,7 @@
 package mac.yk.devicemanagement.bean;
 
 import java.io.Serializable;
+import java.sql.Date;
 import java.util.Observable;
 
 /**
@@ -8,75 +9,68 @@ import java.util.Observable;
  */
 
 public class Device extends Observable implements Serializable{
-    String id,name,xunjian,chuchang,zhuangtai;
+    int Did,Dname,status;
+    Date chuchang,xunjian;
 
     public Device() {
+
     }
 
-    public Device(String id, String name, String xunjian, String chuchang, String zhuangtai) {
-        this.id = id;
-        this.name = name;
-        this.xunjian = xunjian;
+    public Device(int did, int Dname, int status, Date chuchang, Date xunjian) {
+        Did = did;
+        this.Dname = Dname;
+        this.status = status;
         this.chuchang = chuchang;
-        this.zhuangtai = zhuangtai;
-    }
-
-    public String getId() {
-        return id;
-    }
-
-    public void setId(String id) {
-        this.id = id;
-        setChanged();
-        notifyObservers();
-
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-        setChanged();
-        notifyObservers();
-    }
-
-    public String getXunjian() {
-        return xunjian;
-    }
-
-    public void setXunjian(String xunjian) {
         this.xunjian = xunjian;
-        setChanged();
-        notifyObservers();
     }
 
-    public String getChuchang() {
+    public int getDid() {
+        return Did;
+    }
+
+    public void setDid(int did) {
+        Did = did;
+    }
+
+    public int getName() {
+        return Dname;
+    }
+
+    public void setName(int name) {
+        this.Dname = name;
+    }
+
+    public int getStatus() {
+        return status;
+    }
+
+    public void setStatus(int status) {
+        setChanged();
+        notifyObservers();
+        this.status = status;
+    }
+
+    public Date getChuchang() {
         return chuchang;
     }
 
-    public void setChuchang(String chuchang) {
+    public void setChuchang(Date chuchang) {
         this.chuchang = chuchang;
-        setChanged();
-        notifyObservers();
     }
 
-    public String getZhuangtai() {
-        return zhuangtai;
+    public Date getXunjian() {
+        return xunjian;
     }
 
-    public void setZhuangtai(String zhuangtai) {
-        this.zhuangtai = zhuangtai;
-        setChanged();
-        notifyObservers();
+    public void setXunjian(Date xunjian) {
+        this.xunjian = xunjian;
     }
 
     @Override
     public String toString() {
-        return  "name:"+name+"\n"+
-                "ID:" + id + "\n" +
-                "当前状态:"+zhuangtai+"\n"+
+        return  "name:"+Dname+"\n"+
+                "ID:" + Did + "\n" +
+                "当前状态:"+status+"\n"+
                         "出厂日期:"+chuchang+"\n"+
                         "上次巡检日期:"+xunjian;
     }
