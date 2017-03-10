@@ -4,8 +4,11 @@ import android.content.Context;
 
 import com.google.gson.Gson;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 
 public class ConvertUtils {
@@ -28,5 +31,15 @@ public class ConvertUtils {
        String json= gson.toJson(object);
 
         return json;
+    }
+    public static Date String2Date(String s){
+        SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd");
+        try {
+            return  sdf.parse(s);
+        } catch (ParseException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        return null;
     }
 }

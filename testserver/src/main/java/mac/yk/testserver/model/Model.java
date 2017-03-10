@@ -40,7 +40,7 @@ public class Model implements IModel {
     public void chaxun(Context context, String id, OkHttpUtils.OnCompleteListener<Result> callback) {
         OkHttpUtils<Result> OK=new OkHttpUtils<>(context);
         OK.setRequestUrl(I.REQUEST.CHAXUN)
-                .addFormParam(I.DEVICE.DID, String.valueOf(id))
+                .addParam(I.DEVICE.DID, id)
                 .targetClass(Result.class)
                 .execute(callback);
 
@@ -50,8 +50,8 @@ public class Model implements IModel {
     public void control(Context context, String vid, String did, OkHttpUtils.OnCompleteListener<Result> callback) {
         OkHttpUtils<Result> OK=new OkHttpUtils<>(context);
         OK.setRequestUrl(I.REQUEST.CONTROL)
-                .addFormParam(I.DEVICE.DID,did)
-                .addFormParam(I.DEVICE.STATUS,vid)
+                .addParam(I.DEVICE.DID,did)
+                .addParam(I.DEVICE.STATUS,vid)
                 .targetClass(Result.class)
                 .execute(callback);
     }
@@ -75,8 +75,8 @@ public class Model implements IModel {
         OkHttpUtils<Result> OK=new OkHttpUtils<>(context);
         String json= ConvertUtils.getjson(device);
         OK.setRequestUrl(I.REQUEST.SAVE)
-                .addFormParam(I.DEVICE.TABLENAME, json)
-                .addFormParam(I.USER.NAME,name)
+                .addParam(I.DEVICE.TABLENAME, json)
+                .addParam(I.USER.NAME,name)
                 .targetClass(Result.class)
                 .execute(callback);
     }
@@ -86,8 +86,8 @@ public class Model implements IModel {
     public void Login(Context context, String name, String passwd, OkHttpUtils.OnCompleteListener<Result> callback) {
         OkHttpUtils<Result> OK=new OkHttpUtils<>(context);
         OK.setRequestUrl(I.REQUEST.LOGIN)
-                .addFormParam(I.USER.NAME,name)
-                .addFormParam(I.USER.PASSWD,passwd)
+                .addParam(I.USER.NAME,name)
+                .addParam(I.USER.PASSWD,passwd)
                 .targetClass(Result.class)
                 .execute(callback);
     }
@@ -96,7 +96,7 @@ public class Model implements IModel {
     public void LogOut(Context context, String name, OkHttpUtils.OnCompleteListener<Result> callback) {
         OkHttpUtils<Result> ok=new OkHttpUtils<>(context);
         ok.setRequestUrl(I.REQUEST.LOGOUT)
-                .addFormParam(I.USER.NAME,name)
+                .addParam(I.USER.NAME,name)
                 .targetClass(Result.class)
                 .execute(callback);
     }
@@ -105,9 +105,9 @@ public class Model implements IModel {
     public void downloadWeixiu(Context context, String id, int page, OkHttpUtils.OnCompleteListener<Weixiu[]> callback) {
        OkHttpUtils<Weixiu[]> ok=new OkHttpUtils<>(context);
         ok.setRequestUrl(I.REQUEST.DOWNWEIXIU)
-                .addFormParam(I.DEVICE.DID,id)
-                .addFormParam(I.DOWNLOAD.PAGE, String.valueOf(page))
-                .addFormParam(I.DOWNLOAD.SIZE, String.valueOf(5))
+                .addParam(I.DEVICE.DID,id)
+                .addParam(I.DOWNLOAD.PAGE, String.valueOf(page))
+                .addParam(I.DOWNLOAD.SIZE, String.valueOf(5))
                 .targetClass(Weixiu[].class)
                 .execute(callback);
     }
@@ -116,9 +116,9 @@ public class Model implements IModel {
     public void downloadXunjian(Context context, String id, int page, OkHttpUtils.OnCompleteListener<Xunjian[]> callback) {
         OkHttpUtils<Xunjian[]> ok =new OkHttpUtils<>(context);
         ok.setRequestUrl(I.REQUEST.DOWNXUNJIAN)
-                .addFormParam(I.DEVICE.DID,id)
-                .addFormParam(I.DOWNLOAD.PAGE, String.valueOf(page))
-                .addFormParam(I.DOWNLOAD.SIZE, String.valueOf(5))
+                .addParam(I.DEVICE.DID,id)
+                .addParam(I.DOWNLOAD.PAGE, String.valueOf(page))
+                .addParam(I.DOWNLOAD.SIZE, String.valueOf(5))
                 .targetClass(Xunjian[].class)
                 .execute(callback);
     }
@@ -127,10 +127,10 @@ public class Model implements IModel {
     public void xunjian(Context context, String userName, String Did,String status, String remark, OkHttpUtils.OnCompleteListener<Result> callback) {
         OkHttpUtils<Result> ok=new OkHttpUtils<>(context);
         ok.setRequestUrl(I.REQUEST.XUNJIAN)
-                .addFormParam(I.XUNJIAN.STATUS,status)
-                .addFormParam(I.XUNJIAN.USER,userName)
-                .addFormParam(I.XUNJIAN.REMARK,remark)
-                .addFormParam(I.XUNJIAN.DID,Did)
+                .addParam(I.XUNJIAN.STATUS,status)
+                .addParam(I.XUNJIAN.USER,userName)
+                .addParam(I.XUNJIAN.REMARK,remark)
+                .addParam(I.XUNJIAN.DID,Did)
                 .targetClass(Result.class)
                 .execute(callback);
     }
@@ -139,10 +139,10 @@ public class Model implements IModel {
     public void xiujun(Context context, String userName, String Did, boolean translate,String remark, OkHttpUtils.OnCompleteListener<Result> callback) {
         OkHttpUtils<Result> ok=new OkHttpUtils<>(context);
         ok.setRequestUrl(I.REQUEST.XIUJUN)
-                .addFormParam(I.WEIXIU.REMARK,remark)
-                .addFormParam(I.WEIXIU.USER,userName)
-                .addFormParam(I.WEIXIU.TRANSLATE,String.valueOf(translate))
-                .addFormParam(I.WEIXIU.DID,Did)
+                .addParam(I.WEIXIU.REMARK,remark)
+                .addParam(I.WEIXIU.USER,userName)
+                .addParam(I.WEIXIU.TRANSLATE,String.valueOf(translate))
+                .addParam(I.WEIXIU.DID,Did)
                 .targetClass(Result.class)
                 .execute(callback);
     }

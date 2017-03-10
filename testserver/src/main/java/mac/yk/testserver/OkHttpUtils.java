@@ -32,8 +32,6 @@ import okhttp3.RequestBody;
 import okhttp3.Response;
 
 
-
-
 /**
  * Created by yao on 2016/9/16.
  *
@@ -144,7 +142,7 @@ public class OkHttpUtils<T> {
 
 
     private void initHandler() {
-        mHandler = new Handler(MyApplication.instance.getMainLooper()) {
+        mHandler = new Handler(MyApplication.application.getMainLooper()) {
             @Override
             public void handleMessage(Message msg) {
                 switch (msg.what) {

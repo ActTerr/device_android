@@ -1,14 +1,9 @@
 package mac.yk.devicemanagement.bean;
 
 import java.io.Serializable;
-import java.sql.Date;
-import java.util.Observable;
+import java.util.Date;
 
-/**
- * Created by mac-yk on 2017/3/1.
- */
-
-public class Device extends Observable implements Serializable{
+public class Device  implements Serializable {
     int Did,Dname,status;
     Date chuchang,xunjian;
 
@@ -16,9 +11,9 @@ public class Device extends Observable implements Serializable{
 
     }
 
-    public Device(int did, int Dname, int status, Date chuchang, Date xunjian) {
+    public Device(int did, int dname, int status, Date chuchang, Date xunjian) {
         Did = did;
-        this.Dname = Dname;
+        this.Dname = dname;
         this.status = status;
         this.chuchang = chuchang;
         this.xunjian = xunjian;
@@ -45,8 +40,6 @@ public class Device extends Observable implements Serializable{
     }
 
     public void setStatus(int status) {
-        setChanged();
-        notifyObservers();
         this.status = status;
     }
 
@@ -68,10 +61,10 @@ public class Device extends Observable implements Serializable{
 
     @Override
     public String toString() {
-        return  "name:"+Dname+"\n"+
+        return  "Dname:"+Dname+"\n"+
                 "ID:" + Did + "\n" +
                 "当前状态:"+status+"\n"+
-                        "出厂日期:"+chuchang+"\n"+
-                        "上次巡检日期:"+xunjian;
+                "出厂日期:"+chuchang+"\n"+
+                "上次巡检日期:"+xunjian;
     }
 }

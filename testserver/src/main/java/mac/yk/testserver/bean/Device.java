@@ -1,7 +1,7 @@
 package mac.yk.testserver.bean;
 
 import java.io.Serializable;
-import java.sql.Date;
+import java.util.Date;
 import java.util.Observable;
 
 /**
@@ -45,9 +45,10 @@ public class Device extends Observable implements Serializable{
     }
 
     public void setStatus(int status) {
+        this.status = status;
         setChanged();
         notifyObservers();
-        this.status = status;
+
     }
 
     public Date getChuchang() {
