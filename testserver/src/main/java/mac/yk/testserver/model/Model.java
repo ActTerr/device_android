@@ -2,13 +2,14 @@ package mac.yk.testserver.model;
 
 import android.content.Context;
 
-import mac.yk.devicemanagement.I;
-import mac.yk.devicemanagement.bean.Device;
-import mac.yk.devicemanagement.bean.Result;
-import mac.yk.devicemanagement.bean.Weixiu;
-import mac.yk.devicemanagement.bean.Xunjian;
-import mac.yk.devicemanagement.util.ConvertUtils;
-import mac.yk.devicemanagement.util.OkHttpUtils;
+import mac.yk.testserver.ConvertUtils;
+import mac.yk.testserver.I;
+import mac.yk.testserver.OkHttpUtils;
+import mac.yk.testserver.bean.Device;
+import mac.yk.testserver.bean.Result;
+import mac.yk.testserver.bean.Weixiu;
+import mac.yk.testserver.bean.Xunjian;
+
 
 /**
  * Created by mac-yk on 2017/3/1.
@@ -72,7 +73,7 @@ public class Model implements IModel {
     @Override
     public void saveDevice(Context context, String name, Device device, OkHttpUtils.OnCompleteListener<Result> callback) {
         OkHttpUtils<Result> OK=new OkHttpUtils<>(context);
-        String json=ConvertUtils.getjson(device);
+        String json= ConvertUtils.getjson(device);
         OK.setRequestUrl(I.REQUEST.SAVE)
                 .addFormParam(I.DEVICE.TABLENAME, json)
                 .addFormParam(I.USER.NAME,name)
