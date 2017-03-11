@@ -7,6 +7,7 @@ import mac.yk.testserver.I;
 import mac.yk.testserver.OkHttpUtils;
 import mac.yk.testserver.bean.Device;
 import mac.yk.testserver.bean.Result;
+import mac.yk.testserver.bean.Scrap;
 import mac.yk.testserver.bean.Weixiu;
 import mac.yk.testserver.bean.Xunjian;
 
@@ -144,6 +145,38 @@ public class Model implements IModel {
                 .addParam(I.WEIXIU.TRANSLATE,String.valueOf(translate))
                 .addParam(I.WEIXIU.DID,Did)
                 .targetClass(Result.class)
+                .execute(callback);
+    }
+
+    @Override
+    public void baofei(Context context, String name, String Dname,String Did, String remark,OkHttpUtils.OnCompleteListener<Result> callback) {
+        OkHttpUtils<Result> ok=new OkHttpUtils<>(context);
+        ok.setRequestUrl(I.REQUEST.BAOFEI)
+                .addParam(I.BAOFEI.REMARK,remark)
+                .addParam(I.BAOFEI.DID,Did)
+                .addParam(I.BAOFEI.USER,name)
+                .addParam(I.BAOFEI.DNAME,Dname)
+                .targetClass(Result.class)
+                .execute(callback);
+    }
+
+    @Override
+    public void downScrap(Context context, int page, int size,OkHttpUtils.OnCompleteListener<Scrap[]> callback) {
+        OkHttpUtils<Scrap[]> ok=new OkHttpUtils<>(context);
+        ok.setRequestUrl(I.REQUEST.DOWNSCRAP)
+                .addParam(I.DOWNLOAD.PAGE, String.valueOf(page))
+                .addParam(I.DOWNLOAD.SIZE, String.valueOf(size))
+                .targetClass(Scrap[].class)
+                .execute(callback);
+    }
+
+    @Override
+    public void downDevice(Context context, int page, int size,OkHttpUtils.OnCompleteListener<Device[]> callback) {
+        OkHttpUtils<Device[]> ok=new OkHttpUtils<>(context);
+        ok.setRequestUrl(I.REQUEST.DOWNDEVICE)
+                .addParam(I.DOWNLOAD.PAGE, String.valueOf(page))
+                .addParam(I.DOWNLOAD.SIZE, String.valueOf(size))
+                .targetClass(Device[].class)
                 .execute(callback);
     }
 

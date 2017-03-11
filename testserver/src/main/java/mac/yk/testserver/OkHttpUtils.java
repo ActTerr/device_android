@@ -3,6 +3,7 @@ package mac.yk.testserver;
 import android.content.Context;
 import android.os.Handler;
 import android.os.Message;
+import android.util.Log;
 
 import com.google.gson.Gson;
 
@@ -342,6 +343,7 @@ public class OkHttpUtils<T> {
             @Override
             public void onResponse(Call call, Response response) throws IOException {
                 String json = response.body().string();
+                Log.e("main",""+mClazz.getName());
                 if(mClazz.equals(String.class)){
                     Message msg = Message.obtain();
                     msg.what = RESULT_SUCCESS;

@@ -6,6 +6,7 @@ import android.content.Context;
 import mac.yk.testserver.OkHttpUtils;
 import mac.yk.testserver.bean.Device;
 import mac.yk.testserver.bean.Result;
+import mac.yk.testserver.bean.Scrap;
 import mac.yk.testserver.bean.Weixiu;
 import mac.yk.testserver.bean.Xunjian;
 
@@ -36,4 +37,10 @@ public interface IModel {
     void xunjian(Context context, String userName, String Did, String status, String remark, OkHttpUtils.OnCompleteListener<Result> callback);
 
     void xiujun(Context context, String userName, String Did, boolean translate, String remark, OkHttpUtils.OnCompleteListener<Result> callback);
+
+    void baofei(Context context,String name,String Dname,String Did,String remark,OkHttpUtils.OnCompleteListener<Result> callback);
+
+    void downScrap(Context context, int page, int size, OkHttpUtils.OnCompleteListener<Scrap[]> callback);
+
+    void downDevice(Context context,int page,int size,OkHttpUtils.OnCompleteListener<Device[]> callback);
 }

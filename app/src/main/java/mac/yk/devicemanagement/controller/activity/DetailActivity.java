@@ -285,7 +285,7 @@ public class DetailActivity extends AppCompatActivity {
                             progressDialog.dismiss();
                             if (result != null && result.getRetCode() == I.RESULT.SUCCESS) {
                                 device = (Device) result.getRetData();
-                                MyApplication.getDevice().setZhuangtai(device.getZhuangtai());
+                                MyApplication.getDevice().setStatus(device.getStatus());
 //                                setArguments();
                             } else {
                                 Toast.makeText(context, "请求失败！", Toast.LENGTH_SHORT).show();
