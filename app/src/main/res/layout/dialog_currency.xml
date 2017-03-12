@@ -3,6 +3,7 @@
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent">
     <TextView
+        android:id="@+id/dia_title"
         android:layout_marginTop="10dp"
         android:layout_gravity="center"
         android:text="是否更换硬件"
@@ -39,7 +40,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
     <Button
-        android:id="@+id/btn_commit2"
+        android:id="@+id/btn_commit"
         android:text="提交"
         android:layout_gravity="center"
         android:layout_width="wrap_content"

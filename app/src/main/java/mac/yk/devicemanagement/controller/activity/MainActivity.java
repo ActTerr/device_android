@@ -133,16 +133,8 @@ public class MainActivity extends AppCompatActivity {
                         progressDialog.dismiss();
                         if (result != null && result.getRetCode() == I.RESULT.SUCCESS) {
                             Device device = (Device) result.getRetData();
-
-                            if (device.getName().equals("空")) {
-                                L.e("main","gotoSave");
-                                MFGT.gotoSaveActivity(MainActivity.this, id);
-                            } else {
                                 L.e("main","gotoDetail");
                                 MFGT.gotoDetailActivity(MainActivity.this, device);
-
-                            }
-
 
                         } else {
                             L.e("main","gotoSave");
@@ -153,7 +145,7 @@ public class MainActivity extends AppCompatActivity {
                     @Override
                     public void onError(String error) {
                         progressDialog.dismiss();
-                        Toast.makeText(MainActivity.this, "请求失败！", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(MainActivity.this, "请检查网络！", Toast.LENGTH_SHORT).show();
                     }
                 });
             }
@@ -178,7 +170,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onError(String error) {
                 progressDialog.dismiss();
-                Toast.makeText(MainActivity.this, "获取预警信息失败！", Toast.LENGTH_SHORT).show();
+                Toast.makeText(MainActivity.this, "请检查网络！", Toast.LENGTH_SHORT).show();
             }
         });
     }

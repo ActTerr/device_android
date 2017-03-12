@@ -1,7 +1,7 @@
 package mac.yk.devicemanagement.util;
 
-import mac.yk.devicemanagement.data.Data;
 import mac.yk.devicemanagement.model.IModel;
+import mac.yk.devicemanagement.model.Model;
 
 /**
  * Created by mac-yk on 2017/3/7.
@@ -10,6 +10,6 @@ import mac.yk.devicemanagement.model.IModel;
 public class TestUtil {
 
     public static IModel getData(){
-        return Data.getInstance();
+        return Model.getInstance();
     }
 }

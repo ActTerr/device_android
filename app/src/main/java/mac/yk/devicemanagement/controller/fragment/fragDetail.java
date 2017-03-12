@@ -16,6 +16,7 @@ import butterknife.ButterKnife;
 import mac.yk.devicemanagement.MyApplication;
 import mac.yk.devicemanagement.R;
 import mac.yk.devicemanagement.bean.Device;
+import mac.yk.devicemanagement.util.ConvertUtils;
 import mac.yk.devicemanagement.util.L;
 
 /**
@@ -42,7 +43,7 @@ public class fragDetail extends Fragment implements Observer{
         observer=this;
         device=MyApplication.getDevice();
         L.e("main","fragdetail:"+device.toString());
-        deviceName.setText(device.getName());
+        deviceName.setText(ConvertUtils.getDname(device.getName()));
         detail.setText(device.toString());
         device.addObserver(observer);
         return view;

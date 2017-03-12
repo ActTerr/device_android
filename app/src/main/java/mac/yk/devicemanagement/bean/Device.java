@@ -2,18 +2,39 @@ package mac.yk.devicemanagement.bean;
 
 import java.io.Serializable;
 import java.util.Date;
+import java.util.Observable;
 
-public class Device  implements Serializable {
+import mac.yk.devicemanagement.util.ConvertUtils;
+
+/**
+ * Created by mac-yk on 2017/3/1.
+ */
+
+public class Device extends Observable implements Serializable{
     int Did,Dname,status;
     Date chuchang,xunjian;
+
+    boolean isDianchi=false;
+
+    public boolean isDianchi() {
+        return isDianchi;
+    }
+
+    public void setDianchi(boolean dianchi) {
+        isDianchi = dianchi;
+    }
 
     public Device() {
 
     }
 
-    public Device(int did, int dname, int status, Date chuchang, Date xunjian) {
+    public int getDname() {
+        return Dname;
+    }
+
+    public Device(int did, int Dname, int status, Date chuchang, Date xunjian) {
         Did = did;
-        this.Dname = dname;
+        this.Dname = Dname;
         this.status = status;
         this.chuchang = chuchang;
         this.xunjian = xunjian;
@@ -27,13 +48,6 @@ public class Device  implements Serializable {
         Did = did;
     }
 
-    public int getName() {
-        return Dname;
-    }
-
-    public void setName(int name) {
-        this.Dname = name;
-    }
 
     public int getStatus() {
         return status;
@@ -41,6 +55,9 @@ public class Device  implements Serializable {
 
     public void setStatus(int status) {
         this.status = status;
+        setChanged();
+        notifyObservers();
+
     }
 
     public Date getChuchang() {
@@ -61,10 +78,10 @@ public class Device  implements Serializable {
 
     @Override
     public String toString() {
-        return  "Dname:"+Dname+"\n"+
+        return  "name:"+Dname+"\n"+
                 "ID:" + Did + "\n" +
-                "当前状态:"+status+"\n"+
-                "出厂日期:"+chuchang+"\n"+
-                "上次巡检日期:"+xunjian;
+                "当前状态:"+ ConvertUtils.getStatus(isDianchi,status)+"\n"+
+                        "出厂日期:"+chuchang+"\n"+
+                        "上次巡检日期:"+xunjian;
     }
 }

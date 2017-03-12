@@ -36,6 +36,8 @@ import mac.yk.devicemanagement.util.MFGT;
 import mac.yk.devicemanagement.util.OkHttpUtils;
 import mac.yk.devicemanagement.util.TestUtil;
 
+import static mac.yk.devicemanagement.R.id.baofei;
+
 
 public class DetailActivity extends AppCompatActivity {
     ProgressDialog progressDialog;
@@ -52,8 +54,6 @@ public class DetailActivity extends AppCompatActivity {
     @BindView(R.id.drawLayout)
     DrawerLayout drawLayout;
 
-    xiujunHoler xiujunHoler;
-    xunjianHolder xunjianHolder;
     /**
      * dialog
      */
@@ -72,13 +72,14 @@ public class DetailActivity extends AppCompatActivity {
         model = TestUtil.getData();
         device = (Device) getIntent().getSerializableExtra("device");
         MyApplication.setDevice(device);
-        L.e("main","detail:"+ device.toString());
+        L.e("main", "detail:" + device.toString());
         if (device == null) {
             finish();
         } else {
-            id = device.getId();
-            if (device.getName().equals("电池")) {
+            id = String.valueOf(device.getDid());
+            if (device.getDname() == I.DNAME.DIANCHI) {
                 isDianchi = true;
+                device.setDianchi(true);
             }
         }
         setSupportActionBar(toolBar);
@@ -91,7 +92,7 @@ public class DetailActivity extends AppCompatActivity {
             navView.inflateMenu(R.menu.menu_detail);
             setUpNavView(navView);
             ImageView imageView = (ImageView) navView.getHeaderView(0).findViewById(R.id.avatar);
-            TextView textView= (TextView) navView.getHeaderView(0).findViewById(R.id.nav_name);
+            TextView textView = (TextView) navView.getHeaderView(0).findViewById(R.id.nav_name);
             textView.setText(MyApplication.getInstance().getUserName());
             imageView.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -106,7 +107,7 @@ public class DetailActivity extends AppCompatActivity {
             navView.getMenu().getItem(4).setTitle("充电");
         }
 //        setArguments();
-        Log.e("main","setArgument执行");
+        Log.e("main", "setArgument执行");
     }
 
 
@@ -122,9 +123,9 @@ public class DetailActivity extends AppCompatActivity {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
                 switch (item.getItemId()) {
+                    case R.id.beiyong:
                     case R.id.daiyong:
                     case R.id.yunxing:
-                    case R.id.baofei:
                     case R.id.weixiu:
                         postControl(item.getItemId());
                         break;
@@ -137,6 +138,9 @@ public class DetailActivity extends AppCompatActivity {
                     case R.id.record:
                         MFGT.gotoRecordActivity(context, id);
                         break;
+                    case baofei:
+                        postBaofei();
+                        break;
                 }
                 item.setChecked(true);
                 drawLayout.closeDrawers();
@@ -144,6 +148,65 @@ public class DetailActivity extends AppCompatActivity {
             }
         });
     }
+
+    public class BaofeiHolder {
+        View v;
+        @BindView(R.id.dia_title)
+        TextView diaTitle;
+        @BindView(R.id.cb_no)
+        CheckBox cbNo;
+        @BindView(R.id.cb_yes)
+        CheckBox cbYes;
+        @BindView(R.id.remark)
+        EditText remark;
+
+        public BaofeiHolder() {
+            v = View.inflate(context, R.layout.dialog_currency, null);
+            ButterKnife.bind(v);
+            cbNo.setVisibility(View.GONE);
+            cbYes.setVisibility(View.GONE);
+            diaTitle.setText("报废提交");
+            remark.setHint("请说明报废原因");
+
+        }
+
+        public View getV() {
+            return v;
+        }
+
+        public void setV(View v) {
+            this.v = v;
+        }
+
+        @OnClick(R.id.btn_commit)
+        public void onClick(View view) {
+           progressDialog.show();
+            model.baofei(context, MyApplication.getInstance().getUserName(), String.valueOf(device.getDname()), id, remark.getText().toString(), new OkHttpUtils.OnCompleteListener<Result>() {
+                @Override
+                public void onSuccess(Result result) {
+                    if (result.getRetCode()==I.RESULT.SUCCESS&&result.isRetMsg()){
+                        int status= (int) result.getRetData();
+                        device.setStatus(status);
+                    }else {
+                        Toast.makeText(context, "提交失败", Toast.LENGTH_SHORT).show();
+                    }
+                }
+
+                @Override
+               public void onError(String error) {
+                    Toast.makeText(context, "请检查网络", Toast.LENGTH_SHORT).show();
+                }
+            });
+        }
+    }
+
+    private void postBaofei() {
+        BaofeiHolder baofei=new BaofeiHolder();
+        dialog.setContentView(baofei.getV());
+        dialog.setTitle(null);
+        dialog.show();
+    }
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
@@ -157,13 +220,13 @@ public class DetailActivity extends AppCompatActivity {
 
     private void postControl(int Cid) {
         progressDialog.show();
-        model.control(context, isDianchi, MyApplication.getInstance().getUserName(), String.valueOf(Cid), id, new OkHttpUtils.OnCompleteListener<Result>() {
+        model.control(context, String.valueOf(Cid), id, new OkHttpUtils.OnCompleteListener<Result>() {
             @Override
             public void onSuccess(Result result) {
                 progressDialog.dismiss();
                 if (result != null && result.getRetCode() == I.RESULT.SUCCESS) {
-                    device = (Device) result.getRetData();
-                    MyApplication.getDevice().setZhuangtai(device.getZhuangtai());
+                    int status = (int) result.getRetData();
+                    device.setStatus(status);
 //                    setArguments();
                 } else {
                     Toast.makeText(context, "请求失败！", Toast.LENGTH_SHORT).show();
@@ -179,8 +242,6 @@ public class DetailActivity extends AppCompatActivity {
     }
 
 
-
-
     public class xiujunHoler {
         @BindView(R.id.cb_no)
         CheckBox cbNo;
@@ -192,7 +253,7 @@ public class DetailActivity extends AppCompatActivity {
         View v;
 
         public xiujunHoler() {
-            v = View.inflate(context, R.layout.dialog_xiujun, null);
+            v = View.inflate(context, R.layout.dialog_currency, null);
             ButterKnife.bind(v);
         }
 
@@ -202,28 +263,28 @@ public class DetailActivity extends AppCompatActivity {
 
         @OnClick({R.id.cb_no, R.id.cb_yes, R.id.btn_commit2})
         public void onClick(View view) {
-            boolean translate=false;
+            boolean translate = false;
             switch (view.getId()) {
                 case R.id.cb_no:
                     cbNo.setChecked(true);
                     cbYes.setChecked(false);
-                    translate=false;
+                    translate = false;
                     break;
                 case R.id.cb_yes:
                     cbYes.setChecked(true);
                     cbNo.setChecked(false);
-                    translate=true;
+                    translate = true;
                     break;
                 case R.id.btn_commit2:
                     dialog.dismiss();
                     progressDialog.show();
-                    model.xiujun(context, MyApplication.getInstance().getUserName(), isDianchi, id, translate,remark.getText().toString(), new OkHttpUtils.OnCompleteListener<Result>() {
+                    model.xiujun(context, MyApplication.getInstance().getUserName(), id, translate, remark.getText().toString(), new OkHttpUtils.OnCompleteListener<Result>() {
                         @Override
                         public void onSuccess(Result result) {
                             progressDialog.dismiss();
                             if (result != null && result.getRetCode() == I.RESULT.SUCCESS) {
-                                device = (Device) result.getRetData();
-                                MyApplication.getDevice().setZhuangtai(device.getZhuangtai());
+                                int status = (int) result.getRetData();
+                                device.setStatus(status);
 //                                setArguments();
                             } else {
                                 Toast.makeText(context, "请求失败！", Toast.LENGTH_SHORT).show();
@@ -242,50 +303,59 @@ public class DetailActivity extends AppCompatActivity {
     }
 
     public class xunjianHolder {
-        @BindView(R.id.cb_good)
-        CheckBox cbGood;
-        @BindView(R.id.cb_abnormal)
-        CheckBox cbAbnormal;
+
+        View v;
+        @BindView(R.id.dia_title)
+        TextView diaTitle;
+        @BindView(R.id.cb_no)
+        CheckBox cbNo;
+        @BindView(R.id.cb_yes)
+        CheckBox cbYes;
         @BindView(R.id.remark)
         EditText remark;
-        View v;
 
         public xunjianHolder() {
-            v = View.inflate(context, R.layout.dialog_xunjian, null);
+            v = View.inflate(context, R.layout.dialog_currency, null);
             ButterKnife.bind(v);
+            diaTitle.setText("设备状态");
+            remark.setHint("如有问题请备注");
+            cbNo.setText("异常");
+            cbYes.setText("良好");
         }
 
         public View getV() {
             return v;
         }
 
-        @OnClick({R.id.cb_good, R.id.cb_abnormal, R.id.btn_commit})
+
+        @OnClick({R.id.cb_no, R.id.cb_yes, R.id.btn_commit})
         public void onClick(View view) {
             switch (view.getId()) {
-                case R.id.cb_good:
-                    cbGood.setChecked(true);
-                    cbAbnormal.setChecked(false);
+                case R.id.cb_no:
+                    cbNo.setChecked(true);
+                    cbYes.setChecked(false);
                     break;
-                case R.id.cb_abnormal:
-                    cbAbnormal.setChecked(true);
-                    cbGood.setChecked(false);
+                case R.id.cb_yes:
+                    cbYes.setChecked(true);
+                    cbNo.setChecked(false);
                     break;
                 case R.id.btn_commit:
                     dialog.dismiss();
                     progressDialog.show();
-                    String zhuangtai;
-                    if (cbAbnormal.isChecked()) {
-                        zhuangtai = "正常";
+                    String status;
+                    if (cbYes.isChecked()) {
+                        status = "1";
                     } else {
-                        zhuangtai = "异常";
+                        status = "0";
                     }
-                    model.xunjian(context, MyApplication.getInstance().getUserName(), isDianchi, id, zhuangtai, remark.getText().toString(), new OkHttpUtils.OnCompleteListener<Result>() {
+                    model.xunjian(context, MyApplication.getInstance().getUserName(), id, status, remark.getText().toString(), new OkHttpUtils.OnCompleteListener<Result>() {
                         @Override
                         public void onSuccess(Result result) {
                             progressDialog.dismiss();
                             if (result != null && result.getRetCode() == I.RESULT.SUCCESS) {
-                                device = (Device) result.getRetData();
-                                MyApplication.getDevice().setStatus(device.getStatus());
+                                int status = (int) result.getRetData();
+                                device.setStatus(status);
+//                                MyApplication.getDevice().setStatus(device.getStatus());
 //                                setArguments();
                             } else {
                                 Toast.makeText(context, "请求失败！", Toast.LENGTH_SHORT).show();
@@ -304,20 +374,18 @@ public class DetailActivity extends AppCompatActivity {
     }
 
     private void postXiujun() {
-        xiujunHoler = new xiujunHoler();
+       xiujunHoler xiujunHoler = new xiujunHoler();
         dialog.setContentView(xiujunHoler.getV());
         dialog.setTitle(null);
         dialog.show();
     }
 
     private void postxunjian() {
-        xunjianHolder = new xunjianHolder();
+        xunjianHolder xunjianHolder = new xunjianHolder();
         dialog.setContentView(xunjianHolder.getV());
         dialog.setTitle(null);
         dialog.show();
     }
-
-
 
 
 }

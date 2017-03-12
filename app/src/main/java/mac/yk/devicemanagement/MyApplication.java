@@ -17,6 +17,9 @@ public class MyApplication extends Application {
     }
 
     public static Device getDevice() {
+        if (device==null){
+            device=new Device();
+        }
         return device;
     }
 
@@ -24,7 +27,7 @@ public class MyApplication extends Application {
         MyApplication.device = device;
     }
 
-    private static Device device=new Device();
+    private static Device device;
 //    static ArrayList<Observer> observers;
 //    public static void addObserver(Fragment fragment){
 //        Observer observer= (Observer) fragment;
