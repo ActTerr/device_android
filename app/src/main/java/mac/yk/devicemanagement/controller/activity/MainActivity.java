@@ -25,8 +25,9 @@ import mac.yk.devicemanagement.MyApplication;
 import mac.yk.devicemanagement.R;
 import mac.yk.devicemanagement.bean.Device;
 import mac.yk.devicemanagement.bean.Result;
+import mac.yk.devicemanagement.controller.fragment.fragBaofei;
 import mac.yk.devicemanagement.controller.fragment.fragMain;
-import mac.yk.devicemanagement.controller.fragment.fragMain2;
+import mac.yk.devicemanagement.controller.fragment.fragTongji;
 import mac.yk.devicemanagement.model.IModel;
 import mac.yk.devicemanagement.util.ActivityUtils;
 import mac.yk.devicemanagement.util.L;
@@ -106,7 +107,10 @@ public class MainActivity extends AppCompatActivity {
                         getYujing();
                         break;
                     case R.id.tongji:
-                        ActivityUtils.changeFragment(getSupportFragmentManager(), new fragMain2(), R.id.frame);
+                        ActivityUtils.changeFragment(getSupportFragmentManager(), new fragTongji(), R.id.frame);
+                        break;
+                    case R.id.bf_tongji:
+                        ActivityUtils.changeFragment(getSupportFragmentManager(),new fragBaofei(),R.id.frame);
                         break;
                 }
                 item.setChecked(true);
@@ -154,7 +158,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void getYujing() {
-
+    progressDialog.show();
         model.getYujing(this, new OkHttpUtils.OnCompleteListener<Result>() {
             @Override
             public void onSuccess(Result result) {

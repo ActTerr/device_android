@@ -172,7 +172,7 @@ public class MainActivity extends AppCompatActivity {
 //                });
                 break;
             case R.id.xunjian:
-                model.xunjian(this, true,"yk", "1111", "1", "afafaf", new OkHttpUtils.OnCompleteListener<Result>() {
+                model.xunjian(this, true,"yk", "1111", "0", "afafaf", new OkHttpUtils.OnCompleteListener<Result>() {
                     @Override
                     public void onSuccess(Result result) {
                         if (result != null) {

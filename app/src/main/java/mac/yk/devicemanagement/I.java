@@ -11,7 +11,7 @@ public interface I {
         String CONTROL="control";
         String SAVE="save";
         String LOGOUT="logOut";
-        String SERVER_ROOT="http://192.168.0.28:8080/deviceManagement/Server?";
+        String SERVER_ROOT="http://192.168.0.28:8080/deviceManagement/Server?request=";
         String XUNJIAN="xunjian";
         String XIUJUN="xiujun";
         String LOGIN="login";

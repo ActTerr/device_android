@@ -52,10 +52,10 @@ public class xunjianAdapter extends RecyclerView.Adapter {
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
         XjViewHolder xjViewHolder= (XjViewHolder) holder;
         Xunjian xunjian=xjlist.get(position);
-        xjViewHolder.xJianDate.setText(xunjian.getXjDate());
+        xjViewHolder.xJianDate.setText(String.valueOf(xunjian.getXjDate()));
         xjViewHolder.xjUser.setText(xunjian.getXjUser());
         xjViewHolder.status.setText(xunjian.getStatus());
-        if (xunjian.getStatus().equals("异常")){
+        if (xunjian.getStatus()==0){
             xjViewHolder.cause.setText(xunjian.getCause());
         }else {
             xjViewHolder.cause.setVisibility(View.GONE);

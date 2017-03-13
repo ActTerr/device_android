@@ -1,29 +1,20 @@
 package mac.yk.devicemanagement.controller.activity;
 
-import android.app.ProgressDialog;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.PopupWindow;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-import mac.yk.devicemanagement.MyApplication;
 import mac.yk.devicemanagement.R;
-import mac.yk.devicemanagement.bean.Device;
-import mac.yk.devicemanagement.bean.Result;
 import mac.yk.devicemanagement.model.IModel;
 import mac.yk.devicemanagement.util.ConvertUtils;
-import mac.yk.devicemanagement.util.L;
-import mac.yk.devicemanagement.util.MFGT;
-import mac.yk.devicemanagement.util.OkHttpUtils;
 import mac.yk.devicemanagement.util.TestUtil;
 
 import static android.view.View.inflate;
@@ -66,33 +57,33 @@ public class SaveActivity extends AppCompatActivity implements View.OnClickListe
         dianchi.setOnClickListener(this);
     }
 
-    public void onSave(View view) {
-        final Device device = new Device(id, name.getText().toString(), xunjian.getText().toString(), chuchang.getText().toString(), zhuangtai.getText().toString());
-        Log.e("main","save:"+name.getText().toString());
-        final ProgressDialog progressDialog = new ProgressDialog(this);
-        progressDialog.show();
-
-        model.saveDevice(this, MyApplication.getInstance().getUserName(),device, new OkHttpUtils.OnCompleteListener<Result>() {
-            @Override
-            public void onSuccess(Result result) {
-                progressDialog.dismiss();
-                if (result != null && result.getRetCode() == 0) {
-                    Toast.makeText(SaveActivity.this, "保存成功", Toast.LENGTH_SHORT).show();
-                    MFGT.gotoDetailActivity(SaveActivity.this,device);
-                    L.e("main",device.toString());
-                    finish();
-                } else {
-                    Toast.makeText(SaveActivity.this, "保存失败", Toast.LENGTH_SHORT).show();
-                }
-            }
-
-            @Override
-            public void onError(String error) {
-                progressDialog.dismiss();
-                Toast.makeText(SaveActivity.this, "保存失败", Toast.LENGTH_SHORT).show();
-            }
-        });
-    }
+//    public void onSave(View view) {
+//        final Device device = new Device(id, name.getText().toString(), "", "", zhuangtai.getText().toString());
+//        Log.e("main","save:"+name.getText().toString());
+//        final ProgressDialog progressDialog = new ProgressDialog(this);
+//        progressDialog.show();
+//
+//        model.saveDevice(this, MyApplication.getInstance().getUserName(),device, new OkHttpUtils.OnCompleteListener<Result>() {
+//            @Override
+//            public void onSuccess(Result result) {
+//                progressDialog.dismiss();
+//                if (result != null && result.getRetCode() == 0) {
+//                    Toast.makeText(SaveActivity.this, "保存成功", Toast.LENGTH_SHORT).show();
+//                    MFGT.gotoDetailActivity(SaveActivity.this,device);
+//                    L.e("main",device.toString());
+//                    finish();
+//                } else {
+//                    Toast.makeText(SaveActivity.this, "保存失败", Toast.LENGTH_SHORT).show();
+//                }
+//            }
+//
+//            @Override
+//            public void onError(String error) {
+//                progressDialog.dismiss();
+//                Toast.makeText(SaveActivity.this, "保存失败", Toast.LENGTH_SHORT).show();
+//            }
+//        });
+//    }
 
     @OnClick(R.id.select)
     public void onClick() {

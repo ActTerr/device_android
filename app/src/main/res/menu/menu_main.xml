@@ -4,7 +4,10 @@
     <item android:id="@+id/tongji"
         android:icon="@mipmap/ic_launcher"
         android:title="设备统计"/>
+    <item android:id="@+id/bf_tongji"
+        android:title="报废统计"/>
     <item android:id="@+id/yujing"
         android:icon="@mipmap/ic_launcher"
         android:title="预警信息"/>
+
 </menu>

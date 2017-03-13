@@ -2,8 +2,6 @@ package mac.yk.testserver;
 
 public interface I {
 
-
-
     interface REQUEST{
         String DOWNWEIXIU="downloadWeiXiu";
         String DOWNXUNJIAN="downloadXunJian";
@@ -20,6 +18,7 @@ public interface I {
         String BAOFEI="baofei";
         String DOWNDEVICE="downDevice";
         String DOWNSCRAP="downScrap";
+        String YONGHOU="yonghou";
     }
     interface BAOFEI{
         String TABLENAME="baofei";
@@ -30,7 +29,6 @@ public interface I {
     }
 
     interface RESULT{
-
         int SUCCESS=0;
         int DEFEAT=1;
     }
@@ -43,7 +41,7 @@ public interface I {
         int XIUJUN=5;
         int XUNJIAN=6;
         int BAOFEI=7;
-
+        int YONGHOU=8;
     }
     interface DNAME{
         int DIANTAI=1;

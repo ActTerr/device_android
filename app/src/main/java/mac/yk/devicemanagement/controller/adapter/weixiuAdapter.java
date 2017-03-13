@@ -63,8 +63,8 @@ public class weixiuAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
             WxViewHolder wxViewHolder= (WxViewHolder) holder;
             Weixiu weixiu=weixius.get(position);
-            wxViewHolder.xjDate.setText(weixiu.getXjData());
-            wxViewHolder.wxDate.setText(weixiu.getWxDate());
+            wxViewHolder.xjDate.setText(String.valueOf(weixiu.getXjData()));
+            wxViewHolder.wxDate.setText(String.valueOf(weixiu.getWxDate()));
             wxViewHolder.wxUser.setText(weixiu.getControlUser());
             wxViewHolder.wxRemark.setText(weixiu.getRemark());
             wxViewHolder.translate.setText(getTranText(weixiu.isTranslate()));

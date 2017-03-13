@@ -10,16 +10,20 @@ import mac.yk.devicemanagement.bean.Device;
  */
 
 public class MyApplication extends Application {
+    public static  MyApplication application;
     public static Context context;
     public static MyApplication instance=new MyApplication();
     public static MyApplication getInstance(){
         return instance;
     }
 
+    @Override
+    public void onCreate() {
+        super.onCreate();
+        application=this;
+    }
+
     public static Device getDevice() {
-        if (device==null){
-            device=new Device();
-        }
         return device;
     }
 
@@ -27,7 +31,7 @@ public class MyApplication extends Application {
         MyApplication.device = device;
     }
 
-    private static Device device;
+    private static Device device=new Device();
 //    static ArrayList<Observer> observers;
 //    public static void addObserver(Fragment fragment){
 //        Observer observer= (Observer) fragment;

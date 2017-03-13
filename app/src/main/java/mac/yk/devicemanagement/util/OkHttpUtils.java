@@ -144,7 +144,7 @@ public class OkHttpUtils<T> {
 
 
     private void initHandler() {
-        mHandler = new Handler(MyApplication.instance.getMainLooper()) {
+        mHandler = new Handler(MyApplication.application.getMainLooper()) {
             @Override
             public void handleMessage(Message msg) {
                 switch (msg.what) {
