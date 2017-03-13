@@ -14,12 +14,14 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 import mac.yk.devicemanagement.I;
 import mac.yk.devicemanagement.MyApplication;
 import mac.yk.devicemanagement.R;
@@ -33,7 +35,10 @@ import mac.yk.devicemanagement.util.ActivityUtils;
 import mac.yk.devicemanagement.util.L;
 import mac.yk.devicemanagement.util.MFGT;
 import mac.yk.devicemanagement.util.OkHttpUtils;
+import mac.yk.devicemanagement.util.SpUtil;
 import mac.yk.devicemanagement.util.TestUtil;
+
+import static mac.yk.devicemanagement.R.id.yujing;
 
 public class MainActivity extends AppCompatActivity {
     IModel model;
@@ -48,11 +53,13 @@ public class MainActivity extends AppCompatActivity {
     @BindView(R.id.drawLayout)
     DrawerLayout drawLayout;
 
+    DialogHolder dialogHolder;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_currency);
+        View view = View.inflate(this, R.layout.dialog_yujing, null);
         ButterKnife.bind(this);
         builder = new AlertDialog.Builder(this);
         model = TestUtil.getData();
@@ -61,7 +68,9 @@ public class MainActivity extends AppCompatActivity {
         ActionBar ab = getSupportActionBar();
         ab.setHomeAsUpIndicator(R.drawable.ic_menu);
         ab.setDisplayHomeAsUpEnabled(true);
+       dialogHolder=new DialogHolder(view);
         builder.setTitle("预警信息")
+                .setView(view)
                 .setPositiveButton("已读以上信息", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
@@ -75,7 +84,7 @@ public class MainActivity extends AppCompatActivity {
             setUpNavView(navView);
 
             ImageView imageView = (ImageView) navView.getHeaderView(0).findViewById(R.id.avatar);
-            TextView textView= (TextView) navView.getHeaderView(0).findViewById(R.id.nav_name);
+            TextView textView = (TextView) navView.getHeaderView(0).findViewById(R.id.nav_name);
             textView.setText(MyApplication.getInstance().getUserName());
             imageView.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -85,7 +94,9 @@ public class MainActivity extends AppCompatActivity {
                 }
             });
         }
-        getYujing();
+        if (!SpUtil.getPrompt(this)){
+            getYujing();
+        }
     }
 
     @Override
@@ -103,14 +114,14 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
                 switch (item.getItemId()) {
-                    case R.id.yujing:
+                    case yujing:
                         getYujing();
                         break;
                     case R.id.tongji:
                         ActivityUtils.changeFragment(getSupportFragmentManager(), new fragTongji(), R.id.frame);
                         break;
                     case R.id.bf_tongji:
-                        ActivityUtils.changeFragment(getSupportFragmentManager(),new fragBaofei(),R.id.frame);
+                        ActivityUtils.changeFragment(getSupportFragmentManager(), new fragBaofei(), R.id.frame);
                         break;
                 }
                 item.setChecked(true);
@@ -137,11 +148,11 @@ public class MainActivity extends AppCompatActivity {
                         progressDialog.dismiss();
                         if (result != null && result.getRetCode() == I.RESULT.SUCCESS) {
                             Device device = (Device) result.getRetData();
-                                L.e("main","gotoDetail");
-                                MFGT.gotoDetailActivity(MainActivity.this, device);
+                            L.e("main", "gotoDetail");
+                            MFGT.gotoDetailActivity(MainActivity.this, device);
 
                         } else {
-                            L.e("main","gotoSave");
+                            L.e("main", "gotoSave");
                             MFGT.gotoSaveActivity(MainActivity.this, id);
                         }
                     }
@@ -158,14 +169,15 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void getYujing() {
-    progressDialog.show();
+        progressDialog.show();
         model.getYujing(this, new OkHttpUtils.OnCompleteListener<Result>() {
             @Override
             public void onSuccess(Result result) {
                 progressDialog.dismiss();
                 if (result != null && result.getRetCode() == I.RESULT.SUCCESS) {
-                    String yujing = (String) result.getRetData();
-                    builder.setMessage(yujing).show();
+                    String yujingm = (String) result.getRetData();
+                    dialogHolder.yujing.setText(yujingm);
+                    builder.show();
                 } else {
                     Toast.makeText(MainActivity.this, "获取预警信息失败！", Toast.LENGTH_SHORT).show();
                 }
@@ -177,6 +189,22 @@ public class MainActivity extends AppCompatActivity {
                 Toast.makeText(MainActivity.this, "请检查网络！", Toast.LENGTH_SHORT).show();
             }
         });
+    }
+    class DialogHolder{
+        @BindView(R.id.yujing)
+        TextView yujing;
+        @BindView(R.id.no_prompt)
+        CheckBox noPrompt;
+
+        public DialogHolder(View view) {
+            ButterKnife.bind(this,view);
+        }
+        @OnClick(R.id.no_prompt)
+        public void onClick() {
+            if(noPrompt.isChecked()){
+                SpUtil.savePrompt(MainActivity.this,true);
+            }
+        }
     }
 
 

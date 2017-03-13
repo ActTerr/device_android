@@ -27,5 +27,10 @@ public class SpUtil {
     public static void setFlag(Context context,boolean flag){
         getDefault(context).edit().putBoolean("flag",flag).apply();
     }
-
+    public static void savePrompt(Context context,boolean prompt){
+        getDefault(context).edit().putBoolean("prompt",prompt).apply();
+    }
+    public static boolean getPrompt(Context context){
+        return getDefault(context).getBoolean("prompt",false);
+    }
 }
