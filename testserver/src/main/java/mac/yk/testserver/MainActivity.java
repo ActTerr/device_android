@@ -82,7 +82,7 @@ public class MainActivity extends AppCompatActivity {
                 });
                 break;
             case R.id.control:
-                model.control(this, String.valueOf(I.CONTROL.WEIXIU), "1111", new OkHttpUtils.OnCompleteListener<Result>() {
+                model.control(this, true,String.valueOf(I.CONTROL.BEIYONG), "1111", new OkHttpUtils.OnCompleteListener<Result>() {
                     @Override
                     public void onSuccess(Result result) {
                         if (result != null) {
@@ -172,7 +172,7 @@ public class MainActivity extends AppCompatActivity {
 //                });
                 break;
             case R.id.xunjian:
-                model.xunjian(this, "yk", "1111", "1", "afafaf", new OkHttpUtils.OnCompleteListener<Result>() {
+                model.xunjian(this, true,"yk", "1111", "1", "afafaf", new OkHttpUtils.OnCompleteListener<Result>() {
                     @Override
                     public void onSuccess(Result result) {
                         if (result != null) {
@@ -187,7 +187,7 @@ public class MainActivity extends AppCompatActivity {
                 });
                 break;
             case R.id.xiujun:
-                model.xiujun(this, "yk", "1111", true, "aaaa", new OkHttpUtils.OnCompleteListener<Result>() {
+                model.xiujun(this, true,"yk", "1111", true, "aaaa", new OkHttpUtils.OnCompleteListener<Result>() {
                     @Override
                     public void onSuccess(Result result) {
                         if (result != null) {

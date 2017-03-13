@@ -11,18 +11,18 @@
     <item android:id="@+id/beiyong"
         android:title="备用"/>
     <item
-        android:id="@+id/weixiu"
-        android:title="维修" />
+        android:id="@+id/xunjian"
+        android:title="巡检" />
 
     <item
         android:id="@+id/xiujun"
         android:title="修竣" />
-    <item
-        android:id="@+id/xunjian"
-        android:title="巡检" />
+
     <item
         android:id="@+id/baofei"
         android:title="报废" />
+    <item android:id="@+id/yonghou"
+        android:title="用后"/>
     <item
         android:id="@+id/record"
         android:title="记录" />

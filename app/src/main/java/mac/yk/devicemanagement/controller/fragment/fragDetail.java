@@ -43,7 +43,7 @@ public class fragDetail extends Fragment implements Observer{
         observer=this;
         device=MyApplication.getDevice();
         L.e("main","fragdetail:"+device.toString());
-        deviceName.setText(ConvertUtils.getDname(device.getName()));
+        deviceName.setText(ConvertUtils.getDname(device.getDname()));
         detail.setText(device.toString());
         device.addObserver(observer);
         return view;

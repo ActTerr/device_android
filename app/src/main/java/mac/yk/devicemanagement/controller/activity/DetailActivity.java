@@ -36,8 +36,6 @@ import mac.yk.devicemanagement.util.MFGT;
 import mac.yk.devicemanagement.util.OkHttpUtils;
 import mac.yk.devicemanagement.util.TestUtil;
 
-import static mac.yk.devicemanagement.R.id.baofei;
-
 
 public class DetailActivity extends AppCompatActivity {
     ProgressDialog progressDialog;
@@ -103,8 +101,11 @@ public class DetailActivity extends AppCompatActivity {
             });
         }
         if (isDianchi) {
-            navView.getMenu().getItem(3).setTitle("用后");
-            navView.getMenu().getItem(4).setTitle("充电");
+            navView.getMenu().getItem(3).setTitle("充电");
+            navView.getMenu().getItem(4).setTitle("充满");
+        }else{
+            //如果不是电池该项不可见
+            navView.getMenu().getItem(6).setVisible(false);
         }
 //        setArguments();
         Log.e("main", "setArgument执行");
@@ -126,7 +127,6 @@ public class DetailActivity extends AppCompatActivity {
                     case R.id.beiyong:
                     case R.id.daiyong:
                     case R.id.yunxing:
-                    case R.id.weixiu:
                         postControl(item.getItemId());
                         break;
                     case R.id.xunjian:
@@ -138,13 +138,36 @@ public class DetailActivity extends AppCompatActivity {
                     case R.id.record:
                         MFGT.gotoRecordActivity(context, id);
                         break;
-                    case baofei:
+                    case R.id.baofei:
                         postBaofei();
                         break;
+                    case R.id.yonghou:
+                        postYonghou(id);
                 }
                 item.setChecked(true);
                 drawLayout.closeDrawers();
                 return false;
+            }
+        });
+    }
+
+    private void postYonghou(String id) {
+        progressDialog.show();
+        model.yonghou(context, id, new OkHttpUtils.OnCompleteListener<Result>() {
+            @Override
+            public void onSuccess(Result result) {
+                progressDialog.dismiss();
+                if(result.getRetCode()==I.RESULT.SUCCESS){
+                    int status= (int) result.getRetData();
+                    device.setStatus(status);
+                }else {
+                    Toast.makeText(context, "当前状态不可执行该操作！", Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onError(String error) {
+
             }
         });
     }
@@ -220,7 +243,7 @@ public class DetailActivity extends AppCompatActivity {
 
     private void postControl(int Cid) {
         progressDialog.show();
-        model.control(context, String.valueOf(Cid), id, new OkHttpUtils.OnCompleteListener<Result>() {
+        model.control(context, isDianchi,String.valueOf(Cid), id, new OkHttpUtils.OnCompleteListener<Result>() {
             @Override
             public void onSuccess(Result result) {
                 progressDialog.dismiss();
@@ -229,7 +252,7 @@ public class DetailActivity extends AppCompatActivity {
                     device.setStatus(status);
 //                    setArguments();
                 } else {
-                    Toast.makeText(context, "请求失败！", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(context, "当前状态不可执行该操作！", Toast.LENGTH_SHORT).show();
                 }
             }
 
@@ -261,7 +284,7 @@ public class DetailActivity extends AppCompatActivity {
             return v;
         }
 
-        @OnClick({R.id.cb_no, R.id.cb_yes, R.id.btn_commit2})
+        @OnClick({R.id.cb_no, R.id.cb_yes, R.id.btn_commit})
         public void onClick(View view) {
             boolean translate = false;
             switch (view.getId()) {
@@ -275,10 +298,10 @@ public class DetailActivity extends AppCompatActivity {
                     cbNo.setChecked(false);
                     translate = true;
                     break;
-                case R.id.btn_commit2:
+                case R.id.btn_commit:
                     dialog.dismiss();
                     progressDialog.show();
-                    model.xiujun(context, MyApplication.getInstance().getUserName(), id, translate, remark.getText().toString(), new OkHttpUtils.OnCompleteListener<Result>() {
+                    model.xiujun(context, isDianchi,MyApplication.getInstance().getUserName(), id, translate, remark.getText().toString(), new OkHttpUtils.OnCompleteListener<Result>() {
                         @Override
                         public void onSuccess(Result result) {
                             progressDialog.dismiss();
@@ -287,7 +310,7 @@ public class DetailActivity extends AppCompatActivity {
                                 device.setStatus(status);
 //                                setArguments();
                             } else {
-                                Toast.makeText(context, "请求失败！", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(context, "当前状态不可执行该操作", Toast.LENGTH_SHORT).show();
                             }
                         }
 
@@ -348,7 +371,7 @@ public class DetailActivity extends AppCompatActivity {
                     } else {
                         status = "0";
                     }
-                    model.xunjian(context, MyApplication.getInstance().getUserName(), id, status, remark.getText().toString(), new OkHttpUtils.OnCompleteListener<Result>() {
+                    model.xunjian(context, isDianchi,MyApplication.getInstance().getUserName(), id, status, remark.getText().toString(), new OkHttpUtils.OnCompleteListener<Result>() {
                         @Override
                         public void onSuccess(Result result) {
                             progressDialog.dismiss();

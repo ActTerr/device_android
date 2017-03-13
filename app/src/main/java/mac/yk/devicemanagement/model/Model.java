@@ -58,6 +58,15 @@ public class Model implements IModel {
                 .execute(callback);
     }
 
+    @Override
+    public void yonghou(Context context, String Did, OkHttpUtils.OnCompleteListener<Result> callback) {
+        OkHttpUtils<Result> ok=new OkHttpUtils<>(context);
+        ok.setRequestUrl(I.REQUEST.YONGHOU)
+                .addParam(I.DEVICE.DID,Did)
+                .targetClass(Result.class)
+                .execute(callback);
+    }
+
 
     @Override
     public void saveDevice(Context context, String name, Device device, OkHttpUtils.OnCompleteListener<Result> callback) {

@@ -13,7 +13,7 @@ public interface I {
         String CONTROL="control";
         String SAVE="save";
         String LOGOUT="logOut";
-        String SERVER_ROOT="http://192.168.1.100:8080/deviceManagement/Server?request=";
+        String SERVER_ROOT="http://192.168.0.28:8080/deviceManagement/Server?request=";
         String XUNJIAN="xunjian";
         String XIUJUN="xiujun";
         String LOGIN="login";
@@ -36,13 +36,14 @@ public interface I {
     }
     interface CONTROL{
         int START=0;
-        int DAIYONG=1;
-        int YUNXING=2;
-        int BAOFEI=3;
+        int BEIYONG=1;
+        int DAIYONG=2;
+        int YUNXING=3;
         int WEIXIU=4;
         int XIUJUN=5;
         int XUNJIAN=6;
-        int BEIYONG=7;
+        int BAOFEI=7;
+
     }
     interface DNAME{
         int DIANTAI=1;
@@ -61,6 +62,7 @@ public interface I {
         String CHUCHANG="chuchang";
         String STATUS="status";
         String XUNJIAN="xunjian";
+        String ISDIANCHI="isDianchi";
     }
     interface USER{
         String TABLENAME="user";

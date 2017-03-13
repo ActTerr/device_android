@@ -40,6 +40,8 @@ public interface IModel {
 
     void control(Context context,boolean isDianchi, String Cid, String Did, OkHttpUtils.OnCompleteListener<Result> callback);
 
+    void yonghou(Context context,String Did,OkHttpUtils.OnCompleteListener<Result> callback);
+
     void downScrap(Context context, int page, int size, OkHttpUtils.OnCompleteListener<Scrap[]> callback);
 
     void downDevice(Context context, int page, int size, OkHttpUtils.OnCompleteListener<Device[]> callback);

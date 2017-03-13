@@ -48,28 +48,16 @@ public class Model implements IModel {
     }
 
     @Override
-    public void control(Context context, String vid, String did, OkHttpUtils.OnCompleteListener<Result> callback) {
+    public void control(Context context, boolean isDianchi, String vid, String did, OkHttpUtils.OnCompleteListener<Result> callback) {
         OkHttpUtils<Result> OK=new OkHttpUtils<>(context);
         OK.setRequestUrl(I.REQUEST.CONTROL)
                 .addParam(I.DEVICE.DID,did)
                 .addParam(I.DEVICE.STATUS,vid)
+                .addParam(I.DEVICE.ISDIANCHI,String.valueOf(isDianchi))
                 .targetClass(Result.class)
                 .execute(callback);
     }
-//    private String getZhuangtai(String vid) {
-//        int id= Integer.parseInt(vid);
-//        switch (id){
-//            case R.id.daiyong:
-//                return "待用";
-//            case R.id.yunxing:
-//                return "运行";
-//            case R.id.baofei:
-//                return "报废";
-//            case R.id.weixiu:
-//                return "维修";
-//        }
-//        return "";
-//    }
+
 
     @Override
     public void saveDevice(Context context, String name, Device device, OkHttpUtils.OnCompleteListener<Result> callback) {
@@ -125,25 +113,27 @@ public class Model implements IModel {
     }
 
     @Override
-    public void xunjian(Context context, String userName, String Did,String status, String remark, OkHttpUtils.OnCompleteListener<Result> callback) {
+    public void xunjian(Context context,boolean isDianchi,  String userName, String Did,String status, String remark, OkHttpUtils.OnCompleteListener<Result> callback) {
         OkHttpUtils<Result> ok=new OkHttpUtils<>(context);
         ok.setRequestUrl(I.REQUEST.XUNJIAN)
                 .addParam(I.XUNJIAN.STATUS,status)
                 .addParam(I.XUNJIAN.USER,userName)
                 .addParam(I.XUNJIAN.REMARK,remark)
                 .addParam(I.XUNJIAN.DID,Did)
+                .addParam(I.DEVICE.ISDIANCHI,String.valueOf(isDianchi))
                 .targetClass(Result.class)
                 .execute(callback);
     }
 
     @Override
-    public void xiujun(Context context, String userName, String Did, boolean translate,String remark, OkHttpUtils.OnCompleteListener<Result> callback) {
+    public void xiujun(Context context,boolean isDianchi,  String userName, String Did, boolean translate,String remark, OkHttpUtils.OnCompleteListener<Result> callback) {
         OkHttpUtils<Result> ok=new OkHttpUtils<>(context);
         ok.setRequestUrl(I.REQUEST.XIUJUN)
                 .addParam(I.WEIXIU.REMARK,remark)
                 .addParam(I.WEIXIU.USER,userName)
                 .addParam(I.WEIXIU.TRANSLATE,String.valueOf(translate))
                 .addParam(I.WEIXIU.DID,Did)
+                .addParam(I.DEVICE.ISDIANCHI,String.valueOf(isDianchi))
                 .targetClass(Result.class)
                 .execute(callback);
     }
