@@ -9,7 +9,7 @@ import java.util.Observable;
  */
 
 public class Device extends Observable implements Serializable{
-    int Did,Dname,status;
+    int did,dname,status;
     Date chuchang,xunjian;
 
     boolean isDianchi;
@@ -27,27 +27,27 @@ public class Device extends Observable implements Serializable{
     }
 
     public void setDname(int dname) {
-        Dname = dname;
+        dname = dname;
     }
 
     public int getDname() {
-        return Dname;
+        return dname;
     }
 
     public Device(int did, int Dname, int status, Date chuchang, Date xunjian) {
-        this.Did = did;
-        this.Dname = Dname;
+        this.did = did;
+        this.dname = Dname;
         this.status = status;
         this.chuchang = chuchang;
         this.xunjian = xunjian;
     }
 
     public int getDid() {
-        return Did;
+        return did;
     }
 
     public void setDid(int did) {
-        Did = did;
+        did = did;
     }
 
 
@@ -80,8 +80,8 @@ public class Device extends Observable implements Serializable{
 
     @Override
     public String toString() {
-        return  "name:"+Dname+"\n"+
-                "ID:" + Did + "\n" +
+        return  "name:"+dname+"\n"+
+                "ID:" + did + "\n" +
                 "当前状态:"+status+"\n"+
                 "出厂日期:"+chuchang+"\n"+
                 "上次巡检日期:"+xunjian;
