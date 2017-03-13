@@ -144,6 +144,12 @@ public class fragTongji extends Fragment {
         return true;
     }
 
+    /**
+     * 减少for循环次数
+     * @param selected
+     * @param ischange
+     * @param list
+     */
     private void SetSelectedList(int selected,boolean ischange,ArrayList<Device> list) {
         ArrayList<Device> slist = new ArrayList<>();
         if (ischange){
@@ -161,29 +167,9 @@ public class fragTongji extends Fragment {
             }
             deviceAdapter.addData(slist);
         }
-
-
     }
 
 
-//
-//    private void getMessage() {
-//        model.getTongji(context, new OkHttpUtils.OnCompleteListener<Result>() {
-//            @Override
-//            public void onSuccess(Result result) {
-//                if (result != null && result.getRetCode() == 0) {
-//                    tv.setText((CharSequence) result.getRetData());
-//                } else {
-//                    tv.setText("请求失败，请刷新重试");
-//                }
-//            }
-//
-//            @Override
-//            public void onError(String error) {
-//                tv.setText("请求失败，请刷新重试");
-//            }
-//        });
-//    }
 
     @OnClick(R.id.btn_top)
     public void onClick() {

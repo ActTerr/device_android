@@ -26,6 +26,7 @@ public interface I {
         String DNAME="Dname";
         String REMARK="remark";
         String USER="user";
+        String DATE="Date";
     }
 
     interface RESULT{

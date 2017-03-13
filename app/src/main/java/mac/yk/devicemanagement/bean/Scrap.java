@@ -1,8 +1,11 @@
 package mac.yk.devicemanagement.bean;
 
+import java.util.Date;
+
 public class Scrap {
       int Did,Dname;
       String user,remark;
+		Date scrapDate;
       public Scrap(){
 
 	  }
@@ -37,5 +40,12 @@ public class Scrap {
 	public void setRemark(String remark) {
 		this.remark = remark;
 	}
-      
+
+	public Date getScrapDate() {
+		return scrapDate;
+	}
+
+	public void setScrapDate(Date scrapDate) {
+		this.scrapDate = scrapDate;
+	}
 }

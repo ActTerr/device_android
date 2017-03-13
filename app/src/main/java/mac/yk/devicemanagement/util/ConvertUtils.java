@@ -44,6 +44,10 @@ public class ConvertUtils {
         }
         return null;
     }
+    public static String Date2String(Date date){
+        SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd");
+        return sdf.format(date);
+    }
 
     public static String getDname(int Dname){
         switch (Dname){

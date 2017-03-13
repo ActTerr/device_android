@@ -57,8 +57,8 @@ public class DeviceAdapter extends RecyclerView.Adapter {
         L.e("main","id:"+device.getDid());
         deviceHolder.Did.setText(device.getDid()+"");
         deviceHolder.Dname.setText(ConvertUtils.getDname(device.getDname()));
-        deviceHolder.chuchangDate.setText(String.valueOf(device.getChuchang()));
-        deviceHolder.xunjianDate.setText(String.valueOf(device.getXunjian()));
+        deviceHolder.chuchangDate.setText(ConvertUtils.Date2String(device.getChuchang()));
+        deviceHolder.xunjianDate.setText(ConvertUtils.Date2String(device.getXunjian()));
         boolean isDianchi=device.getDname()== I.DNAME.DIANCHI;
         deviceHolder.status.setText(ConvertUtils.getStatus(isDianchi,device.getStatus()));
     }
