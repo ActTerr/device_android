@@ -24,7 +24,7 @@ public class zhishiqiView extends View {
     int NormalColor;
     int FocusColor;
 
-    boolean CountIsChange;
+    boolean CountIsChange=true;
     public zhishiqiView(Context context, AttributeSet attrs) {
         super(context, attrs);
         TypedArray typedArray=context.obtainStyledAttributes(attrs, R.styleable.zhishiqiView);

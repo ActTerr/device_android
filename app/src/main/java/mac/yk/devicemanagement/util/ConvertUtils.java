@@ -54,7 +54,7 @@ public class ConvertUtils {
             case I.DNAME.DIANCHI:
                 return "电池";
             case I.DNAME.DIANTAI:
-                return "带台";
+                return "电台";
             case I.DNAME.JIKONGQI:
                 return "机控器";
             case I.DNAME.QUKONGQI:

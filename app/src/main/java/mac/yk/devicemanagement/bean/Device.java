@@ -4,6 +4,8 @@ import java.io.Serializable;
 import java.util.Date;
 import java.util.Observable;
 
+import mac.yk.devicemanagement.util.ConvertUtils;
+
 /**
  * Created by mac-yk on 2017/3/1.
  */
@@ -12,22 +14,22 @@ public class Device extends Observable implements Serializable{
     int did,dname,status;
     Date chuchang,xunjian;
 
-    boolean isDianchi;
+//    boolean dianchi;
 
-    public boolean isDianchi() {
-        return isDianchi;
-    }
-
-    public void setDianchi(boolean dianchi) {
-        isDianchi = dianchi;
-    }
+//    public boolean isDianchi() {
+//        return dianchi;
+//    }
+//
+//    public void setDianchi(boolean dianchi) {
+//        this.dianchi = dianchi;
+//    }
 
     public Device() {
 
     }
 
     public void setDname(int dname) {
-        dname = dname;
+        this.dname = dname;
     }
 
     public int getDname() {
@@ -47,7 +49,7 @@ public class Device extends Observable implements Serializable{
     }
 
     public void setDid(int did) {
-        did = did;
+        this.did = did;
     }
 
 
@@ -83,7 +85,7 @@ public class Device extends Observable implements Serializable{
         return  "name:"+dname+"\n"+
                 "ID:" + did + "\n" +
                 "当前状态:"+status+"\n"+
-                "出厂日期:"+chuchang+"\n"+
-                "上次巡检日期:"+xunjian;
+                "出厂日期:"+ ConvertUtils.Date2String(chuchang)+"\n"+
+                "上次巡检日期:"+ConvertUtils.Date2String(xunjian);
     }
 }

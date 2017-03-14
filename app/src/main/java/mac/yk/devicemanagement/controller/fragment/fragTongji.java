@@ -104,7 +104,6 @@ public class fragTongji extends Fragment {
                         deviceAdapter.addData(list);
                     }else {
                         SetSelectedList(selected,false,list);
-
                     }
                     isMore=true;
                 } else {

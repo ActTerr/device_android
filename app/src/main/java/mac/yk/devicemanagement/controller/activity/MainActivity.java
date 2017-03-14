@@ -19,6 +19,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.gson.Gson;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
@@ -147,9 +149,12 @@ public class MainActivity extends AppCompatActivity {
                     public void onSuccess(Result result) {
                         progressDialog.dismiss();
                         if (result != null && result.getRetCode() == I.RESULT.SUCCESS) {
-                            Device device = (Device) result.getRetData();
+                            L.e("main",result.toString());
+                            String s = result.getRetData().toString();
+                            Gson gson = new Gson();
+                            Device d = gson.fromJson(s, Device.class);
                             L.e("main", "gotoDetail");
-                            MFGT.gotoDetailActivity(MainActivity.this, device);
+                            MFGT.gotoDetailActivity(MainActivity.this, d);
 
                         } else {
                             L.e("main", "gotoSave");

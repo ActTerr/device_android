@@ -17,32 +17,32 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="200dp">
-        <!--<mac.yk.devicemanagement.widget.lunboView-->
-            <!--android:id="@+id/lunbo"-->
-            <!--android:layout_width="match_parent"-->
-            <!--android:layout_height="200dp">-->
+        <mac.yk.devicemanagement.widget.lunboView
+            android:id="@+id/lunbo"
+            android:layout_width="match_parent"
+            android:layout_height="200dp">
 
-        <!--</mac.yk.devicemanagement.widget.lunboView>-->
-        <!--<mac.yk.devicemanagement.widget.zhishiqiView-->
-            <!--android:id="@+id/zhishi"-->
-            <!--android:layout_width="wrap_content"-->
-            <!--android:layout_height="wrap_content"-->
-            <!--android:layout_centerHorizontal="true"-->
-            <!--android:layout_alignParentBottom="true"-->
-            <!--app:count="5"-->
-            <!--app:focusColor="@color/main_orange"-->
-            <!--app:normalColor="@color/white"-->
-            <!--app:length="10dp"-->
-            <!--app:space="6dp"/>-->
+        </mac.yk.devicemanagement.widget.lunboView>
+        <mac.yk.devicemanagement.widget.zhishiqiView
+            android:id="@+id/zhishi"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_alignParentBottom="true"
+            app:count="3"
+            app:focusColor="@color/main_orange"
+            app:normalColor="@color/white"
+            app:length="10dp"
+            app:space="5dp"/>
 
     </RelativeLayout>
 
-    <ScrollView
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
         <TextView
             android:id="@+id/detail"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
-    </ScrollView>
+    </LinearLayout>
 </LinearLayout>

@@ -179,5 +179,15 @@ public class Model implements IModel {
                 .execute(callback);
     }
 
+    @Override
+    public void getCount(Context context, int Dname,String type, OkHttpUtils.OnCompleteListener<Result> callback) {
+        OkHttpUtils<Result> ok=new OkHttpUtils<>(context);
+        ok.setRequestUrl(I.REQUEST.GETPICCOUNT)
+                .addParam(I.DEVICE.DNAME, String.valueOf(Dname))
+                .addParam(I.PIC.TYPE,type)
+                .targetClass(Result.class)
+                .execute(callback);
+    }
+
 
 }

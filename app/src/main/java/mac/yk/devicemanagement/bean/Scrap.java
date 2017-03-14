@@ -3,7 +3,7 @@ package mac.yk.devicemanagement.bean;
 import java.util.Date;
 
 public class Scrap {
-      int Did,Dname;
+      int did,dname;
       String user,remark;
 		Date scrapDate;
       public Scrap(){
@@ -11,22 +11,22 @@ public class Scrap {
 	  }
 	public Scrap(int did, int dname, String user, String remark) {
 		super();
-		Did = did;
-		Dname = dname;
+		this.did = did;
+		this.dname = dname;
 		this.user = user;
 		this.remark = remark;
 	}
 	public int getDid() {
-		return Did;
+		return did;
 	}
 	public void setDid(int did) {
-		Did = did;
+		this.did = did;
 	}
 	public int getDname() {
-		return Dname;
+		return dname;
 	}
 	public void setDname(int dname) {
-		Dname = dname;
+		this.dname = dname;
 	}
 	public String getUser() {
 		return user;

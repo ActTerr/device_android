@@ -77,7 +77,7 @@ public class DetailActivity extends AppCompatActivity {
             id = String.valueOf(device.getDid());
             if (device.getDname() == I.DNAME.DIANCHI) {
                 isDianchi = true;
-                device.setDianchi(true);
+//                device.setDianchi(true);
             }
         }
         setSupportActionBar(toolBar);

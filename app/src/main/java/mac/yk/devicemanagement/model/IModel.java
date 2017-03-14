@@ -45,4 +45,6 @@ public interface IModel {
     void downScrap(Context context, int page, int size, OkHttpUtils.OnCompleteListener<Scrap[]> callback);
 
     void downDevice(Context context, int page, int size, OkHttpUtils.OnCompleteListener<Device[]> callback);
+
+    void getCount(Context context,int Dname,String type,OkHttpUtils.OnCompleteListener<Result> callback);
 }
