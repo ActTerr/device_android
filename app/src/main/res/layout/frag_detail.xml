@@ -38,9 +38,12 @@
     </RelativeLayout>
 
     <LinearLayout
+        android:layout_marginTop="10dp"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
         <TextView
+            android:padding="5dp"
+            android:textSize="20sp"
             android:id="@+id/detail"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />

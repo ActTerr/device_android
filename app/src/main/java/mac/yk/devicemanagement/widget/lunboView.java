@@ -1,6 +1,7 @@
 package mac.yk.devicemanagement.widget;
 
 import android.content.Context;
+import android.graphics.drawable.Drawable;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v4.view.PagerAdapter;
@@ -16,8 +17,10 @@ import android.widget.Scroller;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 
 import java.lang.reflect.Field;
+import java.util.ArrayList;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -43,13 +46,12 @@ public class lunboView extends ViewPager{
     int count=0;
     IModel model;
     Device device;
+
+    boolean cacheOK=false;
+    ArrayList<Drawable> Images=new ArrayList<>();
     public lunboView(Context context, AttributeSet attributeSet) {
         super(context,attributeSet);
-
     }
-
-
-
 
     class AutoLoopPlayAdapter extends PagerAdapter{
 
@@ -67,6 +69,7 @@ public class lunboView extends ViewPager{
                     if (!notchange){
                         L.e("main","get");
                         setCurrentItem(getCurrentItem()+1);
+
                     }
                 }
             };
@@ -108,21 +111,30 @@ public class lunboView extends ViewPager{
 
         @Override
         public Object instantiateItem(ViewGroup container, int position) {
-            ImageView view=new ImageView(context);
-            container.addView(view);
-            String url=I.REQUEST.SERVER_ROOT+I.REQUEST.DOWNPIC+"&"+I.DEVICE.DNAME+"="+device.getDname()
-                    +"&"+I.PIC.PID+"="+position%count+"&"+I.PIC.TYPE+"="+I.PIC.DEVICE;
-            L.e("main",url);
-            Glide.with(context).load(url)
-                    .placeholder(R.drawable.nopic)
-                    .crossFade()
-                    .into(view);
-            return view;
+            ImageView iv=new ImageView(context);
+            container.addView(iv);
+            if (!cacheOK){
+                String url=I.REQUEST.SERVER_ROOT+I.REQUEST.DOWNPIC+"&"+I.DEVICE.DNAME+"="+device.getDname()
+                        +"&"+I.PIC.PID+"="+position%count+"&"+I.PIC.TYPE+"="+I.PIC.DEVICE;
+                L.e("main",url);
+                Glide.with(context).load(url)
+                        .placeholder(R.drawable.nopic)
+                        .diskCacheStrategy(DiskCacheStrategy.NONE)
+                        .error(R.drawable.nopic)
+                        .into(iv);
+                Images.add(position,iv.getDrawable());
+//                cacheOK=Images.size()==count?true:false;
+            }else {
+                iv.setImageDrawable(Images.get(position%count));
+                L.e("main", "memory");
+            }
+
+            return iv;
         }
 
         @Override
         public void destroyItem(ViewGroup container, int position, Object object) {
-            container.removeView((ImageView) object);
+            container.removeView((View) object);
         }
     }
 
@@ -207,8 +219,4 @@ public class lunboView extends ViewPager{
         return super.onTouchEvent(ev);
     }
 
-    @Override
-    protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
-        setMeasuredDimension(widthMeasureSpec,heightMeasureSpec);
-    }
 }

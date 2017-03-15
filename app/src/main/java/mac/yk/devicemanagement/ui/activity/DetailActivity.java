@@ -77,6 +77,7 @@ public class DetailActivity extends AppCompatActivity {
             id = String.valueOf(device.getDid());
             if (device.getDname() == I.DNAME.DIANCHI) {
                 isDianchi = true;
+                MyApplication.setFlag(true);
 //                device.setDianchi(true);
             }
         }
@@ -101,6 +102,7 @@ public class DetailActivity extends AppCompatActivity {
             });
         }
         if (isDianchi) {
+
             navView.getMenu().getItem(3).setTitle("充电");
             navView.getMenu().getItem(4).setTitle("充满");
         }else{

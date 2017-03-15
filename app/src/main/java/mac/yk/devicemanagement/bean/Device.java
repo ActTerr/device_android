@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.util.Date;
 import java.util.Observable;
 
+import mac.yk.devicemanagement.MyApplication;
 import mac.yk.devicemanagement.util.ConvertUtils;
 
 /**
@@ -82,9 +83,10 @@ public class Device extends Observable implements Serializable{
 
     @Override
     public String toString() {
-        return  "name:"+dname+"\n"+
-                "ID:" + did + "\n" +
-                "当前状态:"+status+"\n"+
+        return
+//                "name:"+ConvertUtils.getDname(dname)+"\n"+
+                "设备ID:" + did + "\n" +
+                "当前状态:"+ConvertUtils.getStatus(MyApplication.getFlag(),status)+"\n"+
                 "出厂日期:"+ ConvertUtils.Date2String(chuchang)+"\n"+
                 "上次巡检日期:"+ConvertUtils.Date2String(xunjian);
     }

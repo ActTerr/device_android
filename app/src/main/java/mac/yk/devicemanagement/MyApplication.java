@@ -16,7 +16,7 @@ public class MyApplication extends Application {
     public static MyApplication getInstance(){
         return instance;
     }
-
+    public static boolean isDianchi;
     @Override
     public void onCreate() {
         super.onCreate();
@@ -53,5 +53,12 @@ public class MyApplication extends Application {
     public static Context getContext(){
         context=getContext();
         return context;
+    }
+
+    public static void setFlag(boolean b) {
+        isDianchi=b;
+    }
+    public static boolean getFlag(){
+        return isDianchi;
     }
 }
