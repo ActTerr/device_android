@@ -11,6 +11,7 @@ import android.widget.Toast;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import mac.yk.devicemanagement.I;
+import mac.yk.devicemanagement.MyApplication;
 import mac.yk.devicemanagement.R;
 import mac.yk.devicemanagement.bean.Result;
 import mac.yk.devicemanagement.model.IModel;
@@ -41,6 +42,7 @@ public class LoginActivity extends AppCompatActivity {
                 if (result != null && result.getRetCode() == I.RESULT.SUCCESS) {
                     SpUtil.saveLoginUser(context,name.getText().toString());
                     Intent intent = new Intent(context, MainActivity.class);
+                    MyApplication.getInstance().setUserName(name.getText().toString());
                     startActivity(intent);
                     finish();
                 } else {

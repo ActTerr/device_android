@@ -25,7 +25,7 @@ public class Splash extends AppCompatActivity {
                     e.printStackTrace();
                 }
                 String name=SpUtil.getLoginUser(context);
-                if (name==null){
+                if (name.equals("")){
                     Intent intent=new Intent(context,LoginActivity.class);
                     startActivity(intent);
                     finish();

@@ -74,7 +74,7 @@ public interface I {
     }
     interface USER{
         String TABLENAME="user";
-        String NAME="user";
+        String NAME="name";
         String PASSWD="passwd";
     }
 

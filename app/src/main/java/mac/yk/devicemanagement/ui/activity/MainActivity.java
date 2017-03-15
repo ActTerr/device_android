@@ -88,6 +88,7 @@ public class MainActivity extends AppCompatActivity {
             ImageView imageView = (ImageView) navView.getHeaderView(0).findViewById(R.id.avatar);
             TextView textView = (TextView) navView.getHeaderView(0).findViewById(R.id.nav_name);
             textView.setText(MyApplication.getInstance().getUserName());
+            L.e("main","name:"+MyApplication.getInstance().getUserName());
             imageView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
