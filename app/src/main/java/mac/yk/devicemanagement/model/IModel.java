@@ -18,7 +18,7 @@ import mac.yk.devicemanagement.util.OkHttpUtils;
 public interface IModel {
     void getYujing(Context context, OkHttpUtils.OnCompleteListener<Result> callback);
 
-    void getTongji(Context context, OkHttpUtils.OnCompleteListener<Result> callback);
+    void getTongji(Context context,String tableName, OkHttpUtils.OnCompleteListener<Result> callback);
 
     void chaxun(Context context, String Did, OkHttpUtils.OnCompleteListener<Result> callback);
 

@@ -30,9 +30,10 @@ public class Model implements IModel {
     }
 
     @Override
-    public void getTongji(Context context, OkHttpUtils.OnCompleteListener<Result> callback) {
+    public void getTongji(Context context, String tableName,OkHttpUtils.OnCompleteListener<Result> callback) {
         OkHttpUtils<Result> OK=new OkHttpUtils<>(context);
         OK.setRequestUrl(I.REQUEST.TONGJI)
+                .addParam(I.TABLENAME,tableName)
                 .targetClass(Result.class)
                 .execute(callback);
     }

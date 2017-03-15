@@ -78,7 +78,7 @@ public class fragTongji extends Fragment {
     }
 
     private void gettongji() {
-        model.getTongji(context, new OkHttpUtils.OnCompleteListener<Result>() {
+        model.getTongji(context,I.DEVICE.TABLENAME, new OkHttpUtils.OnCompleteListener<Result>() {
             @Override
             public void onSuccess(Result result) {
                 if(result.getRetCode()==I.RESULT.SUCCESS){
@@ -189,7 +189,7 @@ public class fragTongji extends Fragment {
                 scan(I.CONTROL.START);
                 break;
         }
-        setTitle(); 
+        setTitle();
         SetSelectedList(selected,true,null);
         return true;
     }
