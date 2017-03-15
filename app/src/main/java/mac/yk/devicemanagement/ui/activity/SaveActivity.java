@@ -109,7 +109,7 @@ public class SaveActivity extends AppCompatActivity implements View.OnClickListe
 
 
     private void showPopuWindow(View v) {
-        pop = new PopupWindow(v, ConvertUtils.dp2px(this, 550), ConvertUtils.px2dp(this, 1000));
+        pop = new PopupWindow(v, ConvertUtils.dp2px(this, 100), ConvertUtils.dp2px(this, 150));
         pop.setOutsideTouchable(true);
         pop.setTouchable(true);
         pop.setFocusable(true);
@@ -213,7 +213,10 @@ public class SaveActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     private void showStatusWindow(View v2) {
-        pop = new PopupWindow(v2, ConvertUtils.dp2px(this, 550), ConvertUtils.px2dp(this, 1000));
+        int width= ConvertUtils.dp2px(this, 100);
+        int height=ConvertUtils.dp2px(this, 150);
+        L.e("main","w:"+width+" h:"+height);
+        pop = new PopupWindow(v2, width,height);
         pop.setOutsideTouchable(true);
         pop.setTouchable(true);
         pop.setFocusable(true);

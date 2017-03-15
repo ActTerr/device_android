@@ -17,6 +17,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.gson.Gson;
 import com.xys.libzxing.zxing.activity.CaptureActivity;
 
 import java.util.ArrayList;
@@ -28,6 +29,7 @@ import mac.yk.devicemanagement.I;
 import mac.yk.devicemanagement.R;
 import mac.yk.devicemanagement.adapter.DeviceAdapter;
 import mac.yk.devicemanagement.bean.Device;
+import mac.yk.devicemanagement.bean.Result;
 import mac.yk.devicemanagement.model.IModel;
 import mac.yk.devicemanagement.util.ConvertUtils;
 import mac.yk.devicemanagement.util.L;
@@ -55,6 +57,7 @@ public class fragTongji extends Fragment {
     GridLayoutManager gridLayoutManager;
     boolean isMore;
     ProgressDialog pd;
+    Integer [] tongji;
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -68,10 +71,48 @@ public class fragTongji extends Fragment {
         rv.setAdapter(deviceAdapter);
         rv.setLayoutManager(gridLayoutManager);
         downData();
+        gettongji();
         setListener();
         setHasOptionsMenu(true);
         return view;
     }
+
+    private void gettongji() {
+        model.getTongji(context, new OkHttpUtils.OnCompleteListener<Result>() {
+            @Override
+            public void onSuccess(Result result) {
+                if(result.getRetCode()==I.RESULT.SUCCESS){
+                    String json=result.getRetData().toString();
+                    Gson gson=new Gson();
+                    tongji= gson.fromJson(json,Integer[].class);
+                    setTitle();
+                }else {
+                    Toast.makeText(context, "查询失败", Toast.LENGTH_SHORT).show();
+                }
+
+            }
+
+            @Override
+            public void onError(String error) {
+                Toast.makeText(context, "检查网络状况", Toast.LENGTH_SHORT).show();
+            }
+        });
+
+    }
+
+    private void setTitle() {
+       if(selected==0){
+           int count=0;
+           for(int i=1;i<5;i++){
+               count+=tongji[i];
+           }
+           tv.setText("设备总数："+count);
+       }else {
+           tv.setText(ConvertUtils.getDname(selected)+"个数:"+tongji[selected]);
+       }
+    }
+
+
 
     private void setListener() {
         rv.setOnScrollListener(new RecyclerView.OnScrollListener() {
@@ -108,6 +149,7 @@ public class fragTongji extends Fragment {
                     }else {
                         SetSelectedList(selected,false,list);
                     }
+
                     isMore=true;
                 } else {
                     isMore=false;
@@ -147,6 +189,7 @@ public class fragTongji extends Fragment {
                 scan(I.CONTROL.START);
                 break;
         }
+        setTitle(); 
         SetSelectedList(selected,true,null);
         return true;
     }
