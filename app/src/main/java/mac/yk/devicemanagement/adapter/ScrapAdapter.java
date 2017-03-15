@@ -13,6 +13,7 @@ import butterknife.ButterKnife;
 import mac.yk.devicemanagement.R;
 import mac.yk.devicemanagement.bean.Scrap;
 import mac.yk.devicemanagement.util.ConvertUtils;
+import mac.yk.devicemanagement.util.L;
 
 /**
  * Created by mac-yk on 2017/3/13.
@@ -37,8 +38,9 @@ public class ScrapAdapter extends RecyclerView.Adapter {
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
         Scrap scrap=scraps.get(position);
+        L.e("main",scrap.toString());
         ScrapHolder scrapHolder= (ScrapHolder) holder;
-        scrapHolder.Did.setText(scrap.getDid()+"");
+        scrapHolder.Did.setText(scrap.getDid());
         scrapHolder.Dname.setText(ConvertUtils.getDname(scrap.getDname()));
         scrapHolder.user.setText(scrap.getUser());
         scrapHolder.ScrapDate.setText(ConvertUtils.Date2String(scrap.getScrapDate()));

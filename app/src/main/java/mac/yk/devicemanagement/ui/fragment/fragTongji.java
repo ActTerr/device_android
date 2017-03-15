@@ -2,6 +2,7 @@ package mac.yk.devicemanagement.ui.fragment;
 
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -16,6 +17,8 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.xys.libzxing.zxing.activity.CaptureActivity;
+
 import java.util.ArrayList;
 
 import butterknife.BindView;
@@ -23,8 +26,8 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import mac.yk.devicemanagement.I;
 import mac.yk.devicemanagement.R;
-import mac.yk.devicemanagement.bean.Device;
 import mac.yk.devicemanagement.adapter.DeviceAdapter;
+import mac.yk.devicemanagement.bean.Device;
 import mac.yk.devicemanagement.model.IModel;
 import mac.yk.devicemanagement.util.ConvertUtils;
 import mac.yk.devicemanagement.util.L;
@@ -117,7 +120,9 @@ public class fragTongji extends Fragment {
             }
         });
     }
-
+    public void scan(int id) {
+        getActivity().startActivityForResult(new Intent(getActivity(), CaptureActivity.class), id);
+    }
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         inflater.inflate(R.menu.menu_name, menu);
@@ -137,6 +142,9 @@ public class fragTongji extends Fragment {
                 break;
             case R.id.jikongqi:
                 selected = I.DNAME.JIKONGQI;
+                break;
+            case R.id.action_capture:
+                scan(I.CONTROL.START);
                 break;
         }
         SetSelectedList(selected,true,null);

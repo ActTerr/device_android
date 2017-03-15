@@ -38,7 +38,7 @@ import mac.yk.devicemanagement.widget.MyItemDecoration;
  * Created by mac-yk on 2017/3/2.
  */
 
-public class fragList extends Fragment {
+public class fragRecord extends Fragment {
 
 
     Handler handler=new Handler(){

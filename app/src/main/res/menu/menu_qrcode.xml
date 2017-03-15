@@ -7,12 +7,4 @@
         android:orderInCategory="100"
         android:icon="@drawable/ic_action_scan"
         app:showAsAction="always"/>
-    <item android:id="@+id/diantai"
-        android:title="电台"/>
-    <item android:id="@+id/dianchi"
-        android:title="电池"/>
-    <item android:id="@+id/jikongqi"
-        android:title="机控器"/>
-    <item android:id="@+id/qukongqi"
-        android:title="区控器"/>
 </menu>

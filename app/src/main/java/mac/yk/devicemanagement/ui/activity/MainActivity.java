@@ -29,10 +29,10 @@ import mac.yk.devicemanagement.MyApplication;
 import mac.yk.devicemanagement.R;
 import mac.yk.devicemanagement.bean.Device;
 import mac.yk.devicemanagement.bean.Result;
+import mac.yk.devicemanagement.model.IModel;
 import mac.yk.devicemanagement.ui.fragment.fragBaofei;
 import mac.yk.devicemanagement.ui.fragment.fragMain;
 import mac.yk.devicemanagement.ui.fragment.fragTongji;
-import mac.yk.devicemanagement.model.IModel;
 import mac.yk.devicemanagement.util.ActivityUtils;
 import mac.yk.devicemanagement.util.L;
 import mac.yk.devicemanagement.util.MFGT;
@@ -132,6 +132,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
     }
+
 
 
     @Override

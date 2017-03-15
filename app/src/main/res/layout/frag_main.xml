@@ -14,14 +14,16 @@
         android:text="车务自管设备管理移动终端"
         android:textSize="37sp" />
 
-    <Button
+    <TextView
+        android:gravity="center"
+        android:layout_marginRight="70dp"
+        android:layout_marginLeft="70dp"
+        android:textSize="30sp"
+        android:text="请点击右上方扫码获取设备信息"
+        android:layout_gravity="center_horizontal"
         android:layout_marginTop="200dp"
-        android:layout_marginLeft="50dp"
-        android:layout_marginRight="50dp"
-        android:id="@+id/saoma"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="扫码操作设备" />
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
 
 
 

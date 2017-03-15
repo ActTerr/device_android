@@ -19,14 +19,14 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import mac.yk.devicemanagement.MyApplication;
 import mac.yk.devicemanagement.R;
-import mac.yk.devicemanagement.ui.fragment.fragList;
+import mac.yk.devicemanagement.ui.fragment.fragRecord;
 import mac.yk.devicemanagement.util.ActivityUtils;
 import mac.yk.devicemanagement.util.L;
 import mac.yk.devicemanagement.util.MFGT;
 
 public class RecordActivity extends AppCompatActivity {
 
-    fragList fragment,fragment2;
+    fragRecord fragment,fragment2;
 
     @BindView(R.id.toolBar)
     Toolbar toolBar;
@@ -50,23 +50,23 @@ public class RecordActivity extends AppCompatActivity {
             finish();
         } else {
             init();
-            fragment = (fragList) getSupportFragmentManager().findFragmentById(R.id.frame);
+            fragment = (fragRecord) getSupportFragmentManager().findFragmentById(R.id.frame);
             Bundle bundle1 = new Bundle();
             bundle1.putString("id", id);
             bundle1.putBoolean("flag", true);
             if (fragment==null){
                 Log.e("main","fragment从空被赋值");
-                fragment=new fragList();
+                fragment=new fragRecord();
             }
             fragment.setArguments(bundle1);
             ActivityUtils.addFragmentToActivity(getSupportFragmentManager(),fragment,R.id.frame);
 
-            fragment2 = (fragList) getSupportFragmentManager().findFragmentById(R.id.frame);
+            fragment2 = (fragRecord) getSupportFragmentManager().findFragmentById(R.id.frame);
             Bundle bundle2 = new Bundle();
             bundle2.putString("id", id);
             bundle2.putBoolean("flag", false);
             if (fragment2==null){
-                fragment2=new fragList();
+                fragment2=new fragRecord();
             }
             fragment2.setArguments(bundle2);
 //            ActivityUtils.addFragmentToActivity(getSupportFragmentManager(), fragment2, R.id.frame);

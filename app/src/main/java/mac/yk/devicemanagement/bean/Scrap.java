@@ -48,4 +48,15 @@ public class Scrap {
 	public void setScrapDate(Date scrapDate) {
 		this.scrapDate = scrapDate;
 	}
+
+	@Override
+	public String toString() {
+		return "Scrap{" +
+				"did=" + did +
+				", dname=" + dname +
+				", user='" + user + '\'' +
+				", remark='" + remark + '\'' +
+				", scrapDate=" + scrapDate +
+				'}';
+	}
 }
