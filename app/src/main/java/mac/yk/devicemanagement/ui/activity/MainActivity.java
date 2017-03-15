@@ -1,4 +1,4 @@
-package mac.yk.devicemanagement.controller.activity;
+package mac.yk.devicemanagement.ui.activity;
 
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
@@ -29,9 +29,9 @@ import mac.yk.devicemanagement.MyApplication;
 import mac.yk.devicemanagement.R;
 import mac.yk.devicemanagement.bean.Device;
 import mac.yk.devicemanagement.bean.Result;
-import mac.yk.devicemanagement.controller.fragment.fragBaofei;
-import mac.yk.devicemanagement.controller.fragment.fragMain;
-import mac.yk.devicemanagement.controller.fragment.fragTongji;
+import mac.yk.devicemanagement.ui.fragment.fragBaofei;
+import mac.yk.devicemanagement.ui.fragment.fragMain;
+import mac.yk.devicemanagement.ui.fragment.fragTongji;
 import mac.yk.devicemanagement.model.IModel;
 import mac.yk.devicemanagement.util.ActivityUtils;
 import mac.yk.devicemanagement.util.L;

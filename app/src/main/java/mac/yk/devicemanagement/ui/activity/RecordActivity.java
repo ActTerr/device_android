@@ -1,4 +1,4 @@
-package mac.yk.devicemanagement.controller.activity;
+package mac.yk.devicemanagement.ui.activity;
 
 import android.content.Context;
 import android.os.Bundle;
@@ -19,7 +19,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import mac.yk.devicemanagement.MyApplication;
 import mac.yk.devicemanagement.R;
-import mac.yk.devicemanagement.controller.fragment.fragList;
+import mac.yk.devicemanagement.ui.fragment.fragList;
 import mac.yk.devicemanagement.util.ActivityUtils;
 import mac.yk.devicemanagement.util.L;
 import mac.yk.devicemanagement.util.MFGT;

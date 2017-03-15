@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:background="@color/white"
-    tools:context="mac.yk.devicemanagement.controller.activity.GestureActivity">
+    tools:context="mac.yk.devicemanagement.ui.activity.GestureActivity">
 
     <RelativeLayout
         android:layout_marginLeft="20dp"

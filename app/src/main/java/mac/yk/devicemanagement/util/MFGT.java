@@ -4,12 +4,12 @@ import android.content.Context;
 import android.content.Intent;
 
 import mac.yk.devicemanagement.bean.Device;
-import mac.yk.devicemanagement.controller.activity.DetailActivity;
-import mac.yk.devicemanagement.controller.activity.GestureActivity;
-import mac.yk.devicemanagement.controller.activity.LoginActivity;
-import mac.yk.devicemanagement.controller.activity.RecordActivity;
-import mac.yk.devicemanagement.controller.activity.SaveActivity;
-import mac.yk.devicemanagement.controller.activity.SetActivity;
+import mac.yk.devicemanagement.ui.activity.DetailActivity;
+import mac.yk.devicemanagement.ui.activity.GestureActivity;
+import mac.yk.devicemanagement.ui.activity.LoginActivity;
+import mac.yk.devicemanagement.ui.activity.RecordActivity;
+import mac.yk.devicemanagement.ui.activity.SaveActivity;
+import mac.yk.devicemanagement.ui.activity.SetActivity;
 
 /**
  * Created by mac-yk on 2017/3/2.

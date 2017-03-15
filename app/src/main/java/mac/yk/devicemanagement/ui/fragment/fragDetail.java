@@ -1,4 +1,4 @@
-package mac.yk.devicemanagement.controller.fragment;
+package mac.yk.devicemanagement.ui.fragment;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;

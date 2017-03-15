@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    <TextView
+        android:gravity="center"
+        android:textSize="20sp"
+        android:id="@+id/beiyong"
+        android:text="备用"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+    <TextView
+        android:gravity="center"
+        android:textSize="20sp"
+        android:id="@+id/daiyong"
+        android:text="待用"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+    <TextView
+        android:gravity="center"
+        android:textSize="20sp"
+        android:id="@+id/yunxing"
+        android:text="运行"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+    <TextView
+        android:gravity="center"
+        android:textSize="20sp"
+        android:id="@+id/weixiu"
+        android:text="维修"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+    <TextView
+        android:visibility="gone"
+        android:gravity="center"
+        android:textSize="20sp"
+        android:id="@+id/yonghou"
+        android:text="用后"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+</LinearLayout>

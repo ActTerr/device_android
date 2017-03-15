@@ -1,4 +1,4 @@
-package mac.yk.devicemanagement.view.holder;
+package mac.yk.devicemanagement.ui.holder;
 
 import android.support.v7.widget.RecyclerView;
 import android.view.View;

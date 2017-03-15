@@ -1,4 +1,4 @@
-package mac.yk.devicemanagement.controller.activity;
+package mac.yk.devicemanagement.ui.activity;
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;

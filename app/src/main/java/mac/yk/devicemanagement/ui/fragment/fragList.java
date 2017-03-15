@@ -1,4 +1,4 @@
-package mac.yk.devicemanagement.controller.fragment;
+package mac.yk.devicemanagement.ui.fragment;
 
 import android.app.Activity;
 import android.content.Context;
@@ -25,8 +25,8 @@ import butterknife.OnClick;
 import mac.yk.devicemanagement.R;
 import mac.yk.devicemanagement.bean.Weixiu;
 import mac.yk.devicemanagement.bean.Xunjian;
-import mac.yk.devicemanagement.controller.adapter.weixiuAdapter;
-import mac.yk.devicemanagement.controller.adapter.xunjianAdapter;
+import mac.yk.devicemanagement.adapter.weixiuAdapter;
+import mac.yk.devicemanagement.adapter.xunjianAdapter;
 import mac.yk.devicemanagement.model.IModel;
 import mac.yk.devicemanagement.util.ConvertUtils;
 import mac.yk.devicemanagement.util.L;

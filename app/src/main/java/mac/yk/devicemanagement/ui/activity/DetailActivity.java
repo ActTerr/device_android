@@ -1,4 +1,4 @@
-package mac.yk.devicemanagement.controller.activity;
+package mac.yk.devicemanagement.ui.activity;
 
 import android.app.Activity;
 import android.app.Dialog;
@@ -28,7 +28,7 @@ import mac.yk.devicemanagement.MyApplication;
 import mac.yk.devicemanagement.R;
 import mac.yk.devicemanagement.bean.Device;
 import mac.yk.devicemanagement.bean.Result;
-import mac.yk.devicemanagement.controller.fragment.fragDetail;
+import mac.yk.devicemanagement.ui.fragment.fragDetail;
 import mac.yk.devicemanagement.model.IModel;
 import mac.yk.devicemanagement.util.ActivityUtils;
 import mac.yk.devicemanagement.util.L;

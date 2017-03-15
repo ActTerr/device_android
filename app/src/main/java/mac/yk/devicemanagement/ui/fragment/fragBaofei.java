@@ -1,4 +1,4 @@
-package mac.yk.devicemanagement.controller.fragment;
+package mac.yk.devicemanagement.ui.fragment;
 
 
 import android.app.ProgressDialog;
@@ -25,7 +25,7 @@ import butterknife.OnClick;
 import mac.yk.devicemanagement.I;
 import mac.yk.devicemanagement.R;
 import mac.yk.devicemanagement.bean.Scrap;
-import mac.yk.devicemanagement.controller.adapter.ScrapAdapter;
+import mac.yk.devicemanagement.adapter.ScrapAdapter;
 import mac.yk.devicemanagement.model.IModel;
 import mac.yk.devicemanagement.util.ConvertUtils;
 import mac.yk.devicemanagement.util.L;

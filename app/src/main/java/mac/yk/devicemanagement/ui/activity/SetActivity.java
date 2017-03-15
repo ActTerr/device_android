@@ -1,4 +1,4 @@
-package mac.yk.devicemanagement.controller.activity;
+package mac.yk.devicemanagement.ui.activity;
 
 import android.app.ProgressDialog;
 import android.content.Context;

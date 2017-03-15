@@ -62,6 +62,20 @@ public class ConvertUtils {
         }
         return null;
     }
+    public static int getDname(String Dname){
+        switch (Dname){
+            case "电池":
+                return I.DNAME.DIANCHI;
+            case "电台":
+                return I.DNAME.DIANTAI;
+            case "机控器":
+                return I.DNAME.JIKONGQI;
+            case "区控器":
+                return I.DNAME.QUKONGQI;
+        }
+        return 0;
+    }
+
     public static String getStatus(boolean isDianchi,int status){
         switch (status){
             case I.CONTROL.BAOFEI:
@@ -75,14 +89,30 @@ public class ConvertUtils {
                     return "充电";
                 }
                 return "维修";
-            case I.CONTROL.XUNJIAN:
-                if (isDianchi){
-                    return "用后";
-                }
-                return "巡检";
             case I.CONTROL.YUNXING:
                 return "运行";
+            case I.CONTROL.YONGHOU:
+                return "用后";
         }
         return null;
     }
+    public static int getStatus(String status){
+        switch (status){
+            case "报废":
+                return I.CONTROL.BAOFEI;
+            case "备用":
+                return I.CONTROL.BEIYONG;
+            case "待用":
+                return I.CONTROL.DAIYONG;
+            case "维修":
+            case "充电":
+                return I.CONTROL.WEIXIU;
+            case "用后":
+                return I.CONTROL.YONGHOU;
+            case "运行":
+                return I.CONTROL.YUNXING;
+        }
+        return 0;
+    }
+
 }

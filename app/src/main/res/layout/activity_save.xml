@@ -5,9 +5,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context="mac.yk.devicemanagement.controller.activity.SaveActivity">
+    tools:context="mac.yk.devicemanagement.ui.activity.SaveActivity">
 <LinearLayout
-    android:paddingBottom="20dp"
     android:layout_marginLeft="10dp"
     android:layout_marginRight="10dp"
     android:layout_marginTop="20dp"
@@ -15,7 +14,6 @@
     android:layout_height="wrap_content"
     android:orientation="horizontal">
     <TextView
-
         android:textSize="30sp"
         android:text="设备名称："
         android:layout_width="wrap_content"
@@ -27,13 +25,12 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" />
     <ImageView
-        android:id="@+id/select"
+        android:id="@+id/nameSelect"
         android:background="@mipmap/ic_launcher"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" />
 </LinearLayout>
     <View
-        android:layout_marginTop="20dp"
         android:layout_marginLeft="10dp"
         android:layout_marginRight="10dp"
         android:background="@color/gray"
@@ -52,7 +49,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
 
-        <EditText
+        <TextView
             android:layout_weight="1"
             android:id="@+id/chuchang"
             android:hint="请输入出厂日期"
@@ -65,13 +62,6 @@
             android:layout_height="wrap_content" />
 
     </LinearLayout>
-    <CalendarView
-        android:visibility="gone"
-        android:id="@+id/chuchangCal"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content">
-
-    </CalendarView>
     <View
         android:layout_marginLeft="10dp"
         android:layout_marginRight="10dp"
@@ -90,19 +80,19 @@
             android:text="巡检日期："
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
-        <EditText
+        <TextView
+            android:layout_weight="1"
             android:id="@+id/xunjian"
             android:hint="请输入巡检日期"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
+        <ImageView
+            android:id="@+id/xunjian_btn"
+            android:src="@mipmap/ic_launcher"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
     </LinearLayout>
-    <CalendarView
-        android:visibility="gone"
-        android:id="@+id/xunjianCal"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content">
 
-    </CalendarView>
     <View
         android:layout_marginLeft="10dp"
         android:layout_marginRight="10dp"
@@ -121,10 +111,16 @@
             android:text="当前状态："
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
-        <EditText
-            android:id="@+id/zhuangtai"
+        <TextView
+            android:layout_weight="1"
+            android:id="@+id/status"
             android:hint="请输入当前状态（默认备用）"
             android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+        <ImageView
+            android:id="@+id/statusSelect"
+            android:src="@mipmap/ic_launcher"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
     </LinearLayout>
 
@@ -135,7 +131,7 @@
         android:layout_width="match_parent"
         android:layout_height="1dp"/>
     <Button
-        android:onClick="onSave"
+        android:id="@+id/btn_save"
         android:layout_marginTop="20dp"
         android:text="保存"
         android:layout_gravity="center"

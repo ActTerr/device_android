@@ -1,4 +1,4 @@
-package mac.yk.devicemanagement.controller.adapter;
+package mac.yk.devicemanagement.adapter;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
@@ -10,7 +10,7 @@ import java.util.ArrayList;
 import mac.yk.devicemanagement.R;
 import mac.yk.devicemanagement.bean.Weixiu;
 import mac.yk.devicemanagement.util.L;
-import mac.yk.devicemanagement.view.holder.WxViewHolder;
+import mac.yk.devicemanagement.ui.holder.WxViewHolder;
 
 /**
  * Created by mac-yk on 2017/3/2.
