@@ -7,7 +7,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -52,7 +52,7 @@ public class fragBaofei extends Fragment {
     ArrayList<Scrap> devices = new ArrayList<>();
     ScrapAdapter scrapAdapter;
     ArrayList<Scrap> currentDevices=new ArrayList<>();
-    LinearLayoutManager llm;
+    GridLayoutManager gridLayoutManager;
     boolean isMore;
     ProgressDialog pd;
     @Nullable
@@ -63,10 +63,10 @@ public class fragBaofei extends Fragment {
         model = TestUtil.getData();
         context = getContext();
         scrapAdapter = new ScrapAdapter(context);
-        llm=new LinearLayoutManager(context);
+        gridLayoutManager=new GridLayoutManager(context,1);
         pd=new ProgressDialog(context);
         rv.setAdapter(scrapAdapter);
-        rv.setLayoutManager(llm);
+        rv.setLayoutManager(gridLayoutManager);
         downData();
         setListener();
         setHasOptionsMenu(true);
@@ -76,7 +76,7 @@ public class fragBaofei extends Fragment {
         rv.setOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
             public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
-                int lastPosition=llm.findLastVisibleItemPosition();
+                int lastPosition=gridLayoutManager.findLastVisibleItemPosition();
                 if (newState==RecyclerView.SCROLL_STATE_IDLE
                         &&lastPosition==scrapAdapter.getItemCount()&&isMore){
                     downData();

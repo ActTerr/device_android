@@ -6,7 +6,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -52,7 +52,7 @@ public class fragTongji extends Fragment {
     ArrayList<Device> devices = new ArrayList<>();
     DeviceAdapter deviceAdapter;
     ArrayList<Device> currentDevices=new ArrayList<>();
-    LinearLayoutManager llm;
+    GridLayoutManager gridLayoutManager;
     boolean isMore;
     ProgressDialog pd;
     @Nullable
@@ -63,10 +63,10 @@ public class fragTongji extends Fragment {
         model = TestUtil.getData();
         context = getContext();
         deviceAdapter = new DeviceAdapter(context);
-        llm=new LinearLayoutManager(context);
+        gridLayoutManager=new GridLayoutManager(context,1);
         pd=new ProgressDialog(context);
         rv.setAdapter(deviceAdapter);
-        rv.setLayoutManager(llm);
+        rv.setLayoutManager(gridLayoutManager);
         downData();
         setListener();
         setHasOptionsMenu(true);
@@ -77,7 +77,7 @@ public class fragTongji extends Fragment {
         rv.setOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
             public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
-                int lastPosition=llm.findLastVisibleItemPosition();
+                int lastPosition=gridLayoutManager.findLastVisibleItemPosition();
                 if (newState==RecyclerView.SCROLL_STATE_IDLE
                         &&lastPosition==deviceAdapter.getItemCount()&&isMore){
                     downData();
