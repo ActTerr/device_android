@@ -1,10 +1,12 @@
 package mac.yk.devicemanagement.ui.activity;
 
+import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
 import android.view.View;
+import android.view.Window;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -22,12 +24,10 @@ import mac.yk.devicemanagement.util.OkHttpUtils;
 import mac.yk.devicemanagement.util.SpUtil;
 import mac.yk.devicemanagement.util.TestUtil;
 
-public class SetActivity extends AppCompatActivity {
+public class SetActivity extends Activity {
 
     @BindView(R.id.user)
     TextView user;
-    @BindView(R.id.name)
-    TextView name;
     @BindView(R.id.lock)
     ImageView lock;
     @BindView(R.id.shoushiText)
@@ -37,8 +37,7 @@ public class SetActivity extends AppCompatActivity {
 
     Context context;
     ProgressDialog pd;
-//    @BindView(R.id.toolBar)
-//    Toolbar toolBar;
+
     IModel model;
 
     @Override
@@ -46,26 +45,26 @@ public class SetActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_set);
         ButterKnife.bind(this);
+        requestWindowFeature(Window.FEATURE_NO_TITLE);
         context = this;
         pd = new ProgressDialog(context);
-        model= TestUtil.getData();
-//        setSupportActionBar(toolBar);
-//        ActionBar ab=getSupportActionBar();
-//        ab.setDisplayHomeAsUpEnabled(true);
+        model = TestUtil.getData();
+        user.setText(MyApplication.getInstance().getUserName());
+
     }
 
-    @OnClick({R.id.rlUser, R.id.rlName, R.id.rlPasswd, R.id.logOut})
+    @OnClick({R.id.rlUser, R.id.rlPasswd, R.id.logOut,R.id.auxiliary})
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.rlUser:
                 Toast.makeText(this, "账号不可修改", Toast.LENGTH_SHORT).show();
                 break;
-            case R.id.rlName:
-                Toast.makeText(this, "姓名不可修改", Toast.LENGTH_SHORT).show();
-                break;
             case R.id.rlPasswd:
                 MFGT.gotoGestureActivity(context);
                 break;
+            case R.id.auxiliary:
+                Intent intent=new Intent(this,AuxiliaryActivity.class);
+                startActivity(intent);
             case R.id.logOut:
                 pd.show();
                 model.LogOut(context, MyApplication.getInstance().getUserName(), new OkHttpUtils.OnCompleteListener<Result>() {
@@ -91,4 +90,5 @@ public class SetActivity extends AppCompatActivity {
                 break;
         }
     }
+    
 }

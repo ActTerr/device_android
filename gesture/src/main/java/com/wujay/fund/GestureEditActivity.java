@@ -12,6 +12,7 @@ import android.widget.FrameLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.wujay.fund.util.SpUtil;
 import com.wujay.fund.widget.GestureContentView;
 import com.wujay.fund.widget.GestureDrawline.GestureCallBack;
 import com.wujay.fund.widget.LockIndicator;
@@ -90,6 +91,7 @@ public class GestureEditActivity extends Activity  {
 				} else {
 					if (inputCode.equals(mFirstPassword)) {
 						Toast.makeText(GestureEditActivity.this, "设置成功", Toast.LENGTH_SHORT).show();
+						SpUtil.setGesPasswd(activity,inputCode);
 						mGestureContentView.clearDrawlineState(0L);
 						GestureEditActivity.this.finish();
 					} else {

@@ -1,5 +1,6 @@
 package com.wujay.fund;
 
+import com.wujay.fund.util.SpUtil;
 import com.wujay.fund.widget.GestureContentView;
 import com.wujay.fund.widget.GestureDrawline.GestureCallBack;
 import android.app.Activity;
@@ -11,6 +12,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.text.Html;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.animation.Animation;
@@ -45,12 +47,15 @@ public class GestureVerifyActivity extends Activity  {
 	private long mExitTime = 0;
 	private int mParamIntentCode;
 	Activity context;
+	String Gpasswd;
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_gesture_verify);
 		context=this;
 		ObtainExtraData();
+		Gpasswd= SpUtil.getGesPasswd(context);
+		Log.e("main",Gpasswd);
 		setUpViews();
 		this.setResult(RESULT_OK);
 	}
@@ -79,7 +84,7 @@ public class GestureVerifyActivity extends Activity  {
 
 
 		// 初始化一个显示各个点的viewGroup
-		mGestureContentView = new GestureContentView(this, true, "1235789",
+		mGestureContentView = new GestureContentView(this, true, Gpasswd,
 				new GestureCallBack() {
 
 					@Override

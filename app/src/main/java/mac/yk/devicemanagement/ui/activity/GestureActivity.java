@@ -51,6 +51,7 @@ public class GestureActivity extends AppCompatActivity {
                 open.setVisibility(View.INVISIBLE);
                 close.setVisibility(View.VISIBLE);
                 btnBack.setBackground(getResources().getDrawable(R.drawable.back));
+                MFGT.gotoSetGestureActivity(this);
                 break;
             case R.id.manual_image:
                 manualImage.setVisibility(View.VISIBLE);
