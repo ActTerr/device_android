@@ -23,11 +23,13 @@
     </RelativeLayout>
 
     <LinearLayout
+        android:id="@+id/manual"
         android:orientation="horizontal"
         android:layout_marginTop="100dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
         <ImageView
+            android:id="@+id/manual_image"
             android:layout_alignParentLeft="true"
             android:src="@mipmap/ic_launcher"
             android:layout_width="wrap_content"
@@ -60,10 +62,13 @@
         android:background="@color/gray"
         />
     <LinearLayout
+        android:id="@+id/auto"
         android:orientation="horizontal"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
         <ImageView
+            android:visibility="invisible"
+            android:id="@+id/auto_image"
             android:layout_alignParentLeft="true"
             android:src="@mipmap/ic_launcher"
             android:layout_width="wrap_content"
@@ -88,6 +93,7 @@
     </LinearLayout>
 
     <LinearLayout
+        android:id="@+id/reset"
         android:layout_marginTop="100dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">

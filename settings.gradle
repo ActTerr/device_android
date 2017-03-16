@@ -1,1 +1,1 @@
-include ':app', ':testserver', ':libzxing'
+include ':app', ':testserver', ':libzxing', ':gesture'

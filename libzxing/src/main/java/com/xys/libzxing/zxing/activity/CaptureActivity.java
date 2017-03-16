@@ -89,7 +89,6 @@ public final class CaptureActivity extends Activity implements SurfaceHolder.Cal
         scanContainer = (RelativeLayout) findViewById(R.id.capture_container);
         scanCropView = (RelativeLayout) findViewById(R.id.capture_crop_view);
         scanLine = (ImageView) findViewById(R.id.capture_scan_line);
-
         inactivityTimer = new InactivityTimer(this);
         beepManager = new BeepManager(this);
 

@@ -21,10 +21,10 @@ public class SpUtil {
        return PreferenceManager.getDefaultSharedPreferences(context);
     }
 
-    public static boolean getFlag(Context context){
+    public static boolean getGesture(Context context){
         return getDefault(context).getBoolean("flag",false);
     }
-    public static void setFlag(Context context,boolean flag){
+    public static void setGesture(Context context,boolean flag){
         getDefault(context).edit().putBoolean("flag",flag).apply();
     }
     public static void savePrompt(Context context,boolean prompt){
@@ -32,5 +32,12 @@ public class SpUtil {
     }
     public static boolean getPrompt(Context context){
         return getDefault(context).getBoolean("prompt",false);
+    }
+
+    public static void setGestureType(Context context,int type){
+         getDefault(context).edit().putInt("type",type).apply();
+    }
+    public static int getGestureType(Context context){
+        return getDefault(context).getInt("type",0);
     }
 }

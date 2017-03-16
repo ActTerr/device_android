@@ -96,4 +96,8 @@ public interface I {
         String USER="user";
         String DID="Did";
     }
+    interface GESTURE{
+        int MANUAL=1;
+        int AUTO=2;
+    }
 }

@@ -64,7 +64,7 @@ public class SetActivity extends AppCompatActivity {
                 Toast.makeText(this, "姓名不可修改", Toast.LENGTH_SHORT).show();
                 break;
             case R.id.rlPasswd:
-                MFGT.gotoLoginActivity(context);
+                MFGT.gotoGestureActivity(context);
                 break;
             case R.id.logOut:
                 pd.show();
