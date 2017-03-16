@@ -145,11 +145,9 @@ public class MainActivity extends AppCompatActivity {
             if (bundle != null) {
                 id = (bundle.getString("result"));
                 L.e("main", id + "");
-                progressDialog.show();
                 model.chaxun(this, id, new OkHttpUtils.OnCompleteListener<Result>() {
                     @Override
                     public void onSuccess(Result result) {
-                        progressDialog.dismiss();
                         if (result != null && result.getRetCode() == I.RESULT.SUCCESS) {
                             L.e("main",result.toString());
                             String s = result.getRetData().toString();
@@ -166,7 +164,6 @@ public class MainActivity extends AppCompatActivity {
 
                     @Override
                     public void onError(String error) {
-                        progressDialog.dismiss();
                         Toast.makeText(MainActivity.this, "请检查网络！", Toast.LENGTH_SHORT).show();
                     }
                 });
