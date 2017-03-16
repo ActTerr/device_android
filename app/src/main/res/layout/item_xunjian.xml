@@ -3,6 +3,7 @@
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent">
     <LinearLayout
+        android:layout_marginTop="5dp"
         android:orientation="horizontal"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
@@ -14,13 +15,13 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content">
             <TextView
-                android:textSize="20sp"
+                android:textSize="15sp"
                 android:text="巡检日期:"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content" />
             <TextView
                 android:id="@+id/xJianDate"
-                android:textSize="20sp"
+                android:textSize="15sp"
                 android:text="XXXXXX"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content" />
@@ -33,13 +34,13 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content">
             <TextView
-                android:textSize="20sp"
+                android:textSize="15sp"
                 android:text="设备状况:"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content" />
             <TextView
                 android:id="@+id/status"
-                android:textSize="20sp"
+                android:textSize="15sp"
                 android:text="XXXXXX"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content" />
@@ -58,13 +59,13 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content">
             <TextView
-                android:textSize="20sp"
+                android:textSize="15sp"
                 android:text="巡检人员:"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content" />
             <TextView
                 android:id="@+id/xjUser"
-                android:textSize="20sp"
+                android:textSize="15sp"
                 android:text="XXXXXX"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content" />
@@ -77,16 +78,24 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content">
             <TextView
-                android:textSize="20sp"
+                android:textSize="15sp"
                 android:text="设备问题:"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content" />
             <TextView
                 android:id="@+id/cause"
-                android:textSize="20sp"
+                android:textSize="15sp"
                 android:text="XXXXXX"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content" />
         </LinearLayout>
     </LinearLayout>
+    <View
+        android:layout_marginTop="3dp"
+        android:layout_marginLeft="10dp"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/gray"
+        android:layout_marginRight="15dp"
+        />
 </LinearLayout>

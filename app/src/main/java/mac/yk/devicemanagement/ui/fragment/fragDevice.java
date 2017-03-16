@@ -40,7 +40,7 @@ import mac.yk.devicemanagement.util.TestUtil;
  * Created by mac-yk on 2017/3/3.
  */
 
-public class fragTongji extends Fragment {
+public class fragDevice extends Fragment {
 
     IModel model;
     Context context;

@@ -32,7 +32,7 @@ import mac.yk.devicemanagement.bean.Result;
 import mac.yk.devicemanagement.model.IModel;
 import mac.yk.devicemanagement.ui.fragment.fragBaofei;
 import mac.yk.devicemanagement.ui.fragment.fragMain;
-import mac.yk.devicemanagement.ui.fragment.fragTongji;
+import mac.yk.devicemanagement.ui.fragment.fragDevice;
 import mac.yk.devicemanagement.util.ActivityUtils;
 import mac.yk.devicemanagement.util.L;
 import mac.yk.devicemanagement.util.MFGT;
@@ -48,6 +48,7 @@ public class MainActivity extends AppCompatActivity {
     ProgressDialog progressDialog;
 
     AlertDialog.Builder builder;
+    AlertDialog Adialog;
     @BindView(R.id.toolBar)
     Toolbar toolBar;
     @BindView(R.id.nav_view)
@@ -71,14 +72,14 @@ public class MainActivity extends AppCompatActivity {
         ab.setHomeAsUpIndicator(R.drawable.ic_menu);
         ab.setDisplayHomeAsUpEnabled(true);
        dialogHolder=new DialogHolder(view);
-        builder.setTitle("预警信息")
+       Adialog= builder.setTitle("预警信息")
                 .setView(view)
                 .setPositiveButton("已读以上信息", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         dialog.dismiss();
                     }
-                });
+                }).create();
         ActivityUtils.addFragmentToActivity(getSupportFragmentManager(), new fragMain(), R.id.frame);
         progressDialog = new ProgressDialog(this);
         if (navView != null) {
@@ -121,7 +122,7 @@ public class MainActivity extends AppCompatActivity {
                         getYujing();
                         break;
                     case R.id.tongji:
-                        ActivityUtils.changeFragment(getSupportFragmentManager(), new fragTongji(), R.id.frame);
+                        ActivityUtils.changeFragment(getSupportFragmentManager(), new fragDevice(), R.id.frame);
                         break;
                     case R.id.bf_tongji:
                         ActivityUtils.changeFragment(getSupportFragmentManager(), new fragBaofei(), R.id.frame);
@@ -181,7 +182,7 @@ public class MainActivity extends AppCompatActivity {
                 if (result != null && result.getRetCode() == I.RESULT.SUCCESS) {
                     String yujingm = (String) result.getRetData();
                     dialogHolder.yujing.setText(yujingm);
-                    builder.show();
+                    Adialog.show();
                 } else {
                     Toast.makeText(MainActivity.this, "获取预警信息失败！", Toast.LENGTH_SHORT).show();
                 }

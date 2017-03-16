@@ -6,6 +6,8 @@
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
+        <item name="android:listDivider">@drawable/divider</item>
+        //将系统自定义的divider设置成自定义的
     </style>
     <style name="Toolbar" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
 
@@ -16,4 +18,5 @@
         <attr name="normalColor" format="reference|color"/>
         <attr name="focusColor" format="reference|color"/>
     </declare-styleable>
+
 </resources>

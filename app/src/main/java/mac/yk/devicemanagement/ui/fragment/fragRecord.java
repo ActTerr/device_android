@@ -23,16 +23,15 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import mac.yk.devicemanagement.R;
-import mac.yk.devicemanagement.bean.Weixiu;
-import mac.yk.devicemanagement.bean.Xunjian;
 import mac.yk.devicemanagement.adapter.weixiuAdapter;
 import mac.yk.devicemanagement.adapter.xunjianAdapter;
+import mac.yk.devicemanagement.bean.Weixiu;
+import mac.yk.devicemanagement.bean.Xunjian;
 import mac.yk.devicemanagement.model.IModel;
 import mac.yk.devicemanagement.util.ConvertUtils;
 import mac.yk.devicemanagement.util.L;
 import mac.yk.devicemanagement.util.OkHttpUtils;
 import mac.yk.devicemanagement.util.TestUtil;
-import mac.yk.devicemanagement.widget.MyItemDecoration;
 
 /**
  * Created by mac-yk on 2017/3/2.
@@ -117,7 +116,6 @@ public class fragRecord extends Fragment {
         );
         rv.setAdapter(adapter);
         rv.setLayoutManager(llm);
-        rv.addItemDecoration(new MyItemDecoration(12));
         rv.setHasFixedSize(true);
         Download(ACTION_DOWNLOAD);
         setListener();
