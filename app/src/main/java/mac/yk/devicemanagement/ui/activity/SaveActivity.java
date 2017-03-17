@@ -127,7 +127,7 @@ public class SaveActivity extends AppCompatActivity implements View.OnClickListe
         public void onClick(View view) {
             switch (view.getId()) {
                 case diantai:
-                    name.setText("电台");
+                    name.setText("diantai");
                     break;
                 case R.id.jikongqi:
                     name.setText("机控器");
@@ -136,7 +136,7 @@ public class SaveActivity extends AppCompatActivity implements View.OnClickListe
                     name.setText("区控器");
                     break;
                 case R.id.dianchi:
-                    name.setText("电池");
+                    name.setText("dianchi");
                     isDianchi = true;
                     break;
             }
@@ -173,7 +173,7 @@ public class SaveActivity extends AppCompatActivity implements View.OnClickListe
                     if (isDianchi) {
                         status.setText("充电");
                     } else {
-                        status.setText("维修");
+                        status.setText("weixiu");
                     }
                     break;
                 case R.id.yonghou:

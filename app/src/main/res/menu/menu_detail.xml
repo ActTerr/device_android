@@ -2,28 +2,36 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
     <item android:id="@+id/beiyong"
+        android:icon="@drawable/beiyong"
         android:title="备用"/>
     <item
         android:id="@+id/daiyong"
+        android:icon="@drawable/daiyong"
         android:title="待用" />
     <item
+        android:icon="@drawable/using"
         android:id="@+id/yunxing"
         android:title="运行" />
     <item android:id="@+id/yonghou"
+        android:icon="@drawable/used"
         android:title="用后"/>
     <item
+        android:icon="@drawable/xunjian"
         android:id="@+id/xunjian"
         android:title="巡检" />
 
     <item
+        android:icon="@drawable/xiujun"
         android:id="@+id/xiujun"
         android:title="修竣" />
 
     <item
         android:id="@+id/baofei"
+        android:icon="@drawable/baofei"
         android:title="报废" />
 
     <item
+        android:icon="@drawable/record"
         android:id="@+id/record"
         android:title="记录" />
 

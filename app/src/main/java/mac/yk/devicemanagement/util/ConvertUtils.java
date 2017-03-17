@@ -53,9 +53,9 @@ public class ConvertUtils {
     public static String getDname(int Dname){
         switch (Dname){
             case I.DNAME.DIANCHI:
-                return "电池";
+                return "dianchi";
             case I.DNAME.DIANTAI:
-                return "电台";
+                return "diantai";
             case I.DNAME.JIKONGQI:
                 return "机控器";
             case I.DNAME.QUKONGQI:
@@ -65,9 +65,9 @@ public class ConvertUtils {
     }
     public static int getDname(String Dname){
         switch (Dname){
-            case "电池":
+            case "dianchi":
                 return I.DNAME.DIANCHI;
-            case "电台":
+            case "diantai":
                 return I.DNAME.DIANTAI;
             case "机控器":
                 return I.DNAME.JIKONGQI;
@@ -80,7 +80,7 @@ public class ConvertUtils {
     public static String getStatus(boolean isDianchi,int status){
         switch (status){
             case I.CONTROL.BAOFEI:
-                return "报废";
+                return "baofei";
             case I.CONTROL.BEIYONG:
                 return "备用";
             case I.CONTROL.DAIYONG:
@@ -89,7 +89,7 @@ public class ConvertUtils {
                 if (isDianchi){
                     return "充电";
                 }
-                return "维修";
+                return "weixiu";
             case I.CONTROL.YUNXING:
                 return "运行";
             case I.CONTROL.YONGHOU:
@@ -99,13 +99,13 @@ public class ConvertUtils {
     }
     public static int getStatus(String status){
         switch (status){
-            case "报废":
+            case "baofei":
                 return I.CONTROL.BAOFEI;
             case "备用":
                 return I.CONTROL.BEIYONG;
             case "待用":
                 return I.CONTROL.DAIYONG;
-            case "维修":
+            case "weixiu":
             case "充电":
                 return I.CONTROL.WEIXIU;
             case "用后":

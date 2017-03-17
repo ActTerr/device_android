@@ -8,11 +8,15 @@
         android:icon="@drawable/ic_action_scan"
         app:showAsAction="always"/>
     <item android:id="@+id/diantai"
+        android:icon="@drawable/diantai"
         android:title="电台"/>
     <item android:id="@+id/dianchi"
+        android:icon="@drawable/dianchi"
         android:title="电池"/>
     <item android:id="@+id/jikongqi"
+        android:icon="@drawable/jikong"
         android:title="机控器"/>
     <item android:id="@+id/qukongqi"
+        android:icon="@drawable/qukong"
         android:title="区控器"/>
 </menu>

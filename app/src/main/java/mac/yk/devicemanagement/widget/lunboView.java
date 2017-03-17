@@ -132,7 +132,7 @@ public class lunboView extends ViewPager{
                         .diskCacheStrategy(DiskCacheStrategy.NONE)
                         .error(R.drawable.nopic)
                         .into(iv);
-                Images.add(position,iv.getDrawable());
+//                Images.add(position,iv.getDrawable());
 //                cacheOK=Images.size()==count?true:false;
             }else {
                 iv.setImageDrawable(Images.get(position%count));

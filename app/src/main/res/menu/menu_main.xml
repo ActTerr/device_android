@@ -2,12 +2,13 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
     <item android:id="@+id/tongji"
-        android:icon="@mipmap/ic_launcher"
+        android:icon="@drawable/device"
         android:title="设备统计"/>
     <item android:id="@+id/bf_tongji"
+        android:icon="@drawable/baofei"
         android:title="报废统计"/>
     <item android:id="@+id/yujing"
-        android:icon="@mipmap/ic_launcher"
+        android:icon="@drawable/yujing"
         android:title="预警信息"/>
 
 </menu>
