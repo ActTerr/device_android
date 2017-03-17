@@ -19,6 +19,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import mac.yk.devicemanagement.MyApplication;
 import mac.yk.devicemanagement.R;
+import mac.yk.devicemanagement.bean.Device;
 import mac.yk.devicemanagement.ui.fragment.fragRecord;
 import mac.yk.devicemanagement.util.ActivityUtils;
 import mac.yk.devicemanagement.util.L;
@@ -35,7 +36,7 @@ public class RecordActivity extends AppCompatActivity {
     @BindView(R.id.drawLayout)
     DrawerLayout drawLayout;
     Context context;
-
+    Device device;
     boolean isWeixiu=true;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,15 +45,14 @@ public class RecordActivity extends AppCompatActivity {
         ButterKnife.bind(this);
         context=this;
 
-//        String id = getIntent().getStringExtra("id");
-        String id="1111";
-        if (id ==null) {
+       device = (Device) getIntent().getSerializableExtra("device");
+        if (device ==null) {
             finish();
         } else {
             init();
             fragment = (fragRecord) getSupportFragmentManager().findFragmentById(R.id.frame);
             Bundle bundle1 = new Bundle();
-            bundle1.putString("id", id);
+            bundle1.putString("id", String.valueOf(device.getDid()));
             bundle1.putBoolean("flag", true);
             if (fragment==null){
                 Log.e("main","fragment从空被赋值");
@@ -63,7 +63,7 @@ public class RecordActivity extends AppCompatActivity {
 
             fragment2 = (fragRecord) getSupportFragmentManager().findFragmentById(R.id.frame);
             Bundle bundle2 = new Bundle();
-            bundle2.putString("id", id);
+            bundle2.putString("id", String.valueOf(device.getDid()));
             bundle2.putBoolean("flag", false);
             if (fragment2==null){
                 fragment2=new fragRecord();
@@ -80,7 +80,7 @@ public class RecordActivity extends AppCompatActivity {
         ab.setHomeAsUpIndicator(R.drawable.ic_menu);
         ab.setDisplayHomeAsUpEnabled(true);
         if (navView != null) {
-            navView.inflateMenu(R.menu.menu_record);
+            navView.inflateMenu(R.menu.menu_record_frag);
             setUpNavView(navView);
             ImageView imageView= (ImageView) navView.getHeaderView(0).findViewById(R.id.avatar);
             TextView textView= (TextView) navView.getHeaderView(0).findViewById(R.id.nav_name);
@@ -89,7 +89,6 @@ public class RecordActivity extends AppCompatActivity {
                 @Override
                 public void onClick(View v) {
                     MFGT.gotoSetActivity(context);
-                    finish();
                 }
             });
         }
@@ -131,5 +130,9 @@ public class RecordActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-
+    @Override
+    public void onBackPressed() {
+        MFGT.gotoDetailActivity(context,device);
+        finish();
+    }
 }

@@ -6,7 +6,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
-import android.view.Window;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -45,7 +44,6 @@ public class SetActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_set);
         ButterKnife.bind(this);
-        requestWindowFeature(Window.FEATURE_NO_TITLE);
         context = this;
         pd = new ProgressDialog(context);
         model = TestUtil.getData();
@@ -90,5 +88,5 @@ public class SetActivity extends Activity {
                 break;
         }
     }
-    
+
 }

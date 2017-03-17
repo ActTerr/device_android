@@ -23,13 +23,12 @@ public class BaseActivity extends AppCompatActivity implements Observer{
     }
 
     @Override
-    protected void onResume() {
-        super.onResume();
-
+    protected void onStop() {
+        super.onStop();
     }
 
     @Override
-    protected void onPause() {
-        super.onPause();
+    protected void onDestroy() {
+        super.onDestroy();
     }
 }

@@ -97,7 +97,6 @@ public class DetailActivity extends AppCompatActivity {
                 @Override
                 public void onClick(View v) {
                     MFGT.gotoSetActivity(context);
-                    finish();
                 }
             });
         }
@@ -138,7 +137,8 @@ public class DetailActivity extends AppCompatActivity {
                         postXiujun();
                         break;
                     case R.id.record:
-                        MFGT.gotoRecordActivity(context, id);
+                        MFGT.gotoRecordActivity(context, device);
+                        finish();
                         break;
                     case R.id.baofei:
                         postBaofei();
@@ -412,5 +412,8 @@ public class DetailActivity extends AppCompatActivity {
         dialog.show();
     }
 
-
+    @Override
+    public void onBackPressed() {
+        MFGT.gotoMainActivity(context);
+    }
 }

@@ -11,6 +11,7 @@ import mac.yk.devicemanagement.bean.Device;
 import mac.yk.devicemanagement.ui.activity.DetailActivity;
 import mac.yk.devicemanagement.ui.activity.GestureActivity;
 import mac.yk.devicemanagement.ui.activity.LoginActivity;
+import mac.yk.devicemanagement.ui.activity.MainActivity;
 import mac.yk.devicemanagement.ui.activity.RecordActivity;
 import mac.yk.devicemanagement.ui.activity.SaveActivity;
 import mac.yk.devicemanagement.ui.activity.SetActivity;
@@ -37,9 +38,9 @@ public class MFGT {
         context.startActivity(intent);
     }
 
-    public static void gotoRecordActivity(Context context,String id){
+    public static void gotoRecordActivity(Context context,Device device){
         Intent intent=new Intent(context,RecordActivity.class);
-        intent.putExtra("id",id);
+        intent.putExtra("device",device);
         context.startActivity(intent);
     }
     public static void gotoSetActivity(Context context){
@@ -58,5 +59,9 @@ public class MFGT {
     public static void gotoValidateGestureActivity(Activity context){
         Intent intent=new Intent(context,GestureVerifyActivity.class);
         context.startActivityForResult(intent,0);
+    }
+    public static void gotoMainActivity(Context context){
+        Intent intent=new Intent(context, MainActivity.class);
+        context.startActivity(intent);
     }
 }

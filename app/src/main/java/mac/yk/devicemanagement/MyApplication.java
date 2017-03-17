@@ -61,4 +61,6 @@ public class MyApplication extends Application {
     public static boolean getFlag(){
         return isDianchi;
     }
+
+
 }

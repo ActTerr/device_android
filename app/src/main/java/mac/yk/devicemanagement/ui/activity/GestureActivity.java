@@ -16,7 +16,7 @@ import mac.yk.devicemanagement.util.MFGT;
 import mac.yk.devicemanagement.util.SpUtil;
 
 public class GestureActivity extends AppCompatActivity {
-    boolean isStart;
+    boolean isOpen;
     @BindView(R.id.manual_image)
     ImageView manualImage;
     @BindView(R.id.auto_image)
@@ -33,32 +33,29 @@ public class GestureActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_gesture);
         ButterKnife.bind(this);
-        isStart = SpUtil.getGesture(this);
-
+        isOpen = SpUtil.getGesture(this);
+        if (isOpen){
+            setGestureOpen();
+        }else {
+            setGestureClose();
+        }
     }
 
-    @OnClick({R.id.close, R.id.open, R.id.manual_image, R.id.auto_image, R.id.reset})
+    @OnClick({R.id.close, R.id.open, R.id.manual, R.id.auto, R.id.reset})
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.close:
-                SpUtil.setGesture(this,false);
-                close.setVisibility(View.INVISIBLE);
-                open.setVisibility(View.VISIBLE);
-                btnBack.setBackground(getResources().getDrawable(R.drawable.backw));
+                setGestureClose();
                 break;
             case R.id.open:
-                SpUtil.setGesture(this,true);
-                open.setVisibility(View.INVISIBLE);
-                close.setVisibility(View.VISIBLE);
-                btnBack.setBackground(getResources().getDrawable(R.drawable.back));
-                MFGT.gotoSetGestureActivity(this);
+                setGestureOpen();
                 break;
-            case R.id.manual_image:
+            case R.id.manual:
                 manualImage.setVisibility(View.VISIBLE);
                 autoImage.setVisibility(View.INVISIBLE);
                 SpUtil.setGestureType(this, I.GESTURE.MANUAL);
                 break;
-            case R.id.auto_image:
+            case R.id.auto:
                 autoImage.setVisibility(View.VISIBLE);
                 manualImage.setVisibility(View.INVISIBLE);
                 SpUtil.setGestureType(this,I.GESTURE.AUTO);
@@ -66,6 +63,24 @@ public class GestureActivity extends AppCompatActivity {
             case R.id.reset:
                 MFGT.gotoSetGestureActivity(this);
                 break;
+        }
+    }
+
+    private void setGestureClose() {
+        SpUtil.setGesture(this,false);
+        close.setVisibility(View.INVISIBLE);
+        open.setVisibility(View.VISIBLE);
+        btnBack.setBackground(getResources().getDrawable(R.drawable.backw));
+    }
+
+    private void setGestureOpen() {
+        SpUtil.setGesture(this,true);
+        open.setVisibility(View.INVISIBLE);
+        close.setVisibility(View.VISIBLE);
+        btnBack.setBackground(getResources().getDrawable(R.drawable.back));
+       String passwd= com.wujay.fund.util.SpUtil.getGesPasswd(this);
+        if (passwd.equals("")){
+            MFGT.gotoSetGestureActivity(this);
         }
     }
 }

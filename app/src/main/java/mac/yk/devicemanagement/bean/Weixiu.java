@@ -3,18 +3,18 @@ package mac.yk.devicemanagement.bean;
 import java.io.Serializable;
 import java.util.Date;
 
-public class Weixiu implements Serializable {
+public class Weixiu implements Serializable{
     Date wxDate;
-    Date xjData;
+    Date xjDate;
     String controlUser;
     String remark;
-    boolean isTranslate;
-    public Weixiu(Date wxDate, Date xjData, String controlUser, String remark,boolean isTranslate) {
+    boolean translate;
+    public Weixiu(Date wxDate, Date xjDate, String controlUser, String remark,boolean isTranslate) {
         this.wxDate = wxDate;
-        this.xjData = xjData;
+        this.xjDate = xjDate;
         this.controlUser = controlUser;
         this.remark = remark;
-        this.isTranslate=isTranslate;
+        this.translate=isTranslate;
     }
     public Weixiu() {
     }
@@ -24,11 +24,11 @@ public class Weixiu implements Serializable {
     public void setWxDate(Date wxDate) {
         this.wxDate = wxDate;
     }
-    public Date getXjData() {
-        return xjData;
+    public Date getXjDate() {
+        return xjDate;
     }
-    public void setXjData(Date xjData) {
-        this.xjData = xjData;
+    public void setXjDate(Date xjDate) {
+        this.xjDate = xjDate;
     }
     public String getControlUser() {
         return controlUser;
@@ -44,10 +44,12 @@ public class Weixiu implements Serializable {
     }
 
     public boolean isTranslate() {
-        return isTranslate;
+        return translate;
     }
 
     public void setTranslate(boolean translate) {
-        isTranslate = translate;
+        translate = translate;
     }
+
+
 }

@@ -43,7 +43,4 @@ public class Xunjian implements Serializable {
     public void setCause(String cause) {
         this.cause = cause;
     }
-
-
-
 }

@@ -106,7 +106,7 @@ public class Model implements IModel {
         ok.setRequestUrl(I.REQUEST.DOWNWEIXIU)
                 .addParam(I.DEVICE.DID,id)
                 .addParam(I.DOWNLOAD.PAGE, String.valueOf(page))
-                .addParam(I.DOWNLOAD.SIZE, String.valueOf(5))
+                .addParam(I.DOWNLOAD.SIZE, String.valueOf(10))
                 .targetClass(Weixiu[].class)
                 .execute(callback);
     }
@@ -117,7 +117,7 @@ public class Model implements IModel {
         ok.setRequestUrl(I.REQUEST.DOWNXUNJIAN)
                 .addParam(I.DEVICE.DID,id)
                 .addParam(I.DOWNLOAD.PAGE, String.valueOf(page))
-                .addParam(I.DOWNLOAD.SIZE, String.valueOf(5))
+                .addParam(I.DOWNLOAD.SIZE, String.valueOf(10))
                 .targetClass(Xunjian[].class)
                 .execute(callback);
     }

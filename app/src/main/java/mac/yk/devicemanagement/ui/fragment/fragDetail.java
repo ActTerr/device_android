@@ -53,8 +53,17 @@ public class fragDetail extends Fragment implements Observer {
         return view;
     }
 
+    @Override
+    public void onPause() {
+        super.onPause();
+        lunbo.setStop(true);
+    }
 
-
+    @Override
+    public void onResume() {
+        super.onResume();
+        lunbo.setStop(false);
+    }
 
     @Override
     public void update(Observable o, Object arg) {

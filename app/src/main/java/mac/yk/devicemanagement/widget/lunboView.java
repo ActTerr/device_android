@@ -47,6 +47,16 @@ public class lunboView extends ViewPager{
     IModel model;
     Device device;
 
+    boolean Stop=false;
+
+    public boolean isStop() {
+        return Stop;
+    }
+
+    public void setStop(boolean stop) {
+        Stop = stop;
+    }
+
     boolean cacheOK=false;
     ArrayList<Drawable> Images=new ArrayList<>();
     public lunboView(Context context, AttributeSet attributeSet) {
@@ -66,7 +76,7 @@ public class lunboView extends ViewPager{
                 @Override
                 public void handleMessage(Message msg) {
                     super.handleMessage(msg);
-                    if (!notchange){
+                    if (!notchange&&!Stop){
                         L.e("main","get");
                         setCurrentItem(getCurrentItem()+1);
 

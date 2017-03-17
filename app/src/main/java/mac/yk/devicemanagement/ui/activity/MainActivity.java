@@ -71,8 +71,8 @@ public class MainActivity extends AppCompatActivity {
         ActionBar ab = getSupportActionBar();
         ab.setHomeAsUpIndicator(R.drawable.ic_menu);
         ab.setDisplayHomeAsUpEnabled(true);
-       dialogHolder=new DialogHolder(view);
-       Adialog= builder.setTitle("预警信息")
+        dialogHolder = new DialogHolder(view);
+        Adialog = builder.setTitle("预警信息")
                 .setView(view)
                 .setPositiveButton("已读以上信息", new DialogInterface.OnClickListener() {
                     @Override
@@ -89,16 +89,15 @@ public class MainActivity extends AppCompatActivity {
             ImageView imageView = (ImageView) navView.getHeaderView(0).findViewById(R.id.avatar);
             TextView textView = (TextView) navView.getHeaderView(0).findViewById(R.id.nav_name);
             textView.setText(MyApplication.getInstance().getUserName());
-            L.e("main","name:"+MyApplication.getInstance().getUserName());
+            L.e("main", "name:" + MyApplication.getInstance().getUserName());
             imageView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     MFGT.gotoSetActivity(MainActivity.this);
-                    finish();
                 }
             });
         }
-        if (!SpUtil.getPrompt(this)){
+        if (!SpUtil.getPrompt(this)) {
             getYujing();
         }
     }
@@ -136,7 +135,6 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-
     @Override
     protected void onActivityResult(final int requestCode, int resultCode, final Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -150,13 +148,13 @@ public class MainActivity extends AppCompatActivity {
                     @Override
                     public void onSuccess(Result result) {
                         if (result != null && result.getRetCode() == I.RESULT.SUCCESS) {
-                            L.e("main",result.toString());
+                            L.e("main", result.toString());
                             String s = result.getRetData().toString();
                             Gson gson = new Gson();
                             Device d = gson.fromJson(s, Device.class);
                             L.e("main", "gotoDetail");
                             MFGT.gotoDetailActivity(MainActivity.this, d);
-
+                            finish();
                         } else {
                             L.e("main", "gotoSave");
                             MFGT.gotoSaveActivity(MainActivity.this, id);
@@ -195,19 +193,21 @@ public class MainActivity extends AppCompatActivity {
             }
         });
     }
-    class DialogHolder{
+
+    class DialogHolder {
         @BindView(R.id.yujing)
         TextView yujing;
         @BindView(R.id.no_prompt)
         CheckBox noPrompt;
 
         public DialogHolder(View view) {
-            ButterKnife.bind(this,view);
+            ButterKnife.bind(this, view);
         }
+
         @OnClick(R.id.no_prompt)
         public void onClick() {
-            if(noPrompt.isChecked()){
-                SpUtil.savePrompt(MainActivity.this,true);
+            if (noPrompt.isChecked()) {
+                SpUtil.savePrompt(MainActivity.this, true);
             }
         }
     }

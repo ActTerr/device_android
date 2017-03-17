@@ -9,8 +9,8 @@ import java.util.ArrayList;
 
 import mac.yk.devicemanagement.R;
 import mac.yk.devicemanagement.bean.Xunjian;
-import mac.yk.devicemanagement.util.L;
 import mac.yk.devicemanagement.ui.holder.XjViewHolder;
+import mac.yk.devicemanagement.util.ConvertUtils;
 
 /**
  * Created by mac-yk on 2017/3/8.
@@ -20,16 +20,14 @@ public class xunjianAdapter extends RecyclerView.Adapter {
     ArrayList<Xunjian> xjlist=new ArrayList<>();
     Context context;
     public void initxData(ArrayList<Xunjian> list ){
-        if (xjlist!=null){
-            xjlist.clear();
-        }
-        for (Xunjian xunjian:list){
-            L.e("main",xunjian.toString());
-        }
-        if (xjlist!=null){
+        synchronized (xjlist){
+            if (xjlist!=null){
+                xjlist.clear();
+            }
             xjlist.addAll(list);
+
+            notifyDataSetChanged();
         }
-        notifyDataSetChanged();
     }
 
     public xunjianAdapter(Context context) {
@@ -52,7 +50,7 @@ public class xunjianAdapter extends RecyclerView.Adapter {
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
         XjViewHolder xjViewHolder= (XjViewHolder) holder;
         Xunjian xunjian=xjlist.get(position);
-        xjViewHolder.xJianDate.setText(String.valueOf(xunjian.getXjDate()));
+        xjViewHolder.xJianDate.setText(ConvertUtils.Date2String(xunjian.getXjDate()));
         xjViewHolder.xjUser.setText(xunjian.getXjUser());
         xjViewHolder.status.setText(xunjian.getStatus());
         if (xunjian.getStatus()==0){

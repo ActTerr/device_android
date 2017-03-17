@@ -11,12 +11,18 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.Iterator;
 import java.util.List;
 
 import butterknife.BindView;
@@ -39,7 +45,7 @@ import mac.yk.devicemanagement.util.TestUtil;
 
 public class fragRecord extends Fragment {
 
-
+    boolean isDesc;
     Handler handler=new Handler(){
         @Override
         public void handleMessage(Message msg) {
@@ -47,6 +53,7 @@ public class fragRecord extends Fragment {
            if (msg.what==1){
                L.e("main","执行download");
                Download(ACTION_DOWNLOAD);
+
            }else {
 
                tvRefresh.setVisibility(View.GONE);
@@ -72,11 +79,10 @@ public class fragRecord extends Fragment {
     @BindView(R.id.srl)
     SwipeRefreshLayout srl;
     ArrayList<Weixiu> wxList;
-    ArrayList<Xunjian> xiujunList;
+    ArrayList<Xunjian> xunjianList;
     boolean isWeixiu;
-
-
-
+    xunjianAdapter xunjianAdapter;
+    weixiuAdapter weixiuAdapter;
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -84,6 +90,7 @@ public class fragRecord extends Fragment {
         ButterKnife.bind(this, view);
         L.e("main","frag解析完布局");
         init();
+        setHasOptionsMenu(true);
         return view;
     }
 
@@ -91,8 +98,7 @@ public class fragRecord extends Fragment {
         context= getContext();
         model= TestUtil.getData();
         wxList=new ArrayList<>();
-        xiujunList=new ArrayList<>();
-
+        xunjianList=new ArrayList<>();
         id=getArguments().getString("id");
         if (id==null){
             Activity a= (Activity) context;
@@ -121,6 +127,82 @@ public class fragRecord extends Fragment {
         setListener();
     }
 
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.menu_record,menu);
+    }
+
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if(item.getItemId()==R.id.recent){
+            isDesc=true;
+          setListSort(true);
+        }else {
+            isDesc=false;
+           setListSort(false);
+        }
+        return true;
+    }
+
+    class MyWxComparator implements Comparator<Weixiu> {
+        boolean desc;
+
+        public MyWxComparator(boolean desc) {
+            this.desc = desc;
+        }
+    
+        @Override
+        public int compare(Weixiu o1, Weixiu o2) {
+            if (desc){
+                if (o1.getXjDate()==null||o2.getXjDate()==null){
+                    return 1;
+                }
+                return (int) (o2.getXjDate().getTime()-o1.getXjDate().getTime());
+            }
+            if (o1.getWxDate()==null||o2.getXjDate()==null){
+                return -1;
+            }
+            return (int) (o1.getXjDate().getTime()-o2.getXjDate().getTime());
+        }
+    }
+    
+    class MyXunjianComParator implements Comparator<Xunjian>{
+        boolean desc;
+
+        public MyXunjianComParator(boolean desc) {
+            this.desc = desc;
+        }
+
+        @Override
+        public int compare(Xunjian o1, Xunjian o2) {
+            if (desc){
+                return (int) (o2.getXjDate().getTime()-o1.getXjDate().getTime());
+            }
+            return (int) (o1.getXjDate().getTime()-o2.getXjDate().getTime());
+        }
+    }
+    private void setListSort(boolean flag) {
+        if (isWeixiu){
+            Collections.sort(wxList,new MyWxComparator(flag));
+            ArrayList<Weixiu> list=new ArrayList<Weixiu>();
+            Iterator<Weixiu> it=wxList.iterator();
+            while (it.hasNext()){
+                list.add(it.next());
+            }
+            weixiuAdapter.initwData(list);
+        }else {
+            Collections.sort(xunjianList,new MyXunjianComParator(flag));
+            ArrayList<Xunjian> list=new ArrayList<>();
+            Iterator<Xunjian> it=xunjianList.iterator();
+            while ((it.hasNext())){
+                list.add(it.next());
+            }
+            xunjianAdapter.initxData(list);
+        }
+
+    }
+
     private void setListener() {
         setPullDownListener();
         setPullUpListener();
@@ -133,9 +215,11 @@ public class fragRecord extends Fragment {
                 super.onScrollStateChanged(recyclerView, newState);
                 int lastPosition=llm.findLastVisibleItemPosition();
                 if (newState==RecyclerView.SCROLL_STATE_IDLE
-                        &&lastPosition==getList().size()&&isMore){
+                        &&lastPosition==getList().size()-1&&isMore){
                     page++;
                     Download(ACTION_ADD);
+
+                    L.e("main","执行ADD");
                 }else {
                     L.e("main","没有更多数据");
                 }
@@ -163,7 +247,7 @@ public class fragRecord extends Fragment {
         if (isWeixiu){
             return wxList;
         }else {
-            return xiujunList;
+            return xunjianList;
         }
     }
 
@@ -198,15 +282,27 @@ public class fragRecord extends Fragment {
             public void onSuccess(Xunjian[] result) {
                 srl.setRefreshing(false);
                 L.e("main","xunjianl:"+result.length);
-                xunjianAdapter adapter1= (xunjianAdapter) adapter;
+                xunjianAdapter= (xunjianAdapter) adapter;
                 if (result!=null){
-                    ArrayList<Xunjian> xunjianList= ConvertUtils.array2List(result);
+                    ArrayList<Xunjian> xunjianLists= ConvertUtils.array2List(result);
+                    if(xunjianLists.size()<10){
+                        isMore=false;
+                    }
                     if (Action==ACTION_ADD){
 
-                        adapter1.addxData(xunjianList);
+                        xunjianAdapter.addxData(xunjianLists);
+                        xunjianList.addAll(xunjianLists);
                     }else {
-                        adapter1.initxData(xunjianList);
+                        xunjianAdapter.initxData(xunjianLists);
+                        synchronized (xunjianList){
+                            if (xunjianList!=null){
+                                xunjianList.clear();
+                            }
+                            xunjianList.addAll(xunjianLists);
+                        }
+                        isMore=true;
                     }
+                    setListSort(isDesc);
                     tvRefresh.setText("刷新成功");
 
                 }else {
@@ -229,21 +325,34 @@ public class fragRecord extends Fragment {
         model.downloadWeixiu(context, id, page, new OkHttpUtils.OnCompleteListener<Weixiu[]>() {
             @Override
             public void onSuccess(Weixiu[] result) {
-               weixiuAdapter adapter1= (weixiuAdapter) adapter;
+           weixiuAdapter = (weixiuAdapter) adapter;
                 srl.setRefreshing(false);
                 L.e("main","weixiul:"+result.length);
                 if (result!=null&&result.length>0){
                   ArrayList<Weixiu> weixius= ConvertUtils.array2List(result);
-                    if (Action==ACTION_ADD){
-                        adapter1.addwData(weixius);
-                    }else {
-                        adapter1.initwData(weixius);
+                    if (weixius.size()<10){
+                        isMore=false;
                     }
+                    if (Action==ACTION_ADD){
+                        weixiuAdapter.addwData(weixius);
+                        wxList.addAll(weixius);
+                    }else {
+                        weixiuAdapter.initwData(weixius);
+                        synchronized (wxList){
+                            if(wxList!=null){
+                                wxList.clear();
+                            }
+                            wxList.addAll(weixius);
+                        }
+                        isMore=true;
+                    }
+                    setListSort(isDesc);
                     tvRefresh.setText("刷新成功");
 
                 }else {
                     tvRefresh.setText("刷新失败");
                 }
+
                 delayToInvisible();
             }
 
