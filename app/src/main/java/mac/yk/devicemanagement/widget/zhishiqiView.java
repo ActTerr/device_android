@@ -5,10 +5,10 @@ import android.content.res.TypedArray;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.util.AttributeSet;
-import android.view.MotionEvent;
 import android.view.View;
 
 import mac.yk.devicemanagement.R;
+import mac.yk.devicemanagement.util.L;
 
 
 /**
@@ -82,14 +82,17 @@ public class zhishiqiView extends View {
        if (count==0){
            return;
        }
+
         int left=(getWidth()-length*count+space*(count-1))/2;
         for (int i=0;i<count;i++){
             int color=i==focus?FocusColor:NormalColor;
             paint.setColor(color);
             int width=left+(length+space)*(count-1);
             int height=(getHeight()-length)/2;
+            L.e("main","开始绘制");
             canvas.drawRect(width,height,width+length,height+length,paint);
         }
+
     }
 
 
@@ -106,13 +109,4 @@ public class zhishiqiView extends View {
         requestLayout();
     }
 
-    @Override
-    public boolean onTouchEvent(MotionEvent event) {
-        return super.onTouchEvent(event);
-    }
-
-    @Override
-    public boolean dispatchTouchEvent(MotionEvent event) {
-        return super.dispatchTouchEvent(event);
-    }
 }

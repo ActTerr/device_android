@@ -38,7 +38,7 @@ public interface IModel {
 
     void baofei(Context context,String name, String Dname, String Did, String remark, OkHttpUtils.OnCompleteListener<Result> callback);
 
-    void control(Context context,boolean isDianchi, String Cid, String Did, OkHttpUtils.OnCompleteListener<Result> callback);
+    void control(Context context,boolean isDianchi, int Cid, String Did, OkHttpUtils.OnCompleteListener<Result> callback);
 
     void yonghou(Context context,String Did,OkHttpUtils.OnCompleteListener<Result> callback);
 

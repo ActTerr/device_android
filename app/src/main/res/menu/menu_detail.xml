@@ -1,15 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
+    <item android:id="@+id/beiyong"
+        android:title="备用"/>
     <item
         android:id="@+id/daiyong"
         android:title="待用" />
     <item
         android:id="@+id/yunxing"
         android:title="运行" />
-
-    <item android:id="@+id/beiyong"
-        android:title="备用"/>
+    <item android:id="@+id/yonghou"
+        android:title="用后"/>
     <item
         android:id="@+id/xunjian"
         android:title="巡检" />
@@ -21,8 +22,7 @@
     <item
         android:id="@+id/baofei"
         android:title="报废" />
-    <item android:id="@+id/yonghou"
-        android:title="用后"/>
+
     <item
         android:id="@+id/record"
         android:title="记录" />

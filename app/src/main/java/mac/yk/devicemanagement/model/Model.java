@@ -49,11 +49,11 @@ public class Model implements IModel {
     }
 
     @Override
-    public void control(Context context, boolean isDianchi, String vid, String did, OkHttpUtils.OnCompleteListener<Result> callback) {
+    public void control(Context context, boolean isDianchi,int  cid, String did, OkHttpUtils.OnCompleteListener<Result> callback) {
         OkHttpUtils<Result> OK=new OkHttpUtils<>(context);
         OK.setRequestUrl(I.REQUEST.CONTROL)
                 .addParam(I.DEVICE.DID,did)
-                .addParam(I.DEVICE.STATUS,vid)
+                .addParam(I.DEVICE.STATUS,String.valueOf(cid))
                 .addParam(I.DEVICE.ISDIANCHI,String.valueOf(isDianchi))
                 .targetClass(Result.class)
                 .execute(callback);

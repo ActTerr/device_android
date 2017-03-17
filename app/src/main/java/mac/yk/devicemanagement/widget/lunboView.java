@@ -39,7 +39,7 @@ import mac.yk.devicemanagement.util.OkHttpUtils;
  */
 
 public class lunboView extends ViewPager{
-    zhishiqiView zhishiView;
+//    zhishiqiView zhishiView;
     boolean notchange;
     Handler handler;
     Timer mTimer;
@@ -53,7 +53,7 @@ public class lunboView extends ViewPager{
         return Stop;
     }
 
-    public void setStop(boolean stop) {
+    public  void setStop(boolean stop) {
         Stop = stop;
     }
 
@@ -100,7 +100,7 @@ public class lunboView extends ViewPager{
                 @Override
                 public void onPageSelected(int position) {
                     L.e("main","position:"+position);
-                    zhishiView.setFocus(position%count);
+//                    zhishiView.setFocus(position%count);
                 }
 
                 @Override
@@ -150,8 +150,8 @@ public class lunboView extends ViewPager{
 
     private void startPlay(zhishiqiView z){
 
-        zhishiView=z;
-        zhishiView.setCount(count);
+//        zhishiView=z;
+//        zhishiView.setCount(count);
         AutoLoopPlayAdapter adapter=new AutoLoopPlayAdapter(getContext());
         this.setAdapter(adapter);
         notchange=false;
@@ -172,7 +172,7 @@ public class lunboView extends ViewPager{
             public void run() {
                 handler.sendEmptyMessage(0);
             }
-        },1000,2000);
+        },1000,3000);
 
     }
 
