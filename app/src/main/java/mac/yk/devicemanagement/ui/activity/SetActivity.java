@@ -22,6 +22,7 @@ import mac.yk.devicemanagement.util.MFGT;
 import mac.yk.devicemanagement.util.OkHttpUtils;
 import mac.yk.devicemanagement.util.SpUtil;
 import mac.yk.devicemanagement.util.TestUtil;
+import mac.yk.devicemanagement.util.ToastUtil;
 
 public class SetActivity extends Activity {
 
@@ -82,7 +83,7 @@ public class SetActivity extends Activity {
                     @Override
                     public void onError(String error) {
                         pd.dismiss();
-                        Toast.makeText(context, "检查网络状况", Toast.LENGTH_SHORT).show();
+                        ToastUtil.showNetWorkBad(context);
                     }
                 });
                 break;

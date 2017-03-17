@@ -2,6 +2,7 @@ package mac.yk.devicemanagement.ui.activity;
 
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
@@ -31,14 +32,15 @@ import mac.yk.devicemanagement.bean.Device;
 import mac.yk.devicemanagement.bean.Result;
 import mac.yk.devicemanagement.model.IModel;
 import mac.yk.devicemanagement.ui.fragment.fragBaofei;
-import mac.yk.devicemanagement.ui.fragment.fragMain;
 import mac.yk.devicemanagement.ui.fragment.fragDevice;
+import mac.yk.devicemanagement.ui.fragment.fragMain;
 import mac.yk.devicemanagement.util.ActivityUtils;
 import mac.yk.devicemanagement.util.L;
 import mac.yk.devicemanagement.util.MFGT;
 import mac.yk.devicemanagement.util.OkHttpUtils;
 import mac.yk.devicemanagement.util.SpUtil;
 import mac.yk.devicemanagement.util.TestUtil;
+import mac.yk.devicemanagement.util.ToastUtil;
 
 import static mac.yk.devicemanagement.R.id.yujing;
 
@@ -57,13 +59,14 @@ public class MainActivity extends AppCompatActivity {
     DrawerLayout drawLayout;
 
     DialogHolder dialogHolder;
-
+    Context context;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_currency);
         View view = View.inflate(this, R.layout.dialog_yujing, null);
         ButterKnife.bind(this);
+        context=this;
         builder = new AlertDialog.Builder(this);
         model = TestUtil.getData();
         progressDialog = new ProgressDialog(this);
@@ -163,7 +166,7 @@ public class MainActivity extends AppCompatActivity {
 
                     @Override
                     public void onError(String error) {
-                        Toast.makeText(MainActivity.this, "请检查网络！", Toast.LENGTH_SHORT).show();
+                        ToastUtil.showNetWorkBad(context);
                     }
                 });
             }
@@ -189,7 +192,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onError(String error) {
                 progressDialog.dismiss();
-                Toast.makeText(MainActivity.this, "请检查网络！", Toast.LENGTH_SHORT).show();
+                ToastUtil.showNetWorkBad(context);
             }
         });
     }

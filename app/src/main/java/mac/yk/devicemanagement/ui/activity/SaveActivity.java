@@ -27,6 +27,7 @@ import mac.yk.devicemanagement.util.L;
 import mac.yk.devicemanagement.util.MFGT;
 import mac.yk.devicemanagement.util.OkHttpUtils;
 import mac.yk.devicemanagement.util.TestUtil;
+import mac.yk.devicemanagement.util.ToastUtil;
 
 import static android.view.View.inflate;
 import static mac.yk.devicemanagement.R.id.diantai;
@@ -102,7 +103,7 @@ public class SaveActivity extends AppCompatActivity implements View.OnClickListe
             @Override
             public void onError(String error) {
                 progressDialog.dismiss();
-                Toast.makeText(SaveActivity.this, "保存失败", Toast.LENGTH_SHORT).show();
+                ToastUtil.showNetWorkBad(SaveActivity.this);
             }
         });
     }

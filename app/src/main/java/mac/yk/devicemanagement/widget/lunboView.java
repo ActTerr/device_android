@@ -33,6 +33,9 @@ import mac.yk.devicemanagement.model.IModel;
 import mac.yk.devicemanagement.model.Model;
 import mac.yk.devicemanagement.util.L;
 import mac.yk.devicemanagement.util.OkHttpUtils;
+import mac.yk.devicemanagement.util.ToastUtil;
+
+import static mac.yk.devicemanagement.MyApplication.context;
 
 /**
  * Created by mac-yk on 2017/3/3.
@@ -193,7 +196,8 @@ public class lunboView extends ViewPager{
 
             @Override
             public void onError(String error) {
-                Toast.makeText(getContext(), "请检查网络", Toast.LENGTH_SHORT).show();
+
+                ToastUtil.showNetWorkBad(context);
             }
         });
     }

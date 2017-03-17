@@ -21,6 +21,7 @@ public class MyApplication extends Application {
     public void onCreate() {
         super.onCreate();
         application=this;
+        context=this;
     }
 
     public static Device getDevice() {
@@ -51,7 +52,7 @@ public class MyApplication extends Application {
         this.userName = userName;
     }
     public static Context getContext(){
-        context=getContext();
+
         return context;
     }
 

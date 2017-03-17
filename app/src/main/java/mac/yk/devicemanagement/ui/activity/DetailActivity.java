@@ -35,6 +35,7 @@ import mac.yk.devicemanagement.util.L;
 import mac.yk.devicemanagement.util.MFGT;
 import mac.yk.devicemanagement.util.OkHttpUtils;
 import mac.yk.devicemanagement.util.TestUtil;
+import mac.yk.devicemanagement.util.ToastUtil;
 
 
 public class DetailActivity extends AppCompatActivity {
@@ -176,7 +177,8 @@ public class DetailActivity extends AppCompatActivity {
 
             @Override
             public void onError(String error) {
-
+                progressDialog.dismiss();
+                ToastUtil.showNetWorkBad(context);
             }
         });
     }
@@ -216,6 +218,7 @@ public class DetailActivity extends AppCompatActivity {
             model.baofei(context, MyApplication.getInstance().getUserName(), String.valueOf(device.getDname()), id, remark.getText().toString(), new OkHttpUtils.OnCompleteListener<Result>() {
                 @Override
                 public void onSuccess(Result result) {
+                    progressDialog.dismiss();
                     if (result.getRetCode()==I.RESULT.SUCCESS&&result.isRetMsg()){
                         int status= Integer.parseInt(result.getRetData().toString());
                         device.setStatus(status);
@@ -226,6 +229,7 @@ public class DetailActivity extends AppCompatActivity {
 
                 @Override
                public void onError(String error) {
+                    progressDialog.dismiss();
                     Toast.makeText(context, "请检查网络", Toast.LENGTH_SHORT).show();
                 }
             });
@@ -267,7 +271,7 @@ public class DetailActivity extends AppCompatActivity {
             @Override
             public void onError(String error) {
                 progressDialog.dismiss();
-                Toast.makeText(context, "检查网络", Toast.LENGTH_SHORT).show();
+                ToastUtil.showNetWorkBad(context);
             }
         });
     }
@@ -407,7 +411,7 @@ public class DetailActivity extends AppCompatActivity {
                         @Override
                         public void onError(String error) {
                             progressDialog.dismiss();
-                            Toast.makeText(context, "检查网络", Toast.LENGTH_SHORT).show();
+                            ToastUtil.showNetWorkBad(context);
                         }
                     });
                     break;
@@ -437,7 +441,7 @@ public class DetailActivity extends AppCompatActivity {
                 @Override
                 public void onError(String error) {
                     progressDialog.dismiss();
-                    Toast.makeText(context, "检查网络", Toast.LENGTH_SHORT).show();
+                    ToastUtil.showNetWorkBad(context);
                 }
             });
         }
@@ -465,7 +469,7 @@ public class DetailActivity extends AppCompatActivity {
                 @Override
                 public void onError(String error) {
                     progressDialog.dismiss();
-                    Toast.makeText(context, "检查网络", Toast.LENGTH_SHORT).show();
+                    ToastUtil.showNetWorkBad(context);
                 }
             });
         }

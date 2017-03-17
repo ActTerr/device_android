@@ -35,6 +35,7 @@ import mac.yk.devicemanagement.util.ConvertUtils;
 import mac.yk.devicemanagement.util.L;
 import mac.yk.devicemanagement.util.OkHttpUtils;
 import mac.yk.devicemanagement.util.TestUtil;
+import mac.yk.devicemanagement.util.ToastUtil;
 
 /**
  * Created by mac-yk on 2017/3/3.
@@ -158,7 +159,8 @@ public class fragDevice extends Fragment {
 
             @Override
             public void onError(String error) {
-                Toast.makeText(context, "请检查网络状况!", Toast.LENGTH_SHORT).show();
+                pd.dismiss();
+                ToastUtil.showNetWorkBad(context);
             }
         });
     }

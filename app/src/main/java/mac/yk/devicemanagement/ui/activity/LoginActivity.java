@@ -1,5 +1,6 @@
 package mac.yk.devicemanagement.ui.activity;
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -18,6 +19,7 @@ import mac.yk.devicemanagement.model.IModel;
 import mac.yk.devicemanagement.util.OkHttpUtils;
 import mac.yk.devicemanagement.util.SpUtil;
 import mac.yk.devicemanagement.util.TestUtil;
+import mac.yk.devicemanagement.util.ToastUtil;
 
 public class LoginActivity extends AppCompatActivity {
     Context context;
@@ -26,6 +28,8 @@ public class LoginActivity extends AppCompatActivity {
     @BindView(R.id.passwd)
     EditText passwd;
     IModel model;
+
+    ProgressDialog progressDialog;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -33,12 +37,15 @@ public class LoginActivity extends AppCompatActivity {
         ButterKnife.bind(this);
         context = this;
         model= TestUtil.getData();
+        progressDialog=new ProgressDialog(context);
     }
 
     public void onLogin(View view) {
+        progressDialog.show();
         model.Login(this, name.getText().toString(), passwd.getText().toString(), new OkHttpUtils.OnCompleteListener<Result>() {
             @Override
             public void onSuccess(Result result) {
+                progressDialog.dismiss();
                 if (result != null && result.getRetCode() == I.RESULT.SUCCESS) {
                     SpUtil.saveLoginUser(context,name.getText().toString());
                     Intent intent = new Intent(context, MainActivity.class);
@@ -46,13 +53,14 @@ public class LoginActivity extends AppCompatActivity {
                     startActivity(intent);
                     finish();
                 } else {
-                    Toast.makeText(LoginActivity.this, "登陆失败" + result.getRetData(), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(LoginActivity.this, "密码或者用户名错误!" + result.getRetData(), Toast.LENGTH_SHORT).show();
                 }
             }
 
             @Override
             public void onError(String error) {
-                Toast.makeText(LoginActivity.this, "登陆失败，请重试", Toast.LENGTH_SHORT).show();
+                progressDialog.dismiss();
+                ToastUtil.showNetWorkBad(context);
             }
         });
     }
