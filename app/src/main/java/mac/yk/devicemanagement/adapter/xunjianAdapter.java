@@ -52,7 +52,7 @@ public class xunjianAdapter extends RecyclerView.Adapter {
         Xunjian xunjian=xjlist.get(position);
         xjViewHolder.xJianDate.setText(ConvertUtils.Date2String(xunjian.getXjDate()));
         xjViewHolder.xjUser.setText(xunjian.getXjUser());
-        xjViewHolder.status.setText(xunjian.getStatus());
+        xjViewHolder.status.setText(ConvertUtils.getXunjianStatus(xunjian.getStatus()));
         if (xunjian.getStatus()==0){
             xjViewHolder.cause.setText(xunjian.getCause());
         }else {

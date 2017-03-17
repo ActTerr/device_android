@@ -215,7 +215,7 @@ public class fragRecord extends Fragment {
                 super.onScrollStateChanged(recyclerView, newState);
                 int lastPosition=llm.findLastVisibleItemPosition();
                 if (newState==RecyclerView.SCROLL_STATE_IDLE
-                        &&lastPosition==getList().size()-1&&isMore){
+                        &&lastPosition==getList().size()-1&&isMore&&getList().size()>10){
                     page++;
                     Download(ACTION_ADD);
 
@@ -285,8 +285,10 @@ public class fragRecord extends Fragment {
                 xunjianAdapter= (xunjianAdapter) adapter;
                 if (result!=null){
                     ArrayList<Xunjian> xunjianLists= ConvertUtils.array2List(result);
+                    L.e("main","down size:"+xunjianLists.size());
                     if(xunjianLists.size()<10){
                         isMore=false;
+                        L.e("main","ismore为false");
                     }
                     if (Action==ACTION_ADD){
 
@@ -330,8 +332,10 @@ public class fragRecord extends Fragment {
                 L.e("main","weixiul:"+result.length);
                 if (result!=null&&result.length>0){
                   ArrayList<Weixiu> weixius= ConvertUtils.array2List(result);
+                    L.e("main","down size:"+weixius.size());
                     if (weixius.size()<10){
                         isMore=false;
+                        L.e("main","ismore为false");
                     }
                     if (Action==ACTION_ADD){
                         weixiuAdapter.addwData(weixius);

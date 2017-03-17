@@ -115,5 +115,11 @@ public class ConvertUtils {
         }
         return 0;
     }
-
+    public static String getXunjianStatus(int i){
+        if (i==0){
+            return "异常";
+        }else {
+            return "良好";
+        }
+    }
 }
