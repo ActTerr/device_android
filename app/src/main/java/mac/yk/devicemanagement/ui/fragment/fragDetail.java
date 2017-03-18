@@ -2,7 +2,6 @@ package mac.yk.devicemanagement.ui.fragment;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -25,7 +24,7 @@ import mac.yk.devicemanagement.widget.zhishiqiView;
  * Created by mac-yk on 2017/3/3.
  */
 
-public class fragDetail extends Fragment implements Observer {
+public class fragDetail extends BaseFragment implements Observer {
 
     @BindView(R.id.deviceName)
     TextView deviceName;

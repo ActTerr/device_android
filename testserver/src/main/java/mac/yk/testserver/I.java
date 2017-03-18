@@ -1,8 +1,10 @@
 package mac.yk.testserver;
 
 public interface I {
-
+    String TABLENAME="tableName";
     interface REQUEST{
+        String PATH="Server";
+        String PARAM="request";
         String DOWNWEIXIU="downloadWeiXiu";
         String DOWNXUNJIAN="downloadXunJian";
         String YUJING="yujing";
@@ -11,7 +13,7 @@ public interface I {
         String CONTROL="control";
         String SAVE="save";
         String LOGOUT="logOut";
-        String SERVER_ROOT="http://192.168.0.28:8080/deviceManagement/Server?request=";
+        String SERVER_ROOT="http://192.168.1.100:8080/deviceManagement/";
         String XUNJIAN="xunjian";
         String XIUJUN="xiujun";
         String LOGIN="login";
@@ -19,6 +21,8 @@ public interface I {
         String DOWNDEVICE="downDevice";
         String DOWNSCRAP="downScrap";
         String YONGHOU="yonghou";
+        String DOWNPIC="downPic";
+        String GETPICCOUNT="getPicCount";
     }
     interface BAOFEI{
         String TABLENAME="baofei";
@@ -26,7 +30,15 @@ public interface I {
         String DNAME="Dname";
         String REMARK="remark";
         String USER="user";
+        String DATE="Date";
     }
+    interface PIC{
+        String AVATAR_SUFFIX_JPG="JPG";
+        String DEVICE="Device";
+        String PID="pId";
+        String TYPE="picType";
+    }
+
 
     interface RESULT{
         int SUCCESS=0;
@@ -64,7 +76,7 @@ public interface I {
     }
     interface USER{
         String TABLENAME="user";
-        String NAME="user";
+        String NAME="name";
         String PASSWD="passwd";
     }
 
@@ -85,5 +97,9 @@ public interface I {
         String REMARK="remark";
         String USER="user";
         String DID="Did";
+    }
+    interface GESTURE{
+        int MANUAL=1;
+        int AUTO=2;
     }
 }

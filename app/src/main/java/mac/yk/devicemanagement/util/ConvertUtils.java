@@ -80,7 +80,7 @@ public class ConvertUtils {
     public static String getStatus(boolean isDianchi,int status){
         switch (status){
             case I.CONTROL.BAOFEI:
-                return "baofei";
+                return "报废";
             case I.CONTROL.BEIYONG:
                 return "备用";
             case I.CONTROL.DAIYONG:
@@ -89,7 +89,7 @@ public class ConvertUtils {
                 if (isDianchi){
                     return "充电";
                 }
-                return "weixiu";
+                return "维修";
             case I.CONTROL.YUNXING:
                 return "运行";
             case I.CONTROL.YONGHOU:
@@ -99,13 +99,13 @@ public class ConvertUtils {
     }
     public static int getStatus(String status){
         switch (status){
-            case "baofei":
+            case "报废":
                 return I.CONTROL.BAOFEI;
             case "备用":
                 return I.CONTROL.BEIYONG;
             case "待用":
                 return I.CONTROL.DAIYONG;
-            case "weixiu":
+            case "维修":
             case "充电":
                 return I.CONTROL.WEIXIU;
             case "用后":

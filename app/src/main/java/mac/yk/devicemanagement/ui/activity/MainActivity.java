@@ -11,14 +11,12 @@ import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.google.gson.Gson;
 
@@ -31,6 +29,8 @@ import mac.yk.devicemanagement.R;
 import mac.yk.devicemanagement.bean.Device;
 import mac.yk.devicemanagement.bean.Result;
 import mac.yk.devicemanagement.model.IModel;
+import mac.yk.devicemanagement.net.ServerAPI;
+import mac.yk.devicemanagement.net.netWork;
 import mac.yk.devicemanagement.ui.fragment.fragBaofei;
 import mac.yk.devicemanagement.ui.fragment.fragDevice;
 import mac.yk.devicemanagement.ui.fragment.fragMain;
@@ -41,10 +41,14 @@ import mac.yk.devicemanagement.util.OkHttpUtils;
 import mac.yk.devicemanagement.util.SpUtil;
 import mac.yk.devicemanagement.util.TestUtil;
 import mac.yk.devicemanagement.util.ToastUtil;
+import rx.Observer;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.functions.Func1;
+import rx.schedulers.Schedulers;
 
 import static mac.yk.devicemanagement.R.id.yujing;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends BaseActivity{
     IModel model;
     String id;
     ProgressDialog progressDialog;
@@ -173,28 +177,37 @@ public class MainActivity extends AppCompatActivity {
 
         }
     }
+    Observer<String> observer=new Observer<String>(){
+        @Override
+        public void onCompleted() {
 
+        }
+
+        @Override
+        public void onError(Throwable e) {
+            progressDialog.dismiss();
+            ToastUtil.showNetWorkBad(context);
+        }
+
+        @Override
+        public void onNext(String s) {
+            progressDialog.dismiss();
+           dialogHolder.yujing.setText(s);
+           Adialog.show();
+        }
+    };
     private void getYujing() {
         progressDialog.show();
-        model.getYujing(this, new OkHttpUtils.OnCompleteListener<Result>() {
+        netWork<ServerAPI> netWork=new netWork<>();
+       subscription= netWork.targetClass(ServerAPI.class).getAPI().getyujing().map(new Func1<Result, String>() {
             @Override
-            public void onSuccess(Result result) {
-                progressDialog.dismiss();
-                if (result != null && result.getRetCode() == I.RESULT.SUCCESS) {
-                    String yujingm = (String) result.getRetData();
-                    dialogHolder.yujing.setText(yujingm);
-                    Adialog.show();
-                } else {
-                    Toast.makeText(MainActivity.this, "获取预警信息失败！", Toast.LENGTH_SHORT).show();
-                }
+            public String call(Result result) {
+                return result.getRetData().toString();
             }
+        }).subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(observer);
 
-            @Override
-            public void onError(String error) {
-                progressDialog.dismiss();
-                ToastUtil.showNetWorkBad(context);
-            }
-        });
     }
 
     class DialogHolder {

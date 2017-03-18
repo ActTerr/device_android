@@ -6,7 +6,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -32,17 +31,23 @@ import mac.yk.devicemanagement.adapter.ScrapAdapter;
 import mac.yk.devicemanagement.bean.Result;
 import mac.yk.devicemanagement.bean.Scrap;
 import mac.yk.devicemanagement.model.IModel;
+import mac.yk.devicemanagement.net.ServerAPI;
+import mac.yk.devicemanagement.net.netWork;
 import mac.yk.devicemanagement.util.ConvertUtils;
 import mac.yk.devicemanagement.util.L;
 import mac.yk.devicemanagement.util.OkHttpUtils;
 import mac.yk.devicemanagement.util.TestUtil;
 import mac.yk.devicemanagement.util.ToastUtil;
+import rx.Subscriber;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.functions.Func1;
+import rx.schedulers.Schedulers;
 
 /**
  * Created by mac-yk on 2017/3/13.
  */
 
-public class fragBaofei extends Fragment {
+public class fragBaofei extends BaseFragment {
     IModel model;
     Context context;
     @BindView(R.id.tv)
@@ -51,14 +56,15 @@ public class fragBaofei extends Fragment {
     RecyclerView rv;
 
     int page = 1;
-    int selected=0;
+    int selected = 0;
     ArrayList<Scrap> devices = new ArrayList<>();
     ScrapAdapter scrapAdapter;
-    ArrayList<Scrap> currentDevices=new ArrayList<>();
+    ArrayList<Scrap> currentDevices = new ArrayList<>();
     GridLayoutManager gridLayoutManager;
     boolean isMore;
     ProgressDialog pd;
     Integer[] tongji;
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -67,8 +73,8 @@ public class fragBaofei extends Fragment {
         model = TestUtil.getData();
         context = getContext();
         scrapAdapter = new ScrapAdapter(context);
-        gridLayoutManager=new GridLayoutManager(context,1);
-        pd=new ProgressDialog(context);
+        gridLayoutManager = new GridLayoutManager(context, 1);
+        pd = new ProgressDialog(context);
         rv.setAdapter(scrapAdapter);
         rv.setLayoutManager(gridLayoutManager);
         downData();
@@ -78,36 +84,47 @@ public class fragBaofei extends Fragment {
         return view;
     }
 
-    private void getTongji() {
-        model.getTongji(context,I.BAOFEI.TABLENAME, new OkHttpUtils.OnCompleteListener<Result>() {
-            @Override
-            public void onSuccess(Result result) {
-                if(result.getRetCode()==I.RESULT.SUCCESS){
-                    String json=result.getRetData().toString();
-                    Gson gson=new Gson();
-                    tongji= gson.fromJson(json,Integer[].class);
-                    setTitle();
-                }else {
-                    Toast.makeText(context, "查询失败", Toast.LENGTH_SHORT).show();
-                }
-            }
+    Subscriber<String> sub = new Subscriber<String>() {
+        @Override
+        public void onCompleted() {
 
+        }
+
+        @Override
+        public void onError(Throwable e) {
+            Toast.makeText(context, "查询失败", Toast.LENGTH_SHORT).show();
+        }
+
+        @Override
+        public void onNext(String json) {
+            Gson gson = new Gson();
+            tongji = gson.fromJson(json, Integer[].class);
+            setTitle();
+        }
+    };
+
+    private void getTongji() {
+        netWork<ServerAPI> network = new netWork<>();
+        subscription = network.targetClass(ServerAPI.class).getAPI().getTongji(I.BAOFEI.TABLENAME)
+                .map(new Func1<Result, String>() {
             @Override
-            public void onError(String error) {
-                ToastUtil.showNetWorkBad(context);
+            public String call(Result result) {
+                return result.getRetData().toString();
             }
-        });
+        }).subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(sub);
     }
 
     private void setTitle() {
-        if(selected==0){
-            int count=0;
-            for(int i=1;i<5;i++){
-                count+=tongji[i];
+        if (selected == 0) {
+            int count = 0;
+            for (int i = 1; i < 5; i++) {
+                count += tongji[i];
             }
-            tv.setText("设备总数："+count);
-        }else {
-            tv.setText(ConvertUtils.getDname(selected)+"个数:"+tongji[selected]);
+            tv.setText("设备总数：" + count);
+        } else {
+            tv.setText(ConvertUtils.getDname(selected) + "个数:" + tongji[selected]);
         }
     }
 
@@ -115,9 +132,9 @@ public class fragBaofei extends Fragment {
         rv.setOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
             public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
-                int lastPosition=gridLayoutManager.findLastVisibleItemPosition();
-                if (newState==RecyclerView.SCROLL_STATE_IDLE
-                        &&lastPosition==scrapAdapter.getItemCount()&&isMore){
+                int lastPosition = gridLayoutManager.findLastVisibleItemPosition();
+                if (newState == RecyclerView.SCROLL_STATE_IDLE
+                        && lastPosition == scrapAdapter.getItemCount() && isMore) {
                     downData();
                 }
             }
@@ -136,20 +153,20 @@ public class fragBaofei extends Fragment {
             @Override
             public void onSuccess(Scrap[] result) {
                 pd.dismiss();
-                L.e("main","id:"+result[1].getDid());
+                L.e("main", "id:" + result[1].getDid());
                 if (result != null) {
                     ArrayList<Scrap> list = ConvertUtils.array2List(result);
-                    L.e("main","list"+list.size());
+                    L.e("main", "list" + list.size());
                     devices.addAll(list);
-                    if (selected==0){
+                    if (selected == 0) {
                         scrapAdapter.addData(list);
-                    }else {
-                        SetSelectedList(selected,false,list);
+                    } else {
+                        SetSelectedList(selected, false, list);
 
                     }
-                    isMore=true;
+                    isMore = true;
                 } else {
-                    isMore=false;
+                    isMore = false;
                 }
             }
 
@@ -186,29 +203,31 @@ public class fragBaofei extends Fragment {
                 break;
         }
         setTitle();
-        SetSelectedList(selected,true,null);
+        SetSelectedList(selected, true, null);
         return true;
     }
+
     public void scan(int id) {
         getActivity().startActivityForResult(new Intent(getActivity(), CaptureActivity.class), id);
     }
 
     /**
      * 减少for循环次数
+     *
      * @param selected
      * @param ischange
      * @param list
      */
-    private void SetSelectedList(int selected,boolean ischange,ArrayList<Scrap> list) {
+    private void SetSelectedList(int selected, boolean ischange, ArrayList<Scrap> list) {
         ArrayList<Scrap> slist = new ArrayList<>();
-        if (ischange){
+        if (ischange) {
             for (Scrap d : devices) {
                 if (d.getDname() == selected) {
                     slist.add(d);
                 }
             }
             scrapAdapter.changeData(slist);
-        }else {
+        } else {
             for (Scrap d : list) {
                 if (d.getDname() == selected) {
                     slist.add(d);
@@ -217,7 +236,6 @@ public class fragBaofei extends Fragment {
             scrapAdapter.addData(slist);
         }
     }
-
 
 
     @OnClick(R.id.btn_top)

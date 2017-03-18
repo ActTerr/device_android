@@ -5,7 +5,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -41,7 +40,7 @@ import mac.yk.devicemanagement.util.ToastUtil;
  * Created by mac-yk on 2017/3/3.
  */
 
-public class fragDevice extends Fragment {
+public class fragDevice extends BaseFragment {
 
     IModel model;
     Context context;
@@ -59,6 +58,10 @@ public class fragDevice extends Fragment {
     boolean isMore;
     ProgressDialog pd;
     Integer [] tongji;
+
+    public fragDevice() {
+    }
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {

@@ -7,9 +7,11 @@ import android.os.Message;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.util.AttributeSet;
+import android.util.DisplayMetrics;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.view.animation.Interpolator;
 import android.view.animation.LinearInterpolator;
 import android.widget.ImageView;
@@ -31,6 +33,7 @@ import mac.yk.devicemanagement.bean.Device;
 import mac.yk.devicemanagement.bean.Result;
 import mac.yk.devicemanagement.model.IModel;
 import mac.yk.devicemanagement.model.Model;
+import mac.yk.devicemanagement.util.ConvertUtils;
 import mac.yk.devicemanagement.util.L;
 import mac.yk.devicemanagement.util.OkHttpUtils;
 import mac.yk.devicemanagement.util.ToastUtil;
@@ -49,7 +52,7 @@ public class lunboView extends ViewPager{
     int count=0;
     IModel model;
     Device device;
-
+    int width;
     boolean Stop=false;
 
     public boolean isStop() {
@@ -73,6 +76,7 @@ public class lunboView extends ViewPager{
             this.context=context;
             setListener();
             init();
+            getdisplayWidth();
         }
         private void init() {
             handler=new Handler(){
@@ -125,7 +129,12 @@ public class lunboView extends ViewPager{
         @Override
         public Object instantiateItem(ViewGroup container, int position) {
             ImageView iv=new ImageView(context);
+            LayoutParams mParams = new LayoutParams();
+            mParams.height=ConvertUtils.dp2px(context,200);
+            mParams.width=width;
+            iv.setLayoutParams(mParams);
             container.addView(iv);
+
             if (!cacheOK){
                 String url=I.REQUEST.SERVER_ROOT+I.REQUEST.DOWNPIC+"&"+I.DEVICE.DNAME+"="+device.getDname()
                         +"&"+I.PIC.PID+"="+position%count+"&"+I.PIC.TYPE+"="+I.PIC.DEVICE;
@@ -133,6 +142,7 @@ public class lunboView extends ViewPager{
                 Glide.with(context).load(url)
                         .placeholder(R.drawable.nopic)
                         .diskCacheStrategy(DiskCacheStrategy.NONE)
+                        .override(width, ConvertUtils.dp2px(context,200))
                         .error(R.drawable.nopic)
                         .into(iv);
 //                Images.add(position,iv.getDrawable());
@@ -149,6 +159,14 @@ public class lunboView extends ViewPager{
         public void destroyItem(ViewGroup container, int position, Object object) {
             container.removeView((View) object);
         }
+    }
+
+    private void getdisplayWidth() {
+        DisplayMetrics displayMetrics=new DisplayMetrics();
+        WindowManager windowManager= (WindowManager) context.getSystemService(context.WINDOW_SERVICE);
+        windowManager.getDefaultDisplay().getMetrics(displayMetrics);
+        width=displayMetrics.widthPixels;
+        L.e("main","width"+width);
     }
 
     private void startPlay(zhishiqiView z){

@@ -6,7 +6,6 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -43,7 +42,7 @@ import mac.yk.devicemanagement.util.TestUtil;
  * Created by mac-yk on 2017/3/2.
  */
 
-public class fragRecord extends Fragment {
+public class fragRecord extends BaseFragment {
 
     boolean isDesc;
     Handler handler=new Handler(){
