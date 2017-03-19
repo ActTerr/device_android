@@ -30,11 +30,17 @@ import mac.yk.devicemanagement.adapter.DeviceAdapter;
 import mac.yk.devicemanagement.bean.Device;
 import mac.yk.devicemanagement.bean.Result;
 import mac.yk.devicemanagement.model.IModel;
+import mac.yk.devicemanagement.net.ServerAPI;
+import mac.yk.devicemanagement.net.netWork;
 import mac.yk.devicemanagement.util.ConvertUtils;
 import mac.yk.devicemanagement.util.L;
 import mac.yk.devicemanagement.util.OkHttpUtils;
 import mac.yk.devicemanagement.util.TestUtil;
 import mac.yk.devicemanagement.util.ToastUtil;
+import rx.Observer;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.functions.Func1;
+import rx.schedulers.Schedulers;
 
 /**
  * Created by mac-yk on 2017/3/3.
@@ -80,27 +86,42 @@ public class fragDevice extends BaseFragment {
         setHasOptionsMenu(true);
         return view;
     }
+        Observer<Integer[]> obTongji=new Observer<Integer[]>() {
+            @Override
+            public void onCompleted() {
+
+            }
+
+            @Override
+            public void onError(Throwable e) {
+                Toast.makeText(context, "查询失败", Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onNext(Integer[] integers) {
+                tongji=integers;
+                setTitle();
+            }
+        } ;
 
     private void gettongji() {
-        model.getTongji(context,I.DEVICE.TABLENAME, new OkHttpUtils.OnCompleteListener<Result>() {
-            @Override
-            public void onSuccess(Result result) {
-                if(result.getRetCode()==I.RESULT.SUCCESS){
-                    String json=result.getRetData().toString();
-                    Gson gson=new Gson();
-                    tongji= gson.fromJson(json,Integer[].class);
-                    setTitle();
-                }else {
-                    Toast.makeText(context, "查询失败", Toast.LENGTH_SHORT).show();
-                }
+        subscription=new netWork<ServerAPI>().targetClass(ServerAPI.class).getAPI().
+                getTongji(I.DEVICE.TABLENAME).subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .map(new Func1<Result, String>() {
+                    @Override
+                    public String call(Result result) {
+                        return result.getRetData().toString();
+                    }
+                }).map(new Func1<String, Integer[]>() {
+                    @Override
+                    public Integer[] call(String s) {
+                        Gson gson=new Gson();
+                        Integer[] integers=gson.fromJson(s,Integer[].class);
+                        return integers;
+                    }
+                }).subscribe(obTongji);
 
-            }
-
-            @Override
-            public void onError(String error) {
-                Toast.makeText(context, "检查网络状况", Toast.LENGTH_SHORT).show();
-            }
-        });
 
     }
 

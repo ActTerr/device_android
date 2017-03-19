@@ -219,7 +219,7 @@ public class DetailActivity extends AppCompatActivity {
                 @Override
                 public void onSuccess(Result result) {
                     progressDialog.dismiss();
-                    if (result.getRetCode()==I.RESULT.SUCCESS&&result.isRetMsg()){
+                    if (result.getRetCode()==I.RESULT.SUCCESS&&result.isSuccess()){
                         int status= Integer.parseInt(result.getRetData().toString());
                         device.setStatus(status);
                     }else {

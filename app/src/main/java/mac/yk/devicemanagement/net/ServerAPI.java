@@ -16,7 +16,7 @@ import rx.Observable;
 
 public interface ServerAPI {
     @GET(I.REQUEST.PATH+"?request="+I.REQUEST.YUJING)
-    Observable<Result> getyujing();
+    Observable<Result<String>> getyujing();
 
     @GET(I.REQUEST.PATH+"?request="+I.REQUEST.TONGJI)
     Observable<Result> getTongji(@Query(I.TABLENAME) String tableName);

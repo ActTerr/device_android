@@ -12,23 +12,23 @@ import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.google.gson.Gson;
+import java.net.ConnectException;
+import java.net.SocketTimeoutException;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-import mac.yk.devicemanagement.I;
 import mac.yk.devicemanagement.MyApplication;
 import mac.yk.devicemanagement.R;
-import mac.yk.devicemanagement.bean.Device;
-import mac.yk.devicemanagement.bean.Result;
 import mac.yk.devicemanagement.model.IModel;
+import mac.yk.devicemanagement.net.APIException;
 import mac.yk.devicemanagement.net.ServerAPI;
 import mac.yk.devicemanagement.net.netWork;
 import mac.yk.devicemanagement.ui.fragment.fragBaofei;
@@ -37,18 +37,14 @@ import mac.yk.devicemanagement.ui.fragment.fragMain;
 import mac.yk.devicemanagement.util.ActivityUtils;
 import mac.yk.devicemanagement.util.L;
 import mac.yk.devicemanagement.util.MFGT;
-import mac.yk.devicemanagement.util.OkHttpUtils;
 import mac.yk.devicemanagement.util.SpUtil;
 import mac.yk.devicemanagement.util.TestUtil;
 import mac.yk.devicemanagement.util.ToastUtil;
 import rx.Observer;
-import rx.android.schedulers.AndroidSchedulers;
-import rx.functions.Func1;
-import rx.schedulers.Schedulers;
 
 import static mac.yk.devicemanagement.R.id.yujing;
 
-public class MainActivity extends BaseActivity{
+public class MainActivity extends BaseActivity {
     IModel model;
     String id;
     ProgressDialog progressDialog;
@@ -64,13 +60,14 @@ public class MainActivity extends BaseActivity{
 
     DialogHolder dialogHolder;
     Context context;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_currency);
         View view = View.inflate(this, R.layout.dialog_yujing, null);
         ButterKnife.bind(this);
-        context=this;
+        context = this;
         builder = new AlertDialog.Builder(this);
         model = TestUtil.getData();
         progressDialog = new ProgressDialog(this);
@@ -151,33 +148,34 @@ public class MainActivity extends BaseActivity{
             if (bundle != null) {
                 id = (bundle.getString("result"));
                 L.e("main", id + "");
-                model.chaxun(this, id, new OkHttpUtils.OnCompleteListener<Result>() {
-                    @Override
-                    public void onSuccess(Result result) {
-                        if (result != null && result.getRetCode() == I.RESULT.SUCCESS) {
-                            L.e("main", result.toString());
-                            String s = result.getRetData().toString();
-                            Gson gson = new Gson();
-                            Device d = gson.fromJson(s, Device.class);
-                            L.e("main", "gotoDetail");
-                            MFGT.gotoDetailActivity(MainActivity.this, d);
-                            finish();
-                        } else {
-                            L.e("main", "gotoSave");
-                            MFGT.gotoSaveActivity(MainActivity.this, id);
-                        }
-                    }
-
-                    @Override
-                    public void onError(String error) {
-                        ToastUtil.showNetWorkBad(context);
-                    }
-                });
+//                model.chaxun(this, id, new OkHttpUtils.OnCompleteListener<Result>() {
+//                    @Override
+//                    public void onSuccess(Result result) {
+//                        if (result != null && result.getRetCode() == I.RESULT.SUCCESS) {
+//                            L.e("main", result.toString());
+//                            String s = result.getRetData().toString();
+//                            Gson gson = new Gson();
+//                            Device d = gson.fromJson(s, Device.class);
+//                            L.e("main", "gotoDetail");
+//                            MFGT.gotoDetailActivity(MainActivity.this, d);
+//                            finish();
+//                        } else {
+//                            L.e("main", "gotoSave");
+//                            MFGT.gotoSaveActivity(MainActivity.this, id);
+//                        }
+//                    }
+//
+//                    @Override
+//                    public void onError(String error) {
+//                        ToastUtil.showNetWorkBad(context);
+//                    }
+//                });
             }
 
         }
     }
-    Observer<String> observer=new Observer<String>(){
+
+    Observer<String> observer = new Observer<String>() {
         @Override
         public void onCompleted() {
 
@@ -186,28 +184,32 @@ public class MainActivity extends BaseActivity{
         @Override
         public void onError(Throwable e) {
             progressDialog.dismiss();
-            ToastUtil.showNetWorkBad(context);
+            if (e instanceof APIException) {
+                APIException exception = (APIException) e;
+                L.e("main","进入error分支");
+                ToastUtil.showToast(context,exception.message);
+            } else if (e instanceof SocketTimeoutException) {
+                ToastUtil.showToast(context,e.getMessage());
+            } else if (e instanceof ConnectException) {
+                ToastUtil.showToast(context,e.getMessage());
+            }
+            Log.e("main", String.valueOf(e.getMessage()));
         }
 
         @Override
         public void onNext(String s) {
             progressDialog.dismiss();
-           dialogHolder.yujing.setText(s);
-           Adialog.show();
+            dialogHolder.yujing.setText(s);
+            Adialog.show();
         }
     };
+
     private void getYujing() {
         progressDialog.show();
-        netWork<ServerAPI> netWork=new netWork<>();
-       subscription= netWork.targetClass(ServerAPI.class).getAPI().getyujing().map(new Func1<Result, String>() {
-            @Override
-            public String call(Result result) {
-                return result.getRetData().toString();
-            }
-        }).subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
+        netWork<ServerAPI> network = new netWork<>();
+        network.targetClass(ServerAPI.class).getAPI().getyujing()
+                .compose(network.<String>applySchedulers())
                 .subscribe(observer);
-
     }
 
     class DialogHolder {
@@ -223,10 +225,12 @@ public class MainActivity extends BaseActivity{
         @OnClick(R.id.no_prompt)
         public void onClick() {
             if (noPrompt.isChecked()) {
-                SpUtil.savePrompt(MainActivity.this, true);
+                SpUtil.savePrompt(context, true);
             }
         }
+
+
     }
-
-
 }
+
+

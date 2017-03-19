@@ -41,8 +41,9 @@ public interface I {
 
 
     interface RESULT{
-        int SUCCESS=0;
-        int DEFEAT=1;
+        int SUCCESS=1;
+        int DEFEAT=0;
+        String ERROR="error";
     }
     interface CONTROL{
         int START=0;
