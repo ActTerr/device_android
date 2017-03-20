@@ -1,5 +1,6 @@
 package mac.yk.devicemanagement.util;
 
+import android.app.Activity;
 import android.content.Context;
 import android.widget.Toast;
 
@@ -13,5 +14,16 @@ public class ToastUtil {
     }
     public static void showToast(Context context,String s){
         Toast.makeText(context, s, Toast.LENGTH_SHORT).show();
+    }
+    public static void showcannotControl(Context context){
+        Toast.makeText(context, "不能执行当前操作！", Toast.LENGTH_SHORT).show();
+    }
+
+    public static void showControlSuccess(Activity context) {
+        Toast.makeText(context, "操作成功！", Toast.LENGTH_SHORT).show();
+    }
+
+    public static void showNoMore(Context context) {
+        Toast.makeText(context, "没有更多数据", Toast.LENGTH_SHORT).show();
     }
 }

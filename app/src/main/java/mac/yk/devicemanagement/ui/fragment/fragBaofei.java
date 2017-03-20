@@ -15,9 +15,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import com.google.gson.Gson;
 import com.xys.libzxing.zxing.activity.CaptureActivity;
 
 import java.util.ArrayList;
@@ -28,19 +26,18 @@ import butterknife.OnClick;
 import mac.yk.devicemanagement.I;
 import mac.yk.devicemanagement.R;
 import mac.yk.devicemanagement.adapter.ScrapAdapter;
-import mac.yk.devicemanagement.bean.Result;
 import mac.yk.devicemanagement.bean.Scrap;
 import mac.yk.devicemanagement.model.IModel;
+import mac.yk.devicemanagement.net.ApiWrapper;
 import mac.yk.devicemanagement.net.ServerAPI;
-import mac.yk.devicemanagement.net.netWork;
 import mac.yk.devicemanagement.util.ConvertUtils;
+import mac.yk.devicemanagement.util.ExceptionFilter;
 import mac.yk.devicemanagement.util.L;
-import mac.yk.devicemanagement.util.OkHttpUtils;
 import mac.yk.devicemanagement.util.TestUtil;
 import mac.yk.devicemanagement.util.ToastUtil;
+import rx.Observer;
 import rx.Subscriber;
 import rx.android.schedulers.AndroidSchedulers;
-import rx.functions.Func1;
 import rx.schedulers.Schedulers;
 
 /**
@@ -84,7 +81,7 @@ public class fragBaofei extends BaseFragment {
         return view;
     }
 
-    Subscriber<String> sub = new Subscriber<String>() {
+    Observer<Integer[]> obTongji = new Observer<Integer[]>() {
         @Override
         public void onCompleted() {
 
@@ -92,28 +89,27 @@ public class fragBaofei extends BaseFragment {
 
         @Override
         public void onError(Throwable e) {
-            Toast.makeText(context, "查询失败", Toast.LENGTH_SHORT).show();
+            if (ExceptionFilter.filter(context, e)) {
+                ToastUtil.showToast(context, "查询失败");
+            }
         }
 
         @Override
-        public void onNext(String json) {
-            Gson gson = new Gson();
-            tongji = gson.fromJson(json, Integer[].class);
+        public void onNext(Integer[] integers) {
+            L.e("integer", integers.toString());
+            tongji = integers;
             setTitle();
         }
     };
 
+
     private void getTongji() {
-        netWork<ServerAPI> network = new netWork<>();
+        ApiWrapper<ServerAPI> network = new ApiWrapper<>();
         subscription = network.targetClass(ServerAPI.class).getAPI().getTongji(I.BAOFEI.TABLENAME)
-                .map(new Func1<Result, String>() {
-            @Override
-            public String call(Result result) {
-                return result.getRetData().toString();
-            }
-        }).subscribeOn(Schedulers.io())
+                .compose(network.<Integer[]>applySchedulers())
+                .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(sub);
+                .subscribe(obTongji);
     }
 
     private void setTitle() {
@@ -149,33 +145,40 @@ public class fragBaofei extends BaseFragment {
 
     private void downData() {
         pd.show();
-        model.downScrap(context, page, 10, new OkHttpUtils.OnCompleteListener<Scrap[]>() {
-            @Override
-            public void onSuccess(Scrap[] result) {
-                pd.dismiss();
-                L.e("main", "id:" + result[1].getDid());
-                if (result != null) {
-                    ArrayList<Scrap> list = ConvertUtils.array2List(result);
-                    L.e("main", "list" + list.size());
-                    devices.addAll(list);
-                    if (selected == 0) {
-                        scrapAdapter.addData(list);
-                    } else {
-                        SetSelectedList(selected, false, list);
+        ApiWrapper<ServerAPI> wrapper = new ApiWrapper<>();
+        subscription = wrapper.targetClass(ServerAPI.class).getAPI().downScrap(page, 10)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .compose(wrapper.<Scrap[]>applySchedulers())
+                .subscribe(new Subscriber<Scrap[]>() {
+                    @Override
+                    public void onCompleted() {
 
                     }
-                    isMore = true;
-                } else {
-                    isMore = false;
-                }
-            }
 
-            @Override
-            public void onError(String error) {
-                pd.dismiss();
-                ToastUtil.showNetWorkBad(context);
-            }
-        });
+                    @Override
+                    public void onError(Throwable e) {
+                        pd.dismiss();
+                        if (ExceptionFilter.filter(context, e)) {
+                            ToastUtil.showToast(context, "没有更多数据");
+                        }
+                    }
+
+                    @Override
+                    public void onNext(Scrap[] scraps) {
+                        pd.dismiss();
+                        ArrayList<Scrap> list = ConvertUtils.array2List(scraps);
+                        L.e("main", "list" + list.size());
+                        devices.addAll(list);
+                        if (selected == 0) {
+                            scrapAdapter.addData(list);
+                        } else {
+                            SetSelectedList(selected, false, list);
+
+                        }
+                        isMore = true;
+                    }
+                });
     }
 
     @Override

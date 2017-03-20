@@ -33,10 +33,15 @@ import mac.yk.devicemanagement.adapter.xunjianAdapter;
 import mac.yk.devicemanagement.bean.Weixiu;
 import mac.yk.devicemanagement.bean.Xunjian;
 import mac.yk.devicemanagement.model.IModel;
+import mac.yk.devicemanagement.net.ApiWrapper;
+import mac.yk.devicemanagement.net.ServerAPI;
 import mac.yk.devicemanagement.util.ConvertUtils;
+import mac.yk.devicemanagement.util.ExceptionFilter;
 import mac.yk.devicemanagement.util.L;
-import mac.yk.devicemanagement.util.OkHttpUtils;
 import mac.yk.devicemanagement.util.TestUtil;
+import rx.Subscriber;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.schedulers.Schedulers;
 
 /**
  * Created by mac-yk on 2017/3/2.
@@ -276,98 +281,112 @@ public class fragRecord extends BaseFragment {
     }
 
     private void downloadxunjian(final int Action) {
-        model.downloadXunjian(context, id, page, new OkHttpUtils.OnCompleteListener<Xunjian[]>() {
-            @Override
-            public void onSuccess(Xunjian[] result) {
-                srl.setRefreshing(false);
-                L.e("main","xunjianl:"+result.length);
-                xunjianAdapter= (xunjianAdapter) adapter;
-                if (result!=null){
-                    ArrayList<Xunjian> xunjianLists= ConvertUtils.array2List(result);
-                    L.e("main","down size:"+xunjianLists.size());
-                    if(xunjianLists.size()<10){
-                        isMore=false;
-                        L.e("main","ismore为false");
-                    }
-                    if (Action==ACTION_ADD){
+        ApiWrapper<ServerAPI> wrapper = new ApiWrapper<>();
+        subscription = wrapper.targetClass(ServerAPI.class).getAPI()
+                .downloadXunJian(id, page, 10)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .compose(wrapper.<Xunjian[]>applySchedulers())
+                .subscribe(new Subscriber<Xunjian[]>() {
+                    @Override
+                    public void onCompleted() {
 
-                        xunjianAdapter.addxData(xunjianLists);
-                        xunjianList.addAll(xunjianLists);
-                    }else {
-                        xunjianAdapter.initxData(xunjianLists);
-                        synchronized (xunjianList){
-                            if (xunjianList!=null){
-                                xunjianList.clear();
-                            }
-                            xunjianList.addAll(xunjianLists);
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        if (ExceptionFilter.filter(context, e)) {
+                            srl.setRefreshing(false);
+                            tvRefresh.setText("刷新失败");
+                            isMore = false;
+                            delayToInvisible();
                         }
-                        isMore=true;
                     }
-                    setListSort(isDesc);
-                    tvRefresh.setText("刷新成功");
 
-                }else {
-                    tvRefresh.setText("刷新失败");
-                    isMore=false;
-                }
-                delayToInvisible();
-            }
+                    @Override
+                    public void onNext(Xunjian[] result) {
+                        srl.setRefreshing(false);
+                        L.e("main", "xunjianl:" + result.length);
+                        xunjianAdapter = (xunjianAdapter) adapter;
+                        ArrayList<Xunjian> xunjianLists = ConvertUtils.array2List(result);
+                        L.e("main", "down size:" + xunjianLists.size());
+                        if (xunjianLists.size() < 10) {
+                            isMore = false;
+                            L.e("main", "ismore为false");
+                        }
+                        if (Action == ACTION_ADD) {
 
-            @Override
-            public void onError(String error) {
-                srl.setRefreshing(false);
-                tvRefresh.setText("刷新失败");
-                delayToInvisible();
-            }
-        });
+                            xunjianAdapter.addxData(xunjianLists);
+                            xunjianList.addAll(xunjianLists);
+                        } else {
+                            xunjianAdapter.initxData(xunjianLists);
+                            synchronized (xunjianList) {
+                                if (xunjianList != null) {
+                                    xunjianList.clear();
+                                }
+                                xunjianList.addAll(xunjianLists);
+                            }
+                            isMore = true;
+                        }
+                        setListSort(isDesc);
+                        tvRefresh.setText("刷新成功");
+                        delayToInvisible();
+                    }
+                });
     }
+
+
 
     private void downloadweixiu(final int Action) {
-        model.downloadWeixiu(context, id, page, new OkHttpUtils.OnCompleteListener<Weixiu[]>() {
-            @Override
-            public void onSuccess(Weixiu[] result) {
-           weixiuAdapter = (weixiuAdapter) adapter;
-                srl.setRefreshing(false);
-                L.e("main","weixiul:"+result.length);
-                if (result!=null&&result.length>0){
-                  ArrayList<Weixiu> weixius= ConvertUtils.array2List(result);
-                    L.e("main","down size:"+weixius.size());
-                    if (weixius.size()<10){
-                        isMore=false;
-                        L.e("main","ismore为false");
+        ApiWrapper<ServerAPI> wrapper = new ApiWrapper<>();
+        subscription = wrapper.targetClass(ServerAPI.class).getAPI().downLoadWeixiu(id, page, 10)
+                .compose(wrapper.<Weixiu[]>applySchedulers())
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Subscriber<Weixiu[]>() {
+                    @Override
+                    public void onCompleted() {
+
                     }
-                    if (Action==ACTION_ADD){
-                        weixiuAdapter.addwData(weixius);
-                        wxList.addAll(weixius);
-                    }else {
-                        weixiuAdapter.initwData(weixius);
-                        synchronized (wxList){
-                            if(wxList!=null){
-                                wxList.clear();
-                            }
-                            wxList.addAll(weixius);
+
+                    @Override
+                    public void onError(Throwable e) {
+                        if (ExceptionFilter.filter(context, e)) {
+                            srl.setRefreshing(false);
+                            tvRefresh.setText("刷新失败");
+                            delayToInvisible();
                         }
-                        isMore=true;
                     }
-                    setListSort(isDesc);
-                    tvRefresh.setText("刷新成功");
-
-                }else {
-                    tvRefresh.setText("刷新失败");
-                }
-
-                delayToInvisible();
-            }
-
-            @Override
-            public void onError(String error) {
-                srl.setRefreshing(false);
-                tvRefresh.setText("刷新失败");
-                delayToInvisible();
-            }
-        });
+                    @Override
+                    public void onNext(Weixiu[] result) {
+                        srl.setRefreshing(false);
+                        L.e("main", "weixiul:" + result.length);
+                        weixiuAdapter= (weixiuAdapter) adapter;
+                        ArrayList<Weixiu> weixius = ConvertUtils.array2List(result);
+                        L.e("main", "down size:" + weixius.size());
+                        if (weixius.size() < 10) {
+                            isMore = false;
+                            L.e("main", "ismore为false");
+                        }
+                        if (Action == ACTION_ADD) {
+                            weixiuAdapter.addwData(weixius);
+                            wxList.addAll(weixius);
+                        } else {
+                            weixiuAdapter.initwData(weixius);
+                            synchronized (wxList) {
+                                if (wxList != null) {
+                                    wxList.clear();
+                                }
+                                wxList.addAll(weixius);
+                            }
+                            isMore = true;
+                        }
+                        setListSort(isDesc);
+                        tvRefresh.setText("刷新成功");
+                        delayToInvisible();
+                    }
+                });
     }
-
     private void delayToInvisible() {
         new Thread(new Runnable() {
             @Override

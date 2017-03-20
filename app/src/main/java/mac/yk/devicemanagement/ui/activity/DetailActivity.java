@@ -9,7 +9,6 @@ import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.MenuItem;
@@ -27,18 +26,23 @@ import mac.yk.devicemanagement.I;
 import mac.yk.devicemanagement.MyApplication;
 import mac.yk.devicemanagement.R;
 import mac.yk.devicemanagement.bean.Device;
-import mac.yk.devicemanagement.bean.Result;
 import mac.yk.devicemanagement.model.IModel;
+import mac.yk.devicemanagement.net.ApiWrapper;
+import mac.yk.devicemanagement.net.ServerAPI;
 import mac.yk.devicemanagement.ui.fragment.fragDetail;
 import mac.yk.devicemanagement.util.ActivityUtils;
+import mac.yk.devicemanagement.util.ExceptionFilter;
 import mac.yk.devicemanagement.util.L;
 import mac.yk.devicemanagement.util.MFGT;
-import mac.yk.devicemanagement.util.OkHttpUtils;
 import mac.yk.devicemanagement.util.TestUtil;
 import mac.yk.devicemanagement.util.ToastUtil;
+import rx.Observer;
+import rx.Subscriber;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.schedulers.Schedulers;
 
 
-public class DetailActivity extends AppCompatActivity {
+public class DetailActivity extends BaseActivity {
     ProgressDialog progressDialog;
     IModel model;
     Device device;
@@ -59,7 +63,8 @@ public class DetailActivity extends AppCompatActivity {
 
     String id;
 
-    boolean isBaofei=false;
+    boolean isBaofei = false;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -80,8 +85,8 @@ public class DetailActivity extends AppCompatActivity {
                 isDianchi = true;
                 MyApplication.setFlag(true);
             }
-            if (device.getStatus()==I.CONTROL.BAOFEI){
-                isBaofei=true;
+            if (device.getStatus() == I.CONTROL.BAOFEI) {
+                isBaofei = true;
             }
         }
 
@@ -108,7 +113,7 @@ public class DetailActivity extends AppCompatActivity {
 
             navView.getMenu().getItem(4).setTitle("充电");
             navView.getMenu().getItem(5).setTitle("充满");
-        }else{
+        } else {
             //如果不是电池该项不可见
             navView.getMenu().getItem(3).setVisible(false);
         }
@@ -128,7 +133,7 @@ public class DetailActivity extends AppCompatActivity {
         navView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-                if (isBaofei){
+                if (isBaofei) {
                     Toast.makeText(context, "设备已报废！不可操作！", Toast.LENGTH_SHORT).show();
                     return true;
                 }
@@ -139,7 +144,7 @@ public class DetailActivity extends AppCompatActivity {
                         postControl(item.getItemId());
                         break;
                     case R.id.xunjian:
-                        postxunjian();
+                        postxunjian1();
                         break;
                     case R.id.xiujun:
                         postXiujun();
@@ -163,24 +168,32 @@ public class DetailActivity extends AppCompatActivity {
 
     private void postYonghou(String id) {
         progressDialog.show();
-        model.yonghou(context, id, new OkHttpUtils.OnCompleteListener<Result>() {
-            @Override
-            public void onSuccess(Result result) {
-                progressDialog.dismiss();
-                if(result.getRetCode()==I.RESULT.SUCCESS){
-                    String status= result.getRetData().toString();
-                    device.setStatus(Integer.parseInt(status));
-                }else {
-                    Toast.makeText(context, "当前状态不可执行该操作！", Toast.LENGTH_SHORT).show();
-                }
-            }
+        ApiWrapper<ServerAPI> wrapper = new ApiWrapper<>();
+        subscription = wrapper.targetClass(ServerAPI.class).getAPI().yonghou(id)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .compose(wrapper.<Integer>applySchedulers())
+                .subscribe(new Subscriber<Integer>() {
+                    @Override
+                    public void onCompleted() {
 
-            @Override
-            public void onError(String error) {
-                progressDialog.dismiss();
-                ToastUtil.showNetWorkBad(context);
-            }
-        });
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        progressDialog.dismiss();
+                        if (ExceptionFilter.filter(context, e)) {
+                            ToastUtil.showcannotControl(context);
+                        }
+                    }
+
+                    @Override
+                    public void onNext(Integer integer) {
+                        progressDialog.dismiss();
+                        device.setStatus(integer);
+                        ToastUtil.showControlSuccess(context);
+                    }
+                });
     }
 
     public class BaofeiHolder {
@@ -196,7 +209,7 @@ public class DetailActivity extends AppCompatActivity {
 
         public BaofeiHolder() {
             v = View.inflate(context, R.layout.dialog_currency, null);
-            ButterKnife.bind(this,v);
+            ButterKnife.bind(this, v);
             cbNo.setVisibility(View.GONE);
             cbYes.setVisibility(View.GONE);
             diaTitle.setText("报废提交");
@@ -214,30 +227,39 @@ public class DetailActivity extends AppCompatActivity {
 
         @OnClick(R.id.btn_commit)
         public void onClick(View view) {
-           progressDialog.show();
-            model.baofei(context, MyApplication.getInstance().getUserName(), String.valueOf(device.getDname()), id, remark.getText().toString(), new OkHttpUtils.OnCompleteListener<Result>() {
-                @Override
-                public void onSuccess(Result result) {
-                    progressDialog.dismiss();
-                    if (result.getRetCode()==I.RESULT.SUCCESS&&result.isSuccess()){
-                        int status= Integer.parseInt(result.getRetData().toString());
-                        device.setStatus(status);
-                    }else {
-                        Toast.makeText(context, "提交失败", Toast.LENGTH_SHORT).show();
-                    }
-                }
+            progressDialog.show();
+            ApiWrapper<ServerAPI> wrapper = new ApiWrapper<>();
+            subscription = wrapper.targetClass(ServerAPI.class).getAPI().baofei(MyApplication.getInstance().getUserName()
+                    , String.valueOf(device.getDname()), id, remark.getText().toString())
+                    .subscribeOn(Schedulers.io())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .compose(wrapper.<Integer>applySchedulers())
+                    .subscribe(new Observer<Integer>() {
+                        @Override
+                        public void onCompleted() {
 
-                @Override
-               public void onError(String error) {
-                    progressDialog.dismiss();
-                    Toast.makeText(context, "请检查网络", Toast.LENGTH_SHORT).show();
-                }
-            });
+                        }
+
+                        @Override
+                        public void onError(Throwable e) {
+                            progressDialog.dismiss();
+                            if (ExceptionFilter.filter(context, e)) {
+                                ToastUtil.showcannotControl(context);
+                            }
+                        }
+
+                        @Override
+                        public void onNext(Integer integer) {
+                            progressDialog.dismiss();
+                            device.setStatus(integer);
+                            ToastUtil.showControlSuccess(context);
+                        }
+                    });
         }
     }
 
     private void postBaofei() {
-        BaofeiHolder baofei=new BaofeiHolder();
+        BaofeiHolder baofei = new BaofeiHolder();
         dialog.setContentView(baofei.getV());
         dialog.setTitle(null);
         dialog.show();
@@ -253,31 +275,40 @@ public class DetailActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
+    Observer<Integer> obControl = new Observer<Integer>() {
+        @Override
+        public void onCompleted() {
+
+        }
+
+        @Override
+        public void onError(Throwable e) {
+            progressDialog.dismiss();
+            if (ExceptionFilter.filter(context, e)) {
+                ToastUtil.showcannotControl(context);
+            }
+        }
+
+        @Override
+        public void onNext(Integer integer) {
+            progressDialog.dismiss();
+            device.setStatus(integer);
+            ToastUtil.showControlSuccess(context);
+        }
+    };
 
     private void postControl(final int Cid) {
         progressDialog.show();
-        model.control(context, isDianchi,getControl(Cid), id, new OkHttpUtils.OnCompleteListener<Result>() {
-            @Override
-            public void onSuccess(Result result) {
-                progressDialog.dismiss();
-                if (result != null && result.getRetCode() == I.RESULT.SUCCESS) {
-                    int status = getControl(Cid);
-                    device.setStatus(status);
-                } else {
-                    Toast.makeText(context, "当前状态不可执行该操作！", Toast.LENGTH_SHORT).show();
-                }
-            }
-
-            @Override
-            public void onError(String error) {
-                progressDialog.dismiss();
-                ToastUtil.showNetWorkBad(context);
-            }
-        });
+        ApiWrapper<ServerAPI> network = new ApiWrapper<>();
+        network.targetClass(ServerAPI.class).getAPI().control(isDianchi, getControl(Cid), id)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .compose(network.<Integer>applySchedulers())
+                .subscribe(obControl);
     }
 
     private int getControl(int cid) {
-        switch (cid){
+        switch (cid) {
             case R.id.beiyong:
                 return I.CONTROL.BEIYONG;
             case R.id.daiyong:
@@ -286,7 +317,7 @@ public class DetailActivity extends AppCompatActivity {
                 return I.CONTROL.YUNXING;
 
         }
-      return 0;
+        return 0;
     }
 
 
@@ -302,7 +333,7 @@ public class DetailActivity extends AppCompatActivity {
 
         public xiujunHoler() {
             v = View.inflate(context, R.layout.dialog_currency, null);
-            ButterKnife.bind(this,v);
+            ButterKnife.bind(this, v);
         }
 
         public View getV() {
@@ -326,24 +357,7 @@ public class DetailActivity extends AppCompatActivity {
                 case R.id.btn_commit:
                     dialog.dismiss();
                     progressDialog.show();
-                    model.xiujun(context, isDianchi,MyApplication.getInstance().getUserName(), id, translate, remark.getText().toString(), new OkHttpUtils.OnCompleteListener<Result>() {
-                        @Override
-                        public void onSuccess(Result result) {
-                            progressDialog.dismiss();
-                            if (result != null && result.getRetCode() == I.RESULT.SUCCESS) {
-                                String status=result.getRetData().toString();
-                                device.setStatus(Integer.parseInt(status));
-                            } else {
-                                Toast.makeText(context, "当前状态不可执行该操作", Toast.LENGTH_SHORT).show();
-                            }
-                        }
-
-                        @Override
-                        public void onError(String error) {
-                            progressDialog.dismiss();
-                            Toast.makeText(context, "检查网络", Toast.LENGTH_SHORT).show();
-                        }
-                    });
+                    postXiujun2(translate,remark.getText().toString());
                     break;
             }
         }
@@ -363,7 +377,7 @@ public class DetailActivity extends AppCompatActivity {
 
         public xunjianHolder() {
             v = View.inflate(context, R.layout.dialog_currency, null);
-            ButterKnife.bind(this,v);
+            ButterKnife.bind(this, v);
             diaTitle.setText("设备状态");
             remark.setHint("如有问题请备注");
             cbNo.setText("异常");
@@ -395,84 +409,93 @@ public class DetailActivity extends AppCompatActivity {
                     } else {
                         status = "0";
                     }
-                    model.xunjian(context, isDianchi,MyApplication.getInstance().getUserName(), id, status, remark.getText().toString(), new OkHttpUtils.OnCompleteListener<Result>() {
-                        @Override
-                        public void onSuccess(Result result) {
-                            progressDialog.dismiss();
-                            if (result != null && result.getRetCode() == I.RESULT.SUCCESS) {
-                                String status= result.getRetData().toString();
-                                device.setStatus(Integer.parseInt(status));
-
-                            } else {
-                                Toast.makeText(context, "请求失败！", Toast.LENGTH_SHORT).show();
-                            }
-                        }
-
-                        @Override
-                        public void onError(String error) {
-                            progressDialog.dismiss();
-                            ToastUtil.showNetWorkBad(context);
-                        }
-                    });
+                    postxunjian2(status, remark.getText().toString());
                     break;
             }
         }
     }
 
     private void postXiujun() {
-        if (!isDianchi){
+        if (!isDianchi) {
             xiujunHoler xiujunHoler = new xiujunHoler();
             dialog.setContentView(xiujunHoler.getV());
             dialog.setTitle(null);
             dialog.show();
-        }else {
-            model.xiujun(context, isDianchi,MyApplication.getInstance().getUserName(), id, false, "", new OkHttpUtils.OnCompleteListener<Result>() {
-                @Override
-                public void onSuccess(Result result) {
-                    progressDialog.dismiss();
-                    if (result != null && result.getRetCode() == I.RESULT.SUCCESS) {
-                        String status=result.getRetData().toString();
-                        device.setStatus(Integer.parseInt(status));
-                    } else {
-                        Toast.makeText(context, "当前状态不可执行该操作", Toast.LENGTH_SHORT).show();
-                    }
-                }
-
-                @Override
-                public void onError(String error) {
-                    progressDialog.dismiss();
-                    ToastUtil.showNetWorkBad(context);
-                }
-            });
+        } else {
+            postXiujun2(false, "");
         }
     }
 
-    private void postxunjian() {
-        if (!isDianchi){
+    private void postXiujun2(boolean translate, String remark) {
+        ApiWrapper<ServerAPI> wrapper = new ApiWrapper<>();
+        subscription = wrapper.targetClass(ServerAPI.class).getAPI()
+                .xiujun(isDianchi, MyApplication.getInstance().getUserName(), id, translate, remark)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .compose(wrapper.<Integer>applySchedulers())
+                .subscribe(new Subscriber<Integer>() {
+                    @Override
+                    public void onCompleted() {
+
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        progressDialog.dismiss();
+                        if (ExceptionFilter.filter(context, e)) {
+                            ToastUtil.showcannotControl(context);
+                        }
+                    }
+
+                    @Override
+                    public void onNext(Integer integer) {
+                        progressDialog.dismiss();
+                        device.setStatus(integer);
+                        ToastUtil.showControlSuccess(context);
+                    }
+                });
+    }
+
+    private void postxunjian1() {
+        if (!isDianchi) {
             xunjianHolder xunjianHolder = new xunjianHolder();
             dialog.setContentView(xunjianHolder.getV());
             dialog.setTitle(null);
             dialog.show();
-        }else{
-            model.xunjian(context, isDianchi,MyApplication.getInstance().getUserName(), id, "0", "", new OkHttpUtils.OnCompleteListener<Result>() {
-                @Override
-                public void onSuccess(Result result) {
-                    progressDialog.dismiss();
-                    if (result != null && result.getRetCode() == I.RESULT.SUCCESS) {
-                        String status= result.getRetData().toString();
-                        device.setStatus(Integer.parseInt(status));
-                    } else {
-                        Toast.makeText(context, "请求失败！", Toast.LENGTH_SHORT).show();
-                    }
-                }
-
-                @Override
-                public void onError(String error) {
-                    progressDialog.dismiss();
-                    ToastUtil.showNetWorkBad(context);
-                }
-            });
+        } else {
+            postxunjian2("0", "");
         }
+    }
+
+    private void postxunjian2(String status, String remark) {
+        ApiWrapper<ServerAPI> wrapper = new ApiWrapper<>();
+        subscription = wrapper.targetClass(ServerAPI.class).getAPI()
+                .xunjian(isDianchi, MyApplication.getInstance().getUserName(), id, status, remark)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .compose(wrapper.<Integer>applySchedulers())
+                .subscribe(new Subscriber<Integer>() {
+                    @Override
+                    public void onCompleted() {
+
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        progressDialog.dismiss();
+                        if (ExceptionFilter.filter(context, e)) {
+                            ToastUtil.showcannotControl(context);
+                        }
+                    }
+
+                    @Override
+                    public void onNext(Integer integer) {
+                        progressDialog.dismiss();
+                        device.setStatus(integer);
+                        ToastUtil.showControlSuccess(context);
+                    }
+                });
+
     }
 
     @Override

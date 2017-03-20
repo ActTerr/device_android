@@ -16,7 +16,6 @@ import android.view.animation.Interpolator;
 import android.view.animation.LinearInterpolator;
 import android.widget.ImageView;
 import android.widget.Scroller;
-import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
@@ -30,13 +29,16 @@ import mac.yk.devicemanagement.I;
 import mac.yk.devicemanagement.MyApplication;
 import mac.yk.devicemanagement.R;
 import mac.yk.devicemanagement.bean.Device;
-import mac.yk.devicemanagement.bean.Result;
 import mac.yk.devicemanagement.model.IModel;
-import mac.yk.devicemanagement.model.Model;
+import mac.yk.devicemanagement.net.ApiWrapper;
+import mac.yk.devicemanagement.net.ServerAPI;
 import mac.yk.devicemanagement.util.ConvertUtils;
+import mac.yk.devicemanagement.util.ExceptionFilter;
 import mac.yk.devicemanagement.util.L;
-import mac.yk.devicemanagement.util.OkHttpUtils;
 import mac.yk.devicemanagement.util.ToastUtil;
+import rx.Subscriber;
+import rx.Subscription;
+import rx.android.schedulers.AndroidSchedulers;
 
 import static mac.yk.devicemanagement.MyApplication.context;
 
@@ -44,48 +46,53 @@ import static mac.yk.devicemanagement.MyApplication.context;
  * Created by mac-yk on 2017/3/3.
  */
 
-public class lunboView extends ViewPager{
-//    zhishiqiView zhishiView;
+public class lunboView extends ViewPager {
+    //    zhishiqiView zhishiView;
     boolean notchange;
     Handler handler;
     Timer mTimer;
-    int count=0;
+    int count = 0;
     IModel model;
     Device device;
     int width;
-    boolean Stop=false;
+    boolean Stop = false;
+    protected Subscription subscription;
 
     public boolean isStop() {
         return Stop;
     }
 
-    public  void setStop(boolean stop) {
+    public void setStop(boolean stop) {
         Stop = stop;
     }
 
-    boolean cacheOK=false;
-    ArrayList<Drawable> Images=new ArrayList<>();
+    boolean cacheOK = false;
+    ArrayList<Drawable> Images = new ArrayList<>();
+
     public lunboView(Context context, AttributeSet attributeSet) {
-        super(context,attributeSet);
+        super(context, attributeSet);
     }
 
-    class AutoLoopPlayAdapter extends PagerAdapter{
+    class AutoLoopPlayAdapter extends PagerAdapter {
 
         Context context;
+
         public AutoLoopPlayAdapter(Context context) {
-            this.context=context;
+            this.context = context;
             setListener();
             init();
             getdisplayWidth();
         }
+
         private void init() {
-            handler=new Handler(){
+//           Looper looper= handler.getLooper();
+//            looper.prepareMainLooper();
+            handler = new Handler() {
                 @Override
                 public void handleMessage(Message msg) {
                     super.handleMessage(msg);
-                    if (!notchange&&!Stop){
-                        L.e("main","get");
-                        setCurrentItem(getCurrentItem()+1);
+                    if (!notchange && !Stop) {
+                        setCurrentItem(getCurrentItem() + 1);
 
                     }
                 }
@@ -106,7 +113,7 @@ public class lunboView extends ViewPager{
 
                 @Override
                 public void onPageSelected(int position) {
-                    L.e("main","position:"+position);
+                    L.e("main", "position:" + position);
 //                    zhishiView.setFocus(position%count);
                 }
 
@@ -116,6 +123,7 @@ public class lunboView extends ViewPager{
                 }
             });
         }
+
         @Override
         public int getCount() {
             return Integer.MAX_VALUE;
@@ -123,32 +131,32 @@ public class lunboView extends ViewPager{
 
         @Override
         public boolean isViewFromObject(View view, Object object) {
-            return view==object;
+            return view == object;
         }
 
         @Override
         public Object instantiateItem(ViewGroup container, int position) {
-            ImageView iv=new ImageView(context);
+            ImageView iv = new ImageView(context);
             LayoutParams mParams = new LayoutParams();
-            mParams.height=ConvertUtils.dp2px(context,200);
-            mParams.width=width;
+            mParams.height = ConvertUtils.dp2px(context, 200);
+            mParams.width = width;
             iv.setLayoutParams(mParams);
             container.addView(iv);
-
-            if (!cacheOK){
-                String url=I.REQUEST.SERVER_ROOT+I.REQUEST.DOWNPIC+"&"+I.DEVICE.DNAME+"="+device.getDname()
-                        +"&"+I.PIC.PID+"="+position%count+"&"+I.PIC.TYPE+"="+I.PIC.DEVICE;
-                L.e("main",url);
+            L.e("main", cacheOK + "cache");
+            if (!cacheOK) {
+                String url = I.REQUEST.SERVER_ROOT + I.REQUEST.PATH + "?request=" + I.REQUEST.DOWNPIC + "&" + I.DEVICE.DNAME + "=" + device.getDname()
+                        + "&" + I.PIC.PID + "=" + position % count + "&" + I.PIC.TYPE + "=" + I.PIC.DEVICE;
+                L.e("main", url);
                 Glide.with(context).load(url)
                         .placeholder(R.drawable.nopic)
                         .diskCacheStrategy(DiskCacheStrategy.NONE)
-                        .override(width, ConvertUtils.dp2px(context,200))
+                        .override(width, ConvertUtils.dp2px(context, 200))
                         .error(R.drawable.nopic)
                         .into(iv);
 //                Images.add(position,iv.getDrawable());
 //                cacheOK=Images.size()==count?true:false;
-            }else {
-                iv.setImageDrawable(Images.get(position%count));
+            } else {
+                iv.setImageDrawable(Images.get(position % count));
                 L.e("main", "memory");
             }
 
@@ -162,24 +170,24 @@ public class lunboView extends ViewPager{
     }
 
     private void getdisplayWidth() {
-        DisplayMetrics displayMetrics=new DisplayMetrics();
-        WindowManager windowManager= (WindowManager) context.getSystemService(context.WINDOW_SERVICE);
+        DisplayMetrics displayMetrics = new DisplayMetrics();
+        WindowManager windowManager = (WindowManager) context.getSystemService(context.WINDOW_SERVICE);
         windowManager.getDefaultDisplay().getMetrics(displayMetrics);
-        width=displayMetrics.widthPixels;
-        L.e("main","width"+width);
+        width = displayMetrics.widthPixels;
+        L.e("main", "width" + width);
     }
 
-    private void startPlay(zhishiqiView z){
-
+    private void startPlay(zhishiqiView z) {
+        L.e("main", "执行startPlay");
 //        zhishiView=z;
 //        zhishiView.setCount(count);
-        AutoLoopPlayAdapter adapter=new AutoLoopPlayAdapter(getContext());
+        AutoLoopPlayAdapter adapter = new AutoLoopPlayAdapter(getContext());
         this.setAdapter(adapter);
-        notchange=false;
-        MyScroller scroller=new MyScroller(getContext(),new LinearInterpolator());
+        notchange = false;
+        MyScroller scroller = new MyScroller(getContext(), new LinearInterpolator());
         scroller.setDuration(2000);
         try {
-          Field field =ViewPager.class.getField("MyScroller");
+            Field field = ViewPager.class.getField("MyScroller");
             field.setAccessible(true);
             field.set(this, scroller);
         } catch (NoSuchFieldException e) {
@@ -187,40 +195,47 @@ public class lunboView extends ViewPager{
         } catch (IllegalAccessException e) {
             e.printStackTrace();
         }
-        mTimer=new Timer();
+        mTimer = new Timer();
         mTimer.schedule(new TimerTask() {
             @Override
             public void run() {
                 handler.sendEmptyMessage(0);
             }
-        },1000,3000);
+        }, 1000, 3000);
 
     }
 
     public void getPicCount(final zhishiqiView z) {
-        device= MyApplication.getDevice();
-        model= Model.getInstance();
-        model.getCount(getContext(), device.getDname(),I.PIC.DEVICE,new OkHttpUtils.OnCompleteListener<Result>() {
-            @Override
-            public void onSuccess(Result result) {
-                if (result.getRetCode()==I.RESULT.SUCCESS){
-                    String s= result.getRetData().toString();
-                    count= Integer.parseInt(s.substring(0,1));
-                    startPlay(z);
-                }else {
-                    Toast.makeText(getContext(), "服务器没有图片", Toast.LENGTH_SHORT).show();
-                }
-            }
+        device = MyApplication.getDevice();
+        L.e("main", "execute getcount");
+        ApiWrapper<ServerAPI> wrapper = new ApiWrapper<>();
+        subscription = wrapper.targetClass(ServerAPI.class).getAPI().getCount(device.getDname(), I.PIC.DEVICE)
+                .compose(wrapper.<Integer>applySchedulers())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Subscriber<Integer>() {
+                    @Override
+                    public void onCompleted() {
 
-            @Override
-            public void onError(String error) {
+                    }
 
-                ToastUtil.showNetWorkBad(context);
-            }
-        });
+                    @Override
+                    public void onError(Throwable e) {
+                        if (ExceptionFilter.filter(context, e)) {
+                            ToastUtil.showToast(context, "服务器没有图片");
+                        }
+                    }
+
+                    @Override
+                    public void onNext(Integer integer) {
+                        count = integer;
+                        startPlay(z);
+                    }
+                });
+
     }
 
-    class MyScroller extends Scroller{
+    class MyScroller extends Scroller {
         int duration;
 
         public void setDuration(int duration) {
@@ -233,22 +248,27 @@ public class lunboView extends ViewPager{
 
         @Override
         public void startScroll(int startX, int startY, int dx, int dy, int duration) {
-            super.startScroll(startX, startY, dx, dy,this.duration);
+            super.startScroll(startX, startY, dx, dy, this.duration);
         }
     }
 
     @Override
     public boolean onTouchEvent(MotionEvent ev) {
-        switch (ev.getAction()){
+        switch (ev.getAction()) {
             case MotionEvent.ACTION_DOWN:
             case MotionEvent.ACTION_MOVE:
-                notchange=true;
+                notchange = true;
                 break;
             case MotionEvent.ACTION_UP:
-                notchange=false;
+                notchange = false;
                 break;
         }
         return super.onTouchEvent(ev);
     }
 
+    protected void unsubscribe() {
+        if (subscription != null && !subscription.isUnsubscribed()) {
+            subscription.unsubscribe();
+        }
+    }
 }

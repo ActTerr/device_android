@@ -14,9 +14,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import com.google.gson.Gson;
 import com.xys.libzxing.zxing.activity.CaptureActivity;
 
 import java.util.ArrayList;
@@ -28,18 +26,16 @@ import mac.yk.devicemanagement.I;
 import mac.yk.devicemanagement.R;
 import mac.yk.devicemanagement.adapter.DeviceAdapter;
 import mac.yk.devicemanagement.bean.Device;
-import mac.yk.devicemanagement.bean.Result;
 import mac.yk.devicemanagement.model.IModel;
+import mac.yk.devicemanagement.net.ApiWrapper;
 import mac.yk.devicemanagement.net.ServerAPI;
-import mac.yk.devicemanagement.net.netWork;
 import mac.yk.devicemanagement.util.ConvertUtils;
+import mac.yk.devicemanagement.util.ExceptionFilter;
 import mac.yk.devicemanagement.util.L;
-import mac.yk.devicemanagement.util.OkHttpUtils;
 import mac.yk.devicemanagement.util.TestUtil;
 import mac.yk.devicemanagement.util.ToastUtil;
 import rx.Observer;
 import rx.android.schedulers.AndroidSchedulers;
-import rx.functions.Func1;
 import rx.schedulers.Schedulers;
 
 /**
@@ -56,14 +52,14 @@ public class fragDevice extends BaseFragment {
     RecyclerView rv;
 
     int page = 1;
-    int selected=0;
-    ArrayList<Device> devices = new ArrayList<>();
+    int selected = 0;
+    ArrayList<Device> mDevices = new ArrayList<>();
     DeviceAdapter deviceAdapter;
-    ArrayList<Device> currentDevices=new ArrayList<>();
+    ArrayList<Device> currentDevices = new ArrayList<>();
     GridLayoutManager gridLayoutManager;
     boolean isMore;
     ProgressDialog pd;
-    Integer [] tongji;
+    Integer[] tongji;
 
     public fragDevice() {
     }
@@ -76,8 +72,8 @@ public class fragDevice extends BaseFragment {
         model = TestUtil.getData();
         context = getContext();
         deviceAdapter = new DeviceAdapter(context);
-        gridLayoutManager=new GridLayoutManager(context,1);
-        pd=new ProgressDialog(context);
+        gridLayoutManager = new GridLayoutManager(context, 1);
+        pd = new ProgressDialog(context);
         rv.setAdapter(deviceAdapter);
         rv.setLayoutManager(gridLayoutManager);
         downData();
@@ -86,66 +82,60 @@ public class fragDevice extends BaseFragment {
         setHasOptionsMenu(true);
         return view;
     }
-        Observer<Integer[]> obTongji=new Observer<Integer[]>() {
-            @Override
-            public void onCompleted() {
 
-            }
+    Observer<Integer[]> obTongji = new Observer<Integer[]>() {
+        @Override
+        public void onCompleted() {
 
-            @Override
-            public void onError(Throwable e) {
-                Toast.makeText(context, "查询失败", Toast.LENGTH_SHORT).show();
-            }
+        }
 
-            @Override
-            public void onNext(Integer[] integers) {
-                tongji=integers;
-                setTitle();
+        @Override
+        public void onError(Throwable e) {
+            if (ExceptionFilter.filter(context, e)) {
+                ToastUtil.showToast(context, "查询失败");
             }
-        } ;
+        }
+
+        @Override
+        public void onNext(Integer[] integers) {
+            L.e("integer", integers.toString());
+            tongji = integers;
+            setTitle();
+        }
+    };
 
     private void gettongji() {
-        subscription=new netWork<ServerAPI>().targetClass(ServerAPI.class).getAPI().
+        ApiWrapper<ServerAPI> wrapper = new ApiWrapper<>();
+        subscription = wrapper.targetClass(ServerAPI.class).getAPI().
                 getTongji(I.DEVICE.TABLENAME).subscribeOn(Schedulers.io())
+                .compose(wrapper.<Integer[]>applySchedulers())
                 .observeOn(AndroidSchedulers.mainThread())
-                .map(new Func1<Result, String>() {
-                    @Override
-                    public String call(Result result) {
-                        return result.getRetData().toString();
-                    }
-                }).map(new Func1<String, Integer[]>() {
-                    @Override
-                    public Integer[] call(String s) {
-                        Gson gson=new Gson();
-                        Integer[] integers=gson.fromJson(s,Integer[].class);
-                        return integers;
-                    }
-                }).subscribe(obTongji);
-
+                .subscribe(obTongji);
 
     }
 
     private void setTitle() {
-       if(selected==0){
-           int count=0;
-           for(int i=1;i<5;i++){
-               count+=tongji[i];
-           }
-           tv.setText("设备总数："+count);
-       }else {
-           tv.setText(ConvertUtils.getDname(selected)+"个数:"+tongji[selected]);
-       }
+        if (selected == 0) {
+            int count = 0;
+            for (int i = 1; i < 5; i++) {
+                count += tongji[i];
+            }
+            tv.setText("设备总数：" + count);
+        } else {
+            tv.setText(ConvertUtils.getDname(selected) + "个数:" + tongji[selected]);
+        }
     }
-
 
 
     private void setListener() {
         rv.setOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
             public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
-                int lastPosition=gridLayoutManager.findLastVisibleItemPosition();
-                if (newState==RecyclerView.SCROLL_STATE_IDLE
-                        &&lastPosition==deviceAdapter.getItemCount()&&isMore){
+                int lastPosition = gridLayoutManager.findLastVisibleItemPosition();
+                L.e("main", lastPosition + " count:" + deviceAdapter.getItemCount() + "flag" + isMore);
+                if (newState == RecyclerView.SCROLL_STATE_IDLE
+                        && lastPosition == deviceAdapter.getItemCount() - 1 && isMore) {
+                    page++;
                     downData();
                 }
             }
@@ -160,37 +150,47 @@ public class fragDevice extends BaseFragment {
 
     private void downData() {
         pd.show();
-        model.downDevice(context, page, 10, new OkHttpUtils.OnCompleteListener<Device[]>() {
-            @Override
-            public void onSuccess(Device[] result) {
-                pd.dismiss();
-                L.e("main","id:"+result[1].getDid());
-                if (result != null) {
-                    ArrayList<Device> list = ConvertUtils.array2List(result);
-                    L.e("main","list"+list.size());
-                    devices.addAll(list);
-                    if (selected==0){
-                        deviceAdapter.addData(list);
-                    }else {
-                        SetSelectedList(selected,false,list);
+        ApiWrapper<ServerAPI> wrapper = new ApiWrapper<>();
+        subscription = wrapper.targetClass(ServerAPI.class).getAPI().downDevice(page, 10)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .compose(wrapper.<Device[]>applySchedulers())
+                .subscribe(new Observer<Device[]>() {
+                    @Override
+                    public void onCompleted() {
+
                     }
 
-                    isMore=true;
-                } else {
-                    isMore=false;
-                }
-            }
+                    @Override
+                    public void onError(Throwable e) {
+                        pd.dismiss();
+                        if (ExceptionFilter.filter(context, e)) {
+                            isMore = false;
+                            ToastUtil.showNoMore(context);
+                        }
+                    }
 
-            @Override
-            public void onError(String error) {
-                pd.dismiss();
-                ToastUtil.showNetWorkBad(context);
-            }
-        });
+                    @Override
+                    public void onNext(Device[] devices) {
+                        pd.dismiss();
+                        ArrayList<Device> list = ConvertUtils.array2List(devices);
+                        L.e("main", "list" + list.size());
+                        mDevices.addAll(list);
+                        if (selected == 0) {
+                            deviceAdapter.addData(list);
+                        } else {
+                            SetSelectedList(selected, false, list);
+                        }
+                        isMore = true;
+                    }
+                });
+
     }
+
     public void scan(int id) {
         getActivity().startActivityForResult(new Intent(getActivity(), CaptureActivity.class), id);
     }
+
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         inflater.inflate(R.menu.menu_name, menu);
@@ -216,26 +216,27 @@ public class fragDevice extends BaseFragment {
                 break;
         }
         setTitle();
-        SetSelectedList(selected,true,null);
+        SetSelectedList(selected, true, null);
         return true;
     }
 
     /**
      * 减少for循环次数
+     *
      * @param selected
      * @param ischange
      * @param list
      */
-    private void SetSelectedList(int selected,boolean ischange,ArrayList<Device> list) {
+    private void SetSelectedList(int selected, boolean ischange, ArrayList<Device> list) {
         ArrayList<Device> slist = new ArrayList<>();
-        if (ischange){
-            for (Device d : devices) {
+        if (ischange) {
+            for (Device d : mDevices) {
                 if (d.getDname() == selected) {
                     slist.add(d);
                 }
             }
             deviceAdapter.changeData(slist);
-        }else {
+        } else {
             for (Device d : list) {
                 if (d.getDname() == selected) {
                     slist.add(d);
@@ -244,7 +245,6 @@ public class fragDevice extends BaseFragment {
             deviceAdapter.addData(slist);
         }
     }
-
 
 
     @OnClick(R.id.btn_top)

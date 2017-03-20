@@ -2,9 +2,9 @@ package mac.yk.devicemanagement.ui.activity;
 
 import android.app.DatePickerDialog;
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
 import android.widget.DatePicker;
@@ -16,23 +16,26 @@ import android.widget.Toast;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-import mac.yk.devicemanagement.I;
 import mac.yk.devicemanagement.MyApplication;
 import mac.yk.devicemanagement.R;
 import mac.yk.devicemanagement.bean.Device;
-import mac.yk.devicemanagement.bean.Result;
 import mac.yk.devicemanagement.model.IModel;
+import mac.yk.devicemanagement.net.ApiWrapper;
+import mac.yk.devicemanagement.net.ServerAPI;
 import mac.yk.devicemanagement.util.ConvertUtils;
+import mac.yk.devicemanagement.util.ExceptionFilter;
 import mac.yk.devicemanagement.util.L;
 import mac.yk.devicemanagement.util.MFGT;
-import mac.yk.devicemanagement.util.OkHttpUtils;
 import mac.yk.devicemanagement.util.TestUtil;
 import mac.yk.devicemanagement.util.ToastUtil;
+import rx.Subscriber;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.schedulers.Schedulers;
 
 import static android.view.View.inflate;
 import static mac.yk.devicemanagement.R.id.diantai;
 
-public class SaveActivity extends AppCompatActivity implements View.OnClickListener {
+public class SaveActivity extends BaseActivity implements View.OnClickListener {
     String id;
     IModel model;
 
@@ -59,13 +62,14 @@ public class SaveActivity extends AppCompatActivity implements View.OnClickListe
     ImageView statusSelect;
     boolean isDianchi = false;
     boolean isSelected = false;
-
+    Context context;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_save);
         ButterKnife.bind(this);
+        context=this;
         model = TestUtil.getData();
         id = getIntent().getStringExtra("id");
         if (id == null) {
@@ -85,27 +89,37 @@ public class SaveActivity extends AppCompatActivity implements View.OnClickListe
         final ProgressDialog progressDialog = new ProgressDialog(this);
         progressDialog.show();
 
-        model.saveDevice(this, MyApplication.getInstance().getUserName(), device, new OkHttpUtils.OnCompleteListener<Result>() {
-            @Override
-            public void onSuccess(Result result) {
-                progressDialog.dismiss();
-                L.e("main",result.toString());
-                if (result != null && result.getRetCode() == I.RESULT.SUCCESS) {
-                    Toast.makeText(SaveActivity.this, "保存成功", Toast.LENGTH_SHORT).show();
-                    MFGT.gotoDetailActivity(SaveActivity.this, device);
-                    L.e("main", device.toString());
-                    finish();
-                } else {
-                    Toast.makeText(SaveActivity.this, "保存失败", Toast.LENGTH_SHORT).show();
-                }
-            }
+        ApiWrapper<ServerAPI> wrapper=new ApiWrapper<>();
+        subscription=wrapper.targetClass(ServerAPI.class).getAPI().
+                saveDevice(MyApplication.getInstance().getUserName(),device)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .compose(wrapper.<String>applySchedulers())
+                .subscribe(new Subscriber<String>() {
+                    @Override
+                    public void onCompleted() {
 
-            @Override
-            public void onError(String error) {
-                progressDialog.dismiss();
-                ToastUtil.showNetWorkBad(SaveActivity.this);
-            }
-        });
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        progressDialog.dismiss();
+                        if ( ExceptionFilter.filter(context,e)){
+                            ToastUtil.showToast(context,"请求失败!");
+                        }
+
+
+                    }
+
+                    @Override
+                    public void onNext(String s) {
+                        progressDialog.dismiss();
+                        Toast.makeText(SaveActivity.this, "保存成功", Toast.LENGTH_SHORT).show();
+                        MFGT.gotoDetailActivity(SaveActivity.this, device);
+                        L.e("main", device.toString());
+                        finish();
+                    }
+                });
     }
 
 

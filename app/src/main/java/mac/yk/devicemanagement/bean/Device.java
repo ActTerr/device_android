@@ -12,7 +12,7 @@ import mac.yk.devicemanagement.util.ConvertUtils;
  */
 
 public class Device extends Observable implements Serializable{
-    int did,dname,status;
+    int did,  dname,status;
     Date chuchang,xunjian;
 
 //    boolean dianchi;

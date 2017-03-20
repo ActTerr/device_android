@@ -10,19 +10,17 @@ import android.widget.Toast;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import mac.yk.devicemanagement.I;
 import mac.yk.devicemanagement.MyApplication;
 import mac.yk.devicemanagement.R;
-import mac.yk.devicemanagement.bean.Result;
 import mac.yk.devicemanagement.model.IModel;
+import mac.yk.devicemanagement.net.ApiWrapper;
 import mac.yk.devicemanagement.net.ServerAPI;
-import mac.yk.devicemanagement.net.netWork;
+import mac.yk.devicemanagement.util.ExceptionFilter;
 import mac.yk.devicemanagement.util.SpUtil;
 import mac.yk.devicemanagement.util.TestUtil;
 import mac.yk.devicemanagement.util.ToastUtil;
 import rx.Observer;
 import rx.android.schedulers.AndroidSchedulers;
-import rx.functions.Func1;
 import rx.schedulers.Schedulers;
 
 public class LoginActivity extends BaseActivity{
@@ -44,7 +42,7 @@ public class LoginActivity extends BaseActivity{
         progressDialog=new ProgressDialog(context);
     }
 
-     Observer<Integer> observer=new Observer<Integer>() {
+     Observer<String> observer=new Observer<String>() {
          @Override
          public void onCompleted() {
 
@@ -53,34 +51,31 @@ public class LoginActivity extends BaseActivity{
          @Override
          public void onError(Throwable e) {
              progressDialog.dismiss();
-             ToastUtil.showNetWorkBad(context);
+             if (ExceptionFilter.filter(context,e)){
+                 Toast.makeText(LoginActivity.this, "密码或者用户名错误!" , Toast.LENGTH_SHORT).show();
+             }
          }
 
          @Override
-         public void onNext(Integer s) {
+         public void onNext(String s) {
              progressDialog.dismiss();
-             if (s== I.RESULT.SUCCESS){
+             ToastUtil.showToast(context,"登陆成功！");
                  SpUtil.saveLoginUser(context,name.getText().toString());
                  Intent intent = new Intent(context, MainActivity.class);
                  MyApplication.getInstance().setUserName(name.getText().toString());
                  startActivity(intent);
                  finish();
-             }else {
-                 Toast.makeText(LoginActivity.this, "密码或者用户名错误!" , Toast.LENGTH_SHORT).show();
-             }
+
          }
      };
     public void onLogin(View view) {
         progressDialog.show();
-        netWork<ServerAPI> netWork=new netWork<>();
-        subscription= netWork.targetClass(ServerAPI.class).getAPI().login(name.getText().toString(),
-                passwd.getText().toString()).map(new Func1<Result,Integer>() {
-            @Override
-            public Integer call(Result result) {
-                return result.getRetCode();
-            }
-        }).subscribeOn(Schedulers.io())
+        ApiWrapper<ServerAPI> ApiWrapper =new ApiWrapper<>();
+        subscription= ApiWrapper.targetClass(ServerAPI.class).getAPI().login(name.getText().toString(),
+                passwd.getText().toString()).compose(ApiWrapper.<String>applySchedulers())
+                .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(observer);
+
     }
 }

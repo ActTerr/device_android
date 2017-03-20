@@ -1,6 +1,5 @@
 package mac.yk.devicemanagement.ui.activity;
 
-import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
@@ -18,13 +17,19 @@ import mac.yk.devicemanagement.MyApplication;
 import mac.yk.devicemanagement.R;
 import mac.yk.devicemanagement.bean.Result;
 import mac.yk.devicemanagement.model.IModel;
+import mac.yk.devicemanagement.net.ApiWrapper;
+import mac.yk.devicemanagement.net.ServerAPI;
+import mac.yk.devicemanagement.util.ExceptionFilter;
 import mac.yk.devicemanagement.util.MFGT;
 import mac.yk.devicemanagement.util.OkHttpUtils;
 import mac.yk.devicemanagement.util.SpUtil;
 import mac.yk.devicemanagement.util.TestUtil;
 import mac.yk.devicemanagement.util.ToastUtil;
+import rx.Subscriber;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.schedulers.Schedulers;
 
-public class SetActivity extends Activity {
+public class SetActivity extends BaseActivity{
 
     @BindView(R.id.user)
     TextView user;
@@ -52,7 +57,7 @@ public class SetActivity extends Activity {
 
     }
 
-    @OnClick({R.id.rlUser, R.id.rlPasswd, R.id.logOut,R.id.auxiliary})
+    @OnClick({R.id.rlUser, R.id.rlPasswd, R.id.logOut, R.id.auxiliary})
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.rlUser:
@@ -62,10 +67,41 @@ public class SetActivity extends Activity {
                 MFGT.gotoGestureActivity(context);
                 break;
             case R.id.auxiliary:
-                Intent intent=new Intent(this,AuxiliaryActivity.class);
+                Intent intent = new Intent(this, AuxiliaryActivity.class);
                 startActivity(intent);
             case R.id.logOut:
                 pd.show();
+                ApiWrapper<ServerAPI> wrapper = new ApiWrapper<>();
+               subscription= wrapper.targetClass(ServerAPI.class).getAPI().logOut(MyApplication.getInstance().getUserName())
+                        .compose(wrapper.<String>applySchedulers())
+                       .subscribeOn(Schedulers.io())
+                       .observeOn(AndroidSchedulers.mainThread())
+                        .subscribe(new Subscriber<String>() {
+                            @Override
+                            public void onCompleted() {
+
+                            }
+
+                            @Override
+                            public void onError(Throwable e) {
+                                pd.dismiss();
+                                if (          ExceptionFilter.filter(context,e)){
+                                    ToastUtil.showToast(context,"请求失败");
+                                }
+
+                            }
+
+                            @Override
+                            public void onNext(String s) {
+                                pd.dismiss();
+                                MyApplication.getInstance().setUserName(null);
+                                SpUtil.saveLoginUser(context, null);
+                                MFGT.gotoLoginActivity(context);
+                                finish();
+                            }
+                        });
+
+
                 model.LogOut(context, MyApplication.getInstance().getUserName(), new OkHttpUtils.OnCompleteListener<Result>() {
                     @Override
                     public void onSuccess(Result result) {

@@ -18,8 +18,8 @@ import rx.schedulers.Schedulers;
  * Created by mac-yk on 2017/3/18.
  */
 
-public class netWork<T> {
-    public netWork() {
+public class ApiWrapper<T> {
+    public ApiWrapper() {
     }
     Retrofit retrofit;
     OkHttpClient okHttpClient;
@@ -28,7 +28,7 @@ public class netWork<T> {
     //反射传参数的
     private CallAdapter.Factory rxJavaCallAdapterFactory = RxJavaCallAdapterFactory.create();
     Class<T> mClazz;
-    public netWork<T> targetClass(Class<T> clazz){
+    public ApiWrapper<T> targetClass(Class<T> clazz){
         mClazz=clazz;
         return this;
     }

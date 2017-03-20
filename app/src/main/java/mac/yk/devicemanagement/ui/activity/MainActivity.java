@@ -12,35 +12,34 @@ import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import java.net.ConnectException;
-import java.net.SocketTimeoutException;
-
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import mac.yk.devicemanagement.MyApplication;
 import mac.yk.devicemanagement.R;
+import mac.yk.devicemanagement.bean.Device;
 import mac.yk.devicemanagement.model.IModel;
-import mac.yk.devicemanagement.net.APIException;
+import mac.yk.devicemanagement.net.ApiWrapper;
 import mac.yk.devicemanagement.net.ServerAPI;
-import mac.yk.devicemanagement.net.netWork;
 import mac.yk.devicemanagement.ui.fragment.fragBaofei;
 import mac.yk.devicemanagement.ui.fragment.fragDevice;
 import mac.yk.devicemanagement.ui.fragment.fragMain;
 import mac.yk.devicemanagement.util.ActivityUtils;
+import mac.yk.devicemanagement.util.ExceptionFilter;
 import mac.yk.devicemanagement.util.L;
 import mac.yk.devicemanagement.util.MFGT;
 import mac.yk.devicemanagement.util.SpUtil;
 import mac.yk.devicemanagement.util.TestUtil;
 import mac.yk.devicemanagement.util.ToastUtil;
 import rx.Observer;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.schedulers.Schedulers;
 
 import static mac.yk.devicemanagement.R.id.yujing;
 
@@ -137,7 +136,29 @@ public class MainActivity extends BaseActivity {
             }
         });
     }
+    Observer<Device> obChaxun=new Observer<Device>() {
+        @Override
+        public void onCompleted() {
 
+        }
+
+        @Override
+        public void onError(Throwable e) {
+            progressDialog.dismiss();
+            if (ExceptionFilter.filter(context,e)){
+                L.e("main", "gotoSave");
+                MFGT.gotoSaveActivity(MainActivity.this, id);
+            }
+        }
+
+        @Override
+        public void onNext(Device device) {
+          progressDialog.dismiss();
+            L.e("main",device.toString());
+            MFGT.gotoDetailActivity(MainActivity.this, device);
+            finish();
+        }
+    };
 
     @Override
     protected void onActivityResult(final int requestCode, int resultCode, final Intent data) {
@@ -148,52 +169,29 @@ public class MainActivity extends BaseActivity {
             if (bundle != null) {
                 id = (bundle.getString("result"));
                 L.e("main", id + "");
-//                model.chaxun(this, id, new OkHttpUtils.OnCompleteListener<Result>() {
-//                    @Override
-//                    public void onSuccess(Result result) {
-//                        if (result != null && result.getRetCode() == I.RESULT.SUCCESS) {
-//                            L.e("main", result.toString());
-//                            String s = result.getRetData().toString();
-//                            Gson gson = new Gson();
-//                            Device d = gson.fromJson(s, Device.class);
-//                            L.e("main", "gotoDetail");
-//                            MFGT.gotoDetailActivity(MainActivity.this, d);
-//                            finish();
-//                        } else {
-//                            L.e("main", "gotoSave");
-//                            MFGT.gotoSaveActivity(MainActivity.this, id);
-//                        }
-//                    }
-//
-//                    @Override
-//                    public void onError(String error) {
-//                        ToastUtil.showNetWorkBad(context);
-//                    }
-//                });
+                ApiWrapper<ServerAPI> network=new ApiWrapper<>();
+                subscription=network.targetClass(ServerAPI.class).
+                        getAPI().chaxun(id)
+                        .subscribeOn(Schedulers.io())
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .compose(network.<Device>applySchedulers())
+                        .subscribe(obChaxun);
             }
 
         }
     }
 
-    Observer<String> observer = new Observer<String>() {
+    Observer<String> observerYujing = new Observer<String>() {
         @Override
         public void onCompleted() {
-
         }
 
         @Override
         public void onError(Throwable e) {
             progressDialog.dismiss();
-            if (e instanceof APIException) {
-                APIException exception = (APIException) e;
-                L.e("main","进入error分支");
-                ToastUtil.showToast(context,exception.message);
-            } else if (e instanceof SocketTimeoutException) {
-                ToastUtil.showToast(context,e.getMessage());
-            } else if (e instanceof ConnectException) {
-                ToastUtil.showToast(context,e.getMessage());
+            if ( ExceptionFilter.filter(context,e)){
+                ToastUtil.showToast(context,"服务器没有响应");
             }
-            Log.e("main", String.valueOf(e.getMessage()));
         }
 
         @Override
@@ -204,12 +202,16 @@ public class MainActivity extends BaseActivity {
         }
     };
 
+
     private void getYujing() {
         progressDialog.show();
-        netWork<ServerAPI> network = new netWork<>();
-        network.targetClass(ServerAPI.class).getAPI().getyujing()
+        ApiWrapper<ServerAPI> network = new ApiWrapper<>();
+        subscription=network.targetClass(ServerAPI.class).
+                getAPI().getyujing()
                 .compose(network.<String>applySchedulers())
-                .subscribe(observer);
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(observerYujing);
     }
 
     class DialogHolder {

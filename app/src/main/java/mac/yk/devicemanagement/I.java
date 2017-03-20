@@ -13,7 +13,7 @@ public interface I {
         String CONTROL="control";
         String SAVE="save";
         String LOGOUT="logOut";
-        String SERVER_ROOT="http://192.168.1.100:8080/deviceManagement/";
+        String SERVER_ROOT="http://192.168.0.28:8080/deviceManagement/";
         String XUNJIAN="xunjian";
         String XIUJUN="xiujun";
         String LOGIN="login";
@@ -26,8 +26,8 @@ public interface I {
     }
     interface BAOFEI{
         String TABLENAME="baofei";
-        String DID="Did";
-        String DNAME="Dname";
+        String DID="dId";
+        String DNAME="dName";
         String REMARK="remark";
         String USER="user";
         String DATE="Date";
@@ -68,8 +68,8 @@ public interface I {
     }
     interface DEVICE{
         String TABLENAME="device";
-        String DID="Did";
-        String DNAME="Dname";
+        String DID="dId";
+        String DNAME="dName";
         String CHUCHANG="chuchang";
         String STATUS="status";
         String XUNJIAN="xunjian";
@@ -85,7 +85,7 @@ public interface I {
         String ID="id";
         String TABLENAME="weixiu";
         String WXDATE="wxDate";
-        String DID="Did";
+        String DID="dId";
         String USER="user";
         String TRANSLATE="translate";
         String REMARK="remark";
@@ -97,7 +97,7 @@ public interface I {
         String STATUS="status";
         String REMARK="remark";
         String USER="user";
-        String DID="Did";
+        String DID="dId";
     }
     interface GESTURE{
         int MANUAL=1;

@@ -53,9 +53,9 @@ public class ConvertUtils {
     public static String getDname(int Dname){
         switch (Dname){
             case I.DNAME.DIANCHI:
-                return "dianchi";
+                return "电池";
             case I.DNAME.DIANTAI:
-                return "diantai";
+                return "电台";
             case I.DNAME.JIKONGQI:
                 return "机控器";
             case I.DNAME.QUKONGQI:
@@ -65,9 +65,9 @@ public class ConvertUtils {
     }
     public static int getDname(String Dname){
         switch (Dname){
-            case "dianchi":
+            case "电池":
                 return I.DNAME.DIANCHI;
-            case "diantai":
+            case "电台":
                 return I.DNAME.DIANTAI;
             case "机控器":
                 return I.DNAME.JIKONGQI;
