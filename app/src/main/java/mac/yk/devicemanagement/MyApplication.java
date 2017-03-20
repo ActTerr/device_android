@@ -1,7 +1,10 @@
 package mac.yk.devicemanagement;
 
+import android.app.Activity;
 import android.app.Application;
 import android.content.Context;
+
+import java.util.ArrayList;
 
 import mac.yk.devicemanagement.bean.Device;
 
@@ -63,5 +66,15 @@ public class MyApplication extends Application {
         return isDianchi;
     }
 
+    static ArrayList<Activity> activities=new ArrayList<>();
+    public static void addActivity(Activity activity){
+        activities.add(activity);
+    }
+    public static void rmActivity(Activity activity){
+        activities.remove(activity);
+    }
 
+    public static ArrayList<Activity> getActivities() {
+        return activities;
+    }
 }

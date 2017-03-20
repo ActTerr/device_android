@@ -224,12 +224,18 @@ public class lunboView extends ViewPager {
                         if (ExceptionFilter.filter(context, e)) {
                             ToastUtil.showToast(context, "服务器没有图片");
                         }
+                        if (subscription != null && !subscription.isUnsubscribed()) {
+                            subscription.unsubscribe();
+                        }
                     }
 
                     @Override
                     public void onNext(Integer integer) {
                         count = integer;
                         startPlay(z);
+                        if (subscription != null && !subscription.isUnsubscribed()) {
+                            subscription.unsubscribe();
+                        }
                     }
                 });
 
@@ -264,11 +270,5 @@ public class lunboView extends ViewPager {
                 break;
         }
         return super.onTouchEvent(ev);
-    }
-
-    protected void unsubscribe() {
-        if (subscription != null && !subscription.isUnsubscribed()) {
-            subscription.unsubscribe();
-        }
     }
 }

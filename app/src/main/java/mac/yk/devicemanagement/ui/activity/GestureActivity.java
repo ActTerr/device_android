@@ -1,7 +1,6 @@
 package mac.yk.devicemanagement.ui.activity;
 
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -15,7 +14,7 @@ import mac.yk.devicemanagement.R;
 import mac.yk.devicemanagement.util.MFGT;
 import mac.yk.devicemanagement.util.SpUtil;
 
-public class GestureActivity extends AppCompatActivity {
+public class GestureActivity extends BaseActivity {
     boolean isOpen;
     @BindView(R.id.manual_image)
     ImageView manualImage;

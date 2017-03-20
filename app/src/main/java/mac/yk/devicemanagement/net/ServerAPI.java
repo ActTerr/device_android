@@ -25,7 +25,7 @@ public interface ServerAPI {
     Observable<Result<Device>> chaxun(@Query(I.DEVICE.DID) String Did);
 
     @GET(I.REQUEST.PATH+"?request="+I.REQUEST.SAVE)
-    Observable<Result<String>> saveDevice(@Query(I.USER.NAME) String name,@Query(I.DEVICE.TABLENAME) Device device);
+    Observable<Result<String>> saveDevice(@Query(I.USER.NAME) String name,@Query(I.DEVICE.TABLENAME) String device);
 
     @GET(I.REQUEST.PATH+"?request="+I.REQUEST.LOGIN)
     Observable<Result<String>> login(@Query(I.USER.NAME) String name,@Query(I.USER.PASSWD) String passwd);

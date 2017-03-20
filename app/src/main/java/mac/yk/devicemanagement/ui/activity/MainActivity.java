@@ -59,13 +59,20 @@ public class MainActivity extends BaseActivity {
 
     DialogHolder dialogHolder;
     Context context;
-
+    @BindView(R.id.netView)
+    TextView mTv;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_currency);
         View view = View.inflate(this, R.layout.dialog_yujing, null);
         ButterKnife.bind(this);
+        boolean netConnect = this.isNetConnect();
+        if (netConnect){
+            mTv.setVisibility(View.GONE);
+        }else {
+            mTv.setVisibility(View.VISIBLE);
+        }
         context = this;
         builder = new AlertDialog.Builder(this);
         model = TestUtil.getData();
@@ -233,6 +240,7 @@ public class MainActivity extends BaseActivity {
 
 
     }
+
 }
 
 

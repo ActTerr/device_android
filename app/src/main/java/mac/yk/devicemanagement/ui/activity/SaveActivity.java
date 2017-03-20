@@ -81,7 +81,8 @@ public class SaveActivity extends BaseActivity implements View.OnClickListener {
     }
 
     public void onSave(View view) {
-        final Device device = new Device(Integer.parseInt(id), ConvertUtils.getDname(name.getText().toString()),
+        final Device device = new Device(Integer.parseInt(id),
+                ConvertUtils.getDname(name.getText().toString()),
                 ConvertUtils.getStatus(status.getText().toString()),
                 ConvertUtils.String2Date(chuchang.getText().toString()),
                 ConvertUtils.String2Date(xunjian.getText().toString()));
@@ -91,7 +92,7 @@ public class SaveActivity extends BaseActivity implements View.OnClickListener {
 
         ApiWrapper<ServerAPI> wrapper=new ApiWrapper<>();
         subscription=wrapper.targetClass(ServerAPI.class).getAPI().
-                saveDevice(MyApplication.getInstance().getUserName(),device)
+                saveDevice(MyApplication.getInstance().getUserName(),ConvertUtils.getjson(device))
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .compose(wrapper.<String>applySchedulers())
