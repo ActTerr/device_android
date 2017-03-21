@@ -10,6 +10,7 @@ import com.squareup.leakcanary.RefWatcher;
 import java.util.ArrayList;
 
 import mac.yk.devicemanagement.bean.Device;
+import mac.yk.devicemanagement.uncaught.CrashHandler;
 
 /**
  * Created by mac-yk on 2017/3/1.
@@ -17,19 +18,19 @@ import mac.yk.devicemanagement.bean.Device;
 
 public class MyApplication extends Application {
     public static  MyApplication application;
-    public static Context context;
     public static MyApplication instance=new MyApplication();
     public static MyApplication getInstance(){
         return instance;
     }
     public static boolean isDianchi;
+
     private RefWatcher refWatcher;
     @Override
     public void onCreate() {
         super.onCreate();
         application=this;
-        context=this;
         refWatcher= LeakCanary.install(this);
+        CrashHandler.getInstance().init(application);
     }
 
     public static Device getDevice() {
@@ -61,7 +62,7 @@ public class MyApplication extends Application {
     }
     public static Context getContext(){
 
-        return context;
+        return application;
     }
 
     public static void setFlag(boolean b) {

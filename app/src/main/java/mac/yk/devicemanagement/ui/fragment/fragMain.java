@@ -45,7 +45,7 @@ public class fragMain extends BaseFragment {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()){
+        switch (item.getItemId()) {
             case R.id.action_capture:
                 scan(I.CONTROL.START);
                 break;
@@ -55,9 +55,7 @@ public class fragMain extends BaseFragment {
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        inflater.inflate(R.menu.menu_qrcode,menu);
+        inflater.inflate(R.menu.menu_qrcode, menu);
     }
-
-
 
 }

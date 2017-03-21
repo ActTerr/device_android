@@ -6,7 +6,11 @@ import mac.yk.devicemanagement.bean.Result;
 import mac.yk.devicemanagement.bean.Scrap;
 import mac.yk.devicemanagement.bean.Weixiu;
 import mac.yk.devicemanagement.bean.Xunjian;
+import okhttp3.RequestBody;
 import retrofit2.http.GET;
+import retrofit2.http.Multipart;
+import retrofit2.http.POST;
+import retrofit2.http.Part;
 import retrofit2.http.Query;
 import rx.Observable;
 
@@ -67,4 +71,10 @@ public interface ServerAPI {
 
     @GET(I.REQUEST.PATH+"?request="+I.REQUEST.GETPICCOUNT)
     Observable<Result<Integer>> getCount(@Query(I.DEVICE.DNAME )int dName,@Query(I.PIC.TYPE) String type);
+
+    @POST(I.REQUEST.PATH+"?request="+I.REQUEST.UPLOADUNCAUGHT)
+    @Multipart
+    Observable<Result<String>> uploadCrash(
+            @Part("file\";filename=\"throwable.log\"") RequestBody file,
+            @Query(I.UNCAUGHT.PATH) String path, @Query(I.UNCAUGHT.FILE_NAME)String name);
 }

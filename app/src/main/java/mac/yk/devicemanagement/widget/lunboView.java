@@ -40,7 +40,6 @@ import rx.Subscriber;
 import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
 
-import static mac.yk.devicemanagement.MyApplication.context;
 
 /**
  * Created by mac-yk on 2017/3/3.
@@ -69,8 +68,10 @@ public class lunboView extends ViewPager {
     boolean cacheOK = false;
     ArrayList<Drawable> Images = new ArrayList<>();
 
+    Context context;
     public lunboView(Context context, AttributeSet attributeSet) {
         super(context, attributeSet);
+        this.context=context;
     }
 
     class AutoLoopPlayAdapter extends PagerAdapter {
@@ -171,7 +172,7 @@ public class lunboView extends ViewPager {
 
     private void getdisplayWidth() {
         DisplayMetrics displayMetrics = new DisplayMetrics();
-        WindowManager windowManager = (WindowManager) context.getSystemService(context.WINDOW_SERVICE);
+        WindowManager windowManager = (WindowManager) getContext().getSystemService(getContext().WINDOW_SERVICE);
         windowManager.getDefaultDisplay().getMetrics(displayMetrics);
         width = displayMetrics.widthPixels;
         L.e("main", "width" + width);
