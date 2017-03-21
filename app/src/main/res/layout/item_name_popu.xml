@@ -1,15 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical" android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="@color/gray2">
     <TextView
+        android:layout_marginTop="4dp"
         android:gravity="center"
         android:textSize="20sp"
         android:id="@+id/diantai"
+        android:textColor="@color/white"
         android:text="电台"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
     <TextView
+        android:layout_marginTop="4dp"
+        android:textColor="@color/white"
         android:gravity="center"
         android:textSize="20sp"
         android:id="@+id/jikongqi"
@@ -17,6 +22,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
     <TextView
+        android:layout_marginTop="4dp"
+        android:textColor="@color/white"
         android:gravity="center"
         android:textSize="20sp"
         android:id="@+id/qukongqi"
@@ -24,6 +31,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
     <TextView
+        android:layout_marginTop="4dp"
+        android:textColor="@color/white"
         android:gravity="center"
         android:textSize="20sp"
         android:id="@+id/dianchi"

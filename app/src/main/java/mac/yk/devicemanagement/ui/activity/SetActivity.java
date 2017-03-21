@@ -1,5 +1,6 @@
 package mac.yk.devicemanagement.ui.activity;
 
+import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
@@ -97,7 +98,7 @@ public class SetActivity extends BaseActivity{
                                 MyApplication.getInstance().setUserName(null);
                                 SpUtil.saveLoginUser(context, null);
                                 MFGT.gotoLoginActivity(context);
-                                finish();
+                                MFGT.finish((Activity) context);
                             }
                         });
 
@@ -110,7 +111,7 @@ public class SetActivity extends BaseActivity{
                             MyApplication.getInstance().setUserName(null);
                             SpUtil.saveLoginUser(context, null);
                             MFGT.gotoLoginActivity(context);
-                            finish();
+                            MFGT.finish((Activity) context);
                         } else {
                             Toast.makeText(context, "退出失败，请重试", Toast.LENGTH_SHORT).show();
                         }

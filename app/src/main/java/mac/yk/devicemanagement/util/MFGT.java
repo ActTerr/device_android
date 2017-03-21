@@ -7,6 +7,7 @@ import android.content.Intent;
 import com.wujay.fund.GestureEditActivity;
 import com.wujay.fund.GestureVerifyActivity;
 
+import mac.yk.devicemanagement.R;
 import mac.yk.devicemanagement.bean.Device;
 import mac.yk.devicemanagement.ui.activity.DetailActivity;
 import mac.yk.devicemanagement.ui.activity.GestureActivity;
@@ -25,36 +26,39 @@ public class MFGT {
         Intent intent=new Intent(context,DetailActivity.class);
         intent.putExtra("device",device);
         L.e("main",device.toString());
-        context.startActivity(intent);
+        startActivity(context,intent);
     }
     public static void gotoSaveActivity(Context context,String id){
         Intent intent=new Intent(context,SaveActivity.class);
         intent.putExtra("id",id);
-        context.startActivity(intent);
+        startActivity(context,intent);
     }
-
+    public static void startActivity(Context context,Intent intent){
+        context.startActivity(intent);
+        ((Activity)context).overridePendingTransition(R.anim.push_left_in,R.anim.push_left_out);
+    }
     public static void gotoLoginActivity(Context context) {
         Intent intent=new Intent(context, LoginActivity.class);
-        context.startActivity(intent);
+        startActivity(context,intent);
     }
 
     public static void gotoRecordActivity(Context context,Device device){
         Intent intent=new Intent(context,RecordActivity.class);
         intent.putExtra("device",device);
-        context.startActivity(intent);
+        startActivity(context,intent);
     }
     public static void gotoSetActivity(Context context){
         Intent intent=new Intent(context, SetActivity.class);
-        context.startActivity(intent);
+        startActivity(context,intent);
     }
 
     public static void gotoGestureActivity(Context context){
         Intent intent=new Intent(context, GestureActivity.class);
-        context.startActivity(intent);
+        startActivity(context,intent);
     }
     public static void gotoSetGestureActivity(Context context){
         Intent intent=new Intent(context,GestureEditActivity.class);
-        context.startActivity(intent);
+        startActivity(context,intent);
     }
     public static void gotoValidateGestureActivity(Activity context){
         Intent intent=new Intent(context,GestureVerifyActivity.class);
@@ -62,6 +66,10 @@ public class MFGT {
     }
     public static void gotoMainActivity(Context context){
         Intent intent=new Intent(context, MainActivity.class);
-        context.startActivity(intent);
+        startActivity(context,intent);
+    }
+    public static void finish(Activity activity){
+        activity.finish();
+        activity.overridePendingTransition(R.anim.push_right_in,R.anim.push_right_out);
     }
 }

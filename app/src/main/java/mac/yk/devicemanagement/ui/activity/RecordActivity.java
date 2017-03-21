@@ -1,5 +1,6 @@
 package mac.yk.devicemanagement.ui.activity;
 
+import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -48,7 +49,7 @@ public class RecordActivity extends BaseActivity {
 
        device = (Device) getIntent().getSerializableExtra("device");
         if (device ==null) {
-            finish();
+            MFGT.finish((Activity) context);
         } else {
             init();
             fragment = (fragRecord) getSupportFragmentManager().findFragmentById(R.id.frame);
@@ -134,6 +135,6 @@ public class RecordActivity extends BaseActivity {
     @Override
     public void onBackPressed() {
         MFGT.gotoDetailActivity(context,device);
-        finish();
+        MFGT.finish((Activity) context);
     }
 }

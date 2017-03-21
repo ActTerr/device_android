@@ -4,6 +4,9 @@ import android.app.Activity;
 import android.app.Application;
 import android.content.Context;
 
+import com.squareup.leakcanary.LeakCanary;
+import com.squareup.leakcanary.RefWatcher;
+
 import java.util.ArrayList;
 
 import mac.yk.devicemanagement.bean.Device;
@@ -20,11 +23,13 @@ public class MyApplication extends Application {
         return instance;
     }
     public static boolean isDianchi;
+    private RefWatcher refWatcher;
     @Override
     public void onCreate() {
         super.onCreate();
         application=this;
         context=this;
+        refWatcher= LeakCanary.install(this);
     }
 
     public static Device getDevice() {

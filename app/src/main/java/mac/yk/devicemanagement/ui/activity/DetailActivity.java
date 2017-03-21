@@ -80,7 +80,7 @@ public class DetailActivity extends BaseActivity {
         MyApplication.setDevice(device);
         L.e("main", "detail:" + device.toString());
         if (device == null) {
-            finish();
+            MFGT.finish(context);
         } else {
             id = String.valueOf(device.getDid());
             if (device.getDname() == I.DNAME.DIANCHI) {
@@ -153,7 +153,7 @@ public class DetailActivity extends BaseActivity {
                         break;
                     case R.id.record:
                         MFGT.gotoRecordActivity(context, device);
-                        finish();
+                        MFGT.finish(context);
                         break;
                     case R.id.baofei:
                         postBaofei();
@@ -229,6 +229,7 @@ public class DetailActivity extends BaseActivity {
 
         @OnClick(R.id.btn_commit)
         public void onClick(View view) {
+            dialog.dismiss();
             progressDialog.show();
             ApiWrapper<ServerAPI> wrapper = new ApiWrapper<>();
             subscription = wrapper.targetClass(ServerAPI.class).getAPI().baofei(MyApplication.getInstance().getUserName()

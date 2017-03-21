@@ -38,6 +38,7 @@ import mac.yk.devicemanagement.net.ServerAPI;
 import mac.yk.devicemanagement.util.ConvertUtils;
 import mac.yk.devicemanagement.util.ExceptionFilter;
 import mac.yk.devicemanagement.util.L;
+import mac.yk.devicemanagement.util.MFGT;
 import mac.yk.devicemanagement.util.TestUtil;
 import rx.Subscriber;
 import rx.android.schedulers.AndroidSchedulers;
@@ -106,7 +107,7 @@ public class fragRecord extends BaseFragment {
         id=getArguments().getString("id");
         if (id==null){
             Activity a= (Activity) context;
-            a.finish();
+            MFGT.finish(a);
         }
         isWeixiu=getArguments().getBoolean("flag");
         llm=new LinearLayoutManager(context);

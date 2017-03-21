@@ -1,9 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <item android:id="@+id/recent"
-        android:icon="@drawable/recent"
         android:title="时间正序"/>
     <item android:id="@+id/early"
-        android:icon="@drawable/reverse"
         android:title="时间倒序"/>
 </menu>

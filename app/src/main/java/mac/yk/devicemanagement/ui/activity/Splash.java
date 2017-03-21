@@ -5,7 +5,12 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
+import android.widget.RelativeLayout;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
 import mac.yk.devicemanagement.MyApplication;
 import mac.yk.devicemanagement.R;
 import mac.yk.devicemanagement.util.MFGT;
@@ -13,10 +18,17 @@ import mac.yk.devicemanagement.util.SpUtil;
 
 public class Splash extends AppCompatActivity {
     Context context;
+    @BindView(R.id.activity_splash)
+    RelativeLayout activitySplash;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_splash);;context=this;
+        setContentView(R.layout.activity_splash);
+        ButterKnife.bind(this);
+        context = this;
+        Animation animation= AnimationUtils.loadAnimation(this, R.anim.fade_in);
+        activitySplash.setAnimation(animation);
         new Thread(new Runnable() {
             @Override
             public void run() {
@@ -25,17 +37,17 @@ public class Splash extends AppCompatActivity {
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
-                String name=SpUtil.getLoginUser(context);
-                if (name.equals("")){
-                    Intent intent=new Intent(context,LoginActivity.class);
+                String name = SpUtil.getLoginUser(context);
+                if (name.equals("")) {
+                    Intent intent = new Intent(context, LoginActivity.class);
                     startActivity(intent);
-                    finish();
-                }else {
+                    MFGT.finish((Activity) context);
+                } else {
                     MyApplication.getInstance().setUserName(name);
-                    boolean gesture=SpUtil.getGesture(context);
-                    if(gesture){
+                    boolean gesture = SpUtil.getGesture(context);
+                    if (gesture) {
                         MFGT.gotoValidateGestureActivity((Activity) context);
-                    }else {
+                    } else {
                         gotoMainActivity();
                     }
                 }
@@ -45,16 +57,16 @@ public class Splash extends AppCompatActivity {
     }
 
     private void gotoMainActivity() {
-        Intent intent=new Intent(context,MainActivity.class);
+        Intent intent = new Intent(context, MainActivity.class);
         startActivity(intent);
-        finish();
+        MFGT.finish((Activity) context);
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        if (resultCode==RESULT_OK){
+        if (resultCode == RESULT_OK) {
             gotoMainActivity();
         }
     }

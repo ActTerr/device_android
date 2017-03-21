@@ -1,5 +1,6 @@
 package mac.yk.devicemanagement.ui.activity;
 
+import android.app.Activity;
 import android.app.DatePickerDialog;
 import android.app.ProgressDialog;
 import android.content.Context;
@@ -73,7 +74,7 @@ public class SaveActivity extends BaseActivity implements View.OnClickListener {
         model = TestUtil.getData();
         id = getIntent().getStringExtra("id");
         if (id == null) {
-            finish();
+            MFGT.finish((Activity) context);
         }
         v = inflate(this, R.layout.item_name_popu, null);
         v2 = inflate(this, R.layout.item_status_popu, null);
@@ -109,7 +110,6 @@ public class SaveActivity extends BaseActivity implements View.OnClickListener {
                             ToastUtil.showToast(context,"请求失败!");
                         }
 
-
                     }
 
                     @Override
@@ -118,14 +118,14 @@ public class SaveActivity extends BaseActivity implements View.OnClickListener {
                         Toast.makeText(SaveActivity.this, "保存成功", Toast.LENGTH_SHORT).show();
                         MFGT.gotoDetailActivity(SaveActivity.this, device);
                         L.e("main", device.toString());
-                        finish();
+                        MFGT.finish((Activity) context);
                     }
                 });
     }
 
 
     private void showPopuWindow(View v) {
-        pop = new PopupWindow(v, ConvertUtils.dp2px(this, 100), ConvertUtils.dp2px(this, 150));
+        pop = new PopupWindow(v, ConvertUtils.dp2px(this, 100), ConvertUtils.dp2px(this, 140));
         pop.setOutsideTouchable(true);
         pop.setTouchable(true);
         pop.setFocusable(true);
@@ -143,7 +143,7 @@ public class SaveActivity extends BaseActivity implements View.OnClickListener {
         public void onClick(View view) {
             switch (view.getId()) {
                 case diantai:
-                    name.setText("diantai");
+                    name.setText("电台");
                     break;
                 case R.id.jikongqi:
                     name.setText("机控器");
@@ -152,7 +152,7 @@ public class SaveActivity extends BaseActivity implements View.OnClickListener {
                     name.setText("区控器");
                     break;
                 case R.id.dianchi:
-                    name.setText("dianchi");
+                    name.setText("电池");
                     isDianchi = true;
                     break;
             }
@@ -189,7 +189,7 @@ public class SaveActivity extends BaseActivity implements View.OnClickListener {
                     if (isDianchi) {
                         status.setText("充电");
                     } else {
-                        status.setText("weixiu");
+                        status.setText("维修");
                     }
                     break;
                 case R.id.yonghou:
@@ -230,7 +230,7 @@ public class SaveActivity extends BaseActivity implements View.OnClickListener {
 
     private void showStatusWindow(View v2) {
         int width= ConvertUtils.dp2px(this, 100);
-        int height=ConvertUtils.dp2px(this, 150);
+        int height=ConvertUtils.dp2px(this, 140);
         L.e("main","w:"+width+" h:"+height);
         pop = new PopupWindow(v2, width,height);
         pop.setOutsideTouchable(true);

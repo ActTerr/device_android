@@ -1,5 +1,6 @@
 package mac.yk.devicemanagement.ui.activity;
 
+import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
@@ -16,6 +17,7 @@ import mac.yk.devicemanagement.model.IModel;
 import mac.yk.devicemanagement.net.ApiWrapper;
 import mac.yk.devicemanagement.net.ServerAPI;
 import mac.yk.devicemanagement.util.ExceptionFilter;
+import mac.yk.devicemanagement.util.MFGT;
 import mac.yk.devicemanagement.util.SpUtil;
 import mac.yk.devicemanagement.util.TestUtil;
 import mac.yk.devicemanagement.util.ToastUtil;
@@ -64,7 +66,7 @@ public class LoginActivity extends BaseActivity{
                  Intent intent = new Intent(context, MainActivity.class);
                  MyApplication.getInstance().setUserName(name.getText().toString());
                  startActivity(intent);
-                 finish();
+                 MFGT.finish((Activity) context);
 
          }
      };

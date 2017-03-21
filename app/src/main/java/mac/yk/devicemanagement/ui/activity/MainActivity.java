@@ -1,5 +1,6 @@
 package mac.yk.devicemanagement.ui.activity;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Context;
@@ -163,7 +164,7 @@ public class MainActivity extends BaseActivity {
           progressDialog.dismiss();
             L.e("main",device.toString());
             MFGT.gotoDetailActivity(MainActivity.this, device);
-            finish();
+            MFGT.finish((Activity) context);
         }
     };
 
