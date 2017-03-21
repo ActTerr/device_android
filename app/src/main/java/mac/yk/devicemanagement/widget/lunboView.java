@@ -68,10 +68,10 @@ public class lunboView extends ViewPager {
     boolean cacheOK = false;
     ArrayList<Drawable> Images = new ArrayList<>();
 
-    Context context;
+    Context mContext;
     public lunboView(Context context, AttributeSet attributeSet) {
         super(context, attributeSet);
-        this.context=context;
+        mContext=context;
     }
 
     class AutoLoopPlayAdapter extends PagerAdapter {
@@ -172,7 +172,7 @@ public class lunboView extends ViewPager {
 
     private void getdisplayWidth() {
         DisplayMetrics displayMetrics = new DisplayMetrics();
-        WindowManager windowManager = (WindowManager) getContext().getSystemService(getContext().WINDOW_SERVICE);
+        WindowManager windowManager = (WindowManager) getContext().getSystemService(mContext.WINDOW_SERVICE);
         windowManager.getDefaultDisplay().getMetrics(displayMetrics);
         width = displayMetrics.widthPixels;
         L.e("main", "width" + width);
@@ -222,8 +222,8 @@ public class lunboView extends ViewPager {
 
                     @Override
                     public void onError(Throwable e) {
-                        if (ExceptionFilter.filter(context, e)) {
-                            ToastUtil.showToast(context, "服务器没有图片");
+                        if (ExceptionFilter.filter(mContext, e)) {
+                            ToastUtil.showToast(mContext, "服务器没有图片");
                         }
                         if (subscription != null && !subscription.isUnsubscribed()) {
                             subscription.unsubscribe();

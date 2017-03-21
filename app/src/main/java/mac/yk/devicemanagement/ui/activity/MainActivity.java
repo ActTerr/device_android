@@ -62,6 +62,7 @@ public class MainActivity extends BaseActivity {
     Context context;
     @BindView(R.id.netView)
     TextView mTv;
+    int count=0;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -239,9 +240,18 @@ public class MainActivity extends BaseActivity {
             }
         }
 
-
     }
 
+    @Override
+    public void onBackPressed() {
+        if (count==0){
+            ToastUtil.showToast(context,"再按一次退出程序");
+            count++;
+        }else {
+            MFGT.finish((Activity) context);
+        }
+
+    }
 }
 
 

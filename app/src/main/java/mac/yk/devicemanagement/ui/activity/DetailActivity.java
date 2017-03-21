@@ -513,5 +513,6 @@ public class DetailActivity extends BaseActivity {
     @Override
     public void onBackPressed() {
         MFGT.gotoMainActivity(context);
+        MFGT.finish(context);
     }
 }

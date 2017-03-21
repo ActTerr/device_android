@@ -1,0 +1,32 @@
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="mac.yk.devicemanagement.ui.fragment.fragMain"
+    android:background="@drawable/b1">
+/
+
+    <TextView
+        android:textColor="@color/black"
+        android:gravity="center"
+        android:layout_marginRight="100dp"
+        android:layout_marginLeft="100dp"
+        android:textSize="25sp"
+        android:text="请点击右上方扫码获取设备信息"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="150dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+
+
+
+    <!--<Button-->
+        <!--android:id="@+id/luru"-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_centerHorizontal="true"-->
+        <!--android:layout_marginTop="400dp"-->
+        <!--android:text="录入" />-->
+
+</FrameLayout>
