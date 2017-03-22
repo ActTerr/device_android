@@ -131,19 +131,25 @@ public class fragRecord extends BaseFragment {
         Download(ACTION_DOWNLOAD);
         setListener();
     }
-
+    MenuItem itemRecent;
+    MenuItem itemReverse;
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         inflater.inflate(R.menu.menu_record,menu);
+        itemRecent = menu.getItem(0);
+        itemReverse = menu.getItem(1);
     }
-
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if(item.getItemId()==R.id.recent){
             isDesc=true;
+            item.setIcon(R.drawable.recent_selected);
+            itemReverse.setIcon(R.drawable.reverse);
           setListSort(true);
         }else {
+            itemRecent.setIcon(R.drawable.recent);
+            item.setIcon(R.drawable.reverse_selected);
             isDesc=false;
            setListSort(false);
         }

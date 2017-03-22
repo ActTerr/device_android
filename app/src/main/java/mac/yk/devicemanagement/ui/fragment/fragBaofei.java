@@ -204,6 +204,9 @@ public class fragBaofei extends BaseFragment {
             case R.id.action_capture:
                 scan(I.CONTROL.START);
                 break;
+            case R.id.all:
+                selected=I.DNAME.ALL;
+                break;
         }
         setTitle();
         SetSelectedList(selected, true, null);
@@ -239,7 +242,6 @@ public class fragBaofei extends BaseFragment {
             scrapAdapter.addData(slist);
         }
     }
-
 
     @OnClick(R.id.btn_top)
     public void onClick() {

@@ -71,7 +71,7 @@ public class lunboView extends ViewPager {
     Context mContext;
     public lunboView(Context context, AttributeSet attributeSet) {
         super(context, attributeSet);
-        mContext=context;
+        mContext=getContext();
     }
 
     class AutoLoopPlayAdapter extends PagerAdapter {
@@ -258,7 +258,6 @@ public class lunboView extends ViewPager {
             super.startScroll(startX, startY, dx, dy, this.duration);
         }
     }
-
     @Override
     public boolean onTouchEvent(MotionEvent ev) {
         switch (ev.getAction()) {

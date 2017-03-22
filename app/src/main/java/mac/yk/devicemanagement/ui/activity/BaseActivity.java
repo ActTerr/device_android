@@ -5,8 +5,10 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
+import android.view.ViewConfiguration;
 import android.widget.TextView;
 
+import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Observable;
 import java.util.Observer;
@@ -35,10 +37,22 @@ public class BaseActivity extends AppCompatActivity implements Observer,NetBroad
         super.onCreate(savedInstanceState);
         evevt = this;
         inspectNet();
-
+     forceShowOverflowMenu();
     }
-
-    @Override
+    private void forceShowOverflowMenu() {
+        try {
+            ViewConfiguration config = ViewConfiguration.get(this);
+            Field menuKeyField = ViewConfiguration.class
+                    .getDeclaredField("sHasPermanentMenuKey");
+            if (menuKeyField != null) {
+                menuKeyField.setAccessible(true);
+                menuKeyField.setBoolean(config, false);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+        @Override
     public void update(Observable o, Object arg) {
 
     }
