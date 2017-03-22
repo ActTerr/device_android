@@ -3,7 +3,6 @@ package mac.yk.devicemanagement.ui.fragment;
 
 import android.app.ProgressDialog;
 import android.content.Context;
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.GridLayoutManager;
@@ -15,8 +14,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-
-import com.xys.libzxing.zxing.activity.CaptureActivity;
 
 import java.util.ArrayList;
 
@@ -58,7 +55,7 @@ public class fragBaofei extends BaseFragment {
     ScrapAdapter scrapAdapter;
     ArrayList<Scrap> currentDevices = new ArrayList<>();
     GridLayoutManager gridLayoutManager;
-    boolean isMore;
+    boolean isMore=true;
     ProgressDialog pd;
     Integer[] tongji;
 
@@ -130,8 +127,10 @@ public class fragBaofei extends BaseFragment {
             public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
                 int lastPosition = gridLayoutManager.findLastVisibleItemPosition();
                 if (newState == RecyclerView.SCROLL_STATE_IDLE
-                        && lastPosition == scrapAdapter.getItemCount() && isMore) {
+                        && lastPosition == scrapAdapter.getItemCount() -1&& isMore) {
+                    page++;
                     downData();
+
                 }
             }
 
@@ -162,6 +161,7 @@ public class fragBaofei extends BaseFragment {
                         if (ExceptionFilter.filter(context, e)) {
                             ToastUtil.showToast(context, "没有更多数据");
                         }
+                        isMore=false;
                     }
 
                     @Override
@@ -169,23 +169,24 @@ public class fragBaofei extends BaseFragment {
                         pd.dismiss();
                         ArrayList<Scrap> list = ConvertUtils.array2List(scraps);
                         L.e("main", "list" + list.size());
+
                         devices.addAll(list);
                         if (selected == 0) {
                             scrapAdapter.addData(list);
                         } else {
-                            SetSelectedList(selected, false, list);
+                            SetSelectedList(list);
 
                         }
-                        isMore = true;
+                        if (scraps.length<10){
+                            isMore=false;
+                        }
                     }
                 });
     }
-
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        inflater.inflate(R.menu.menu_name, menu);
+        menu.getItem(3).setVisible(true);
     }
-
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
@@ -201,45 +202,40 @@ public class fragBaofei extends BaseFragment {
             case R.id.jikongqi:
                 selected = I.DNAME.JIKONGQI;
                 break;
-            case R.id.action_capture:
-                scan(I.CONTROL.START);
-                break;
             case R.id.all:
                 selected=I.DNAME.ALL;
                 break;
         }
         setTitle();
-        SetSelectedList(selected, true, null);
+        SetSelectedList(null);
         return true;
     }
-
-    public void scan(int id) {
-        getActivity().startActivityForResult(new Intent(getActivity(), CaptureActivity.class), id);
-    }
-
     /**
      * 减少for循环次数
      *
-     * @param selected
-     * @param ischange
      * @param list
      */
-    private void SetSelectedList(int selected, boolean ischange, ArrayList<Scrap> list) {
-        ArrayList<Scrap> slist = new ArrayList<>();
-        if (ischange) {
-            for (Scrap d : devices) {
-                if (d.getDname() == selected) {
-                    slist.add(d);
+    private void SetSelectedList(ArrayList<Scrap> list) {
+        ArrayList<Scrap> changelist;
+        ArrayList<Scrap> selectList=new ArrayList<>();
+        if (list==null){
+            changelist=devices;
+        }else {
+            changelist=list;
+        }
+            if (selected==0){
+                selectList.addAll(changelist);
+            }else {
+                for (Scrap d : changelist) {
+                    if (d.getDname() == selected) {
+                        selectList.add(d);
+                    }
                 }
             }
-            scrapAdapter.changeData(slist);
+        if (list==null) {
+            scrapAdapter.changeData(selectList);
         } else {
-            for (Scrap d : list) {
-                if (d.getDname() == selected) {
-                    slist.add(d);
-                }
-            }
-            scrapAdapter.addData(slist);
+            scrapAdapter.addData(selectList);
         }
     }
 

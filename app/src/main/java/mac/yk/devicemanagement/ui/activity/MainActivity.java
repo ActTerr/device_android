@@ -14,15 +14,20 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.widget.Toolbar;
 import android.view.KeyEvent;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.xys.libzxing.zxing.activity.CaptureActivity;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import mac.yk.devicemanagement.I;
 import mac.yk.devicemanagement.MyApplication;
 import mac.yk.devicemanagement.R;
 import mac.yk.devicemanagement.bean.Device;
@@ -93,7 +98,13 @@ public class MainActivity extends BaseActivity {
                     }
                 }).create();
         ActivityUtils.addFragmentToActivity(getSupportFragmentManager(), new fragMain(), R.id.frame);
-        progressDialog = new ProgressDialog(this);
+        setNavView();
+        if (!SpUtil.getPrompt(this)) {
+            getYujing();
+        }
+    }
+
+    private void setNavView() {
         if (navView != null) {
             navView.inflateMenu(R.menu.menu_main);
             setUpNavView(navView);
@@ -109,21 +120,62 @@ public class MainActivity extends BaseActivity {
                 }
             });
         }
-        if (!SpUtil.getPrompt(this)) {
-            getYujing();
-        }
     }
 
+
+    /**
+     * 设置actionBar的menu
+     * @param item
+     * @return
+     */
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case android.R.id.home:
                 drawLayout.openDrawer(GravityCompat.START);
                 return true;
+            case R.id.action_capture:
+                scan(I.CONTROL.START);
+                break;
         }
         return super.onOptionsItemSelected(item);
     }
 
+    public void scan(int id) {
+        startActivityForResult(new Intent(context, CaptureActivity.class), id);
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.menu_name, menu);
+        menu.getItem(0).setVisible(false);
+        menu.getItem(1).setVisible(false);
+        menu.getItem(3).setVisible(false);
+        return true;
+    }
+
+//    @Override
+//    public boolean onMenuOpened(int featureId, Menu menu) {
+//        if (featureId == Window.FEATURE_ACTION_BAR && menu != null) {
+//            if (menu.getClass().getSimpleName().equals("MenuBuilder")) {
+//                try {
+//                    Method m = menu.getClass().getDeclaredMethod(
+//                            "setOptionalIconsVisible", Boolean.TYPE);
+//                    m.setAccessible(true);
+//                    m.invoke(menu, true);
+//                } catch (Exception e) {
+//                    Log.d("OverflowIconVisible", e.getMessage());
+//                }
+//            }
+//        }
+//        return super.onMenuOpened(featureId, menu);
+//    }
+
+    /**
+     * 设置navView的监听
+     * @param navView
+     */
     private void setUpNavView(NavigationView navView) {
         navView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
             @Override
@@ -241,6 +293,10 @@ public class MainActivity extends BaseActivity {
         }
 
     }
+
+    /**
+     * 两次back键退出应用
+      */
 
     private long FirstTime=0;
     @Override

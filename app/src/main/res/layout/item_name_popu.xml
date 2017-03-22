@@ -4,7 +4,7 @@
     android:layout_height="match_parent"
     android:background="@color/gray2">
     <TextView
-        android:layout_marginTop="4dp"
+        android:layout_marginTop="3dp"
         android:layout_gravity="center"
         android:textSize="20sp"
         android:id="@+id/diantai"
@@ -12,31 +12,65 @@
         android:text="电台"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" />
+    <View
+        android:background="@color/white"
+        android:layout_gravity="center"
+        android:layout_width="60dp"
+        android:layout_height="1dp"/>
     <TextView
         android:layout_gravity="center"
-        android:layout_marginTop="4dp"
+        android:layout_marginTop="3dp"
         android:textColor="@color/white"
         android:textSize="20sp"
         android:id="@+id/jikongqi"
         android:text="机控器"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" />
+    <View
+        android:background="@color/white"
+        android:layout_gravity="center"
+        android:layout_width="60dp"
+        android:layout_height="1dp"/>
     <TextView
         android:layout_gravity="center"
-        android:layout_marginTop="4dp"
+        android:layout_marginTop="3dp"
         android:textColor="@color/white"
         android:textSize="20sp"
         android:id="@+id/qukongqi"
         android:text="区控器"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" />
+    <View
+        android:background="@color/white"
+        android:layout_gravity="center"
+        android:layout_width="60dp"
+        android:layout_height="1dp"/>
     <TextView
         android:layout_gravity="center"
-        android:layout_marginTop="4dp"
+        android:layout_marginTop="3dp"
         android:textColor="@color/white"
         android:textSize="20sp"
         android:id="@+id/dianchi"
         android:text="电池"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" />
+    <View
+        android:background="@color/white"
+        android:layout_gravity="center"
+        android:layout_width="60dp"
+        android:layout_height="1dp"/>
+    <TextView
+        android:layout_gravity="center"
+        android:layout_marginTop="3dp"
+        android:textColor="@color/white"
+        android:textSize="20sp"
+        android:id="@+id/all"
+        android:text="全部"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+    <View
+        android:background="@color/white"
+        android:layout_gravity="center"
+        android:layout_width="60dp"
+        android:layout_height="1dp"/>
 </LinearLayout>

@@ -10,7 +10,6 @@ import com.squareup.leakcanary.RefWatcher;
 import java.util.ArrayList;
 
 import mac.yk.devicemanagement.bean.Device;
-import mac.yk.devicemanagement.uncaught.CrashHandler;
 
 /**
  * Created by mac-yk on 2017/3/1.
@@ -30,7 +29,7 @@ public class MyApplication extends Application {
         super.onCreate();
         application=this;
         refWatcher= LeakCanary.install(this);
-        CrashHandler.getInstance().init(application);
+//        CrashHandler.getInstance().init(application);
     }
 
     public static Device getDevice() {

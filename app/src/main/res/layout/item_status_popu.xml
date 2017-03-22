@@ -6,33 +6,48 @@
     <TextView
         android:layout_gravity="center"
         android:textColor="@color/white"
-        android:layout_marginTop="4dp"
+        android:layout_marginTop="3dp"
         android:textSize="20sp"
         android:id="@+id/beiyong"
         android:text="备用"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" />
+    <View
+        android:background="@color/white"
+        android:layout_gravity="center"
+        android:layout_width="60dp"
+        android:layout_height="1dp"/>
     <TextView
         android:textColor="@color/white"
-        android:layout_marginTop="4dp"
+        android:layout_marginTop="3dp"
         android:layout_gravity="center"
         android:textSize="20sp"
         android:id="@+id/daiyong"
         android:text="待用"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" />
+    <View
+        android:background="@color/white"
+        android:layout_gravity="center"
+        android:layout_width="60dp"
+        android:layout_height="1dp"/>
     <TextView
         android:textColor="@color/white"
-        android:layout_marginTop="4dp"
+        android:layout_marginTop="3dp"
         android:layout_gravity="center"
         android:textSize="20sp"
         android:id="@+id/yunxing"
         android:text="运行"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" />
+    <View
+        android:background="@color/white"
+        android:layout_gravity="center"
+        android:layout_width="60dp"
+        android:layout_height="1dp"/>
     <TextView
         android:textColor="@color/white"
-        android:layout_marginTop="4dp"
+        android:layout_marginTop="3dp"
         android:layout_gravity="center"
         android:textSize="20sp"
         android:id="@+id/weixiu"
@@ -40,7 +55,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" />
     <TextView
-        android:layout_marginTop="4dp"
+        android:layout_marginTop="3dp"
         android:visibility="gone"
         android:layout_gravity="center"
         android:textSize="20sp"
@@ -48,4 +63,23 @@
         android:text="用后"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" />
+    <View
+        android:background="@color/white"
+        android:layout_gravity="center"
+        android:layout_width="60dp"
+        android:layout_height="1dp"/>
+    <TextView
+        android:textColor="@color/white"
+        android:layout_marginTop="3dp"
+        android:layout_gravity="center"
+        android:textSize="20sp"
+        android:id="@+id/all"
+        android:text="全部"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+    <View
+        android:background="@color/white"
+        android:layout_gravity="center"
+        android:layout_width="60dp"
+        android:layout_height="1dp"/>
 </LinearLayout>

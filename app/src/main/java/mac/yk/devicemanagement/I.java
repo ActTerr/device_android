@@ -67,7 +67,7 @@ public interface I {
         int JIKONGQI=2;
         int QUKONGQI=3;
         int DIANCHI=4;
-        int ALL = 5;
+        int ALL = 0;
     }
     interface DOWNLOAD{
         String PAGE="page";
