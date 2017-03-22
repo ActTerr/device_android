@@ -19,7 +19,7 @@ public interface I {
         String CONTROL="control";
         String SAVE="save";
         String LOGOUT="logOut";
-        String SERVER_ROOT="http://192.168.1.100:8080/deviceManagement/";
+        String SERVER_ROOT="http://192.168.0.13:8080/deviceManagement/";
         String XUNJIAN="xunjian";
         String XIUJUN="xiujun";
         String LOGIN="login";
@@ -67,6 +67,7 @@ public interface I {
         int JIKONGQI=2;
         int QUKONGQI=3;
         int DIANCHI=4;
+        int ALL = 5;
     }
     interface DOWNLOAD{
         String PAGE="page";

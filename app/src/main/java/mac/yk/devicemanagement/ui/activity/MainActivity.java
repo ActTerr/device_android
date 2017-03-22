@@ -13,6 +13,7 @@ import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.widget.Toolbar;
+import android.view.KeyEvent;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.CheckBox;
@@ -62,7 +63,6 @@ public class MainActivity extends BaseActivity {
     Context context;
     @BindView(R.id.netView)
     TextView mTv;
-    int count=0;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -242,15 +242,22 @@ public class MainActivity extends BaseActivity {
 
     }
 
+    private long FirstTime=0;
     @Override
-    public void onBackPressed() {
-        if (count==0){
-            ToastUtil.showToast(context,"再按一次退出程序");
-            count++;
-        }else {
-            MFGT.finish((Activity) context);
+    public boolean onKeyUp(int keyCode, KeyEvent event) {
+        switch (keyCode){
+            case KeyEvent.KEYCODE_BACK:
+                long SecondTime=System.currentTimeMillis();
+                if (SecondTime-FirstTime>2000){
+                    ToastUtil.showToast(context,"再按一次退出应用");
+                    FirstTime=SecondTime;
+                    return true;
+                }else {
+                    System.exit(0);
+                }
+                break;
         }
-
+        return super.onKeyUp(keyCode, event);
     }
 }
 
