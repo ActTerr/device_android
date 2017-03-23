@@ -26,13 +26,11 @@ import mac.yk.devicemanagement.I;
 import mac.yk.devicemanagement.R;
 import mac.yk.devicemanagement.adapter.DeviceAdapter;
 import mac.yk.devicemanagement.bean.Device;
-import mac.yk.devicemanagement.model.IModel;
 import mac.yk.devicemanagement.net.ApiWrapper;
 import mac.yk.devicemanagement.net.ServerAPI;
 import mac.yk.devicemanagement.util.ConvertUtils;
 import mac.yk.devicemanagement.util.ExceptionFilter;
 import mac.yk.devicemanagement.util.L;
-import mac.yk.devicemanagement.util.TestUtil;
 import mac.yk.devicemanagement.util.ToastUtil;
 import rx.Observer;
 import rx.android.schedulers.AndroidSchedulers;
@@ -43,7 +41,6 @@ import rx.schedulers.Schedulers;
  */
 public class fragDevice extends BaseFragment {
 
-    IModel model;
     Context context;
     @BindView(R.id.tv)
     TextView tv;
@@ -72,7 +69,6 @@ public class fragDevice extends BaseFragment {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.frag_tongji, container, false);
         ButterKnife.bind(this, view);
-        model = TestUtil.getData();
         context = getContext();
         deviceAdapter = new DeviceAdapter(context);
         gridLayoutManager = new GridLayoutManager(context, 1);

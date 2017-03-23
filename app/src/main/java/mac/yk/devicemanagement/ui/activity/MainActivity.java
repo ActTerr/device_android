@@ -31,7 +31,6 @@ import mac.yk.devicemanagement.I;
 import mac.yk.devicemanagement.MyApplication;
 import mac.yk.devicemanagement.R;
 import mac.yk.devicemanagement.bean.Device;
-import mac.yk.devicemanagement.model.IModel;
 import mac.yk.devicemanagement.net.ApiWrapper;
 import mac.yk.devicemanagement.net.ServerAPI;
 import mac.yk.devicemanagement.ui.fragment.fragBaofei;
@@ -42,7 +41,6 @@ import mac.yk.devicemanagement.util.ExceptionFilter;
 import mac.yk.devicemanagement.util.L;
 import mac.yk.devicemanagement.util.MFGT;
 import mac.yk.devicemanagement.util.SpUtil;
-import mac.yk.devicemanagement.util.TestUtil;
 import mac.yk.devicemanagement.util.ToastUtil;
 import rx.Observer;
 import rx.android.schedulers.AndroidSchedulers;
@@ -51,7 +49,6 @@ import rx.schedulers.Schedulers;
 import static mac.yk.devicemanagement.R.id.yujing;
 
 public class MainActivity extends BaseActivity {
-    IModel model;
     String id;
     ProgressDialog progressDialog;
 
@@ -82,7 +79,6 @@ public class MainActivity extends BaseActivity {
         }
         context = this;
         builder = new AlertDialog.Builder(this);
-        model = TestUtil.getData();
         progressDialog = new ProgressDialog(this);
         setSupportActionBar(toolBar);
         ActionBar ab = getSupportActionBar();

@@ -13,13 +13,11 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import mac.yk.devicemanagement.MyApplication;
 import mac.yk.devicemanagement.R;
-import mac.yk.devicemanagement.model.IModel;
 import mac.yk.devicemanagement.net.ApiWrapper;
 import mac.yk.devicemanagement.net.ServerAPI;
 import mac.yk.devicemanagement.util.ExceptionFilter;
 import mac.yk.devicemanagement.util.MFGT;
 import mac.yk.devicemanagement.util.SpUtil;
-import mac.yk.devicemanagement.util.TestUtil;
 import mac.yk.devicemanagement.util.ToastUtil;
 import rx.Observer;
 import rx.android.schedulers.AndroidSchedulers;
@@ -31,7 +29,6 @@ public class LoginActivity extends BaseActivity{
     EditText name;
     @BindView(R.id.passwd)
     EditText passwd;
-    IModel model;
 
     ProgressDialog progressDialog;
     @Override
@@ -40,7 +37,6 @@ public class LoginActivity extends BaseActivity{
         setContentView(R.layout.activity_login);
         ButterKnife.bind(this);
         context = this;
-        model= TestUtil.getData();
         progressDialog=new ProgressDialog(context);
     }
 

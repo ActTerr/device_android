@@ -29,7 +29,6 @@ import mac.yk.devicemanagement.I;
 import mac.yk.devicemanagement.MyApplication;
 import mac.yk.devicemanagement.R;
 import mac.yk.devicemanagement.bean.Device;
-import mac.yk.devicemanagement.model.IModel;
 import mac.yk.devicemanagement.net.ApiWrapper;
 import mac.yk.devicemanagement.net.ServerAPI;
 import mac.yk.devicemanagement.util.ConvertUtils;
@@ -51,7 +50,6 @@ public class lunboView extends ViewPager {
     Handler handler;
     Timer mTimer;
     int count = 0;
-    IModel model;
     Device device;
     int width;
     boolean Stop = false;

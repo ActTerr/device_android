@@ -20,14 +20,12 @@ import butterknife.OnClick;
 import mac.yk.devicemanagement.MyApplication;
 import mac.yk.devicemanagement.R;
 import mac.yk.devicemanagement.bean.Device;
-import mac.yk.devicemanagement.model.IModel;
 import mac.yk.devicemanagement.net.ApiWrapper;
 import mac.yk.devicemanagement.net.ServerAPI;
 import mac.yk.devicemanagement.util.ConvertUtils;
 import mac.yk.devicemanagement.util.ExceptionFilter;
 import mac.yk.devicemanagement.util.L;
 import mac.yk.devicemanagement.util.MFGT;
-import mac.yk.devicemanagement.util.TestUtil;
 import mac.yk.devicemanagement.util.ToastUtil;
 import rx.Subscriber;
 import rx.android.schedulers.AndroidSchedulers;
@@ -38,7 +36,6 @@ import static mac.yk.devicemanagement.R.id.diantai;
 
 public class SaveActivity extends BaseActivity implements View.OnClickListener {
     String id;
-    IModel model;
 
     PopupWindow pop;
     View v;
@@ -71,7 +68,6 @@ public class SaveActivity extends BaseActivity implements View.OnClickListener {
         setContentView(R.layout.activity_save);
         ButterKnife.bind(this);
         context=this;
-        model = TestUtil.getData();
         id = getIntent().getStringExtra("id");
         if (id == null) {
             MFGT.finish((Activity) context);

@@ -32,14 +32,12 @@ import mac.yk.devicemanagement.adapter.weixiuAdapter;
 import mac.yk.devicemanagement.adapter.xunjianAdapter;
 import mac.yk.devicemanagement.bean.Weixiu;
 import mac.yk.devicemanagement.bean.Xunjian;
-import mac.yk.devicemanagement.model.IModel;
 import mac.yk.devicemanagement.net.ApiWrapper;
 import mac.yk.devicemanagement.net.ServerAPI;
 import mac.yk.devicemanagement.util.ConvertUtils;
 import mac.yk.devicemanagement.util.ExceptionFilter;
 import mac.yk.devicemanagement.util.L;
 import mac.yk.devicemanagement.util.MFGT;
-import mac.yk.devicemanagement.util.TestUtil;
 import rx.Subscriber;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
@@ -67,7 +65,6 @@ public class fragRecord extends BaseFragment {
     };
     final static int ACTION_ADD=1;
     final static int ACTION_DOWNLOAD=2;
-    IModel model;
    String id;
    Context context;
     int page=1;
@@ -101,7 +98,6 @@ public class fragRecord extends BaseFragment {
 
     private void init() {
         context= getContext();
-        model= TestUtil.getData();
         wxList=new ArrayList<>();
         xunjianList=new ArrayList<>();
         id=getArguments().getString("id");

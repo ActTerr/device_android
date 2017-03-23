@@ -26,7 +26,6 @@ import mac.yk.devicemanagement.I;
 import mac.yk.devicemanagement.MyApplication;
 import mac.yk.devicemanagement.R;
 import mac.yk.devicemanagement.bean.Device;
-import mac.yk.devicemanagement.model.IModel;
 import mac.yk.devicemanagement.net.ApiWrapper;
 import mac.yk.devicemanagement.net.ServerAPI;
 import mac.yk.devicemanagement.ui.fragment.fragDetail;
@@ -35,7 +34,6 @@ import mac.yk.devicemanagement.util.ExceptionFilter;
 import mac.yk.devicemanagement.util.L;
 import mac.yk.devicemanagement.util.MFGT;
 import mac.yk.devicemanagement.util.NetUtil;
-import mac.yk.devicemanagement.util.TestUtil;
 import mac.yk.devicemanagement.util.ToastUtil;
 import rx.Observer;
 import rx.Subscriber;
@@ -45,7 +43,6 @@ import rx.schedulers.Schedulers;
 
 public class DetailActivity extends BaseActivity {
     ProgressDialog progressDialog;
-    IModel model;
     Device device;
     Activity context;
     boolean isDianchi = false;
@@ -75,7 +72,6 @@ public class DetailActivity extends BaseActivity {
         context = this;
         progressDialog = new ProgressDialog(context);
         dialog = new Dialog(context);
-        model = TestUtil.getData();
         device = (Device) getIntent().getSerializableExtra("device");
         MyApplication.setDevice(device);
         L.e("main", "detail:" + device.toString());
