@@ -331,6 +331,6 @@ public class fragDevice extends BaseFragment {
 
     @OnClick(R.id.btn_top)
     public void onClick() {
-        rv.setScrollingTouchSlop(0);
+        rv.scrollToPosition(0);
     }
 }

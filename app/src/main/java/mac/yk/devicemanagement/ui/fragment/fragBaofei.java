@@ -51,14 +51,20 @@ public class fragBaofei extends BaseFragment {
 
     int page = 1;
     int selected = 0;
-    ArrayList<Scrap> devices = new ArrayList<>();
     ScrapAdapter scrapAdapter;
-    ArrayList<Scrap> currentDevices = new ArrayList<>();
     GridLayoutManager gridLayoutManager;
-    boolean isMore=true;
+    boolean isMore = true;
     ProgressDialog pd;
     Integer[] tongji;
-
+    ArrayList<Scrap> diantais = new ArrayList<>();
+    ArrayList<Scrap> dianchis = new ArrayList<>();
+    ArrayList<Scrap> jikongqis = new ArrayList<>();
+    ArrayList<Scrap> qukongqis = new ArrayList<>();
+    boolean show = true;
+    @BindView(R.id.Prompt)
+    TextView Prompt;
+    ArrayList<Integer> pages=new ArrayList<>();
+    ArrayList<Boolean> mores=new ArrayList<>();
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -71,12 +77,34 @@ public class fragBaofei extends BaseFragment {
         pd = new ProgressDialog(context);
         rv.setAdapter(scrapAdapter);
         rv.setLayoutManager(gridLayoutManager);
-        downData();
         getTongji();
         setListener();
         setHasOptionsMenu(true);
+        initMemory();
         return view;
     }
+
+    private void initMemory() {
+        for (int i=0;i<4;i++){
+            pages.add(1);
+            mores.add(true);
+        }
+
+    }
+//
+//    private void showPrompt() {
+//        Observable.just(selected).subscribe(new Action1<Integer>() {
+//            @Override
+//            public void call(Integer integer) {
+//                L.e("main", "rx被调用");
+//                if (integer != 0) {
+//                    Prompt.setVisibility(View.GONE);
+//                    downData();
+//                }
+//            }
+//        });
+//    }
+
 
     Observer<Integer[]> obTongji = new Observer<Integer[]>() {
         @Override
@@ -127,7 +155,7 @@ public class fragBaofei extends BaseFragment {
             public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
                 int lastPosition = gridLayoutManager.findLastVisibleItemPosition();
                 if (newState == RecyclerView.SCROLL_STATE_IDLE
-                        && lastPosition == scrapAdapter.getItemCount() -1&& isMore) {
+                        && lastPosition == scrapAdapter.getItemCount() - 1 && isMore) {
                     page++;
                     downData();
 
@@ -145,7 +173,7 @@ public class fragBaofei extends BaseFragment {
     private void downData() {
         pd.show();
         ApiWrapper<ServerAPI> wrapper = new ApiWrapper<>();
-        subscription = wrapper.targetClass(ServerAPI.class).getAPI().downScrap(page, 10)
+        subscription = wrapper.targetClass(ServerAPI.class).getAPI().downScrap(page, 10, selected)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .compose(wrapper.<Scrap[]>applySchedulers())
@@ -161,7 +189,7 @@ public class fragBaofei extends BaseFragment {
                         if (ExceptionFilter.filter(context, e)) {
                             ToastUtil.showToast(context, "没有更多数据");
                         }
-                        isMore=false;
+                        isMore = false;
                     }
 
                     @Override
@@ -169,26 +197,23 @@ public class fragBaofei extends BaseFragment {
                         pd.dismiss();
                         ArrayList<Scrap> list = ConvertUtils.array2List(scraps);
                         L.e("main", "list" + list.size());
-
-                        devices.addAll(list);
-                        if (selected == 0) {
-                            scrapAdapter.addData(list);
-                        } else {
-                            SetSelectedList(list);
-
-                        }
-                        if (scraps.length<10){
-                            isMore=false;
+                        SetSelectedList(list);
+                        if (scraps.length < 10) {
+                            isMore = false;
                         }
                     }
                 });
     }
+
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         menu.getItem(3).setVisible(true);
     }
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
+        pages.add(selected,page);
+        mores.add(selected,isMore);
         switch (item.getItemId()) {
             case R.id.dianchi:
                 selected = I.DNAME.DIANCHI;
@@ -202,45 +227,76 @@ public class fragBaofei extends BaseFragment {
             case R.id.jikongqi:
                 selected = I.DNAME.JIKONGQI;
                 break;
-            case R.id.all:
-                selected=I.DNAME.ALL;
-                break;
+        }
+        if (show){
+            if (selected!=0){
+                Prompt.setVisibility(View.GONE);
+                show=false;
+            }
+        }
+        page=pages.get(selected);
+        isMore=mores.get(selected);
+        if (page==1&&isMore){
+            downData();
         }
         setTitle();
         SetSelectedList(null);
         return true;
     }
-    /**
-     * 减少for循环次数
-     *
-     * @param list
-     */
+
     private void SetSelectedList(ArrayList<Scrap> list) {
-        ArrayList<Scrap> changelist;
-        ArrayList<Scrap> selectList=new ArrayList<>();
-        if (list==null){
-            changelist=devices;
-        }else {
-            changelist=list;
-        }
-            if (selected==0){
-                selectList.addAll(changelist);
-            }else {
-                for (Scrap d : changelist) {
-                    if (d.getDname() == selected) {
-                        selectList.add(d);
-                    }
-                }
-            }
-        if (list==null) {
-            scrapAdapter.changeData(selectList);
+        if (list == null) {
+            scrapAdapter.changeData(getCurrentList());
         } else {
-            scrapAdapter.addData(selectList);
+            getCurrentList().addAll(list);
+            scrapAdapter.addData(list);
         }
     }
 
+    private ArrayList<Scrap> getCurrentList() {
+        switch (selected) {
+            case I.DNAME.DIANCHI:
+                return dianchis;
+            case I.DNAME.DIANTAI:
+                return diantais;
+            case I.DNAME.JIKONGQI:
+                return jikongqis;
+            case I.DNAME.QUKONGQI:
+                return qukongqis;
+        }
+        return null;
+    }
+
+    /**
+     * 减少for循环次数
+     */
+//    private void SetSelectedList(ArrayList<Scrap> list) {
+//        ArrayList<Scrap> changelist;
+//        ArrayList<Scrap> selectList=new ArrayList<>();
+//        if (list==null){
+//            changelist=devices;
+//        }else {
+//            changelist=list;
+//        }
+//            if (selected==0){
+//                selectList.addAll(changelist);
+//            }else {
+//                for (Scrap d : changelist) {
+//                    if (d.getDname() == selected) {
+//                        selectList.add(d);
+//                    }
+//                }
+//            }
+//        if (list==null) {
+//            scrapAdapter.changeData(selectList);
+//        } else {
+//            scrapAdapter.addData(selectList);
+//        }
+//    }
     @OnClick(R.id.btn_top)
     public void onClick() {
-        rv.setScrollingTouchSlop(0);
+        rv.scrollToPosition(0);
+
     }
+
 }

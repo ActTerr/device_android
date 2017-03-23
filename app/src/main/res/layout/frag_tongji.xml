@@ -5,6 +5,16 @@
         android:background="@color/gray2"
     >
     <TextView
+        android:visibility="visible"
+        android:id="@+id/Prompt"
+        android:gravity="center"
+        android:textColor="@color/white"
+        android:textSize="35sp"
+        android:text="请点击右上角选择设备"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+    <TextView
+        android:layout_below="@+id/Prompt"
         android:textColor="@color/white"
         android:gravity="center"
         android:id="@+id/tv"

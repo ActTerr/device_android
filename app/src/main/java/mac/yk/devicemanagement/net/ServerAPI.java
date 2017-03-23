@@ -64,7 +64,7 @@ public interface ServerAPI {
     Observable<Result<Integer>> yonghou(@Query(I.DEVICE.DID) String Did);
 
     @GET(I.REQUEST.PATH+"?request="+I.REQUEST.DOWNSCRAP)
-    Observable<Result<Scrap[]>> downScrap(@Query(I.DOWNLOAD.PAGE) int page,@Query(I.DOWNLOAD.SIZE) int size);
+    Observable<Result<Scrap[]>> downScrap(@Query(I.DOWNLOAD.PAGE) int page,@Query(I.DOWNLOAD.SIZE) int size,@Query(I.BAOFEI.DNAME) int dName);
 
     @GET(I.REQUEST.PATH+"?request="+I.REQUEST.DOWNDEVICE)
     Observable<Result<Device[]>> downDevice(@Query(I.DOWNLOAD.PAGE) int page,@Query(I.DOWNLOAD.SIZE) int size);

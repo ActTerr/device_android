@@ -65,6 +65,7 @@ public class ScrapAdapter extends RecyclerView.Adapter {
         notifyDataSetChanged();
     }
 
+
     class ScrapHolder extends RecyclerView.ViewHolder {
         @BindView(R.id.Did)
         TextView Did;
