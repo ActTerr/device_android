@@ -147,6 +147,9 @@ public class loodView extends FrameLayout {
                 });
     }
 
+    /**
+     * 命名时最后一个使用数字，然后for循环里通过反射取得控件并操作
+     */
     private void initIndicator() {
         try {
             Class c=Class.forName("mac.yk.devicemanagement.widget.loodView");
@@ -155,6 +158,7 @@ public class loodView extends FrameLayout {
                 field.setAccessible(true);
                 View view= (View) field.get(this);
                 view.setVisibility(GONE);
+                indicator.add(view);
             }
         } catch (NoSuchFieldException e) {
             e.printStackTrace();
@@ -163,13 +167,6 @@ public class loodView extends FrameLayout {
         } catch (ClassNotFoundException e) {
             e.printStackTrace();
         }
-        indicator.add(vDot1);
-        indicator.add(vDot2);
-        indicator.add(vDot3);
-        indicator.add(vDot4);
-        indicator.add(vDot5);
-        indicator.add(vDot6);
-        indicator.add(vDot7);
     }
 
     private void initUi(Context context) {
