@@ -31,6 +31,7 @@ import com.facebook.imagepipeline.image.QualityInfo;
 import com.facebook.imagepipeline.request.ImageRequest;
 import com.facebook.imagepipeline.request.ImageRequestBuilder;
 
+import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.Executors;
@@ -147,6 +148,21 @@ public class loodView extends FrameLayout {
     }
 
     private void initIndicator() {
+        try {
+            Class c=Class.forName("mac.yk.devicemanagement.widget.loodView");
+            for (int i=count+1;i<8;i++){
+                Field field=c.getDeclaredField("vDot"+i);
+                field.setAccessible(true);
+                View view= (View) field.get(this);
+                view.setVisibility(GONE);
+            }
+        } catch (NoSuchFieldException e) {
+            e.printStackTrace();
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        }
         indicator.add(vDot1);
         indicator.add(vDot2);
         indicator.add(vDot3);
@@ -154,7 +170,6 @@ public class loodView extends FrameLayout {
         indicator.add(vDot5);
         indicator.add(vDot6);
         indicator.add(vDot7);
-        L.e(TAG,"init Success");
     }
 
     private void initUi(Context context) {
