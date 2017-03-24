@@ -180,11 +180,11 @@ public class lunboView extends ViewPager {
         L.e("main", "执行startPlay");
 //        zhishiView=z;
 //        zhishiView.setCount(count);
-        AutoLoopPlayAdapter adapter = new AutoLoopPlayAdapter(getContext());
+        AutoLoopPlayAdapter adapter = new AutoLoopPlayAdapter(mContext);
         this.setAdapter(adapter);
         notchange = false;
-        MyScroller scroller = new MyScroller(getContext(), new LinearInterpolator());
-        scroller.setDuration(2000);
+        MyScroller scroller = new MyScroller(mContext, new LinearInterpolator());
+        scroller.setDuration(500);
         try {
             Field field = ViewPager.class.getField("MyScroller");
             field.setAccessible(true);

@@ -39,7 +39,7 @@ import rx.schedulers.Schedulers;
  * Created by mac-yk on 2017/3/13.
  */
 
-public class fragBaofei extends BaseFragment {
+public class fragScrap extends BaseFragment {
     Context context;
     @BindView(R.id.tv)
     TextView tv;

@@ -33,7 +33,7 @@ import mac.yk.devicemanagement.R;
 import mac.yk.devicemanagement.bean.Device;
 import mac.yk.devicemanagement.net.ApiWrapper;
 import mac.yk.devicemanagement.net.ServerAPI;
-import mac.yk.devicemanagement.ui.fragment.fragBaofei;
+import mac.yk.devicemanagement.ui.fragment.fragScrap;
 import mac.yk.devicemanagement.ui.fragment.fragDevice;
 import mac.yk.devicemanagement.ui.fragment.fragMain;
 import mac.yk.devicemanagement.util.ActivityUtils;
@@ -184,7 +184,7 @@ public class MainActivity extends BaseActivity {
                         ActivityUtils.changeFragment(getSupportFragmentManager(), new fragDevice(), R.id.frame);
                         break;
                     case R.id.bf_tongji:
-                        ActivityUtils.changeFragment(getSupportFragmentManager(), new fragBaofei(), R.id.frame);
+                        ActivityUtils.changeFragment(getSupportFragmentManager(), new fragScrap(), R.id.frame);
                         break;
                 }
                 item.setChecked(true);

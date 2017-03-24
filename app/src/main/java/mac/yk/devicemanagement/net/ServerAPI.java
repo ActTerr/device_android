@@ -38,7 +38,8 @@ public interface ServerAPI {
     Observable<Result<String>> logOut(@Query(I.USER.NAME) String name);
 
     @GET(I.REQUEST.PATH+"?request="+I.REQUEST.DOWNWEIXIU)
-    Observable<Result<Weixiu[]>> downLoadWeixiu(@Query(I.DEVICE.DID) String did, @Query(I.DOWNLOAD.PAGE) int page, @Query(I.DOWNLOAD.SIZE) int size);
+    Observable<Result<Weixiu[]>> downLoadWeixiu(@Query(I.DEVICE.DID) String did, @Query(I.DOWNLOAD.PAGE) int page,
+                                                @Query(I.DOWNLOAD.SIZE) int size);
 
     @GET(I.REQUEST.PATH+"?request="+I.REQUEST.DOWNXUNJIAN)
     Observable<Result<Xunjian[]>> downloadXunJian (@Query(I.DEVICE.DID) String did, @Query(I.DOWNLOAD.PAGE) int page,
@@ -51,23 +52,27 @@ public interface ServerAPI {
 
     @GET(I.REQUEST.PATH+"?request="+I.REQUEST.XIUJUN)
     Observable<Result<Integer>> xiujun(@Query(I.DEVICE.ISDIANCHI) boolean isdianchi,@Query(I.USER.NAME) String userName
-            ,@Query(I.DEVICE.DID) String did, @Query(I.WEIXIU.TRANSLATE) boolean translate,@Query(I.WEIXIU.REMARK) String remark);
+            ,@Query(I.DEVICE.DID) String did, @Query(I.WEIXIU.TRANSLATE) boolean translate,
+                                       @Query(I.WEIXIU.REMARK) String remark);
 
     @GET(I.REQUEST.PATH+"?request="+I.REQUEST.BAOFEI)
     Observable<Result<Integer>> baofei(@Query(I.USER.NAME) String name,@Query(I.BAOFEI.DNAME) String Dname
             ,@Query(I.BAOFEI.DID) String Did,@Query(I.BAOFEI.REMARK) String remark);
 
     @GET(I.REQUEST.PATH+"?request="+I.REQUEST.CONTROL)
-    Observable<Result<Integer>> control(@Query(I.DEVICE.ISDIANCHI)boolean isDianchi,@Query(I.DEVICE.STATUS) int Cid,@Query(I.DEVICE.DID) String Did);
+    Observable<Result<Integer>> control(@Query(I.DEVICE.ISDIANCHI)boolean isDianchi,
+                                        @Query(I.DEVICE.STATUS) int Cid,@Query(I.DEVICE.DID) String Did);
 
     @GET(I.REQUEST.PATH+"?request="+I.REQUEST.YONGHOU)
     Observable<Result<Integer>> yonghou(@Query(I.DEVICE.DID) String Did);
 
     @GET(I.REQUEST.PATH+"?request="+I.REQUEST.DOWNSCRAP)
-    Observable<Result<Scrap[]>> downScrap(@Query(I.DOWNLOAD.PAGE) int page,@Query(I.DOWNLOAD.SIZE) int size,@Query(I.BAOFEI.DNAME) int dName);
+    Observable<Result<Scrap[]>> downScrap(@Query(I.DOWNLOAD.PAGE) int page,@Query(I.DOWNLOAD.SIZE) int size,
+                                          @Query(I.BAOFEI.DNAME) int dName);
 
     @GET(I.REQUEST.PATH+"?request="+I.REQUEST.DOWNDEVICE)
-    Observable<Result<Device[]>> downDevice(@Query(I.DOWNLOAD.PAGE) int page,@Query(I.DOWNLOAD.SIZE) int size,@Query(I.DEVICE.DNAME)int dname,
+    Observable<Result<Device[]>> downDevice(@Query(I.DOWNLOAD.PAGE) int page,@Query(I.DOWNLOAD.SIZE) int size,
+                                            @Query(I.DEVICE.DNAME)int dname,
                                             @Query(I.DEVICE.STATUS) int status);
 
     @GET(I.REQUEST.PATH+"?request="+I.REQUEST.GETPICCOUNT)

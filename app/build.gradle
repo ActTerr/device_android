@@ -48,4 +48,5 @@ dependencies {
     releaseCompile 'com.squareup.leakcanary:leakcanary-android-no-op:1.5'
     testCompile 'com.squareup.leakcanary:leakcanary-android-no-op:1.5'
     compile 'javax.mail:mail:1.5.0-b01'
+    compile 'com.facebook.fresco:fresco:1.2.0'
 }

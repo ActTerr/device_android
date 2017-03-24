@@ -256,7 +256,9 @@ public class fragDevice extends BaseFragment {
                     nameSelected = I.DNAME.JIKONGQI;
                     break;
             }
-            setTitle();
+            if (tongji[1]!=null){
+                setTitle();
+            }
             if (nameSelected != 0) {
                 Prompt.setVisibility(View.GONE);
             }

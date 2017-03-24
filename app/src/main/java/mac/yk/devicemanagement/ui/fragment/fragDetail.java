@@ -17,8 +17,7 @@ import mac.yk.devicemanagement.R;
 import mac.yk.devicemanagement.bean.Device;
 import mac.yk.devicemanagement.util.ConvertUtils;
 import mac.yk.devicemanagement.util.L;
-import mac.yk.devicemanagement.widget.lunboView;
-import mac.yk.devicemanagement.widget.zhishiqiView;
+import mac.yk.devicemanagement.widget.loodView;
 
 /**
  * Created by mac-yk on 2017/3/3.
@@ -32,14 +31,14 @@ public class fragDetail extends BaseFragment implements Observer {
     TextView detail;
     Observer observer;
     Device device;
-    @BindView(R.id.lunbo)
-    lunboView lunbo;
-    @BindView(R.id.zhishi)
-    zhishiqiView zhishi;
+    @BindView(R.id.loodView)
+    loodView lllView;
+
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+
         View view = inflater.inflate(R.layout.frag_detail, container, false);
         ButterKnife.bind(this, view);
         observer = this;
@@ -48,21 +47,9 @@ public class fragDetail extends BaseFragment implements Observer {
         deviceName.setText(ConvertUtils.getDname(device.getDname()));
         detail.setText(device.toString());
         device.addObserver(observer);
-        lunbo.getPicCount(zhishi);
         return view;
     }
 
-    @Override
-    public void onPause() {
-        super.onPause();
-        lunbo.setStop(true);
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-        lunbo.setStop(false);
-    }
 
     @Override
     public void update(Observable o, Object arg) {

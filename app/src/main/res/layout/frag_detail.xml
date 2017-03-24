@@ -2,50 +2,37 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical">
 
     <TextView
+        android:textColor="@color/white"
+        android:background="@color/gray2"
         android:paddingTop="5dp"
-        android:background="@drawable/yellow"
         android:id="@+id/deviceName"
         android:layout_width="match_parent"
         android:layout_height="60dp"
         android:gravity="center"
+        android:paddingBottom="10dp"
         android:text="设备名称"
         android:textSize="40sp" />
-
-    <RelativeLayout
+    <mac.yk.devicemanagement.widget.loodView
+        android:id="@+id/loodView"
+        android:focusable="true"
+        android:focusableInTouchMode="true"
         android:layout_width="match_parent"
-        android:layout_height="200dp">
-        <mac.yk.devicemanagement.widget.lunboView
-            android:id="@+id/lunbo"
-            android:layout_width="match_parent"
-            android:layout_height="200dp">
+        android:layout_height="200dp"
+        android:layout_gravity="center_horizontal">
 
-        </mac.yk.devicemanagement.widget.lunboView>
-        <mac.yk.devicemanagement.widget.zhishiqiView
-            android:id="@+id/zhishi"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerHorizontal="true"
-            android:layout_alignParentBottom="true"
-            app:count="3"
-            app:focusColor="@color/main_orange"
-            app:normalColor="@color/white"
-            app:length="10dp"
-            app:space="5dp"/>
-
-    </RelativeLayout>
-
+    </mac.yk.devicemanagement.widget.loodView>
     <LinearLayout
-        android:background="@drawable/yellow"
-        android:layout_marginTop="10dp"
+        android:background="@color/gray2"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
         <TextView
-            android:padding="5dp"
-            android:textSize="20sp"
+            android:textColor="@color/white"
+            android:paddingTop="10dp"
+            android:padding="10dp"
+            android:textSize="25sp"
             android:id="@+id/detail"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
