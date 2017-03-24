@@ -67,7 +67,8 @@ public interface ServerAPI {
     Observable<Result<Scrap[]>> downScrap(@Query(I.DOWNLOAD.PAGE) int page,@Query(I.DOWNLOAD.SIZE) int size,@Query(I.BAOFEI.DNAME) int dName);
 
     @GET(I.REQUEST.PATH+"?request="+I.REQUEST.DOWNDEVICE)
-    Observable<Result<Device[]>> downDevice(@Query(I.DOWNLOAD.PAGE) int page,@Query(I.DOWNLOAD.SIZE) int size);
+    Observable<Result<Device[]>> downDevice(@Query(I.DOWNLOAD.PAGE) int page,@Query(I.DOWNLOAD.SIZE) int size,@Query(I.DEVICE.DNAME)int dname,
+                                            @Query(I.DEVICE.STATUS) int status);
 
     @GET(I.REQUEST.PATH+"?request="+I.REQUEST.GETPICCOUNT)
     Observable<Result<Integer>> getCount(@Query(I.DEVICE.DNAME )int dName,@Query(I.PIC.TYPE) String type);

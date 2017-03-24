@@ -233,10 +233,12 @@ public class fragBaofei extends BaseFragment {
         page=pages.get(selected);
         isMore=mores.get(selected);
         if (page==1&&isMore){
+            scrapAdapter.clear();
             downData();
+        }else {
+            SetSelectedList(null);
         }
         setTitle();
-        SetSelectedList(null);
         return true;
     }
 

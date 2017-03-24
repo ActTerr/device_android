@@ -48,19 +48,25 @@ public class fragDevice extends BaseFragment {
     RecyclerView rv;
 
     int page = 1;
-    int selected = 0;
-    ArrayList<Device> mDevices = new ArrayList<>();
+    int nameSelected = 0;
+    int statusSelected = 0;
     DeviceAdapter deviceAdapter;
-    ArrayList<Device> currentDevices = new ArrayList<>();
     GridLayoutManager gridLayoutManager;
-    boolean isMore;
+    boolean isMore = true;
     ProgressDialog pd;
     Integer[] tongji;
-    int status = 0;
-    PopupWindow pop;
+    PopupWindow namePop,statusPop;
     View vName, vStatus;
     View view;
-
+    ArrayList<ArrayList<Device>> diantais = new ArrayList<>();
+    ArrayList<ArrayList<Device>> dianchis = new ArrayList<>();
+    ArrayList<ArrayList<Device>> jikongqis = new ArrayList<>();
+    ArrayList<ArrayList<Device>> qukongqis = new ArrayList<>();
+    ArrayList<ArrayList<Integer>> pages = new ArrayList<>();
+    ArrayList<ArrayList<Boolean>> mores = new ArrayList<>();
+    @BindView(R.id.Prompt)
+    TextView Prompt;
+    final static String TAG="fragDevice";
     public fragDevice() {
     }
 
@@ -75,19 +81,43 @@ public class fragDevice extends BaseFragment {
         pd = new ProgressDialog(context);
         rv.setAdapter(deviceAdapter);
         rv.setLayoutManager(gridLayoutManager);
-        downData();
         gettongji();
         setListener();
         setHasOptionsMenu(true);
-
-
+        initMemory();
+        initList();
+        new namePopuHolder();
+        new statusPopuHolder();
         return view;
+    }
+
+    private void initList() {
+        for (int i=0;i<5;i++){
+            diantais.add(new ArrayList<Device>());
+            dianchis.add(new ArrayList<Device>());
+            jikongqis.add(new ArrayList<Device>());
+            qukongqis.add(new ArrayList<Device>());
+        }
+    }
+
+    private void initMemory() {
+        for (int i = 0; i < 5; i++) {
+            ArrayList<Integer> pages2= new ArrayList<>();
+            pages.add(pages2);
+            ArrayList<Boolean> mores2=new ArrayList<>();
+            mores.add(mores2);
+            for (int x = 0; x < 5; x++) {
+                pages2.add(1);
+                mores2.add(true);
+            }
+        }
     }
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         menu.getItem(0).setVisible(true);
         menu.getItem(1).setVisible(true);
+        menu.getItem(3).setVisible(false);
     }
 
     Observer<Integer[]> obTongji = new Observer<Integer[]>() {
@@ -105,7 +135,6 @@ public class fragDevice extends BaseFragment {
 
         @Override
         public void onNext(Integer[] integers) {
-            L.e("integer", integers.toString());
             tongji = integers;
             setTitle();
         }
@@ -122,14 +151,14 @@ public class fragDevice extends BaseFragment {
     }
 
     private void setTitle() {
-        if (selected == 0) {
+        if (nameSelected == 0) {
             int count = 0;
             for (int i = 1; i < 5; i++) {
                 count += tongji[i];
             }
             tv.setText("设备总数：" + count);
         } else {
-            tv.setText(ConvertUtils.getDname(selected) + "个数:" + tongji[selected]);
+            tv.setText(ConvertUtils.getDname(nameSelected) + "个数:" + tongji[nameSelected]);
         }
     }
 
@@ -139,7 +168,6 @@ public class fragDevice extends BaseFragment {
             @Override
             public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
                 int lastPosition = gridLayoutManager.findLastVisibleItemPosition();
-                L.e("main", lastPosition + " count:" + deviceAdapter.getItemCount() + "flag" + isMore);
                 if (newState == RecyclerView.SCROLL_STATE_IDLE
                         && lastPosition == deviceAdapter.getItemCount() - 1 && isMore) {
                     page++;
@@ -158,7 +186,7 @@ public class fragDevice extends BaseFragment {
     private void downData() {
         pd.show();
         ApiWrapper<ServerAPI> wrapper = new ApiWrapper<>();
-        subscription = wrapper.targetClass(ServerAPI.class).getAPI().downDevice(page, 10)
+        subscription = wrapper.targetClass(ServerAPI.class).getAPI().downDevice(page, 10, nameSelected, statusSelected)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .compose(wrapper.<Device[]>applySchedulers())
@@ -181,14 +209,11 @@ public class fragDevice extends BaseFragment {
                     public void onNext(Device[] devices) {
                         pd.dismiss();
                         ArrayList<Device> list = ConvertUtils.array2List(devices);
-                        L.e("main", "list" + list.size());
-                        mDevices.addAll(list);
-                        if (selected == 0) {
-                            deviceAdapter.addData(list);
-                        } else {
-                            SetSelectedList( false, list);
+                        L.e("TAG", "list" + list.size());
+                        setDataChanged(list);
+                        if (list.size() < 10) {
+                            isMore = false;
                         }
-                        isMore = true;
                     }
                 });
 
@@ -204,9 +229,7 @@ public class fragDevice extends BaseFragment {
                 showSelStatusPopu();
                 break;
         }
-
-
-        return true;
+        return super.onOptionsItemSelected(item);
     }
 
     class namePopuHolder {
@@ -215,40 +238,54 @@ public class fragDevice extends BaseFragment {
             ButterKnife.bind(this, vName);
         }
 
-        @OnClick({R.id.diantai, R.id.jikongqi, R.id.qukongqi, R.id.dianchi, R.id.all})
+        @OnClick({R.id.diantai, R.id.jikongqi, R.id.qukongqi, R.id.dianchi})
         public void onClick(View view) {
+            pages.get(nameSelected).add(statusSelected, page);
+            mores.get(nameSelected).add(statusSelected, isMore);
             switch (view.getId()) {
                 case R.id.dianchi:
-                    selected = I.DNAME.DIANCHI;
+                    nameSelected = I.DNAME.DIANCHI;
                     break;
                 case R.id.diantai:
-                    selected = I.DNAME.DIANTAI;
+                    nameSelected = I.DNAME.DIANTAI;
                     break;
                 case R.id.qukongqi:
-                    selected = I.DNAME.QUKONGQI;
+                    nameSelected = I.DNAME.QUKONGQI;
                     break;
                 case R.id.jikongqi:
-                    selected = I.DNAME.JIKONGQI;
+                    nameSelected = I.DNAME.JIKONGQI;
                     break;
-                case R.id.all:
-                    selected = I.DNAME.ALL;
             }
             setTitle();
-            SetSelectedList(true, null);
+            if (nameSelected != 0) {
+                Prompt.setVisibility(View.GONE);
+            }
+            statusSelected = 0;
+            page = pages.get(nameSelected).get(statusSelected);
+            isMore = mores.get(nameSelected).get(statusSelected);
+            if (page==1&&isMore){
+                deviceAdapter.clear();
+                downData();
+                L.e("TAG","downData");
+            }else {
+                L.e("TAG","dataChange");
+                setDataChanged(null);
+            }
+            namePop.dismiss();
         }
 
     }
 
     private void showSelNamePopu() {
-        new statusPopuHolder();
+
         int width = ConvertUtils.dp2px(context, 100);
         int height = ConvertUtils.dp2px(context, 170);
-        pop = new PopupWindow(vName, width, height);
-        pop.setOutsideTouchable(true);
-        pop.setTouchable(true);
-        pop.setFocusable(true);
-        pop.setBackgroundDrawable(new BitmapDrawable());
-        pop.showAtLocation(view, Gravity.TOP, ConvertUtils.dp2px(context, 50), ConvertUtils.dp2px(context, 81));
+        namePop = new PopupWindow(vName, width, height);
+        namePop.setOutsideTouchable(true);
+        namePop.setTouchable(true);
+        namePop.setFocusable(true);
+        namePop.setBackgroundDrawable(new BitmapDrawable());
+        namePop.showAtLocation(view, Gravity.TOP, ConvertUtils.dp2px(context, 50), ConvertUtils.dp2px(context, 81));
     }
 
     class statusPopuHolder {
@@ -256,74 +293,105 @@ public class fragDevice extends BaseFragment {
             vStatus = LayoutInflater.from(context).inflate(R.layout.item_status_popu, null);
             ButterKnife.bind(this, vStatus);
         }
-
         @OnClick({R.id.beiyong, R.id.daiyong, R.id.yunxing, R.id.weixiu, R.id.yonghou, R.id.all})
         public void onClick(View view) {
+            pages.get(nameSelected).set(statusSelected, page);
+            mores.get(nameSelected).set(statusSelected, isMore);
             switch (view.getId()) {
                 case R.id.beiyong:
-                    status=I.CONTROL.BEIYONG;
+                    statusSelected= I.CONTROL.BEIYONG;
                     break;
                 case R.id.daiyong:
-                    status=I.CONTROL.DAIYONG;
+                    statusSelected= I.CONTROL.DAIYONG;
                     break;
                 case R.id.yunxing:
-                    status=I.CONTROL.YUNXING;
+                    statusSelected= I.CONTROL.YUNXING;
                     break;
                 case R.id.weixiu:
-                    status=I.CONTROL.WEIXIU;
+                    statusSelected= I.CONTROL.WEIXIU;
                     break;
                 case R.id.yonghou:
-                    status=I.CONTROL.YONGHOU;
+                    statusSelected = I.CONTROL.YONGHOU;
                     break;
                 case R.id.all:
-                    status=0;
+                    statusSelected= 0;
                     break;
             }
-            SetSelectedList(true, null);
+            page = pages.get(nameSelected).get(statusSelected);
+            isMore = mores.get(nameSelected).get(statusSelected);
+            if (page == 1 && isMore) {
+                deviceAdapter.clear();
+                downData();
+            }else {
+                setDataChanged(null);
+            }
+            statusPop.dismiss();
         }
+
     }
 
     private void showSelStatusPopu() {
-        new namePopuHolder();
-        L.e("main", "showstatus");
+        new statusPopuHolder();
         int width = ConvertUtils.dp2px(context, 100);
         int height = ConvertUtils.dp2px(context, 170);
-        pop = new PopupWindow(vStatus, width, height);
-        pop.setOutsideTouchable(true);
-        pop.setTouchable(true);
-        pop.setFocusable(true);
-        pop.setBackgroundDrawable(new BitmapDrawable());
-        pop.showAtLocation(view, Gravity.TOP, 0, ConvertUtils.dp2px(context, 81));
+        statusPop = new PopupWindow(vStatus, width, height);
+        statusPop.setOutsideTouchable(true);
+        statusPop.setTouchable(true);
+        statusPop.setFocusable(true);
+        statusPop.setBackgroundDrawable(new BitmapDrawable());
+        statusPop.showAtLocation(view, Gravity.TOP, 0, ConvertUtils.dp2px(context, 81));
     }
 
-
-    /**
-     * 减少for循环次数
-     *
-     * @param ischange
-     * @param list
-     */
-    private void SetSelectedList(boolean ischange, ArrayList<Device> list) {
-        ArrayList<Device> slist = new ArrayList<>();
-        if (status == 0 && selected == 0) {
-            slist.addAll(list);
-        }else {
-            for (Device d : mDevices) {
-                if (selected == 0 && status == d.getStatus()) {
-                    slist.add(d);
-                } else if (status == 0 && selected == d.getDname()) {
-                    slist.add(d);
-                } else if (d.getStatus() == status && d.getDname() == selected) {
-                    slist.add(d);
-                }
-        }
-            if (ischange) {
-                deviceAdapter.changeData(slist);
-            } else {
-                deviceAdapter.addData(slist);
-            }
+    private void setDataChanged(ArrayList<Device> list) {
+        if (list == null) {
+            deviceAdapter.changeData(getNameList().get(statusSelected));
+        } else {
+            getNameList().get(statusSelected).addAll(list);
+            deviceAdapter.addData(list);
         }
     }
+
+    private ArrayList<ArrayList<Device>> getNameList() {
+        switch (nameSelected) {
+            case I.DNAME.DIANCHI:
+                return dianchis;
+            case I.DNAME.JIKONGQI:
+                return jikongqis;
+            case I.DNAME.QUKONGQI:
+                return qukongqis;
+            case I.DNAME.DIANTAI:
+                return diantais;
+        }
+        return null;
+
+    }
+//    /**
+//     * 减少for循环次数
+//     *
+//     * @param ischange
+//     * @param list
+//     */
+//    private void SetSelectedList(boolean ischange, ArrayList<Device> list) {
+//        ArrayList<Device> slist = new ArrayList<>();
+//        if (status == 0 && selected == 0) {
+//            slist.addAll(list);
+//        }else {
+//            for (Device d : mDevices) {
+//                if (selected == 0 && status == d.getStatus()) {
+//                    slist.add(d);
+//                } else if (status == 0 && selected == d.getDname()) {
+//                    slist.add(d);
+//                } else if (d.getStatus() == status && d.getDname() == selected) {
+//                    slist.add(d);
+//                }
+//        }
+//            if (ischange) {
+//                deviceAdapter.changeData(slist);
+//            } else {
+//                deviceAdapter.addData(slist);
+//            }
+//        }
+//    }
 
     @OnClick(R.id.btn_top)
     public void onClick() {

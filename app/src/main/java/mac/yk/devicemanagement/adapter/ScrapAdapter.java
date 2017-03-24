@@ -65,6 +65,12 @@ public class ScrapAdapter extends RecyclerView.Adapter {
         notifyDataSetChanged();
     }
 
+    public void clear() {
+        if (scraps!=null){
+            scraps.clear();
+        }
+    }
+
 
     class ScrapHolder extends RecyclerView.ViewHolder {
         @BindView(R.id.Did)

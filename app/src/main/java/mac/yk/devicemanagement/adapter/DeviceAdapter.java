@@ -38,7 +38,6 @@ public class DeviceAdapter extends RecyclerView.Adapter {
     public void addData(ArrayList<Device> list){
         L.e("main","datper"+list.size());
         devices.addAll(list);
-        L.e("main",devices.get(3).toString());
         notifyDataSetChanged();
     }
 
@@ -54,7 +53,6 @@ public class DeviceAdapter extends RecyclerView.Adapter {
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
         Device device=devices.get(position);
         DeviceHolder deviceHolder= (DeviceHolder) holder;
-        L.e("main","id:"+device.getDid());
         deviceHolder.Did.setText(device.getDid()+"");
         deviceHolder.Dname.setText(ConvertUtils.getDname(device.getDname()));
         deviceHolder.chuchangDate.setText(ConvertUtils.Date2String(device.getChuchang()));
@@ -66,6 +64,12 @@ public class DeviceAdapter extends RecyclerView.Adapter {
     @Override
     public int getItemCount() {
         return devices.size();
+    }
+
+    public void clear() {
+        if (devices!=null){
+            devices.clear();
+        }
     }
 
 

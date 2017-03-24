@@ -10,11 +10,11 @@
     <item android:id="@+id/select_status"
         android:icon="@drawable/weixiu"
         app:showAsAction="always"
-        android:title="hehe"/>
+        android:title=""/>
     <item android:id="@+id/select_name"
         android:icon="@drawable/all"
         app:showAsAction="always"
-        android:title="caonima"
+        android:title=""
         />
 
     <item android:id="@+id/diantai"

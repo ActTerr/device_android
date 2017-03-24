@@ -33,7 +33,6 @@ import mac.yk.devicemanagement.util.ActivityUtils;
 import mac.yk.devicemanagement.util.ExceptionFilter;
 import mac.yk.devicemanagement.util.L;
 import mac.yk.devicemanagement.util.MFGT;
-import mac.yk.devicemanagement.util.NetUtil;
 import mac.yk.devicemanagement.util.ToastUtil;
 import rx.Observer;
 import rx.Subscriber;
@@ -495,16 +494,6 @@ public class DetailActivity extends BaseActivity {
                     }
                 });
 
-    }
-    @Override
-    public void onNetChange(int netMobile) {
-        super.onNetChange(netMobile);
-        //网络状态变化时的操作
-        if (netMobile== NetUtil.NETWORK_NONE){
-            mTv.setVisibility(View.VISIBLE);
-        }else {
-            mTv.setVisibility(View.GONE);
-        }
     }
     @Override
     public void onBackPressed() {
