@@ -24,6 +24,9 @@ import android.widget.TextView;
 
 import com.xys.libzxing.zxing.activity.CaptureActivity;
 
+import java.lang.reflect.Field;
+import java.lang.reflect.Method;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
@@ -33,9 +36,9 @@ import mac.yk.devicemanagement.R;
 import mac.yk.devicemanagement.bean.Device;
 import mac.yk.devicemanagement.net.ApiWrapper;
 import mac.yk.devicemanagement.net.ServerAPI;
-import mac.yk.devicemanagement.ui.fragment.fragScrap;
 import mac.yk.devicemanagement.ui.fragment.fragDevice;
 import mac.yk.devicemanagement.ui.fragment.fragMain;
+import mac.yk.devicemanagement.ui.fragment.fragScrap;
 import mac.yk.devicemanagement.util.ActivityUtils;
 import mac.yk.devicemanagement.util.ExceptionFilter;
 import mac.yk.devicemanagement.util.L;
@@ -145,9 +148,14 @@ public class MainActivity extends BaseActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.menu_name, menu);
-        menu.getItem(0).setVisible(false);
-        menu.getItem(1).setVisible(false);
-        menu.getItem(3).setVisible(false);
+        try {
+            Class c=Class.forName("android.view.Menu");
+            Field field=c.getField("size");
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        } catch (NoSuchFieldException e) {
+            e.printStackTrace();
+        }
         return true;
     }
 
@@ -311,6 +319,25 @@ public class MainActivity extends BaseActivity {
         }
         return super.onKeyUp(keyCode, event);
     }
+    @Override
+    public boolean onMenuOpened(int featureId, Menu menu) {
+        if (featureId == 108
+//                Window.FEATURE_ACTION_BAR
+                && menu !=null) {
+            if (menu.getClass().getSimpleName().equals("MenuBuilder")) {
+                try {
+                    Method m = menu.getClass().getDeclaredMethod("setOptionalIconsVisible", Boolean.TYPE);
+                    m.setAccessible(true);
+                    m.invoke(menu, true);
+                } catch (Exception e) {
+                }
+            }
+        }
+        return super.onMenuOpened(featureId, menu);
+    }
+
+
+
 }
 
 

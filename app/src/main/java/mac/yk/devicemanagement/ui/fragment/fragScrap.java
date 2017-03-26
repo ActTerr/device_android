@@ -45,7 +45,7 @@ public class fragScrap extends BaseFragment {
     TextView tv;
     @BindView(R.id.rv)
     RecyclerView rv;
-
+    final static String TAG="fragScrap";
     int page = 1;
     int selected = 0;
     ScrapAdapter scrapAdapter;
@@ -203,7 +203,10 @@ public class fragScrap extends BaseFragment {
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        menu.getItem(3).setVisible(true);
+        menu.findItem(R.id.dianchi).setVisible(true);
+        menu.findItem(R.id.qukongqi).setVisible(true);
+        menu.findItem(R.id.jikongqi).setVisible(true);
+        menu.findItem(R.id.diantai).setVisible(true);
     }
 
     @Override

@@ -66,6 +66,7 @@ public class fragDevice extends BaseFragment {
     ArrayList<ArrayList<Boolean>> mores = new ArrayList<>();
     @BindView(R.id.Prompt)
     TextView Prompt;
+    MenuItem menuStatus,menuName;
     final static String TAG="fragDevice";
     public fragDevice() {
     }
@@ -115,9 +116,10 @@ public class fragDevice extends BaseFragment {
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        menu.getItem(0).setVisible(true);
-        menu.getItem(1).setVisible(true);
-        menu.getItem(3).setVisible(false);
+         menuStatus = menu.findItem(R.id.select_status);
+        menuName = menu.findItem(R.id.select_name);
+        menuStatus.setVisible(true);
+        menuName.setVisible(true);
     }
 
     Observer<Integer[]> obTongji = new Observer<Integer[]>() {
@@ -245,15 +247,19 @@ public class fragDevice extends BaseFragment {
             switch (view.getId()) {
                 case R.id.dianchi:
                     nameSelected = I.DNAME.DIANCHI;
+                    menuName.setIcon(R.drawable.dianchi_white);
                     break;
                 case R.id.diantai:
                     nameSelected = I.DNAME.DIANTAI;
+                    menuName.setIcon(R.drawable.diantai_white);
                     break;
                 case R.id.qukongqi:
                     nameSelected = I.DNAME.QUKONGQI;
+                    menuName.setIcon(R.drawable.qukong_white);
                     break;
                 case R.id.jikongqi:
                     nameSelected = I.DNAME.JIKONGQI;
+                    menuName.setIcon(R.drawable.jikongqi_white);
                     break;
             }
             if (tongji[1]!=null){
@@ -302,21 +308,27 @@ public class fragDevice extends BaseFragment {
             switch (view.getId()) {
                 case R.id.beiyong:
                     statusSelected= I.CONTROL.BEIYONG;
+                    menuStatus.setIcon(R.drawable.beiyong_white);
                     break;
                 case R.id.daiyong:
                     statusSelected= I.CONTROL.DAIYONG;
+                    menuStatus.setIcon(R.drawable.daiyong_white);
                     break;
                 case R.id.yunxing:
                     statusSelected= I.CONTROL.YUNXING;
+                    menuStatus.setIcon(R.drawable.yunxing_white);
                     break;
                 case R.id.weixiu:
                     statusSelected= I.CONTROL.WEIXIU;
+                    menuStatus.setIcon(R.drawable.weixiu_white);
                     break;
                 case R.id.yonghou:
                     statusSelected = I.CONTROL.YONGHOU;
+                    menuStatus.setIcon(R.drawable.yonghou_white);
                     break;
                 case R.id.all:
                     statusSelected= 0;
+                    menuStatus.setIcon(R.drawable.all_white);
                     break;
             }
             page = pages.get(nameSelected).get(statusSelected);
@@ -356,6 +368,7 @@ public class fragDevice extends BaseFragment {
     private ArrayList<ArrayList<Device>> getNameList() {
         switch (nameSelected) {
             case I.DNAME.DIANCHI:
+
                 return dianchis;
             case I.DNAME.JIKONGQI:
                 return jikongqis;
@@ -394,6 +407,7 @@ public class fragDevice extends BaseFragment {
 //            }
 //        }
 //    }
+
 
     @OnClick(R.id.btn_top)
     public void onClick() {
