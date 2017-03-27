@@ -11,12 +11,10 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.PrintWriter;
 
-import mac.yk.devicemanagement.MyApplication;
 import mac.yk.devicemanagement.ui.activity.MainActivity;
 import mac.yk.devicemanagement.util.CommonUtils;
 import mac.yk.devicemanagement.util.ToastUtil;
 
-import static mac.yk.devicemanagement.MyApplication.application;
 
 /**
  * Created by mac-yk on 2017/3/20.
@@ -52,11 +50,11 @@ public class CrashHandler implements Thread.UncaughtExceptionHandler {
             } catch (InterruptedException e1) {
                 e1.printStackTrace();
             }
-            Intent intent = new Intent(application.getApplicationContext(), MainActivity.class);
+            Intent intent = new Intent(mContext, MainActivity.class);
             PendingIntent restartIntent = PendingIntent.getActivity(
-                    application.getApplicationContext(), 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+                    mContext, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
             //退出程序
-            AlarmManager mgr = (AlarmManager) application.getSystemService(Context.ALARM_SERVICE);
+            AlarmManager mgr = (AlarmManager)mContext.getSystemService(Context.ALARM_SERVICE);
             mgr.set(AlarmManager.RTC, System.currentTimeMillis() + 300,
                     restartIntent); // 1秒钟后重启应用
             android.os.Process.killProcess(android.os.Process.myPid());
@@ -71,16 +69,16 @@ public class CrashHandler implements Thread.UncaughtExceptionHandler {
             @Override
             public void run() {
                 Looper.prepare();
-                ToastUtil.showToast(MyApplication.getContext(),"非常抱歉，程序即将崩溃!");
+                ToastUtil.showToast(mContext,"非常抱歉，程序即将崩溃!");
                 Looper.loop();
             }
         }).start();
-        File file = new File(application.getCacheDir().getAbsolutePath() + "/err/");
+        File file = new File(mContext.getCacheDir().getAbsolutePath() + "/err/");
         if (!file.exists()){
             file.mkdir();
         }
         try {
-            PrintWriter writer = new PrintWriter(application.getCacheDir().getAbsolutePath() + "/err/" +
+            PrintWriter writer = new PrintWriter(mContext.getCacheDir().getAbsolutePath() + "/err/" +
                     System.currentTimeMillis() + ".log");
             e.printStackTrace(writer);
             writer.close();
@@ -108,16 +106,16 @@ public class CrashHandler implements Thread.UncaughtExceptionHandler {
             @Override
             public void run() {
                 Looper.prepare();
-                ToastUtil.showToast(MyApplication.getContext(),"非常抱歉，程序即将崩溃!");
+                ToastUtil.showToast(mContext,"非常抱歉，程序即将崩溃!");
                 Looper.loop();
             }
         }).start();
-        File file = new File(application.getCacheDir().getAbsolutePath() + "/err/");
+        File file = new File(mContext.getCacheDir().getAbsolutePath() + "/err/");
         if (!file.exists()){
             file.mkdir();
         }
         try {
-            PrintWriter writer = new PrintWriter(application.getCacheDir().getAbsolutePath() + "/err/" +
+            PrintWriter writer = new PrintWriter(mContext.getCacheDir().getAbsolutePath() + "/err/" +
                     System.currentTimeMillis() + ".log");
             e.printStackTrace(writer);
             writer.close();

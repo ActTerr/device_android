@@ -2,7 +2,6 @@ package mac.yk.devicemanagement;
 
 import android.app.Activity;
 import android.app.Application;
-import android.content.Context;
 
 import com.squareup.leakcanary.LeakCanary;
 import com.squareup.leakcanary.RefWatcher;
@@ -16,7 +15,6 @@ import mac.yk.devicemanagement.bean.Device;
  */
 
 public class MyApplication extends Application {
-    public static  MyApplication application;
     public static MyApplication instance=new MyApplication();
     public static MyApplication getInstance(){
         return instance;
@@ -27,7 +25,6 @@ public class MyApplication extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
-        application=this;
         refWatcher= LeakCanary.install(this);
 //        CrashHandler.getInstance().init(application);
     }
@@ -59,10 +56,7 @@ public class MyApplication extends Application {
     public void setUserName(String userName) {
         this.userName = userName;
     }
-    public static Context getContext(){
 
-        return application;
-    }
 
     public static void setFlag(boolean b) {
         isDianchi=b;

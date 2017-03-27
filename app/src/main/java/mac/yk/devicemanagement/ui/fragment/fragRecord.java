@@ -6,7 +6,6 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.annotation.Nullable;
-import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -48,7 +47,7 @@ import rx.schedulers.Schedulers;
 
 public class fragRecord extends BaseFragment {
 
-    boolean isDesc;
+    boolean isDesc=true;
     Handler handler=new Handler(){
         @Override
         public void handleMessage(Message msg) {
@@ -78,8 +77,8 @@ public class fragRecord extends BaseFragment {
     RecyclerView rv;
     @BindView(R.id.goTop)
     Button goTop;
-    @BindView(R.id.srl)
-    SwipeRefreshLayout srl;
+//    @BindView(R.id.srl)
+//    SwipeRefreshLayout srl;
     ArrayList<Weixiu> wxList;
     ArrayList<Xunjian> xunjianList;
     boolean isWeixiu;
@@ -116,12 +115,12 @@ public class fragRecord extends BaseFragment {
             adapter=new xunjianAdapter(context);
         }
 
-        srl.setColorSchemeColors(
-                getResources().getColor(R.color.google_blue),
-                getResources().getColor(R.color.google_green),
-                getResources().getColor(R.color.google_red),
-                getResources().getColor(R.color.google_yellow)
-        );
+//        srl.setColorSchemeColors(
+//                getResources().getColor(R.color.google_blue),
+//                getResources().getColor(R.color.google_green),
+//                getResources().getColor(R.color.google_red),
+//                getResources().getColor(R.color.google_yellow)
+//        );
         rv.setAdapter(adapter);
         rv.setLayoutManager(llm);
         rv.setHasFixedSize(true);
@@ -143,13 +142,12 @@ public class fragRecord extends BaseFragment {
             isDesc=true;
             item.setIcon(R.drawable.recent_selected);
             itemReverse.setIcon(R.drawable.reverse);
-          setListSort(true);
         }else {
             itemRecent.setIcon(R.drawable.recent);
             item.setIcon(R.drawable.reverse_selected);
             isDesc=false;
-           setListSort(false);
         }
+        setListSort();
         return true;
     }
 
@@ -167,11 +165,12 @@ public class fragRecord extends BaseFragment {
                     return 1;
                 }
                 return (int) (o2.getXjDate().getTime()-o1.getXjDate().getTime());
+            }else {
+                if (o1.getXjDate()==null||o2.getXjDate()==null){
+                    return -1;
+                }
+                return (int) (o1.getXjDate().getTime()-o2.getXjDate().getTime());
             }
-            if (o1.getWxDate()==null||o2.getXjDate()==null){
-                return -1;
-            }
-            return (int) (o1.getXjDate().getTime()-o2.getXjDate().getTime());
         }
     }
     
@@ -184,15 +183,16 @@ public class fragRecord extends BaseFragment {
 
         @Override
         public int compare(Xunjian o1, Xunjian o2) {
-            if (desc){
+            if (!desc){
                 return (int) (o2.getXjDate().getTime()-o1.getXjDate().getTime());
+            }else {
+                return (int) (o1.getXjDate().getTime()-o2.getXjDate().getTime());
             }
-            return (int) (o1.getXjDate().getTime()-o2.getXjDate().getTime());
         }
     }
-    private void setListSort(boolean flag) {
+    private void setListSort() {
         if (isWeixiu){
-            Collections.sort(wxList,new MyWxComparator(flag));
+            Collections.sort(wxList,new MyWxComparator(isDesc));
             ArrayList<Weixiu> list=new ArrayList<Weixiu>();
             Iterator<Weixiu> it=wxList.iterator();
             while (it.hasNext()){
@@ -200,7 +200,7 @@ public class fragRecord extends BaseFragment {
             }
             weixiuAdapter.initwData(list);
         }else {
-            Collections.sort(xunjianList,new MyXunjianComParator(flag));
+            Collections.sort(xunjianList,new MyXunjianComParator(isDesc));
             ArrayList<Xunjian> list=new ArrayList<>();
             Iterator<Xunjian> it=xunjianList.iterator();
             while ((it.hasNext())){
@@ -212,7 +212,7 @@ public class fragRecord extends BaseFragment {
     }
 
     private void setListener() {
-        setPullDownListener();
+//        setPullDownListener();
         setPullUpListener();
     }
 
@@ -223,7 +223,7 @@ public class fragRecord extends BaseFragment {
                 super.onScrollStateChanged(recyclerView, newState);
                 int lastPosition=llm.findLastVisibleItemPosition();
                 if (newState==RecyclerView.SCROLL_STATE_IDLE
-                        &&lastPosition==getList().size()-1&&isMore&&getList().size()>10){
+                        &&lastPosition==getList().size()-1&&isMore&&getList().size()>=10){
                     page++;
                     Download(ACTION_ADD);
 
@@ -237,7 +237,7 @@ public class fragRecord extends BaseFragment {
             public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
                 super.onScrolled(recyclerView, dx, dy);
                 int firstPosition=llm.findFirstVisibleItemPosition();
-                srl.setEnabled(firstPosition==0);
+//                srl.setEnabled(firstPosition==0);
             }
         });
 
@@ -259,30 +259,34 @@ public class fragRecord extends BaseFragment {
         }
     }
 
-    private void setPullDownListener() {
-        srl.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-            @Override
-            public void onRefresh() {
-                srl.setRefreshing(true);
-                tvRefresh.setVisibility(View.VISIBLE);
-                tvRefresh.setText("刷新中");
-                page=1;
-                new Thread(new Runnable() {
-                    @Override
-                    public void run() {
-                        try {
-                            Thread.sleep(2000);
-                            handler.sendEmptyMessage(1);
-
-                        } catch (InterruptedException e) {
-                            e.printStackTrace();
-                        }
-                    }
-                }).start();
-
-            }
-        });
-    }
+//    private void setPullDownListener() {
+//        srl.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+//            @Override
+//            public void onRefresh() {
+//                int firstPosition=llm.findFirstVisibleItemPosition();
+//                if (firstPosition!=0){
+//                    return;
+//                }
+//                srl.setRefreshing(true);
+//                tvRefresh.setVisibility(View.VISIBLE);
+//                tvRefresh.setText("刷新中");
+//                page=1;
+//                new Thread(new Runnable() {
+//                    @Override
+//                    public void run() {
+//                        try {
+//                            Thread.sleep(2000);
+//                            handler.sendEmptyMessage(1);
+//
+//                        } catch (InterruptedException e) {
+//                            e.printStackTrace();
+//                        }
+//                    }
+//                }).start();
+//
+//            }
+//        });
+//    }
 
     private void downloadxunjian(final int Action) {
         ApiWrapper<ServerAPI> wrapper = new ApiWrapper<>();
@@ -300,7 +304,7 @@ public class fragRecord extends BaseFragment {
                     @Override
                     public void onError(Throwable e) {
                         if (ExceptionFilter.filter(context, e)) {
-                            srl.setRefreshing(false);
+//                            srl.setRefreshing(false);
                             tvRefresh.setText("刷新失败");
                             isMore = false;
                             delayToInvisible();
@@ -309,7 +313,7 @@ public class fragRecord extends BaseFragment {
 
                     @Override
                     public void onNext(Xunjian[] result) {
-                        srl.setRefreshing(false);
+//                        srl.setRefreshing(false);
                         L.e("main", "xunjianl:" + result.length);
                         xunjianAdapter = (xunjianAdapter) adapter;
                         ArrayList<Xunjian> xunjianLists = ConvertUtils.array2List(result);
@@ -331,9 +335,10 @@ public class fragRecord extends BaseFragment {
                                 xunjianList.addAll(xunjianLists);
                             }
                             isMore = true;
+
                         }
-                        setListSort(isDesc);
-                        tvRefresh.setText("刷新成功");
+                        tvRefresh.setText("加载成功");
+                        setListSort();
                         delayToInvisible();
                     }
                 });
@@ -356,14 +361,14 @@ public class fragRecord extends BaseFragment {
                     @Override
                     public void onError(Throwable e) {
                         if (ExceptionFilter.filter(context, e)) {
-                            srl.setRefreshing(false);
+//                            srl.setRefreshing(false);
                             tvRefresh.setText("刷新失败");
                             delayToInvisible();
                         }
                     }
                     @Override
                     public void onNext(Weixiu[] result) {
-                        srl.setRefreshing(false);
+//                        srl.setRefreshing(false);
                         L.e("main", "weixiul:" + result.length);
                         weixiuAdapter= (weixiuAdapter) adapter;
                         ArrayList<Weixiu> weixius = ConvertUtils.array2List(result);
@@ -375,6 +380,7 @@ public class fragRecord extends BaseFragment {
                         if (Action == ACTION_ADD) {
                             weixiuAdapter.addwData(weixius);
                             wxList.addAll(weixius);
+
                         } else {
                             weixiuAdapter.initwData(weixius);
                             synchronized (wxList) {
@@ -385,8 +391,8 @@ public class fragRecord extends BaseFragment {
                             }
                             isMore = true;
                         }
-                        setListSort(isDesc);
-                        tvRefresh.setText("刷新成功");
+                        setListSort();
+                        tvRefresh.setText("加载成功");
                         delayToInvisible();
                     }
                 });

@@ -362,7 +362,7 @@ public class loodView extends FrameLayout {
         scheduledExecutorService.shutdown();
     }
 
-    private void destory() {
+    public void destory() {
         scheduledExecutorService.shutdown();
         scheduledExecutorService = null;
     }

@@ -9,7 +9,7 @@ import mac.yk.devicemanagement.ui.activity.BaseActivity;
 import mac.yk.devicemanagement.util.NetUtil;
 
 public class NetBroadcastReceiver extends BroadcastReceiver {
-    public NetEvevt evevt = BaseActivity.evevt;
+    public NetEvevt evevt = new BaseActivity().evevt;
 
     @Override
     public void onReceive(Context context, Intent intent) {

@@ -46,12 +46,12 @@ public interface ServerAPI {
                                            @Query(I.DOWNLOAD.SIZE) int size);
 
     @GET(I.REQUEST.PATH+"?request="+I.REQUEST.XUNJIAN)
-    Observable<Result<Integer>> xunjian(@Query(I.DEVICE.ISDIANCHI) boolean isdianchi,@Query(I.USER.NAME) String userName
+    Observable<Result<Integer>> xunjian(@Query(I.DEVICE.ISDIANCHI) boolean isdianchi,@Query(I.XUNJIAN.USER) String userName
             ,@Query(I.DEVICE.DID) String did,
                                @Query(I.XUNJIAN.STATUS) String status,@Query(I.XUNJIAN.REMARK) String remark);
 
     @GET(I.REQUEST.PATH+"?request="+I.REQUEST.XIUJUN)
-    Observable<Result<Integer>> xiujun(@Query(I.DEVICE.ISDIANCHI) boolean isdianchi,@Query(I.USER.NAME) String userName
+    Observable<Result<Integer>> xiujun(@Query(I.DEVICE.ISDIANCHI) boolean isdianchi,@Query(I.WEIXIU.USER) String userName
             ,@Query(I.DEVICE.DID) String did, @Query(I.WEIXIU.TRANSLATE) boolean translate,
                                        @Query(I.WEIXIU.REMARK) String remark);
 

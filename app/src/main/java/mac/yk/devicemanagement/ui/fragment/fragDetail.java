@@ -60,6 +60,7 @@ public class fragDetail extends BaseFragment implements Observer {
     @Override
     public void onDestroyView() {
         super.onDestroyView();
+        lllView.destory();
         device.deleteObserver(this);
     }
 }

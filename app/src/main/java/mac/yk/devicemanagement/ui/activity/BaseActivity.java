@@ -37,7 +37,7 @@ public class BaseActivity extends AppCompatActivity implements Observer,NetBroad
         super.onCreate(savedInstanceState);
         evevt = this;
         inspectNet();
-     forceShowOverflowMenu();
+        forceShowOverflowMenu();
     }
     private void forceShowOverflowMenu() {
         try {
@@ -65,6 +65,7 @@ public class BaseActivity extends AppCompatActivity implements Observer,NetBroad
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        evevt=null;
         unsubscribe();
 
     }
@@ -140,6 +141,7 @@ public class BaseActivity extends AppCompatActivity implements Observer,NetBroad
         }
         return false;
     }
+
 
 
 
