@@ -153,13 +153,16 @@ public class loodView extends FrameLayout {
     private void initIndicator() {
         try {
             Class c=Class.forName("mac.yk.devicemanagement.widget.loodView");
-            for (int i=count+1;i<8;i++){
+            for (int i=1;i<8;i++){
                 Field field=c.getDeclaredField("vDot"+i);
                 field.setAccessible(true);
                 View view= (View) field.get(this);
-                view.setVisibility(GONE);
                 indicator.add(view);
+                if (i>count+1){
+                    view.setVisibility(GONE);
+                }
             }
+        L.e(TAG,"size:"+indicator.size());
         } catch (NoSuchFieldException e) {
             e.printStackTrace();
         } catch (IllegalAccessException e) {
@@ -287,11 +290,14 @@ public class loodView extends FrameLayout {
         @Override
         public void onPageSelected(int position) {
             currentItem = position;
+            L.e(TAG,"position:"+position);
             for (int i = 0; i < indicator.size(); i++) {
                 if (i == position) {
                     indicator.get(i).setBackgroundResource(R.mipmap.red_point);
+                    L.e(TAG,"setFoucus:"+position);
                 } else {
                         indicator.get(i).setBackgroundResource(R.mipmap.grey_point);
+                    L.e(TAG,"set");
                 }
             }
         }
