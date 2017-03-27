@@ -65,6 +65,7 @@ public class DetailActivity extends BaseActivity {
     boolean isBaofei = false;
     @BindView(R.id.netView)
     TextView mTv;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -89,7 +90,7 @@ public class DetailActivity extends BaseActivity {
                 isBaofei = true;
             }
         }
-
+        setTitle("设备详情");
         setSupportActionBar(toolBar);
         ActionBar ab = getSupportActionBar();
         ab.setHomeAsUpIndicator(R.drawable.ic_menu);
@@ -358,7 +359,7 @@ public class DetailActivity extends BaseActivity {
                 case R.id.btn_commit:
                     dialog.dismiss();
                     progressDialog.show();
-                    postXiujun2(translate,remark.getText().toString());
+                    postXiujun2(translate, remark.getText().toString());
                     break;
             }
         }
@@ -498,6 +499,7 @@ public class DetailActivity extends BaseActivity {
                 });
 
     }
+
     @Override
     public void onBackPressed() {
         MFGT.gotoMainActivity(context);

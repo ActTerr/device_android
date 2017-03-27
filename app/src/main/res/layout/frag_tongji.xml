@@ -10,7 +10,7 @@
         android:gravity="center"
         android:textColor="@color/white"
         android:textSize="35sp"
-        android:text="请点击右上角选择设备"
+        android:text="请点击右上角选择设备名称"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
     <TextView

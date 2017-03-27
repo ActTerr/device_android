@@ -87,6 +87,7 @@ public class fragDevice extends BaseFragment {
         setHasOptionsMenu(true);
         initMemory();
         initList();
+        getActivity().setTitle("设备列表");
         new namePopuHolder();
         new statusPopuHolder();
         return view;

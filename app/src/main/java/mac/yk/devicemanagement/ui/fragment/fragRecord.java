@@ -109,9 +109,10 @@ public class fragRecord extends BaseFragment {
         llm=new LinearLayoutManager(context);
         L.e("main","是否维修:"+isWeixiu);
         if (isWeixiu){
-
+            getActivity().setTitle("维修记录");
             adapter=new weixiuAdapter(context);
         }else {
+            getActivity().setTitle("巡检记录");
             adapter=new xunjianAdapter(context);
         }
 

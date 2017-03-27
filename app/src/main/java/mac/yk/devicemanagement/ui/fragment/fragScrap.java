@@ -77,6 +77,7 @@ public class fragScrap extends BaseFragment {
         setListener();
         setHasOptionsMenu(true);
         initMemory();
+        getActivity().setTitle("报废列表");
         return view;
     }
 
@@ -134,15 +135,18 @@ public class fragScrap extends BaseFragment {
     }
 
     private void setTitle() {
-        if (selected == 0) {
-            int count = 0;
-            for (int i = 1; i < 5; i++) {
-                count += tongji[i];
+        if (tongji!=null){
+            if (selected == 0) {
+                int count = 0;
+                for (int i = 1; i < 5; i++) {
+                    count += tongji[i];
+                }
+                tv.setText("设备总数：" + count);
+            } else {
+                tv.setText(ConvertUtils.getDname(selected) + "个数:" + tongji[selected]);
             }
-            tv.setText("设备总数：" + count);
-        } else {
-            tv.setText(ConvertUtils.getDname(selected) + "个数:" + tongji[selected]);
         }
+
     }
 
     private void setListener() {
