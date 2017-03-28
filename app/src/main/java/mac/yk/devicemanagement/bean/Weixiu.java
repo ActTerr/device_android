@@ -51,5 +51,14 @@ public class Weixiu implements Serializable{
         translate = translate;
     }
 
-
+    @Override
+    public String toString() {
+        return "Weixiu{" +
+                "wxDate=" + wxDate +
+                ", xjDate=" + xjDate +
+                ", controlUser='" + controlUser + '\'' +
+                ", remark='" + remark + '\'' +
+                ", translate=" + translate +
+                '}';
+    }
 }

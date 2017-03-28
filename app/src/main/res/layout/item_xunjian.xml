@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical" android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
     android:background="#00000000"
     >
     <LinearLayout
@@ -26,7 +26,7 @@
                 android:textColor="@color/white"
                 android:id="@+id/xJianDate"
                 android:textSize="13sp"
-                android:text="XXXXXX"
+                android:text=""
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content" />
         </LinearLayout>
@@ -47,7 +47,7 @@
                 android:textColor="@color/white"
                 android:id="@+id/status"
                 android:textSize="13sp"
-                android:text="XXXXXX"
+                android:text=""
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content" />
         </LinearLayout>
@@ -74,7 +74,7 @@
                 android:textColor="@color/white"
                 android:id="@+id/xjUser"
                 android:textSize="13sp"
-                android:text="XXXXXX"
+                android:text=""
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content" />
         </LinearLayout>
@@ -95,7 +95,7 @@
                 android:textColor="@color/white"
                 android:id="@+id/cause"
                 android:textSize="13sp"
-                android:text="XXXXXX"
+                android:text=""
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content" />
         </LinearLayout>

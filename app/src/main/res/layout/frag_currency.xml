@@ -34,8 +34,10 @@
 
                 </android.support.v7.widget.RecyclerView>
                 <Button
+                    android:background="#00000000"
                     android:id="@+id/goTop"
-                    android:text="goTop"
+                    android:text="Top"
+                    android:textColor="@color/white"
                     android:layout_marginRight="20dp"
                     android:layout_marginBottom="20dp"
                     android:layout_alignParentRight="true"

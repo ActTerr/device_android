@@ -2,6 +2,7 @@ package mac.yk.devicemanagement.adapter;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -16,10 +17,10 @@ import mac.yk.devicemanagement.util.ConvertUtils;
  * Created by mac-yk on 2017/3/8.
  */
 
-public class xunjianAdapter extends RecyclerView.Adapter {
+public class xunjianAdapter extends RecyclerView.Adapter<XjViewHolder> {
     ArrayList<Xunjian> xjlist=new ArrayList<>();
     Context context;
-    public void initxData(ArrayList<Xunjian> list ){
+    public void changeData(ArrayList<Xunjian> list ){
         synchronized (xjlist){
             if (xjlist!=null){
                 xjlist.clear();
@@ -34,29 +35,23 @@ public class xunjianAdapter extends RecyclerView.Adapter {
         this.context = context;
     }
 
-    public void addxData(ArrayList<Xunjian> list){
-        xjlist.addAll(list);
-        notifyDataSetChanged();
-    }
     @Override
-    public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        int id= R.layout.item_xunjian;
-        View view=View.inflate(context,id,null);
-        RecyclerView.ViewHolder  viewHolder=new XjViewHolder(view);
+    public XjViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        View view = LayoutInflater.from(context).inflate(R.layout.item_xunjian, parent, false);
+         XjViewHolder  viewHolder=new XjViewHolder(view);
         return viewHolder;
     }
 
     @Override
-    public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
-        XjViewHolder xjViewHolder= (XjViewHolder) holder;
+    public void onBindViewHolder(XjViewHolder holder, int position) {
         Xunjian xunjian=xjlist.get(position);
-        xjViewHolder.xJianDate.setText(ConvertUtils.Date2String(xunjian.getXjDate()));
-        xjViewHolder.xjUser.setText(xunjian.getXjUser());
-        xjViewHolder.status.setText(ConvertUtils.getXunjianStatus(xunjian.getStatus()));
+        holder.xJianDate.setText(ConvertUtils.Date2String(xunjian.getXjDate()));
+        holder.xjUser.setText(xunjian.getXjUser());
+        holder.status.setText(ConvertUtils.getXunjianStatus(xunjian.getStatus()));
         if (xunjian.getStatus()==0){
-            xjViewHolder.cause.setText(xunjian.getCause());
+            holder.cause.setText(xunjian.getCause());
         }else {
-            xjViewHolder.cause.setVisibility(View.GONE);
+            holder.cause.setVisibility(View.GONE);
         }
     }
 

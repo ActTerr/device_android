@@ -53,7 +53,6 @@ public class fragRecord extends BaseFragment {
         public void handleMessage(Message msg) {
             super.handleMessage(msg);
            if (msg.what==1){
-               L.e("TAG","执行download");
                Download(ACTION_DOWNLOAD);
 
            }else {
@@ -166,17 +165,13 @@ public class fragRecord extends BaseFragment {
         @Override
         public int compare(Weixiu o1, Weixiu o2) {
             if (!isDesc){
-                if (o1.getXjDate()==null||o2.getXjDate()==null){
-                    return -1;
-                }
-                return (int) (o2.getXjDate().getTime()-o1.getXjDate().getTime());
+
+                    return (int) (o2.getXjDate().getTime()-o1.getXjDate().getTime());
             }else {
-                if (o1.getXjDate()==null||o2.getXjDate()==null){
-                    return -1;
+
+                    return (int) (o1.getXjDate().getTime()-o2.getXjDate().getTime());
                 }
-                return (int) (o1.getXjDate().getTime()-o2.getXjDate().getTime());
             }
-        }
     }
     
     class MyXunjianComParator implements Comparator<Xunjian>{
@@ -195,22 +190,44 @@ public class fragRecord extends BaseFragment {
         }
     }
     private void setListSort() {
+        L.e(TAG,"execute sort");
         if (isWeixiu){
-            Collections.sort(wxList,new MyWxComparator());
             ArrayList<Weixiu> list=new ArrayList<Weixiu>();
-            Iterator<Weixiu> it=wxList.iterator();
-            while (it.hasNext()){
-                list.add(it.next());
+            ArrayList<Weixiu> list2=new ArrayList<>();
+            for (Weixiu w:wxList){
+                if (w.getXjDate()!=null){
+                    list.add(w);
+                }else {
+                    L.e(TAG,"null:"+w.toString());
+                    list2.add(w);
+                }
             }
-            weixiuAdapter.initwData(list);
+            ArrayList<Weixiu> change=new ArrayList<>();
+            Collections.sort(list,new MyWxComparator());
+            Iterator<Weixiu> it=list.iterator();
+            while (it.hasNext()){
+                Weixiu w=it.next();
+                change.add(w);
+            }
+            if (isDesc){
+                weixiuAdapter.changeData(change);
+                weixiuAdapter.addwData(list2);
+                weixiuAdapter.refresh();
+            }else {
+                weixiuAdapter.changeData(list2);
+                weixiuAdapter.addwData(change);
+                weixiuAdapter.refresh();
+            }
+            L.e(TAG,"itemcount:"+weixiuAdapter.getItemCount()+"listsize:"+list.size());
         }else {
+            L.e(TAG,"xunjianSize:"+xunjianList.size());
             Collections.sort(xunjianList,new MyXunjianComParator());
             ArrayList<Xunjian> list=new ArrayList<>();
             Iterator<Xunjian> it=xunjianList.iterator();
             while ((it.hasNext())){
                 list.add(it.next());
             }
-            xunjianAdapter.initxData(list);
+            xunjianAdapter.changeData(list);
         }
 
     }
@@ -311,6 +328,7 @@ public class fragRecord extends BaseFragment {
 //                            srl.setRefreshing(false);
                             tvRefresh.setText("刷新失败");
                             isMore = false;
+
                             delayToInvisible();
                         }
                     }
@@ -318,26 +336,19 @@ public class fragRecord extends BaseFragment {
                     @Override
                     public void onNext(Xunjian[] result) {
 //                        srl.setRefreshing(false);
-                        L.e("TAG", "xunjianl:" + result.length);
                         xunjianAdapter = (xunjianAdapter) adapter;
                         ArrayList<Xunjian> xunjianLists = ConvertUtils.array2List(result);
                         L.e("TAG", "down size:" + xunjianLists.size());
                         if (xunjianLists.size() < 10) {
                             isMore = false;
-                            L.e("TAG", "ismore为false");
                         }
                         if (Action == ACTION_ADD) {
-
-                            xunjianAdapter.addxData(xunjianLists);
                             xunjianList.addAll(xunjianLists);
                         } else {
-                            xunjianAdapter.initxData(xunjianLists);
-                            synchronized (xunjianList) {
                                 if (xunjianList != null) {
                                     xunjianList.clear();
                                 }
                                 xunjianList.addAll(xunjianLists);
-                            }
                             isMore = true;
 
                         }
@@ -366,6 +377,8 @@ public class fragRecord extends BaseFragment {
                     public void onError(Throwable e) {
                         if (ExceptionFilter.filter(context, e)) {
 //                            srl.setRefreshing(false);
+                            isMore=false;
+                            weixiuAdapter.setLast(true);
                             tvRefresh.setText("刷新失败");
                             delayToInvisible();
                         }
@@ -373,26 +386,21 @@ public class fragRecord extends BaseFragment {
                     @Override
                     public void onNext(Weixiu[] result) {
 //                        srl.setRefreshing(false);
-                        L.e("TAG", "weixiul:" + result.length);
                         weixiuAdapter= (weixiuAdapter) adapter;
                         ArrayList<Weixiu> weixius = ConvertUtils.array2List(result);
                         L.e("TAG", "down size:" + weixius.size());
                         if (weixius.size() < 10) {
                             isMore = false;
-                            L.e("TAG", "ismore为false");
+                            weixiuAdapter.setLast(true);
                         }
                         if (Action == ACTION_ADD) {
-                            weixiuAdapter.addwData(weixius);
                             wxList.addAll(weixius);
 
                         } else {
-                            weixiuAdapter.initwData(weixius);
-                            synchronized (wxList) {
                                 if (wxList != null) {
                                     wxList.clear();
                                 }
                                 wxList.addAll(weixius);
-                            }
                             isMore = true;
                         }
                         setListSort();
@@ -415,6 +423,10 @@ public class fragRecord extends BaseFragment {
         }).start();
     }
 
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+    }
 
     @OnClick(R.id.goTop)
     public void onClick() {
