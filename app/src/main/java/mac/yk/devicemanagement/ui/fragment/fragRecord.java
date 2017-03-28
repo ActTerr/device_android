@@ -46,14 +46,14 @@ import rx.schedulers.Schedulers;
  */
 
 public class fragRecord extends BaseFragment {
-
+    
     boolean isDesc=true;
     Handler handler=new Handler(){
         @Override
         public void handleMessage(Message msg) {
             super.handleMessage(msg);
            if (msg.what==1){
-               L.e("main","执行download");
+               L.e("TAG","执行download");
                Download(ACTION_DOWNLOAD);
 
            }else {
@@ -62,13 +62,14 @@ public class fragRecord extends BaseFragment {
            }
         }
     };
+    final static String TAG="fragRecord";
     final static int ACTION_ADD=1;
     final static int ACTION_DOWNLOAD=2;
    String id;
    Context context;
     int page=1;
     RecyclerView.Adapter adapter;
-    LinearLayoutManager llm;
+
     boolean isMore=true;
     @BindView(R.id.tvRefresh)
     TextView tvRefresh;
@@ -79,17 +80,19 @@ public class fragRecord extends BaseFragment {
     Button goTop;
 //    @BindView(R.id.srl)
 //    SwipeRefreshLayout srl;
-    ArrayList<Weixiu> wxList;
-    ArrayList<Xunjian> xunjianList;
+    ArrayList<Weixiu> wxList=new ArrayList<>();
+    ArrayList<Xunjian> xunjianList=new ArrayList<>();
     boolean isWeixiu;
     xunjianAdapter xunjianAdapter;
     weixiuAdapter weixiuAdapter;
+    LinearLayoutManager llm;
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.frag_currency, container, false);
         ButterKnife.bind(this, view);
-        L.e("main","frag解析完布局");
+       llm=new LinearLayoutManager(context);
+        L.e("TAG","frag解析完布局"+page);
         init();
         setHasOptionsMenu(true);
         return view;
@@ -97,23 +100,15 @@ public class fragRecord extends BaseFragment {
 
     private void init() {
         context= getContext();
-        wxList=new ArrayList<>();
-        xunjianList=new ArrayList<>();
         id=getArguments().getString("id");
         if (id==null){
             Activity a= (Activity) context;
             MFGT.finish(a);
         }
         isWeixiu=getArguments().getBoolean("flag");
-        llm=new LinearLayoutManager(context);
-        L.e("main","是否维修:"+isWeixiu);
-        if (isWeixiu){
-            getActivity().setTitle("维修记录");
-            adapter=new weixiuAdapter(context);
-        }else {
-            getActivity().setTitle("巡检记录");
-            adapter=new xunjianAdapter(context);
-        }
+
+        L.e("TAG","是否维修:"+isWeixiu);
+
 
 //        srl.setColorSchemeColors(
 //                getResources().getColor(R.color.google_blue),
@@ -121,10 +116,21 @@ public class fragRecord extends BaseFragment {
 //                getResources().getColor(R.color.google_red),
 //                getResources().getColor(R.color.google_yellow)
 //        );
+
+        if (page==1){
+            if (isWeixiu&&wxList.size()==0){
+                Download(ACTION_DOWNLOAD);
+                getActivity().setTitle("维修记录");
+                adapter=new weixiuAdapter(context);
+            }else if (!isWeixiu&&xunjianList.size()==0){
+                Download(ACTION_DOWNLOAD);
+                getActivity().setTitle("巡检记录");
+                adapter=new xunjianAdapter(context);
+            }
+        }
         rv.setAdapter(adapter);
         rv.setLayoutManager(llm);
         rv.setHasFixedSize(true);
-        Download(ACTION_DOWNLOAD);
         setListener();
     }
     MenuItem itemRecent;
@@ -152,17 +158,16 @@ public class fragRecord extends BaseFragment {
     }
 
     class MyWxComparator implements Comparator<Weixiu> {
-        boolean desc;
 
-        public MyWxComparator(boolean desc) {
-            this.desc = desc;
+        public MyWxComparator() {
+
         }
     
         @Override
         public int compare(Weixiu o1, Weixiu o2) {
-            if (desc){
+            if (!isDesc){
                 if (o1.getXjDate()==null||o2.getXjDate()==null){
-                    return 1;
+                    return -1;
                 }
                 return (int) (o2.getXjDate().getTime()-o1.getXjDate().getTime());
             }else {
@@ -175,15 +180,14 @@ public class fragRecord extends BaseFragment {
     }
     
     class MyXunjianComParator implements Comparator<Xunjian>{
-        boolean desc;
 
-        public MyXunjianComParator(boolean desc) {
-            this.desc = desc;
+        public MyXunjianComParator() {
+
         }
 
         @Override
         public int compare(Xunjian o1, Xunjian o2) {
-            if (!desc){
+            if (!isDesc){
                 return (int) (o2.getXjDate().getTime()-o1.getXjDate().getTime());
             }else {
                 return (int) (o1.getXjDate().getTime()-o2.getXjDate().getTime());
@@ -192,7 +196,7 @@ public class fragRecord extends BaseFragment {
     }
     private void setListSort() {
         if (isWeixiu){
-            Collections.sort(wxList,new MyWxComparator(isDesc));
+            Collections.sort(wxList,new MyWxComparator());
             ArrayList<Weixiu> list=new ArrayList<Weixiu>();
             Iterator<Weixiu> it=wxList.iterator();
             while (it.hasNext()){
@@ -200,7 +204,7 @@ public class fragRecord extends BaseFragment {
             }
             weixiuAdapter.initwData(list);
         }else {
-            Collections.sort(xunjianList,new MyXunjianComParator(isDesc));
+            Collections.sort(xunjianList,new MyXunjianComParator());
             ArrayList<Xunjian> list=new ArrayList<>();
             Iterator<Xunjian> it=xunjianList.iterator();
             while ((it.hasNext())){
@@ -227,9 +231,9 @@ public class fragRecord extends BaseFragment {
                     page++;
                     Download(ACTION_ADD);
 
-                    L.e("main","执行ADD");
+                    L.e("TAG","执行ADD");
                 }else {
-                    L.e("main","没有更多数据");
+                    L.e("TAG","没有更多数据");
                 }
             }
 
@@ -314,13 +318,13 @@ public class fragRecord extends BaseFragment {
                     @Override
                     public void onNext(Xunjian[] result) {
 //                        srl.setRefreshing(false);
-                        L.e("main", "xunjianl:" + result.length);
+                        L.e("TAG", "xunjianl:" + result.length);
                         xunjianAdapter = (xunjianAdapter) adapter;
                         ArrayList<Xunjian> xunjianLists = ConvertUtils.array2List(result);
-                        L.e("main", "down size:" + xunjianLists.size());
+                        L.e("TAG", "down size:" + xunjianLists.size());
                         if (xunjianLists.size() < 10) {
                             isMore = false;
-                            L.e("main", "ismore为false");
+                            L.e("TAG", "ismore为false");
                         }
                         if (Action == ACTION_ADD) {
 
@@ -369,13 +373,13 @@ public class fragRecord extends BaseFragment {
                     @Override
                     public void onNext(Weixiu[] result) {
 //                        srl.setRefreshing(false);
-                        L.e("main", "weixiul:" + result.length);
+                        L.e("TAG", "weixiul:" + result.length);
                         weixiuAdapter= (weixiuAdapter) adapter;
                         ArrayList<Weixiu> weixius = ConvertUtils.array2List(result);
-                        L.e("main", "down size:" + weixius.size());
+                        L.e("TAG", "down size:" + weixius.size());
                         if (weixius.size() < 10) {
                             isMore = false;
-                            L.e("main", "ismore为false");
+                            L.e("TAG", "ismore为false");
                         }
                         if (Action == ACTION_ADD) {
                             weixiuAdapter.addwData(weixius);

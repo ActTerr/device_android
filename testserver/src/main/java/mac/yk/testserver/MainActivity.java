@@ -1,6 +1,9 @@
 package mac.yk.testserver;
 
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
+import android.os.Message;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
@@ -21,11 +24,20 @@ import rx.schedulers.Schedulers;
 public class MainActivity extends AppCompatActivity {
     IModel model;
     protected Subscription subscription;
+    Handler handler;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
+        Looper.prepare();
+        Looper.loop();
+        handler=new Handler(new Handler.Callback() {
+            @Override
+            public boolean handleMessage(Message msg) {
+                return false;
+            }
+        });
     }
 
     @OnClick({R.id.tongji, R.id.chaxun, R.id.control, R.id.save, R.id.down, R.id.xunjian, R.id.xiujun, R.id.baofei})
@@ -64,6 +76,21 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    private void test(){
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                 handler.sendEmptyMessage(1);
+                handler.sendMessage(new Message());
+                Message.obtain(handler, new Runnable() {
+                    @Override
+                    public void run() {
+
+                    }
+                });
+            }
+        });
+    }
     @Override
     protected void onDestroy() {
         super.onDestroy();
