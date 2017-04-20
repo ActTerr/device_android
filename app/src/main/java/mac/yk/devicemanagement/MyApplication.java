@@ -3,7 +3,6 @@ package mac.yk.devicemanagement;
 import android.app.Activity;
 import android.app.Application;
 
-import com.squareup.leakcanary.LeakCanary;
 import com.squareup.leakcanary.RefWatcher;
 
 import java.util.ArrayList;
@@ -25,8 +24,8 @@ public class MyApplication extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
-        refWatcher= LeakCanary.install(this);
-//        CrashHandler.getInstance().init(application);
+//        refWatcher= LeakCanary.install(this);
+//        CrashHandler.getInstance().init(getApplicationContext());
     }
 
     public static Device getDevice() {

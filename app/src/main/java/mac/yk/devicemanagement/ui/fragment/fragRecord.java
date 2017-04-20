@@ -1,6 +1,7 @@
 package mac.yk.devicemanagement.ui.fragment;
 
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.os.Bundle;
 import android.os.Handler;
@@ -85,12 +86,14 @@ public class fragRecord extends BaseFragment {
     xunjianAdapter xunjianAdapter;
     weixiuAdapter weixiuAdapter;
     LinearLayoutManager llm;
+    ProgressDialog pd;
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.frag_currency, container, false);
         ButterKnife.bind(this, view);
-       llm=new LinearLayoutManager(context);
+        context= getContext();
+        llm=new LinearLayoutManager(context);
         L.e("TAG","frag解析完布局"+page);
         init();
         setHasOptionsMenu(true);
@@ -98,7 +101,7 @@ public class fragRecord extends BaseFragment {
     }
 
     private void init() {
-        context= getContext();
+        pd=new ProgressDialog(context);
         id=getArguments().getString("id");
         if (id==null){
             Activity a= (Activity) context;
@@ -310,6 +313,7 @@ public class fragRecord extends BaseFragment {
 //    }
 
     private void downloadxunjian(final int Action) {
+        pd.show();
         ApiWrapper<ServerAPI> wrapper = new ApiWrapper<>();
         subscription = wrapper.targetClass(ServerAPI.class).getAPI()
                 .downloadXunJian(id, page, 10)
@@ -324,6 +328,7 @@ public class fragRecord extends BaseFragment {
 
                     @Override
                     public void onError(Throwable e) {
+                        pd.dismiss();
                         if (ExceptionFilter.filter(context, e)) {
 //                            srl.setRefreshing(false);
                             tvRefresh.setText("刷新失败");
@@ -336,6 +341,7 @@ public class fragRecord extends BaseFragment {
                     @Override
                     public void onNext(Xunjian[] result) {
 //                        srl.setRefreshing(false);
+                        pd.dismiss();
                         xunjianAdapter = (xunjianAdapter) adapter;
                         ArrayList<Xunjian> xunjianLists = ConvertUtils.array2List(result);
                         L.e("TAG", "down size:" + xunjianLists.size());
@@ -362,6 +368,7 @@ public class fragRecord extends BaseFragment {
 
 
     private void downloadweixiu(final int Action) {
+        pd.show();
         ApiWrapper<ServerAPI> wrapper = new ApiWrapper<>();
         subscription = wrapper.targetClass(ServerAPI.class).getAPI().downLoadWeixiu(id, page, 10)
                 .compose(wrapper.<Weixiu[]>applySchedulers())
@@ -375,6 +382,7 @@ public class fragRecord extends BaseFragment {
 
                     @Override
                     public void onError(Throwable e) {
+                        pd.dismiss();
                         if (ExceptionFilter.filter(context, e)) {
 //                            srl.setRefreshing(false);
                             isMore=false;
@@ -386,6 +394,7 @@ public class fragRecord extends BaseFragment {
                     @Override
                     public void onNext(Weixiu[] result) {
 //                        srl.setRefreshing(false);
+                        pd.dismiss();
                         weixiuAdapter= (weixiuAdapter) adapter;
                         ArrayList<Weixiu> weixius = ConvertUtils.array2List(result);
                         L.e("TAG", "down size:" + weixius.size());

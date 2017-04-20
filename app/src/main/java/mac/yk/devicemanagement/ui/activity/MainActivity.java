@@ -68,6 +68,10 @@ public class MainActivity extends BaseActivity {
     Context context;
     @BindView(R.id.netView)
     TextView mTv;
+
+    fragDevice fragDevice;
+    fragScrap fragScrap;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -75,18 +79,13 @@ public class MainActivity extends BaseActivity {
         View view = View.inflate(this, R.layout.dialog_yujing, null);
         ButterKnife.bind(this);
         boolean netConnect = this.isNetConnect();
-        if (netConnect){
+        if (netConnect) {
             mTv.setVisibility(View.GONE);
-        }else {
+        } else {
             mTv.setVisibility(View.VISIBLE);
         }
-        context = this;
-        builder = new AlertDialog.Builder(this);
-        progressDialog = new ProgressDialog(this);
-        setSupportActionBar(toolBar);
-        ActionBar ab = getSupportActionBar();
-        ab.setHomeAsUpIndicator(R.drawable.ic_menu);
-        ab.setDisplayHomeAsUpEnabled(true);
+        init();
+        initActionbar();
         dialogHolder = new DialogHolder(view);
         Adialog = builder.setTitle("预警信息")
                 .setView(view)
@@ -101,6 +100,21 @@ public class MainActivity extends BaseActivity {
         if (!SpUtil.getPrompt(this)) {
             getYujing();
         }
+    }
+
+    private void initActionbar() {
+        setSupportActionBar(toolBar);
+        ActionBar ab = getSupportActionBar();
+        ab.setHomeAsUpIndicator(R.drawable.ic_menu);
+        ab.setDisplayHomeAsUpEnabled(true);
+    }
+
+    private void init() {
+        fragDevice = new fragDevice();
+        fragScrap=new fragScrap();
+        context = this;
+        builder = new AlertDialog.Builder(this);
+        progressDialog = new ProgressDialog(this);
     }
 
     private void setNavView() {
@@ -124,6 +138,7 @@ public class MainActivity extends BaseActivity {
 
     /**
      * 设置actionBar的menu
+     *
      * @param item
      * @return
      */
@@ -132,7 +147,7 @@ public class MainActivity extends BaseActivity {
         switch (item.getItemId()) {
             case android.R.id.home:
                 drawLayout.openDrawer(GravityCompat.START);
-                return true;
+                break;
             case R.id.action_capture:
                 scan(I.CONTROL.START);
                 break;
@@ -149,8 +164,8 @@ public class MainActivity extends BaseActivity {
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.menu_name, menu);
         try {
-            Class c=Class.forName("android.view.Menu");
-            Field field=c.getField("size");
+            Class c = Class.forName("android.view.Menu");
+            Field field = c.getField("size");
         } catch (ClassNotFoundException e) {
             e.printStackTrace();
         } catch (NoSuchFieldException e) {
@@ -159,25 +174,9 @@ public class MainActivity extends BaseActivity {
         return true;
     }
 
-//    @Override
-//    public boolean onMenuOpened(int featureId, Menu menu) {
-//        if (featureId == Window.FEATURE_ACTION_BAR && menu != null) {
-//            if (menu.getClass().getSimpleName().equals("MenuBuilder")) {
-//                try {
-//                    Method m = menu.getClass().getDeclaredMethod(
-//                            "setOptionalIconsVisible", Boolean.TYPE);
-//                    m.setAccessible(true);
-//                    m.invoke(menu, true);
-//                } catch (Exception e) {
-//                    Log.d("OverflowIconVisible", e.getMessage());
-//                }
-//            }
-//        }
-//        return super.onMenuOpened(featureId, menu);
-//    }
-
     /**
      * 设置navView的监听
+     *
      * @param navView
      */
     private void setUpNavView(NavigationView navView) {
@@ -189,10 +188,11 @@ public class MainActivity extends BaseActivity {
                         getYujing();
                         break;
                     case R.id.tongji:
-                        ActivityUtils.changeFragment(getSupportFragmentManager(), new fragDevice(), R.id.frame);
+
+                        ActivityUtils.changeFragment(getSupportFragmentManager(), fragDevice, R.id.frame);
                         break;
                     case R.id.bf_tongji:
-                        ActivityUtils.changeFragment(getSupportFragmentManager(), new fragScrap(), R.id.frame);
+                        ActivityUtils.changeFragment(getSupportFragmentManager(), fragScrap, R.id.frame);
                         break;
                 }
                 item.setChecked(true);
@@ -201,7 +201,8 @@ public class MainActivity extends BaseActivity {
             }
         });
     }
-    Observer<Device> obChaxun=new Observer<Device>() {
+
+    Observer<Device> obChaxun = new Observer<Device>() {
         @Override
         public void onCompleted() {
 
@@ -210,7 +211,7 @@ public class MainActivity extends BaseActivity {
         @Override
         public void onError(Throwable e) {
             progressDialog.dismiss();
-            if (ExceptionFilter.filter(context,e)){
+            if (ExceptionFilter.filter(context, e)) {
                 L.e("main", "gotoSave");
                 MFGT.gotoSaveActivity(MainActivity.this, id);
             }
@@ -218,8 +219,8 @@ public class MainActivity extends BaseActivity {
 
         @Override
         public void onNext(Device device) {
-          progressDialog.dismiss();
-            L.e("main",device.toString());
+            progressDialog.dismiss();
+            L.e("main", device.toString());
             MFGT.gotoDetailActivity(MainActivity.this, device);
             MFGT.finish((Activity) context);
         }
@@ -234,8 +235,8 @@ public class MainActivity extends BaseActivity {
             if (bundle != null) {
                 id = (bundle.getString("result"));
                 L.e("main", id + "");
-                ApiWrapper<ServerAPI> network=new ApiWrapper<>();
-                subscription=network.targetClass(ServerAPI.class).
+                ApiWrapper<ServerAPI> network = new ApiWrapper<>();
+                subscription = network.targetClass(ServerAPI.class).
                         getAPI().chaxun(id)
                         .subscribeOn(Schedulers.io())
                         .observeOn(AndroidSchedulers.mainThread())
@@ -254,8 +255,8 @@ public class MainActivity extends BaseActivity {
         @Override
         public void onError(Throwable e) {
             progressDialog.dismiss();
-            if ( ExceptionFilter.filter(context,e)){
-                ToastUtil.showToast(context,"服务器没有响应");
+            if (ExceptionFilter.filter(context, e)) {
+                ToastUtil.showToast(context, "服务器没有响应");
             }
         }
 
@@ -271,7 +272,7 @@ public class MainActivity extends BaseActivity {
     private void getYujing() {
         progressDialog.show();
         ApiWrapper<ServerAPI> network = new ApiWrapper<>();
-        subscription=network.targetClass(ServerAPI.class).
+        subscription = network.targetClass(ServerAPI.class).
                 getAPI().getyujing()
                 .compose(network.<String>applySchedulers())
                 .subscribeOn(Schedulers.io())
@@ -300,30 +301,32 @@ public class MainActivity extends BaseActivity {
 
     /**
      * 两次back键退出应用
-      */
+     */
 
-    private long FirstTime=0;
+    private long FirstTime = 0;
+
     @Override
     public boolean onKeyUp(int keyCode, KeyEvent event) {
-        switch (keyCode){
+        switch (keyCode) {
             case KeyEvent.KEYCODE_BACK:
-                long SecondTime=System.currentTimeMillis();
-                if (SecondTime-FirstTime>2000){
-                    ToastUtil.showToast(context,"再按一次退出应用");
-                    FirstTime=SecondTime;
+                long SecondTime = System.currentTimeMillis();
+                if (SecondTime - FirstTime > 2000) {
+                    ToastUtil.showToast(context, "再按一次退出应用");
+                    FirstTime = SecondTime;
                     return true;
-                }else {
+                } else {
                     System.exit(0);
                 }
                 break;
         }
         return super.onKeyUp(keyCode, event);
     }
+
     @Override
     public boolean onMenuOpened(int featureId, Menu menu) {
         if (featureId == 108
 //                Window.FEATURE_ACTION_BAR
-                && menu !=null) {
+                && menu != null) {
             if (menu.getClass().getSimpleName().equals("MenuBuilder")) {
                 try {
                     Method m = menu.getClass().getDeclaredMethod("setOptionalIconsVisible", Boolean.TYPE);
@@ -335,7 +338,6 @@ public class MainActivity extends BaseActivity {
         }
         return super.onMenuOpened(featureId, menu);
     }
-
 
 
 }

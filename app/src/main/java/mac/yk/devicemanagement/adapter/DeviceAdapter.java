@@ -72,7 +72,9 @@ public class DeviceAdapter extends RecyclerView.Adapter {
         }
     }
 
-
+    public void refresh(){
+        notifyDataSetChanged();
+    }
     class DeviceHolder extends RecyclerView.ViewHolder {
         @BindView(R.id.Did)
         TextView Did;

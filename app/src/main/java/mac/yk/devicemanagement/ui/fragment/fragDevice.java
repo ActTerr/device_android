@@ -205,6 +205,8 @@ public class fragDevice extends BaseFragment {
                         if (ExceptionFilter.filter(context, e)) {
                             isMore = false;
                             ToastUtil.showNoMore(context);
+                            deviceAdapter.clear();
+                            deviceAdapter.refresh();
                         }
                     }
 

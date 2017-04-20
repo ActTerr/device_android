@@ -237,6 +237,9 @@ public class fragScrap extends BaseFragment {
                 show=false;
             }
         }
+        if (item.getItemId()==R.id.action_capture){
+            return true;
+        }
         page=pages.get(selected);
         isMore=mores.get(selected);
         if (page==1&&isMore){

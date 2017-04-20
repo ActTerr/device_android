@@ -119,8 +119,6 @@ public class weixiuAdapter extends RecyclerView.Adapter<weixiuAdapter.WxViewHold
 
         @BindView(R.id.translate)
         TextView translate;
-        @BindView(R.id.position)
-        TextView position;
 
         public WxViewHolder(View itemView) {
             super(itemView);
