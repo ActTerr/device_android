@@ -10,5 +10,5 @@
     <item android:id="@+id/yujing"
         android:icon="@drawable/yujing"
         android:title="预警信息"/>
-
+    
 </menu>

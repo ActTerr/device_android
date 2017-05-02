@@ -75,4 +75,5 @@ public class MyApplication extends Application {
     public static ArrayList<Activity> getActivities() {
         return activities;
     }
+
 }

@@ -36,6 +36,7 @@ import mac.yk.devicemanagement.R;
 import mac.yk.devicemanagement.bean.Device;
 import mac.yk.devicemanagement.net.ApiWrapper;
 import mac.yk.devicemanagement.net.ServerAPI;
+import mac.yk.devicemanagement.ui.fragment.fragCount;
 import mac.yk.devicemanagement.ui.fragment.fragDevice;
 import mac.yk.devicemanagement.ui.fragment.fragMain;
 import mac.yk.devicemanagement.ui.fragment.fragScrap;
@@ -71,7 +72,7 @@ public class MainActivity extends BaseActivity {
 
     fragDevice fragDevice;
     fragScrap fragScrap;
-
+    fragCount fragCount;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -112,6 +113,7 @@ public class MainActivity extends BaseActivity {
     private void init() {
         fragDevice = new fragDevice();
         fragScrap=new fragScrap();
+        fragCount=new fragCount();
         context = this;
         builder = new AlertDialog.Builder(this);
         progressDialog = new ProgressDialog(this);
@@ -189,7 +191,7 @@ public class MainActivity extends BaseActivity {
                         break;
                     case R.id.tongji:
 
-                        ActivityUtils.changeFragment(getSupportFragmentManager(), fragDevice, R.id.frame);
+                        ActivityUtils.changeFragment(getSupportFragmentManager(), fragCount, R.id.frame);
                         break;
                     case R.id.bf_tongji:
                         ActivityUtils.changeFragment(getSupportFragmentManager(), fragScrap, R.id.frame);
