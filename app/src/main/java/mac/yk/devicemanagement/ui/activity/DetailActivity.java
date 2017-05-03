@@ -27,7 +27,7 @@ import butterknife.OnClick;
 import mac.yk.devicemanagement.I;
 import mac.yk.devicemanagement.MyApplication;
 import mac.yk.devicemanagement.R;
-import mac.yk.devicemanagement.bean.Device;
+import mac.yk.devicemanagement.bean.DeviceOld;
 import mac.yk.devicemanagement.net.ApiWrapper;
 import mac.yk.devicemanagement.net.ServerAPI;
 import mac.yk.devicemanagement.ui.fragment.fragDetail;
@@ -44,7 +44,7 @@ import rx.schedulers.Schedulers;
 
 public class DetailActivity extends BaseActivity {
     ProgressDialog progressDialog;
-    Device device;
+    DeviceOld deviceOld;
     Activity context;
     boolean isDianchi = false;
     fragDetail fragD;
@@ -75,18 +75,18 @@ public class DetailActivity extends BaseActivity {
         context = this;
         progressDialog = new ProgressDialog(context);
         dialog = new Dialog(context);
-        device = (Device) getIntent().getSerializableExtra("device");
-        MyApplication.setDevice(device);
-        L.e("main", "detail:" + device.toString());
-        if (device == null) {
+        deviceOld = (DeviceOld) getIntent().getSerializableExtra("deviceOld");
+        MyApplication.setDeviceOld(deviceOld);
+        L.e("main", "detail:" + deviceOld.toString());
+        if (deviceOld == null) {
             MFGT.finish(context);
         } else {
-            id = String.valueOf(device.getDid());
-            if (device.getDname() == I.DNAME.DIANCHI) {
+            id = String.valueOf(deviceOld.getDid());
+            if (deviceOld.getDname() == I.DNAME.DIANCHI) {
                 isDianchi = true;
                 MyApplication.setFlag(true);
             }
-            if (device.getStatus() == I.CONTROL.BAOFEI) {
+            if (deviceOld.getStatus() == I.CONTROL.BAOFEI) {
                 isBaofei = true;
             }
         }
@@ -126,7 +126,7 @@ public class DetailActivity extends BaseActivity {
 //    private void setArguments() {
 //        setArguments();
 //        Bundle bundle = new Bundle();
-//        bundle.putSerializable("device", device);
+//        bundle.putSerializable("deviceOld", deviceOld);
 //        fragD.setArguments(bundle);
 //    }
 
@@ -151,7 +151,7 @@ public class DetailActivity extends BaseActivity {
                         postXiujun();
                         break;
                     case R.id.record:
-                        MFGT.gotoRecordActivity(context, device);
+                        MFGT.gotoRecordActivity(context, deviceOld);
                         MFGT.finish(context);
                         break;
                     case R.id.baofei:
@@ -191,7 +191,7 @@ public class DetailActivity extends BaseActivity {
                     @Override
                     public void onNext(Integer integer) {
                         progressDialog.dismiss();
-                        device.setStatus(integer);
+                        deviceOld.setStatus(integer);
                         ToastUtil.showControlSuccess(context);
                     }
                 });
@@ -232,7 +232,7 @@ public class DetailActivity extends BaseActivity {
             progressDialog.show();
             ApiWrapper<ServerAPI> wrapper = new ApiWrapper<>();
             subscription = wrapper.targetClass(ServerAPI.class).getAPI().baofei(MyApplication.getInstance().getUserName()
-                    , String.valueOf(device.getDname()), id, remark.getText().toString())
+                    , String.valueOf(deviceOld.getDname()), id, remark.getText().toString())
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
                     .compose(wrapper.<Integer>applySchedulers())
@@ -253,7 +253,7 @@ public class DetailActivity extends BaseActivity {
                         @Override
                         public void onNext(Integer integer) {
                             progressDialog.dismiss();
-                            device.setStatus(integer);
+                            deviceOld.setStatus(integer);
                             ToastUtil.showControlSuccess(context);
                         }
                     });
@@ -294,7 +294,7 @@ public class DetailActivity extends BaseActivity {
         @Override
         public void onNext(Integer integer) {
             progressDialog.dismiss();
-            device.setStatus(integer);
+            deviceOld.setStatus(integer);
             ToastUtil.showControlSuccess(context);
         }
     };
@@ -452,7 +452,7 @@ public class DetailActivity extends BaseActivity {
                     @Override
                     public void onNext(Integer integer) {
                         progressDialog.dismiss();
-                        device.setStatus(integer);
+                        deviceOld.setStatus(integer);
                         ToastUtil.showControlSuccess(context);
                     }
                 });
@@ -493,7 +493,7 @@ public class DetailActivity extends BaseActivity {
                     @Override
                     public void onNext(Integer integer) {
                         progressDialog.dismiss();
-                        device.setStatus(integer);
+                        deviceOld.setStatus(integer);
                         ToastUtil.showControlSuccess(context);
                     }
                 });

@@ -112,7 +112,7 @@ public class loodView extends FrameLayout {
     }
     private void initCount() {
         ApiWrapper<ServerAPI> wrapper = new ApiWrapper<>();
-        subscription = wrapper.targetClass(ServerAPI.class).getAPI().getCount(MyApplication.getDevice().getDname(), I.PIC.DEVICE)
+        subscription = wrapper.targetClass(ServerAPI.class).getAPI().getCount(MyApplication.getDeviceOld().getDname(), I.PIC.DEVICE)
                 .compose(wrapper.<Integer>applySchedulers())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(AndroidSchedulers.mainThread())
@@ -181,7 +181,7 @@ public class loodView extends FrameLayout {
 
             L.e(TAG,"pinjie");
             String imagesUrl = I.REQUEST.SERVER_ROOT + I.REQUEST.PATH + "?request=" + I.REQUEST.DOWNPIC + "&" + I.DEVICE.DNAME + "=" +
-                    MyApplication.getDevice().getDname() + "&" + I.PIC.PID + "=" + i + "&" + I.PIC.TYPE + "=" + I.PIC.DEVICE;
+                    MyApplication.getDeviceOld().getDname() + "&" + I.PIC.PID + "=" + i + "&" + I.PIC.TYPE + "=" + I.PIC.DEVICE;
             L.e("TAG", imagesUrl);
             Uri uri = Uri.parse(imagesUrl);
             //facebook的View控件

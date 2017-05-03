@@ -7,7 +7,7 @@ import com.squareup.leakcanary.RefWatcher;
 
 import java.util.ArrayList;
 
-import mac.yk.devicemanagement.bean.Device;
+import mac.yk.devicemanagement.bean.DeviceOld;
 
 /**
  * Created by mac-yk on 2017/3/1.
@@ -28,20 +28,20 @@ public class MyApplication extends Application {
 //        CrashHandler.getInstance().init(getApplicationContext());
     }
 
-    public static Device getDevice() {
-        return device;
+    public static DeviceOld getDeviceOld() {
+        return deviceOld;
     }
 
-    public static void setDevice(Device device) {
-        MyApplication.device = device;
+    public static void setDeviceOld(DeviceOld deviceOld) {
+        MyApplication.deviceOld = deviceOld;
     }
 
-    private static Device device=new Device();
+    private static DeviceOld deviceOld =new DeviceOld();
 //    static ArrayList<Observer> observers;
 //    public static void addObserver(Fragment fragment){
 //        Observer observer= (Observer) fragment;
 //        observers.add(observer);
-//        device.addObserver(observer);
+//        deviceOld.addObserver(observer);
 //    }
 
 

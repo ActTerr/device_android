@@ -19,7 +19,7 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import mac.yk.devicemanagement.MyApplication;
 import mac.yk.devicemanagement.R;
-import mac.yk.devicemanagement.bean.Device;
+import mac.yk.devicemanagement.bean.DeviceOld;
 import mac.yk.devicemanagement.net.ApiWrapper;
 import mac.yk.devicemanagement.net.ServerAPI;
 import mac.yk.devicemanagement.util.ConvertUtils;
@@ -78,7 +78,7 @@ public class SaveActivity extends BaseActivity implements View.OnClickListener {
     }
 
     public void onSave(View view) {
-        final Device device = new Device(Integer.parseInt(id),
+        final DeviceOld deviceOld = new DeviceOld(Integer.parseInt(id),
                 ConvertUtils.getDname(name.getText().toString()),
                 ConvertUtils.getStatus(status.getText().toString()),
                 ConvertUtils.String2Date(chuchang.getText().toString()),
@@ -89,7 +89,7 @@ public class SaveActivity extends BaseActivity implements View.OnClickListener {
 
         ApiWrapper<ServerAPI> wrapper=new ApiWrapper<>();
         subscription=wrapper.targetClass(ServerAPI.class).getAPI().
-                saveDevice(MyApplication.getInstance().getUserName(),ConvertUtils.getjson(device))
+                saveDevice(MyApplication.getInstance().getUserName(),ConvertUtils.getjson(deviceOld))
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .compose(wrapper.<String>applySchedulers())
@@ -112,8 +112,8 @@ public class SaveActivity extends BaseActivity implements View.OnClickListener {
                     public void onNext(String s) {
                         progressDialog.dismiss();
                         Toast.makeText(SaveActivity.this, "保存成功", Toast.LENGTH_SHORT).show();
-                        MFGT.gotoDetailActivity(SaveActivity.this, device);
-                        L.e("main", device.toString());
+                        MFGT.gotoDetailActivity(SaveActivity.this, deviceOld);
+                        L.e("main", deviceOld.toString());
                         MFGT.finish((Activity) context);
                     }
                 });

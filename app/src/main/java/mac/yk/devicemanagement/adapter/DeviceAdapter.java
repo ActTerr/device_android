@@ -12,7 +12,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import mac.yk.devicemanagement.I;
 import mac.yk.devicemanagement.R;
-import mac.yk.devicemanagement.bean.Device;
+import mac.yk.devicemanagement.bean.DeviceOld;
 import mac.yk.devicemanagement.util.ConvertUtils;
 import mac.yk.devicemanagement.util.L;
 
@@ -21,7 +21,7 @@ import mac.yk.devicemanagement.util.L;
  */
 
 public class DeviceAdapter extends RecyclerView.Adapter {
-    ArrayList<Device> devices = new ArrayList<>();
+    ArrayList<DeviceOld> deviceOlds = new ArrayList<>();
     Context context;
 
     public DeviceAdapter(Context context) {
@@ -35,40 +35,40 @@ public class DeviceAdapter extends RecyclerView.Adapter {
         return holder;
     }
 
-    public void addData(ArrayList<Device> list){
+    public void addData(ArrayList<DeviceOld> list){
         L.e("main","datper"+list.size());
-        devices.addAll(list);
+        deviceOlds.addAll(list);
         notifyDataSetChanged();
     }
 
-   public void changeData(ArrayList<Device> list){
-       if (devices!=null){
-           devices.clear();
+   public void changeData(ArrayList<DeviceOld> list){
+       if (deviceOlds !=null){
+           deviceOlds.clear();
        }
-       devices.addAll(list);
+       deviceOlds.addAll(list);
        notifyDataSetChanged();
    }
 
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
-        Device device=devices.get(position);
+        DeviceOld deviceOld = deviceOlds.get(position);
         DeviceHolder deviceHolder= (DeviceHolder) holder;
-        deviceHolder.Did.setText(device.getDid()+"");
-        deviceHolder.Dname.setText(ConvertUtils.getDname(device.getDname()));
-        deviceHolder.chuchangDate.setText(ConvertUtils.Date2String(device.getChuchang()));
-        deviceHolder.xunjianDate.setText(ConvertUtils.Date2String(device.getXunjian()));
-        boolean isDianchi=device.getDname()== I.DNAME.DIANCHI;
-        deviceHolder.status.setText(ConvertUtils.getStatus(isDianchi,device.getStatus()));
+        deviceHolder.Did.setText(deviceOld.getDid()+"");
+        deviceHolder.Dname.setText(ConvertUtils.getDname(deviceOld.getDname()));
+        deviceHolder.chuchangDate.setText(ConvertUtils.Date2String(deviceOld.getChuchang()));
+        deviceHolder.xunjianDate.setText(ConvertUtils.Date2String(deviceOld.getXunjian()));
+        boolean isDianchi= deviceOld.getDname()== I.DNAME.DIANCHI;
+        deviceHolder.status.setText(ConvertUtils.getStatus(isDianchi, deviceOld.getStatus()));
     }
 
     @Override
     public int getItemCount() {
-        return devices.size();
+        return deviceOlds.size();
     }
 
     public void clear() {
-        if (devices!=null){
-            devices.clear();
+        if (deviceOlds !=null){
+            deviceOlds.clear();
         }
     }
 

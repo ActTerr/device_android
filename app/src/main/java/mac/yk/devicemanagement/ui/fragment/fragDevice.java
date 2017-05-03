@@ -25,7 +25,7 @@ import butterknife.OnClick;
 import mac.yk.devicemanagement.I;
 import mac.yk.devicemanagement.R;
 import mac.yk.devicemanagement.adapter.DeviceAdapter;
-import mac.yk.devicemanagement.bean.Device;
+import mac.yk.devicemanagement.bean.DeviceOld;
 import mac.yk.devicemanagement.net.ApiWrapper;
 import mac.yk.devicemanagement.net.ServerAPI;
 import mac.yk.devicemanagement.util.ConvertUtils;
@@ -58,10 +58,10 @@ public class fragDevice extends BaseFragment {
     PopupWindow namePop,statusPop;
     View vName, vStatus;
     View view;
-    ArrayList<ArrayList<Device>> diantais = new ArrayList<>();
-    ArrayList<ArrayList<Device>> dianchis = new ArrayList<>();
-    ArrayList<ArrayList<Device>> jikongqis = new ArrayList<>();
-    ArrayList<ArrayList<Device>> qukongqis = new ArrayList<>();
+    ArrayList<ArrayList<DeviceOld>> diantais = new ArrayList<>();
+    ArrayList<ArrayList<DeviceOld>> dianchis = new ArrayList<>();
+    ArrayList<ArrayList<DeviceOld>> jikongqis = new ArrayList<>();
+    ArrayList<ArrayList<DeviceOld>> qukongqis = new ArrayList<>();
     ArrayList<ArrayList<Integer>> pages = new ArrayList<>();
     ArrayList<ArrayList<Boolean>> mores = new ArrayList<>();
     @BindView(R.id.Prompt)
@@ -95,10 +95,10 @@ public class fragDevice extends BaseFragment {
 
     private void initList() {
         for (int i=0;i<5;i++){
-            diantais.add(new ArrayList<Device>());
-            dianchis.add(new ArrayList<Device>());
-            jikongqis.add(new ArrayList<Device>());
-            qukongqis.add(new ArrayList<Device>());
+            diantais.add(new ArrayList<DeviceOld>());
+            dianchis.add(new ArrayList<DeviceOld>());
+            jikongqis.add(new ArrayList<DeviceOld>());
+            qukongqis.add(new ArrayList<DeviceOld>());
         }
     }
 
@@ -192,8 +192,8 @@ public class fragDevice extends BaseFragment {
         subscription = wrapper.targetClass(ServerAPI.class).getAPI().downDevice(page, 10, nameSelected, statusSelected)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .compose(wrapper.<Device[]>applySchedulers())
-                .subscribe(new Observer<Device[]>() {
+                .compose(wrapper.<DeviceOld[]>applySchedulers())
+                .subscribe(new Observer<DeviceOld[]>() {
                     @Override
                     public void onCompleted() {
 
@@ -211,9 +211,9 @@ public class fragDevice extends BaseFragment {
                     }
 
                     @Override
-                    public void onNext(Device[] devices) {
+                    public void onNext(DeviceOld[] deviceOlds) {
                         pd.dismiss();
-                        ArrayList<Device> list = ConvertUtils.array2List(devices);
+                        ArrayList<DeviceOld> list = ConvertUtils.array2List(deviceOlds);
                         L.e("TAG", "list" + list.size());
                         setDataChanged(list);
                         if (list.size() < 10) {
@@ -359,7 +359,7 @@ public class fragDevice extends BaseFragment {
         statusPop.showAtLocation(view, Gravity.TOP, 0, ConvertUtils.dp2px(context, 81));
     }
 
-    private void setDataChanged(ArrayList<Device> list) {
+    private void setDataChanged(ArrayList<DeviceOld> list) {
         if (list == null) {
             deviceAdapter.changeData(getNameList().get(statusSelected));
         } else {
@@ -368,7 +368,7 @@ public class fragDevice extends BaseFragment {
         }
     }
 
-    private ArrayList<ArrayList<Device>> getNameList() {
+    private ArrayList<ArrayList<DeviceOld>> getNameList() {
         switch (nameSelected) {
             case I.DNAME.DIANCHI:
 
@@ -389,12 +389,12 @@ public class fragDevice extends BaseFragment {
 //     * @param ischange
 //     * @param list
 //     */
-//    private void SetSelectedList(boolean ischange, ArrayList<Device> list) {
-//        ArrayList<Device> slist = new ArrayList<>();
+//    private void SetSelectedList(boolean ischange, ArrayList<DeviceOld> list) {
+//        ArrayList<DeviceOld> slist = new ArrayList<>();
 //        if (status == 0 && selected == 0) {
 //            slist.addAll(list);
 //        }else {
-//            for (Device d : mDevices) {
+//            for (DeviceOld d : mDevices) {
 //                if (selected == 0 && status == d.getStatus()) {
 //                    slist.add(d);
 //                } else if (status == 0 && selected == d.getDname()) {

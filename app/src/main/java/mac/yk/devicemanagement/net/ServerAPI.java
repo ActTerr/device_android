@@ -1,7 +1,7 @@
 package mac.yk.devicemanagement.net;
 
 import mac.yk.devicemanagement.I;
-import mac.yk.devicemanagement.bean.Device;
+import mac.yk.devicemanagement.bean.DeviceOld;
 import mac.yk.devicemanagement.bean.Result;
 import mac.yk.devicemanagement.bean.Scrap;
 import mac.yk.devicemanagement.bean.Weixiu;
@@ -26,7 +26,7 @@ public interface ServerAPI {
     Observable<Result<Integer[]>> getTongji(@Query(I.TABLENAME) String tableName);
 
     @GET(I.REQUEST.PATH+"?request="+I.REQUEST.CHAXUN)
-    Observable<Result<Device>> chaxun(@Query(I.DEVICE.DID) String Did);
+    Observable<Result<DeviceOld>> chaxun(@Query(I.DEVICE.DID) String Did);
 
     @GET(I.REQUEST.PATH+"?request="+I.REQUEST.SAVE)
     Observable<Result<String>> saveDevice(@Query(I.USER.NAME) String name,@Query(I.DEVICE.TABLENAME) String device);
@@ -71,9 +71,9 @@ public interface ServerAPI {
                                           @Query(I.BAOFEI.DNAME) int dName);
 
     @GET(I.REQUEST.PATH+"?request="+I.REQUEST.DOWNDEVICE)
-    Observable<Result<Device[]>> downDevice(@Query(I.DOWNLOAD.PAGE) int page,@Query(I.DOWNLOAD.SIZE) int size,
-                                            @Query(I.DEVICE.DNAME)int dname,
-                                            @Query(I.DEVICE.STATUS) int status);
+    Observable<Result<DeviceOld[]>> downDevice(@Query(I.DOWNLOAD.PAGE) int page, @Query(I.DOWNLOAD.SIZE) int size,
+                                               @Query(I.DEVICE.DNAME)int dname,
+                                               @Query(I.DEVICE.STATUS) int status);
 
     @GET(I.REQUEST.PATH+"?request="+I.REQUEST.GETPICCOUNT)
     Observable<Result<Integer>> getCount(@Query(I.DEVICE.DNAME )int dName,@Query(I.PIC.TYPE) String type);

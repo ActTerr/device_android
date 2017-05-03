@@ -28,7 +28,7 @@ import java.util.TimerTask;
 import mac.yk.devicemanagement.I;
 import mac.yk.devicemanagement.MyApplication;
 import mac.yk.devicemanagement.R;
-import mac.yk.devicemanagement.bean.Device;
+import mac.yk.devicemanagement.bean.DeviceOld;
 import mac.yk.devicemanagement.net.ApiWrapper;
 import mac.yk.devicemanagement.net.ServerAPI;
 import mac.yk.devicemanagement.util.ConvertUtils;
@@ -50,7 +50,7 @@ public class lunboView extends ViewPager {
     Handler handler;
     Timer mTimer;
     int count = 0;
-    Device device;
+    DeviceOld deviceOld;
     int width;
     boolean Stop = false;
     protected Subscription subscription;
@@ -143,7 +143,7 @@ public class lunboView extends ViewPager {
             container.addView(iv);
             L.e("main", cacheOK + "cache");
             if (!cacheOK) {
-                String url = I.REQUEST.SERVER_ROOT + I.REQUEST.PATH + "?request=" + I.REQUEST.DOWNPIC + "&" + I.DEVICE.DNAME + "=" + device.getDname()
+                String url = I.REQUEST.SERVER_ROOT + I.REQUEST.PATH + "?request=" + I.REQUEST.DOWNPIC + "&" + I.DEVICE.DNAME + "=" + deviceOld.getDname()
                         + "&" + I.PIC.PID + "=" + position % count + "&" + I.PIC.TYPE + "=" + I.PIC.DEVICE;
                 L.e("main", url);
                 Glide.with(context).load(url)
@@ -205,10 +205,10 @@ public class lunboView extends ViewPager {
     }
 
     public void getPicCount(final zhishiqiView z) {
-        device = MyApplication.getDevice();
+        deviceOld = MyApplication.getDeviceOld();
         L.e("main", "execute getcount");
         ApiWrapper<ServerAPI> wrapper = new ApiWrapper<>();
-        subscription = wrapper.targetClass(ServerAPI.class).getAPI().getCount(device.getDname(), I.PIC.DEVICE)
+        subscription = wrapper.targetClass(ServerAPI.class).getAPI().getCount(deviceOld.getDname(), I.PIC.DEVICE)
                 .compose(wrapper.<Integer>applySchedulers())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(AndroidSchedulers.mainThread())

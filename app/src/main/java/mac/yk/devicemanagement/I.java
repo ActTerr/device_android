@@ -40,7 +40,7 @@ public interface I {
     }
     interface PIC{
         String AVATAR_SUFFIX_JPG="JPG";
-        String DEVICE="Device";
+        String DEVICE="DeviceOld";
         String PID="pId";
         String TYPE="picType";
     }
@@ -108,5 +108,37 @@ public interface I {
     interface GESTURE{
         int MANUAL=1;
         int AUTO=2;
+    }
+    interface Device{
+        String DID="CHAR_DEV_TOTAL_REC_ID";
+        String CATEGROY_ID="LOCK_VERSION";
+        String CATEGROY="CHAR_DEV_CATEGORY";
+        String MENUFACTOR="CHAR_PRODUCT_NA";
+        String MODEL="CHAR_MODEL_NA";
+        String OUT_DATE="DATE_OUT_FACTORY";
+        String USE_DATE="DATE_IN_USE";
+        String UNIT_ID   ="CHAR_UNIT_ID";
+        String USE_POSITION="CHAR_USED_POSITION";
+        String SERIAL_NUM="CHAR_SERIAL_NUM";
+        String CODE_NUM="CHAR_CODE_NUM";
+        String STATUS="ENUM_DEV_STATE";
+        String REMARK="CHAR_REMARK";
+        String PRICE="FLOAT_PRICE";
+        String  GRADE    ="CHAR_DEV_GRADE";
+        String STATION="CHAR_STATION_ID";
+        String CREATE_USER="CREATE_USER_ID";
+        String CREATE_DATE="CREATE_DATE";
+        String CREATE_STATION="CREATE_STATION_ID";
+        String USE_USER="CHAR_DEV_USER";
+        String TYPE="CHAR_DEV_TYPE";
+        String SALVAGE_VALUE="CHAR_SALVAGE_VALUE";
+        String WHERE="CHAR_WHERE";
+        String PINLV="CHAR_PINLV";
+        String YA_PIN="CHAR_YA_PIN";
+        String TRANSFER_STATE="CHAR_TRANSFER_STATE";
+        String CHECK_DATE="CHAR_CHECK_DATE";
+        String DATE_UN_USE="DATE_UN_USE";
+        String DATE_IN_CHECK="DATE_IN_CHECK";
+
     }
 }

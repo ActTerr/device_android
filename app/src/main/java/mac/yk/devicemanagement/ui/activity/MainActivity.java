@@ -33,7 +33,7 @@ import butterknife.OnClick;
 import mac.yk.devicemanagement.I;
 import mac.yk.devicemanagement.MyApplication;
 import mac.yk.devicemanagement.R;
-import mac.yk.devicemanagement.bean.Device;
+import mac.yk.devicemanagement.bean.DeviceOld;
 import mac.yk.devicemanagement.net.ApiWrapper;
 import mac.yk.devicemanagement.net.ServerAPI;
 import mac.yk.devicemanagement.ui.fragment.fragCount;
@@ -204,7 +204,7 @@ public class MainActivity extends BaseActivity {
         });
     }
 
-    Observer<Device> obChaxun = new Observer<Device>() {
+    Observer<DeviceOld> obChaxun = new Observer<DeviceOld>() {
         @Override
         public void onCompleted() {
 
@@ -220,10 +220,10 @@ public class MainActivity extends BaseActivity {
         }
 
         @Override
-        public void onNext(Device device) {
+        public void onNext(DeviceOld deviceOld) {
             progressDialog.dismiss();
-            L.e("main", device.toString());
-            MFGT.gotoDetailActivity(MainActivity.this, device);
+            L.e("main", deviceOld.toString());
+            MFGT.gotoDetailActivity(MainActivity.this, deviceOld);
             MFGT.finish((Activity) context);
         }
     };
@@ -242,7 +242,7 @@ public class MainActivity extends BaseActivity {
                         getAPI().chaxun(id)
                         .subscribeOn(Schedulers.io())
                         .observeOn(AndroidSchedulers.mainThread())
-                        .compose(network.<Device>applySchedulers())
+                        .compose(network.<DeviceOld>applySchedulers())
                         .subscribe(obChaxun);
             }
 
