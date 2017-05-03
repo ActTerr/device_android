@@ -45,11 +45,11 @@ public interface I {
         String TYPE="picType";
     }
 
-
     interface RESULT{
         int SUCCESS=1;
         int DEFEAT=0;
-        String ERROR="error";
+        String SUC="成功";
+        String DEF="失败";
     }
     interface CONTROL{
         int START=0;
@@ -82,9 +82,13 @@ public interface I {
         String ISDIANCHI="isDianchi";
     }
     interface USER{
-        String TABLENAME="user";
-        String NAME="name";
-        String PASSWD="passwd";
+        String TABLENAME="MYUSER";
+        String NAME="NAME";
+        String PASSWD="MYPASSWD";
+        String ACCOUNTS="ACCOUNTS";
+        String UNIT="UNIT";
+        String GRADE="GRADE";
+        String AUTHORITY="AUTHORITY";
     }
 
     interface WEIXIU{
@@ -109,7 +113,7 @@ public interface I {
         int MANUAL=1;
         int AUTO=2;
     }
-    interface Device{
+    interface DEVICE2{
         String DID="CHAR_DEV_TOTAL_REC_ID";
         String CATEGROY_ID="LOCK_VERSION";
         String CATEGROY="CHAR_DEV_CATEGORY";
@@ -139,6 +143,6 @@ public interface I {
         String CHECK_DATE="CHAR_CHECK_DATE";
         String DATE_UN_USE="DATE_UN_USE";
         String DATE_IN_CHECK="DATE_IN_CHECK";
-
     }
+
 }

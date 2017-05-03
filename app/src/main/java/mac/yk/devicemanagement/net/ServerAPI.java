@@ -4,6 +4,7 @@ import mac.yk.devicemanagement.I;
 import mac.yk.devicemanagement.bean.DeviceOld;
 import mac.yk.devicemanagement.bean.Result;
 import mac.yk.devicemanagement.bean.Scrap;
+import mac.yk.devicemanagement.bean.User;
 import mac.yk.devicemanagement.bean.Weixiu;
 import mac.yk.devicemanagement.bean.Xunjian;
 import okhttp3.RequestBody;
@@ -32,7 +33,7 @@ public interface ServerAPI {
     Observable<Result<String>> saveDevice(@Query(I.USER.NAME) String name,@Query(I.DEVICE.TABLENAME) String device);
 
     @GET(I.REQUEST.PATH+"?request="+I.REQUEST.LOGIN)
-    Observable<Result<String>> login(@Query(I.USER.NAME) String name,@Query(I.USER.PASSWD) String passwd);
+    Observable<Result<User>> login(@Query(I.USER.NAME) String name, @Query(I.USER.PASSWD) String passwd);
 
     @GET(I.REQUEST.PATH+"?request="+I.REQUEST.LOGOUT)
     Observable<Result<String>> logOut(@Query(I.USER.NAME) String name);

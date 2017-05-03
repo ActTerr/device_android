@@ -13,11 +13,11 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import mac.yk.devicemanagement.MyApplication;
 import mac.yk.devicemanagement.R;
+import mac.yk.devicemanagement.bean.User;
 import mac.yk.devicemanagement.net.ApiWrapper;
 import mac.yk.devicemanagement.net.ServerAPI;
 import mac.yk.devicemanagement.util.ExceptionFilter;
 import mac.yk.devicemanagement.util.MFGT;
-import mac.yk.devicemanagement.util.SpUtil;
 import mac.yk.devicemanagement.util.ToastUtil;
 import rx.Observer;
 import rx.android.schedulers.AndroidSchedulers;
@@ -40,7 +40,7 @@ public class LoginActivity extends BaseActivity{
         progressDialog=new ProgressDialog(context);
     }
 
-     Observer<String> observer=new Observer<String>() {
+     Observer<User> observer=new Observer<User>() {
          @Override
          public void onCompleted() {
 
@@ -55,22 +55,22 @@ public class LoginActivity extends BaseActivity{
          }
 
          @Override
-         public void onNext(String s) {
+         public void onNext(User user) {
              progressDialog.dismiss();
              ToastUtil.showToast(context,"登陆成功！");
-                 SpUtil.saveLoginUser(context,name.getText().toString());
+//                 SpUtil.saveLoginUser(context,name.getText().toString());
+
                  Intent intent = new Intent(context, MainActivity.class);
-                 MyApplication.getInstance().setUserName(name.getText().toString());
+                 MyApplication.getInstance().setUserName(user.getName());
                  startActivity(intent);
                  MFGT.finish((Activity) context);
-
          }
      };
     public void onLogin(View view) {
         progressDialog.show();
         ApiWrapper<ServerAPI> ApiWrapper =new ApiWrapper<>();
         subscription= ApiWrapper.targetClass(ServerAPI.class).getAPI().login(name.getText().toString(),
-                passwd.getText().toString()).compose(ApiWrapper.<String>applySchedulers())
+                passwd.getText().toString()).compose(ApiWrapper.<User>applySchedulers())
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(observer);
