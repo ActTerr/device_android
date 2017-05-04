@@ -28,12 +28,12 @@ import mac.yk.devicemanagement.I;
 import mac.yk.devicemanagement.MyApplication;
 import mac.yk.devicemanagement.R;
 import mac.yk.devicemanagement.bean.DeviceOld;
+import mac.yk.devicemanagement.bean.Status;
 import mac.yk.devicemanagement.net.ApiWrapper;
 import mac.yk.devicemanagement.net.ServerAPI;
 import mac.yk.devicemanagement.ui.fragment.fragDetail;
 import mac.yk.devicemanagement.util.ActivityUtils;
 import mac.yk.devicemanagement.util.ExceptionFilter;
-import mac.yk.devicemanagement.util.L;
 import mac.yk.devicemanagement.util.MFGT;
 import mac.yk.devicemanagement.util.ToastUtil;
 import rx.Observer;
@@ -44,7 +44,7 @@ import rx.schedulers.Schedulers;
 
 public class DetailActivity extends BaseActivity {
     ProgressDialog progressDialog;
-    DeviceOld deviceOld;
+    String[] data;
     Activity context;
     boolean isDianchi = false;
     fragDetail fragD;
@@ -56,6 +56,7 @@ public class DetailActivity extends BaseActivity {
     @BindView(R.id.drawLayout)
     DrawerLayout drawLayout;
 
+    DeviceOld deviceOld;
     /**
      * dialog
      */
@@ -75,13 +76,15 @@ public class DetailActivity extends BaseActivity {
         context = this;
         progressDialog = new ProgressDialog(context);
         dialog = new Dialog(context);
-        deviceOld = (DeviceOld) getIntent().getSerializableExtra("deviceOld");
-        MyApplication.setDeviceOld(deviceOld);
-        L.e("main", "detail:" + deviceOld.toString());
+        data= (String[]) getIntent().getSerializableExtra("deviceOld");
+        MyApplication.getInstance().setData(data);
+        MyApplication.setStatus(new Status(data[0],data[11]));
+        deviceOld=new DeviceOld();
+//        L.e("main", "detail:" + deviceOld.toString());
         if (deviceOld == null) {
             MFGT.finish(context);
         } else {
-            id = String.valueOf(deviceOld.getDid());
+//            id = String.valueOf(deviceOld.getDid());
             if (deviceOld.getDname() == I.DNAME.DIANCHI) {
                 isDianchi = true;
                 MyApplication.setFlag(true);
@@ -96,6 +99,9 @@ public class DetailActivity extends BaseActivity {
         ab.setHomeAsUpIndicator(R.drawable.ic_menu);
         ab.setDisplayHomeAsUpEnabled(true);
         fragD = new fragDetail();
+        Bundle bundle=new Bundle();
+        bundle.putStringArray("data",data);
+        fragD.setArguments(bundle);
         ActivityUtils.addFragmentToActivity(getSupportFragmentManager(), fragD, R.id.frame);
         if (navView != null) {
             navView.inflateMenu(R.menu.menu_detail);

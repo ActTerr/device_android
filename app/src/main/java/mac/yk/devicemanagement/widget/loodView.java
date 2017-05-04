@@ -45,6 +45,7 @@ import mac.yk.devicemanagement.MyApplication;
 import mac.yk.devicemanagement.R;
 import mac.yk.devicemanagement.net.ApiWrapper;
 import mac.yk.devicemanagement.net.ServerAPI;
+import mac.yk.devicemanagement.util.ConvertUtils;
 import mac.yk.devicemanagement.util.ExceptionFilter;
 import mac.yk.devicemanagement.util.L;
 import mac.yk.devicemanagement.util.ToastUtil;
@@ -94,11 +95,15 @@ public class loodView extends FrameLayout {
     View vDot6;
     @BindView(R.id.v_dot7)
     View vDot7;
+
+
+    int Dname;
     private ScheduledExecutorService scheduledExecutorService;
 
     public loodView(@NonNull Context context, @Nullable AttributeSet attrs, @AttrRes int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         this.context = context;
+        Dname= ConvertUtils.getDname(MyApplication.getInstance().getData()[2]);
         initCount();
     }
     public loodView(Context context) {
@@ -112,7 +117,7 @@ public class loodView extends FrameLayout {
     }
     private void initCount() {
         ApiWrapper<ServerAPI> wrapper = new ApiWrapper<>();
-        subscription = wrapper.targetClass(ServerAPI.class).getAPI().getCount(MyApplication.getDeviceOld().getDname(), I.PIC.DEVICE)
+        subscription = wrapper.targetClass(ServerAPI.class).getAPI().getCount(Dname, I.PIC.DEVICE)
                 .compose(wrapper.<Integer>applySchedulers())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(AndroidSchedulers.mainThread())
@@ -176,12 +181,10 @@ public class loodView extends FrameLayout {
         View view = LayoutInflater.from(context).inflate(R.layout.load_view, this, true);
         ButterKnife.bind(this,view);
         initIndicator();
-        L.e("TAG","zhixing");
         for (int i = 0; i < count; i++) {
 
-            L.e(TAG,"pinjie");
             String imagesUrl = I.REQUEST.SERVER_ROOT + I.REQUEST.PATH + "?request=" + I.REQUEST.DOWNPIC + "&" + I.DEVICE.DNAME + "=" +
-                    MyApplication.getDeviceOld().getDname() + "&" + I.PIC.PID + "=" + i + "&" + I.PIC.TYPE + "=" + I.PIC.DEVICE;
+                    Dname + "&" + I.PIC.PID + "=" + i + "&" + I.PIC.TYPE + "=" + I.PIC.DEVICE;
             L.e("TAG", imagesUrl);
             Uri uri = Uri.parse(imagesUrl);
             //facebook的View控件
@@ -290,14 +293,11 @@ public class loodView extends FrameLayout {
         @Override
         public void onPageSelected(int position) {
             currentItem = position;
-            L.e(TAG,"position:"+position);
             for (int i = 0; i < indicator.size(); i++) {
                 if (i == position) {
                     indicator.get(i).setBackgroundResource(R.mipmap.red_point);
-                    L.e(TAG,"setFoucus:"+position);
                 } else {
                         indicator.get(i).setBackgroundResource(R.mipmap.grey_point);
-                    L.e(TAG,"set");
                 }
             }
         }

@@ -40,7 +40,7 @@ public interface I {
     }
     interface PIC{
         String AVATAR_SUFFIX_JPG="JPG";
-        String DEVICE="DeviceOld";
+        String DEVICE="Device";
         String PID="pId";
         String TYPE="picType";
     }

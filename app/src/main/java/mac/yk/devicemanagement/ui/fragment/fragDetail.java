@@ -2,13 +2,13 @@ package mac.yk.devicemanagement.ui.fragment;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import java.util.ArrayList;
 import java.util.Observable;
 import java.util.Observer;
 
@@ -17,9 +17,8 @@ import butterknife.ButterKnife;
 import mac.yk.devicemanagement.MyApplication;
 import mac.yk.devicemanagement.R;
 import mac.yk.devicemanagement.adapter.DetailAdapter;
-import mac.yk.devicemanagement.bean.DeviceOld;
+import mac.yk.devicemanagement.bean.Status;
 import mac.yk.devicemanagement.util.ConvertUtils;
-import mac.yk.devicemanagement.util.L;
 import mac.yk.devicemanagement.widget.loodView;
 
 /**
@@ -28,17 +27,16 @@ import mac.yk.devicemanagement.widget.loodView;
 
 public class fragDetail extends BaseFragment implements Observer {
 
-    @BindView(R.id.deviceName)
-    TextView deviceName;
-//    @BindView(R.id.detail)
-//    TextView detail;
     Observer observer;
-    DeviceOld deviceOld;
     @BindView(R.id.loodView)
     loodView lllView;
     @BindView(R.id.rv)
     RecyclerView rv;
-    ArrayList<String> data;
+    String[] data;
+    @BindView(R.id.deviceStatus)
+    TextView deviceStatus;
+
+    Status status;
 
 
     @Nullable
@@ -48,27 +46,29 @@ public class fragDetail extends BaseFragment implements Observer {
         View view = inflater.inflate(R.layout.frag_detail, container, false);
         ButterKnife.bind(this, view);
         observer = this;
-        deviceOld = MyApplication.getDeviceOld();
-        L.e("main", "fragdetail:" + deviceOld.toString());
-        deviceName.setText(ConvertUtils.getDname(deviceOld.getDname()));
-//        detail.setText(deviceOld.toString());
-        deviceOld.addObserver(observer);
-        data=new ArrayList<>();
-        rv.setAdapter(new DetailAdapter(getContext(),data));
+        status=MyApplication.getStatus();
+        data = getArguments().getStringArray("data");
+        deviceStatus.setText("设备状态："+ConvertUtils.getStatus(false, Integer.parseInt(status.getStatus())));
+        status.addObserver(observer);
+        rv.setAdapter(new DetailAdapter(getContext(), data));
+        rv.setLayoutManager(new GridLayoutManager(getContext(),1));
         return view;
     }
 
 
+
     @Override
     public void update(Observable o, Object arg) {
-        deviceOld = (DeviceOld) o;
-//        detail.setText(deviceOld.toString());
+        status= (Status) o;
+        deviceStatus.setText("设备状态："+ConvertUtils.getStatus(false, Integer.parseInt(status.getStatus())));
     }
 
     @Override
     public void onDestroyView() {
         super.onDestroyView();
         lllView.destory();
-        deviceOld.deleteObserver(this);
+        status.deleteObserver(this);
     }
+
+
 }

@@ -68,11 +68,17 @@ public class ConvertUtils {
         return null;
     }
 
+    /**
+     * 待完善
+     * @param Dname
+     * @return
+     */
     public static int getDname(String Dname) {
         switch (Dname) {
             case "电池":
                 return I.DNAME.DIANCHI;
-            case "电台":
+            case "停车顶":
+            case "手持台":
                 return I.DNAME.DIANTAI;
             case "机控器":
                 return I.DNAME.JIKONGQI;

@@ -22,7 +22,7 @@ import mac.yk.devicemanagement.ui.activity.SetActivity;
  */
 
 public class MFGT {
-    public static void gotoDetailActivity(Context context, DeviceOld deviceOld){
+    public static void gotoDetailActivity(Context context, String[] deviceOld){
         Intent intent=new Intent(context,DetailActivity.class);
         intent.putExtra("deviceOld", deviceOld);
         L.e("main", deviceOld.toString());

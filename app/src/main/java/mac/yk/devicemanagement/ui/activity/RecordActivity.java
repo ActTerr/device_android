@@ -23,7 +23,6 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import mac.yk.devicemanagement.MyApplication;
 import mac.yk.devicemanagement.R;
-import mac.yk.devicemanagement.bean.DeviceOld;
 import mac.yk.devicemanagement.ui.fragment.fragRecord;
 import mac.yk.devicemanagement.util.ActivityUtils;
 import mac.yk.devicemanagement.util.L;
@@ -40,7 +39,7 @@ public class RecordActivity extends BaseActivity {
     @BindView(R.id.drawLayout)
     DrawerLayout drawLayout;
     Context context;
-    DeviceOld deviceOld;
+    String[] deviceOld;
     boolean isWeixiu=true;
     @BindView(R.id.netView)
     TextView mTv;
@@ -51,14 +50,15 @@ public class RecordActivity extends BaseActivity {
         ButterKnife.bind(this);
         context=this;
 
-       deviceOld = (DeviceOld) getIntent().getSerializableExtra("deviceOld");
+       deviceOld = (String[]) getIntent().getSerializableExtra("deviceOld");
+
         if (deviceOld ==null) {
             MFGT.finish((Activity) context);
         } else {
             init();
             fragment = (fragRecord) getSupportFragmentManager().findFragmentById(R.id.frame);
             Bundle bundle1 = new Bundle();
-            bundle1.putString("id", String.valueOf(deviceOld.getDid()));
+            bundle1.putString("id", String.valueOf(deviceOld[0]));
             bundle1.putBoolean("flag", true);
             if (fragment==null){
                 Log.e("main","fragment从空被赋值");
@@ -69,7 +69,7 @@ public class RecordActivity extends BaseActivity {
 
             fragment2 = (fragRecord) getSupportFragmentManager().findFragmentById(R.id.frame);
             Bundle bundle2 = new Bundle();
-            bundle2.putString("id", String.valueOf(deviceOld.getDid()));
+            bundle2.putString("id", String.valueOf(deviceOld[0]));
             bundle2.putBoolean("flag", false);
             if (fragment2==null){
                 fragment2=new fragRecord();

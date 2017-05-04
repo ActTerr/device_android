@@ -27,7 +27,7 @@ public interface ServerAPI {
     Observable<Result<Integer[]>> getTongji(@Query(I.TABLENAME) String tableName);
 
     @GET(I.REQUEST.PATH+"?request="+I.REQUEST.CHAXUN)
-    Observable<Result<DeviceOld>> chaxun(@Query(I.DEVICE.DID) String Did);
+    Observable<Result<String[]>> chaxun(@Query(I.DEVICE.DID) String Did);
 
     @GET(I.REQUEST.PATH+"?request="+I.REQUEST.SAVE)
     Observable<Result<String>> saveDevice(@Query(I.USER.NAME) String name,@Query(I.DEVICE.TABLENAME) String device);

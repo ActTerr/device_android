@@ -9,6 +9,7 @@ import com.squareup.leakcanary.RefWatcher;
 import java.util.ArrayList;
 
 import mac.yk.devicemanagement.bean.DeviceOld;
+import mac.yk.devicemanagement.bean.Status;
 import mac.yk.devicemanagement.bean.User;
 
 /**
@@ -47,10 +48,27 @@ public class MyApplication extends Application {
 //        observers.add(observer);
 //        deviceOld.addObserver(observer);
 //    }
+    static Status status;
 
+    public static Status getStatus() {
+        return status;
+    }
 
+    public static void setStatus(Status s) {
+        status = s;
+    }
 
     private User user;
+
+    private String[] data;
+
+    public String[] getData() {
+        return data;
+    }
+
+    public void setData(String[] data) {
+        this.data = data;
+    }
 
     public User getUser () {
         return user;

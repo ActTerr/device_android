@@ -112,7 +112,7 @@ public class SaveActivity extends BaseActivity implements View.OnClickListener {
                     public void onNext(String s) {
                         progressDialog.dismiss();
                         Toast.makeText(SaveActivity.this, "保存成功", Toast.LENGTH_SHORT).show();
-                        MFGT.gotoDetailActivity(SaveActivity.this, deviceOld);
+//                        MFGT.gotoDetailActivity(SaveActivity.this, deviceOld);
                         L.e("main", deviceOld.toString());
                         MFGT.finish((Activity) context);
                     }
