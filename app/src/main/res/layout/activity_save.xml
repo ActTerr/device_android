@@ -34,7 +34,7 @@
         android:layout_height="wrap_content" />
     <ImageView
         android:id="@+id/nameSelect"
-        android:background="@drawable/deviceOld"
+        android:background="@drawable/device"
         android:layout_width="50dp"
         android:layout_height="50dp" />
 </LinearLayout>

@@ -102,7 +102,7 @@ public class DetailActivity extends BaseActivity {
             setUpNavView(navView);
             ImageView imageView = (ImageView) navView.getHeaderView(0).findViewById(R.id.avatar);
             TextView textView = (TextView) navView.getHeaderView(0).findViewById(R.id.nav_name);
-            textView.setText(MyApplication.getInstance().getUserName());
+            textView.setText(MyApplication.getInstance().getUser().getName());
             imageView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -231,7 +231,7 @@ public class DetailActivity extends BaseActivity {
             dialog.dismiss();
             progressDialog.show();
             ApiWrapper<ServerAPI> wrapper = new ApiWrapper<>();
-            subscription = wrapper.targetClass(ServerAPI.class).getAPI().baofei(MyApplication.getInstance().getUserName()
+            subscription = wrapper.targetClass(ServerAPI.class).getAPI().baofei(MyApplication.getInstance().getUser().getName()
                     , String.valueOf(deviceOld.getDname()), id, remark.getText().toString())
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
@@ -431,7 +431,7 @@ public class DetailActivity extends BaseActivity {
     private void postXiujun2(boolean translate, String remark) {
         ApiWrapper<ServerAPI> wrapper = new ApiWrapper<>();
         subscription = wrapper.targetClass(ServerAPI.class).getAPI()
-                .xiujun(isDianchi, MyApplication.getInstance().getUserName(), id, translate, remark)
+                .xiujun(isDianchi, MyApplication.getInstance().getUser().getName(), id, translate, remark)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .compose(wrapper.<Integer>applySchedulers())
@@ -472,7 +472,7 @@ public class DetailActivity extends BaseActivity {
     private void postxunjian2(String status, String remark) {
         ApiWrapper<ServerAPI> wrapper = new ApiWrapper<>();
         subscription = wrapper.targetClass(ServerAPI.class).getAPI()
-                .xunjian(isDianchi, MyApplication.getInstance().getUserName(), id, status, remark)
+                .xunjian(isDianchi, MyApplication.getInstance().getUser().getName(), id, status, remark)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .compose(wrapper.<Integer>applySchedulers())

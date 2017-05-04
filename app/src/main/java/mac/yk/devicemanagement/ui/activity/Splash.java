@@ -13,6 +13,9 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import mac.yk.devicemanagement.MyApplication;
 import mac.yk.devicemanagement.R;
+import mac.yk.devicemanagement.bean.User;
+import mac.yk.devicemanagement.db.dbUser;
+import mac.yk.devicemanagement.util.L;
 import mac.yk.devicemanagement.util.MFGT;
 import mac.yk.devicemanagement.util.SpUtil;
 
@@ -20,7 +23,7 @@ public class Splash extends AppCompatActivity {
     Context context;
     @BindView(R.id.activity_splash)
     RelativeLayout activitySplash;
-
+    String TAG="Splash";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -43,7 +46,10 @@ public class Splash extends AppCompatActivity {
                     startActivity(intent);
                     MFGT.finish((Activity) context);
                 } else {
-                    MyApplication.getInstance().setUserName(name);
+                    User user= dbUser.getInstance(context).select2(name);
+                    MyApplication.getInstance().setUser(user);
+//                    ToastUtil.showToast(context,user.toString());
+                    L.e(TAG,user.toString());
                     boolean gesture = SpUtil.getGesture(context);
                     if (gesture) {
                         MFGT.gotoValidateGestureActivity((Activity) context);

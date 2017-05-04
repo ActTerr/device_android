@@ -30,8 +30,8 @@ public class fragDetail extends BaseFragment implements Observer {
 
     @BindView(R.id.deviceName)
     TextView deviceName;
-    @BindView(R.id.detail)
-    TextView detail;
+//    @BindView(R.id.detail)
+//    TextView detail;
     Observer observer;
     DeviceOld deviceOld;
     @BindView(R.id.loodView)
@@ -51,7 +51,7 @@ public class fragDetail extends BaseFragment implements Observer {
         deviceOld = MyApplication.getDeviceOld();
         L.e("main", "fragdetail:" + deviceOld.toString());
         deviceName.setText(ConvertUtils.getDname(deviceOld.getDname()));
-        detail.setText(deviceOld.toString());
+//        detail.setText(deviceOld.toString());
         deviceOld.addObserver(observer);
         data=new ArrayList<>();
         rv.setAdapter(new DetailAdapter(getContext(),data));
@@ -62,7 +62,7 @@ public class fragDetail extends BaseFragment implements Observer {
     @Override
     public void update(Observable o, Object arg) {
         deviceOld = (DeviceOld) o;
-        detail.setText(deviceOld.toString());
+//        detail.setText(deviceOld.toString());
     }
 
     @Override

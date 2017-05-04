@@ -89,7 +89,7 @@ public class SaveActivity extends BaseActivity implements View.OnClickListener {
 
         ApiWrapper<ServerAPI> wrapper=new ApiWrapper<>();
         subscription=wrapper.targetClass(ServerAPI.class).getAPI().
-                saveDevice(MyApplication.getInstance().getUserName(),ConvertUtils.getjson(deviceOld))
+                saveDevice(MyApplication.getInstance().getUser().getName(),ConvertUtils.getjson(deviceOld))
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .compose(wrapper.<String>applySchedulers())

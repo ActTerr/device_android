@@ -14,10 +14,13 @@ import butterknife.ButterKnife;
 import mac.yk.devicemanagement.MyApplication;
 import mac.yk.devicemanagement.R;
 import mac.yk.devicemanagement.bean.User;
+import mac.yk.devicemanagement.db.dbUser;
 import mac.yk.devicemanagement.net.ApiWrapper;
 import mac.yk.devicemanagement.net.ServerAPI;
 import mac.yk.devicemanagement.util.ExceptionFilter;
+import mac.yk.devicemanagement.util.L;
 import mac.yk.devicemanagement.util.MFGT;
+import mac.yk.devicemanagement.util.SpUtil;
 import mac.yk.devicemanagement.util.ToastUtil;
 import rx.Observer;
 import rx.android.schedulers.AndroidSchedulers;
@@ -31,15 +34,17 @@ public class LoginActivity extends BaseActivity{
     EditText passwd;
 
     ProgressDialog progressDialog;
+
+    String TAG="LoginActivity";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
         ButterKnife.bind(this);
         context = this;
-        progressDialog=new ProgressDialog(context);
-    }
+        progressDialog = new ProgressDialog(context);
 
+    }
      Observer<User> observer=new Observer<User>() {
          @Override
          public void onCompleted() {
@@ -58,12 +63,19 @@ public class LoginActivity extends BaseActivity{
          public void onNext(User user) {
              progressDialog.dismiss();
              ToastUtil.showToast(context,"登陆成功！");
-//                 SpUtil.saveLoginUser(context,name.getText().toString());
+             dbUser db=dbUser.getInstance(context);
+               if (!db.select1(user.getAccounts())){
+                   L.e(TAG,"execute");
+                  if (db.insert(user)){
+                      L.e(TAG,"insert suc");
+                  }
+               }
+                Intent intent = new Intent(context, MainActivity.class);
+                 MyApplication.getInstance().setUser(user);
+             SpUtil.saveLoginUser(context,name.getText().toString());
+             startActivity(intent);
+             MFGT.finish((Activity) context);
 
-                 Intent intent = new Intent(context, MainActivity.class);
-                 MyApplication.getInstance().setUserName(user.getName());
-                 startActivity(intent);
-                 MFGT.finish((Activity) context);
          }
      };
     public void onLogin(View view) {

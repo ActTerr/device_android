@@ -47,7 +47,7 @@ public class SetActivity extends BaseActivity{
         ButterKnife.bind(this);
         context = this;
         pd = new ProgressDialog(context);
-        user.setText(MyApplication.getInstance().getUserName());
+        user.setText(MyApplication.getInstance().getUser().getName());
 
     }
 
@@ -66,7 +66,7 @@ public class SetActivity extends BaseActivity{
             case R.id.logOut:
                 pd.show();
                 ApiWrapper<ServerAPI> wrapper = new ApiWrapper<>();
-               subscription= wrapper.targetClass(ServerAPI.class).getAPI().logOut(MyApplication.getInstance().getUserName())
+               subscription= wrapper.targetClass(ServerAPI.class).getAPI().logOut(MyApplication.getInstance().getUser().getName())
                         .compose(wrapper.<String>applySchedulers())
                        .subscribeOn(Schedulers.io())
                        .observeOn(AndroidSchedulers.mainThread())
@@ -88,7 +88,7 @@ public class SetActivity extends BaseActivity{
                             @Override
                             public void onNext(String s) {
                                 pd.dismiss();
-                                MyApplication.getInstance().setUserName(null);
+                                MyApplication.getInstance().setUser(null);
                                 SpUtil.saveLoginUser(context, null);
                                 MFGT.gotoLoginActivity(context);
                                 MFGT.finish((Activity) context);

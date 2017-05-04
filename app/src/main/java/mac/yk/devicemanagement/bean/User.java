@@ -50,4 +50,15 @@ public class User {
     public void setAccounts(String accounts) {
         this.accounts = accounts;
     }
+
+    @Override
+    public String toString() {
+        return "User{" +
+                "name='" + name + '\'' +
+                ", authority=" + authority +
+                ", grade=" + grade +
+                ", unit=" + unit +
+                ", accounts='" + accounts + '\'' +
+                '}';
+    }
 }
