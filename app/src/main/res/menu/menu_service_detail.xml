@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:id="@+id/weixiu"
+        android:title="维修"/>
+    <item android:id="@+id/xiujun"
+        android:title="修竣"/>
+    <item android:id="@+id/baofei"
+        android:title="报废"/>
+    <item android:id="@+id/record"
+        android:title="记录"/>
+</menu>

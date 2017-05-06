@@ -27,12 +27,13 @@ import butterknife.OnClick;
 import mac.yk.devicemanagement.I;
 import mac.yk.devicemanagement.MyApplication;
 import mac.yk.devicemanagement.R;
-import mac.yk.devicemanagement.bean.DeviceOld;
 import mac.yk.devicemanagement.bean.Status;
+import mac.yk.devicemanagement.bean.User;
 import mac.yk.devicemanagement.net.ApiWrapper;
 import mac.yk.devicemanagement.net.ServerAPI;
 import mac.yk.devicemanagement.ui.fragment.fragDetail;
 import mac.yk.devicemanagement.util.ActivityUtils;
+import mac.yk.devicemanagement.util.ConvertUtils;
 import mac.yk.devicemanagement.util.ExceptionFilter;
 import mac.yk.devicemanagement.util.MFGT;
 import mac.yk.devicemanagement.util.ToastUtil;
@@ -56,7 +57,7 @@ public class DetailActivity extends BaseActivity {
     @BindView(R.id.drawLayout)
     DrawerLayout drawLayout;
 
-    DeviceOld deviceOld;
+    Status mStatus;
     /**
      * dialog
      */
@@ -66,7 +67,7 @@ public class DetailActivity extends BaseActivity {
     boolean isBaofei = false;
     @BindView(R.id.netView)
     TextView mTv;
-
+    User user;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -78,21 +79,22 @@ public class DetailActivity extends BaseActivity {
         dialog = new Dialog(context);
         data= (String[]) getIntent().getSerializableExtra("deviceOld");
         MyApplication.getInstance().setData(data);
-        MyApplication.setStatus(new Status(data[0],data[11]));
-        deviceOld=new DeviceOld();
+        mStatus=new Status(data[0],data[11]);
+        MyApplication.setStatus(mStatus);
 //        L.e("main", "detail:" + deviceOld.toString());
-        if (deviceOld == null) {
+        if (data == null) {
             MFGT.finish(context);
         } else {
-//            id = String.valueOf(deviceOld.getDid());
-            if (deviceOld.getDname() == I.DNAME.DIANCHI) {
+            id = String.valueOf(data[0]);
+            if (data[2].equals("电池")) {
                 isDianchi = true;
                 MyApplication.setFlag(true);
             }
-            if (deviceOld.getStatus() == I.CONTROL.BAOFEI) {
+            if (mStatus.getStatus().equals("报废")) {
                 isBaofei = true;
             }
         }
+        user=MyApplication.getInstance().getUser();
         setTitle("设备详情");
         setSupportActionBar(toolBar);
         ActionBar ab = getSupportActionBar();
@@ -104,7 +106,7 @@ public class DetailActivity extends BaseActivity {
         fragD.setArguments(bundle);
         ActivityUtils.addFragmentToActivity(getSupportFragmentManager(), fragD, R.id.frame);
         if (navView != null) {
-            navView.inflateMenu(R.menu.menu_detail);
+            navView.inflateMenu(getMenu());
             setUpNavView(navView);
             ImageView imageView = (ImageView) navView.getHeaderView(0).findViewById(R.id.avatar);
             TextView textView = (TextView) navView.getHeaderView(0).findViewById(R.id.nav_name);
@@ -124,17 +126,24 @@ public class DetailActivity extends BaseActivity {
             //如果不是电池该项不可见
             navView.getMenu().getItem(3).setVisible(false);
         }
-//        setArguments();
         Log.e("main", "setArgument执行");
     }
 
+    private int getMenu() {
 
-//    private void setArguments() {
-//        setArguments();
-//        Bundle bundle = new Bundle();
-//        bundle.putSerializable("deviceOld", deviceOld);
-//        fragD.setArguments(bundle);
-//    }
+        switch (user.getGrade()){
+            case 0:
+            case 1:
+                if (isDianchi){
+                    return R.menu.menu_battery_detail;
+                }
+                return R.menu.menu_device_detail;
+            case 2:
+                return R.menu.menu_service_detail;
+        }
+        return 0;
+    }
+
 
     private void setUpNavView(NavigationView navView) {
         navView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
@@ -142,22 +151,40 @@ public class DetailActivity extends BaseActivity {
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
                 if (isBaofei) {
                     Toast.makeText(context, "设备已报废！不可操作！", Toast.LENGTH_SHORT).show();
-                    return true;
+                }
+                if (item.getItemId()!=R.id.record&&user.getAuthority()==0){
+                    ToastUtil.showToast(context,"该帐号没有权限操作！");
                 }
                 switch (item.getItemId()) {
                     case R.id.beiyong:
+                        if (!mStatus.getStatus().equals("运行")){
+                            ToastUtil.showcannotControl(context);
+                        }else {
+                            postControl("备用");
+                        }
+                        break;
                     case R.id.daiyong:
+                        if (!mStatus.getStatus().equals("备用")){
+                            ToastUtil.showcannotControl(context);
+                        }else {
+                            postControl("待用");
+                        }
+                        break;
                     case R.id.yunxing:
-                        postControl(item.getItemId());
+                        if (!mStatus.getStatus().equals("待用")){
+                            ToastUtil.showcannotControl(context);
+                        }else {
+                            postControl("运行");
+                        }
                         break;
                     case R.id.xunjian:
-                        postxunjian1();
+                        showXunJianDialog();
                         break;
                     case R.id.xiujun:
-                        postXiujun();
+                        showXiujunDialog();
                         break;
                     case R.id.record:
-                        MFGT.gotoRecordActivity(context, deviceOld);
+                        MFGT.gotoRecordActivity(context, mStatus.getDid());
                         MFGT.finish(context);
                         break;
                     case R.id.baofei:
@@ -165,6 +192,15 @@ public class DetailActivity extends BaseActivity {
                         break;
                     case R.id.yonghou:
                         postYonghou(id);
+                        break;
+                    case R.id.shiyong:
+                        break;
+                    case R.id.Ddaiyong:
+                        break;
+                    case R.id.weixiu:
+                        break;
+                    case R.id.chongdian:
+                        break;
                 }
                 item.setChecked(true);
                 drawLayout.closeDrawers();
@@ -197,7 +233,7 @@ public class DetailActivity extends BaseActivity {
                     @Override
                     public void onNext(Integer integer) {
                         progressDialog.dismiss();
-                        deviceOld.setStatus(integer);
+                        mStatus.setStatus(ConvertUtils.getStatus(isDianchi,integer));
                         ToastUtil.showControlSuccess(context);
                     }
                 });
@@ -237,12 +273,12 @@ public class DetailActivity extends BaseActivity {
             dialog.dismiss();
             progressDialog.show();
             ApiWrapper<ServerAPI> wrapper = new ApiWrapper<>();
-            subscription = wrapper.targetClass(ServerAPI.class).getAPI().baofei(MyApplication.getInstance().getUser().getName()
-                    , String.valueOf(deviceOld.getDname()), id, remark.getText().toString())
+            subscription = wrapper.targetClass(ServerAPI.class).getAPI().baofei(user.getName()
+                    ,  id, remark.getText().toString())
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
-                    .compose(wrapper.<Integer>applySchedulers())
-                    .subscribe(new Observer<Integer>() {
+                    .compose(wrapper.<String>applySchedulers())
+                    .subscribe(new Observer<String>() {
                         @Override
                         public void onCompleted() {
 
@@ -257,9 +293,9 @@ public class DetailActivity extends BaseActivity {
                         }
 
                         @Override
-                        public void onNext(Integer integer) {
+                        public void onNext(String s) {
                             progressDialog.dismiss();
-                            deviceOld.setStatus(integer);
+                            mStatus.setStatus(s);
                             ToastUtil.showControlSuccess(context);
                         }
                     });
@@ -283,7 +319,7 @@ public class DetailActivity extends BaseActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    Observer<Integer> obControl = new Observer<Integer>() {
+    Observer<String> obControl = new Observer<String>() {
         @Override
         public void onCompleted() {
 
@@ -298,20 +334,20 @@ public class DetailActivity extends BaseActivity {
         }
 
         @Override
-        public void onNext(Integer integer) {
+        public void onNext(String s) {
             progressDialog.dismiss();
-            deviceOld.setStatus(integer);
+            mStatus.setStatus(s);
             ToastUtil.showControlSuccess(context);
         }
     };
 
-    private void postControl(final int Cid) {
+    private void postControl(String status) {
         progressDialog.show();
         ApiWrapper<ServerAPI> network = new ApiWrapper<>();
-        network.targetClass(ServerAPI.class).getAPI().control(isDianchi, getControl(Cid), id)
+        network.targetClass(ServerAPI.class).getAPI().control(status, id)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .compose(network.<Integer>applySchedulers())
+                .compose(network.<String>applySchedulers())
                 .subscribe(obControl);
     }
 
@@ -365,7 +401,7 @@ public class DetailActivity extends BaseActivity {
                 case R.id.btn_commit:
                     dialog.dismiss();
                     progressDialog.show();
-                    postXiujun2(translate, remark.getText().toString());
+                    postXiuJu(translate, remark.getText().toString());
                     break;
             }
         }
@@ -417,31 +453,29 @@ public class DetailActivity extends BaseActivity {
                     } else {
                         status = "0";
                     }
-                    postxunjian2(status, remark.getText().toString());
+                    postXunJian(status, remark.getText().toString());
                     break;
             }
         }
     }
 
-    private void postXiujun() {
+    private void showXiujunDialog() {
         if (!isDianchi) {
             xiujunHoler xiujunHoler = new xiujunHoler();
             dialog.setContentView(xiujunHoler.getV());
             dialog.setTitle(null);
             dialog.show();
-        } else {
-            postXiujun2(false, "");
         }
     }
 
-    private void postXiujun2(boolean translate, String remark) {
+    private void postXiuJu(boolean translate, String remark) {
         ApiWrapper<ServerAPI> wrapper = new ApiWrapper<>();
         subscription = wrapper.targetClass(ServerAPI.class).getAPI()
-                .xiujun(isDianchi, MyApplication.getInstance().getUser().getName(), id, translate, remark)
+                .xiujun("", id, translate, remark)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .compose(wrapper.<Integer>applySchedulers())
-                .subscribe(new Subscriber<Integer>() {
+                .compose(wrapper.<String>applySchedulers())
+                .subscribe(new Subscriber<String>() {
                     @Override
                     public void onCompleted() {
 
@@ -456,33 +490,31 @@ public class DetailActivity extends BaseActivity {
                     }
 
                     @Override
-                    public void onNext(Integer integer) {
+                    public void onNext(String s) {
                         progressDialog.dismiss();
-                        deviceOld.setStatus(integer);
+                        mStatus.setStatus(s);
                         ToastUtil.showControlSuccess(context);
                     }
                 });
     }
 
-    private void postxunjian1() {
+    private void showXunJianDialog() {
         if (!isDianchi) {
             xunjianHolder xunjianHolder = new xunjianHolder();
             dialog.setContentView(xunjianHolder.getV());
             dialog.setTitle(null);
             dialog.show();
-        } else {
-            postxunjian2("0", "");
         }
     }
 
-    private void postxunjian2(String status, String remark) {
+    private void postXunJian(final String status, String remark) {
         ApiWrapper<ServerAPI> wrapper = new ApiWrapper<>();
         subscription = wrapper.targetClass(ServerAPI.class).getAPI()
-                .xunjian(isDianchi, MyApplication.getInstance().getUser().getName(), id, status, remark)
+                .xunjian("", id, status, remark)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .compose(wrapper.<Integer>applySchedulers())
-                .subscribe(new Subscriber<Integer>() {
+                .compose(wrapper.<String>applySchedulers())
+                .subscribe(new Subscriber<String>() {
                     @Override
                     public void onCompleted() {
 
@@ -497,9 +529,9 @@ public class DetailActivity extends BaseActivity {
                     }
 
                     @Override
-                    public void onNext(Integer integer) {
+                    public void onNext(String s) {
                         progressDialog.dismiss();
-                        deviceOld.setStatus(integer);
+                        mStatus.setStatus(s);
                         ToastUtil.showControlSuccess(context);
                     }
                 });

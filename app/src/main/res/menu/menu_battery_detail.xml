@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/Ddaiyong"
+        android:icon="@drawable/daiyong"
+        android:title="待用" />
+    <item
+        android:icon="@drawable/using"
+        android:id="@+id/shiyong"
+        android:title="使用" />
+    <item android:title="充电"
+        android:id="@+id/chongdian"/>
+    <item android:title="报废"
+        android:id="@+id/baofei"/>
+</menu>

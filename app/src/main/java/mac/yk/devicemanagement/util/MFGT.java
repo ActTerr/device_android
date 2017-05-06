@@ -8,7 +8,6 @@ import com.wujay.fund.GestureEditActivity;
 import com.wujay.fund.GestureVerifyActivity;
 
 import mac.yk.devicemanagement.R;
-import mac.yk.devicemanagement.bean.DeviceOld;
 import mac.yk.devicemanagement.ui.activity.DetailActivity;
 import mac.yk.devicemanagement.ui.activity.GestureActivity;
 import mac.yk.devicemanagement.ui.activity.LoginActivity;
@@ -42,9 +41,9 @@ public class MFGT {
         startActivity(context,intent);
     }
 
-    public static void gotoRecordActivity(Context context,DeviceOld deviceOld){
+    public static void gotoRecordActivity(Context context,String did){
         Intent intent=new Intent(context,RecordActivity.class);
-        intent.putExtra("deviceOld", deviceOld);
+        intent.putExtra("Did",did);
         startActivity(context,intent);
     }
     public static void gotoSetActivity(Context context){

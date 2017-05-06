@@ -49,22 +49,21 @@ public interface ServerAPI {
                                            @Query(I.DOWNLOAD.SIZE) int size);
 
     @GET(I.REQUEST.PATH+"?request="+I.REQUEST.XUNJIAN)
-    Observable<Result<Integer>> xunjian(@Query(I.DEVICE.ISDIANCHI) boolean isdianchi,@Query(I.XUNJIAN.USER) String userName
-            ,@Query(I.DEVICE.DID) String did,
-                               @Query(I.XUNJIAN.STATUS) String status,@Query(I.XUNJIAN.REMARK) String remark);
+    Observable<Result<String>> xunjian(@Query(I.USER.NAME) String userName
+            ,@Query(I.DEVICE2.DID) String did,
+                               @Query(I.DEVICE2.STATUS) String status,@Query(I.XUNJIAN.REMARK) String remark);
 
     @GET(I.REQUEST.PATH+"?request="+I.REQUEST.XIUJUN)
-    Observable<Result<Integer>> xiujun(@Query(I.DEVICE.ISDIANCHI) boolean isdianchi,@Query(I.WEIXIU.USER) String userName
+    Observable<Result<String>> xiujun(@Query(I.WEIXIU.USER) String userName
             ,@Query(I.DEVICE.DID) String did, @Query(I.WEIXIU.TRANSLATE) boolean translate,
                                        @Query(I.WEIXIU.REMARK) String remark);
 
     @GET(I.REQUEST.PATH+"?request="+I.REQUEST.BAOFEI)
-    Observable<Result<Integer>> baofei(@Query(I.USER.NAME) String name,@Query(I.BAOFEI.DNAME) String Dname
+    Observable<Result<String>> baofei(@Query(I.USER.NAME) String name
             ,@Query(I.BAOFEI.DID) String Did,@Query(I.BAOFEI.REMARK) String remark);
 
     @GET(I.REQUEST.PATH+"?request="+I.REQUEST.CONTROL)
-    Observable<Result<Integer>> control(@Query(I.DEVICE.ISDIANCHI)boolean isDianchi,
-                                        @Query(I.DEVICE.STATUS) int Cid,@Query(I.DEVICE.DID) String Did);
+    Observable<Result<String>> control(@Query(I.DEVICE2.STATUS) String status,@Query(I.DEVICE2.DID) String Did);
 
     @GET(I.REQUEST.PATH+"?request="+I.REQUEST.YONGHOU)
     Observable<Result<Integer>> yonghou(@Query(I.DEVICE.DID) String Did);
