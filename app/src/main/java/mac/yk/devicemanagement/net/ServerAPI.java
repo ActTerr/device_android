@@ -1,5 +1,7 @@
 package mac.yk.devicemanagement.net;
 
+import java.util.ArrayList;
+
 import mac.yk.devicemanagement.I;
 import mac.yk.devicemanagement.bean.DeviceOld;
 import mac.yk.devicemanagement.bean.Result;
@@ -24,7 +26,7 @@ public interface ServerAPI {
     Observable<Result<String>> getyujing();
 
     @GET(I.REQUEST.PATH+"?request="+I.REQUEST.TONGJI)
-    Observable<Result<Integer[]>> getTongji(@Query(I.TABLENAME) String tableName);
+    Observable<Result<ArrayList<String[]>>> getTongji(@Query(I.UNIT) int unit,@Query("year") String yaer );
 
     @GET(I.REQUEST.PATH+"?request="+I.REQUEST.CHAXUN)
     Observable<Result<String[]>> chaxun(@Query(I.DEVICE.DID) String Did);

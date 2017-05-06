@@ -144,12 +144,12 @@ public class fragDevice extends BaseFragment {
     };
 
     private void gettongji() {
-        ApiWrapper<ServerAPI> wrapper = new ApiWrapper<>();
-        subscription = wrapper.targetClass(ServerAPI.class).getAPI().
-                getTongji(I.DEVICE.TABLENAME).subscribeOn(Schedulers.io())
-                .compose(wrapper.<Integer[]>applySchedulers())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(obTongji);
+//        ApiWrapper<ServerAPI> wrapper = new ApiWrapper<>();
+//        subscription = wrapper.targetClass(ServerAPI.class).getAPI().
+//                getTongji(I.DEVICE.TABLENAME).subscribeOn(Schedulers.io())
+//                .compose(wrapper.<Integer[]>applySchedulers())
+//                .observeOn(AndroidSchedulers.mainThread())
+//                .subscribe(obTongji);
 
     }
 

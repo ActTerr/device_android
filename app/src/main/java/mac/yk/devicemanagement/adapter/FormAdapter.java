@@ -57,12 +57,12 @@ public class FormAdapter extends BaseAdapter {
 		TextView textView4 = (TextView) view.findViewById(R.id.text4);
 		TextView textView5 = (TextView) view.findViewById(R.id.text5);
 		TextView textView6 = (TextView) view.findViewById(R.id.text6);
-		textView1.setTextColor(Color.BLACK);
-		textView2.setTextColor(Color.BLACK);
-		textView3.setTextColor(Color.BLACK);
-		textView4.setTextColor(Color.BLACK);
-		textView5.setTextColor(Color.BLACK);
-		textView6.setTextColor(Color.BLACK);
+//		textView1.setTextColor(Color.BLACK);
+//		textView2.setTextColor(Color.BLACK);
+//		textView3.setTextColor(Color.BLACK);
+//		textView4.setTextColor(Color.BLACK);
+//		textView5.setTextColor(Color.BLACK);
+//		textView6.setTextColor(Color.BLACK);
 		textView1.setText(list.get(0));
 		textView2.setText(list.get(1));
 		textView3.setText(list.get(2));

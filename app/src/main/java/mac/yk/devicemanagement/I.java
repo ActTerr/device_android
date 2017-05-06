@@ -2,6 +2,7 @@ package mac.yk.devicemanagement;
 
 public interface I {
     String TABLENAME="tableName";
+    String UNIT="unit";
     interface UNCAUGHT{
         String PATH="/Users/mac-yk/Downloads/Server/";
         String FILE_NAME="fileName";
@@ -19,7 +20,7 @@ public interface I {
         String CONTROL="control";
         String SAVE="save";
         String LOGOUT="logOut";
-        String SERVER_ROOT="http://192.168.0.36:8080/deviceManagement/";
+        String SERVER_ROOT="http://192.168.1.101:8080/deviceManagement/";
         String XUNJIAN="xunjian";
         String XIUJUN="xiujun";
         String LOGIN="login";
@@ -115,7 +116,7 @@ public interface I {
     }
     interface DEVICE2{
         String DID="CHAR_DEV_TOTAL_REC_ID";
-        String CATEGROY_ID="LOCK_VERSION";
+        String LOCK_VERSION="LOCK_VERSION";
         String CATEGROY="CHAR_DEV_CATEGORY";
         String MENUFACTOR="CHAR_PRODUCT_NA";
         String MODEL="CHAR_MODEL_NA";

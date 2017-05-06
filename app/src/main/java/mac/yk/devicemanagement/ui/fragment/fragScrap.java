@@ -126,12 +126,12 @@ public class fragScrap extends BaseFragment {
 
 
     private void getTongji() {
-        ApiWrapper<ServerAPI> network = new ApiWrapper<>();
-        subscription = network.targetClass(ServerAPI.class).getAPI().getTongji(I.BAOFEI.TABLENAME)
-                .compose(network.<Integer[]>applySchedulers())
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(obTongji);
+//        ApiWrapper<ServerAPI> network = new ApiWrapper<>();
+//        subscription = network.targetClass(ServerAPI.class).getAPI().getTongji(I.BAOFEI.TABLENAME)
+//                .compose(network.<Integer[]>applySchedulers())
+//                .subscribeOn(Schedulers.io())
+//                .observeOn(AndroidSchedulers.mainThread())
+//                .subscribe(obTongji);
     }
 
     private void setTitle() {

@@ -77,7 +77,6 @@ public class ConvertUtils {
         switch (Dname) {
             case "电池":
                 return I.DNAME.DIANCHI;
-            case "停车顶":
             case "手持台":
                 return I.DNAME.DIANTAI;
             case "机控器":
