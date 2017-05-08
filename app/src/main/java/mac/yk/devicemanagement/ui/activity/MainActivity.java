@@ -112,7 +112,7 @@ public class MainActivity extends BaseActivity {
     private void init() {
         fragDevice = new fragDevice();
         fragScrap=new fragScrap();
-        fragCount=new fragCount();
+        fragCount =new fragCount();
         context = this;
         builder = new AlertDialog.Builder(this);
         progressDialog = new ProgressDialog(this);
