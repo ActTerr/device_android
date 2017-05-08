@@ -33,7 +33,6 @@ import mac.yk.devicemanagement.net.ApiWrapper;
 import mac.yk.devicemanagement.net.ServerAPI;
 import mac.yk.devicemanagement.ui.fragment.fragDetail;
 import mac.yk.devicemanagement.util.ActivityUtils;
-import mac.yk.devicemanagement.util.ConvertUtils;
 import mac.yk.devicemanagement.util.ExceptionFilter;
 import mac.yk.devicemanagement.util.MFGT;
 import mac.yk.devicemanagement.util.ToastUtil;
@@ -178,10 +177,18 @@ public class DetailActivity extends BaseActivity {
                         }
                         break;
                     case R.id.xunjian:
-                        showXunJianDialog();
+                        if (!mStatus.getStatus().equals("备用")){
+                            ToastUtil.showcannotControl(context);
+                        }else {
+                            showXunJianDialog();
+                        }
                         break;
                     case R.id.xiujun:
-                        showXiujunDialog();
+                        if (!mStatus.getStatus().equals("维修")){
+                            ToastUtil.showcannotControl(context);
+                        }else {
+                            showXiujunDialog();
+                        }
                         break;
                     case R.id.record:
                         MFGT.gotoRecordActivity(context, mStatus.getDid());
@@ -190,16 +197,30 @@ public class DetailActivity extends BaseActivity {
                     case R.id.baofei:
                         postBaofei();
                         break;
-                    case R.id.yonghou:
-                        postYonghou(id);
-                        break;
                     case R.id.shiyong:
+                        if (!mStatus.getStatus().equals("使用")){
+                         ToastUtil.showcannotControl(context);
+                        }else {
+                            postControlD(I.CONTROL_D.SHIYONG);
+                        }
                         break;
                     case R.id.Ddaiyong:
+                        if (!mStatus.getStatus().equals("待用")){
+                            ToastUtil.showcannotControl(context);
+                        }else {
+                            postControlD(I.CONTROL_D.D_DAIYONG);
+                        }
                         break;
                     case R.id.weixiu:
+                        if (!mStatus.getStatus().equals("待修")){
+                            ToastUtil.showcannotControl(context);
+                        }else {
+                            postControl("维修");
+                        }
                         break;
                     case R.id.chongdian:
+                            postControlD(I.CONTROL_D.CHONGDIAN);
+
                         break;
                 }
                 item.setChecked(true);
@@ -209,14 +230,12 @@ public class DetailActivity extends BaseActivity {
         });
     }
 
-    private void postYonghou(String id) {
-        progressDialog.show();
-        ApiWrapper<ServerAPI> wrapper = new ApiWrapper<>();
-        subscription = wrapper.targetClass(ServerAPI.class).getAPI().yonghou(id)
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .compose(wrapper.<Integer>applySchedulers())
-                .subscribe(new Subscriber<Integer>() {
+    private void postControlD(String s) {
+        dialog.show();
+        ApiWrapper<ServerAPI> wrapper=new ApiWrapper<>();
+        wrapper.targetClass(ServerAPI.class).getAPI().controlD(s,mStatus.getDid())
+                .compose(wrapper.<String>applySchedulers())
+                .subscribe(new Subscriber<String>() {
                     @Override
                     public void onCompleted() {
 
@@ -224,20 +243,21 @@ public class DetailActivity extends BaseActivity {
 
                     @Override
                     public void onError(Throwable e) {
-                        progressDialog.dismiss();
-                        if (ExceptionFilter.filter(context, e)) {
-                            ToastUtil.showcannotControl(context);
+                        dialog.dismiss();
+                        if(ExceptionFilter.filter(context,e)){
+                            ToastUtil.showToast(context,"操作失败");
                         }
                     }
 
                     @Override
-                    public void onNext(Integer integer) {
-                        progressDialog.dismiss();
-                        mStatus.setStatus(ConvertUtils.getStatus(isDianchi,integer));
-                        ToastUtil.showControlSuccess(context);
+                    public void onNext(String s) {
+                        dialog.dismiss();
+                        mStatus.setStatus(s);
                     }
                 });
     }
+
+
 
     public class BaofeiHolder {
         View v;

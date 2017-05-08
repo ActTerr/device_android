@@ -3,6 +3,7 @@ package mac.yk.devicemanagement;
 public interface I {
     String TABLENAME="tableName";
     String UNIT="unit";
+    String YEAR="year";
     interface UNCAUGHT{
         String PATH="/Users/mac-yk/Downloads/Server/";
         String FILE_NAME="fileName";
@@ -30,6 +31,15 @@ public interface I {
         String YONGHOU="yonghou";
         String DOWNPIC="downPic";
         String GETPICCOUNT="getPicCount";
+        String GETCOUNT="getCount";
+        String CONTROL_D="controlD";
+
+    }
+    interface CONTROL_D{
+        String CONTROL_TYPE="control_type";
+        String SHIYONG="shiyong";
+        String D_DAIYONG="Ddaiyong";
+        String CHONGDIAN="chongdian";
     }
     interface BAOFEI{
         String TABLENAME="baofei";
@@ -41,7 +51,7 @@ public interface I {
     }
     interface PIC{
         String AVATAR_SUFFIX_JPG="JPG";
-        String DEVICE="Device";
+        String DEVICE="DeviceOld";
         String PID="pId";
         String TYPE="picType";
     }
@@ -74,6 +84,7 @@ public interface I {
         String SIZE="size";
     }
     interface DEVICE{
+
         String TABLENAME="device";
         String DID="dId";
         String DNAME="dName";
@@ -93,30 +104,31 @@ public interface I {
     }
 
     interface WEIXIU{
-        String ID="id";
-        String TABLENAME="weixiu";
-        String WXDATE="wxDate";
-        String DID="dId";
-        String USER="user";
-        String TRANSLATE="translate";
-        String REMARK="remark";
-        String XJDATE="xjDate";
+        String ID="ID";
+        String TABLENAME="SERVICE";
+        String WXDATE="WX_DATE";
+        String DID="DID";
+        String USER="WX_USER";
+        String TRANSLATE="ISTRANSLATE";
+        String REMARK="REMARK";
+        String XJDATE="XJ_DATE";
     }
     interface XUNJIAN{
-        String TABLENAME="xunjian";
-        String DATE="date";
-        String STATUS="status";
-        String REMARK="remark";
-        String USER="user";
-        String DID="dId";
+        String TABLENAME="XUNJIAN";
+        String DATE="XJ_DATE";
+        String STATUS="STATUS";
+        String REMARK="REMARK";
+        String USER="XJ_USER";
+        String DID="DID";
     }
     interface GESTURE{
         int MANUAL=1;
         int AUTO=2;
     }
     interface DEVICE2{
+        String TABLE_NAME="DEV_TOTAL_REC";
         String DID="CHAR_DEV_TOTAL_REC_ID";
-        String LOCK_VERSION="LOCK_VERSION";
+        String CATEGROY_ID="LOCK_VERSION";
         String CATEGROY="CHAR_DEV_CATEGORY";
         String MENUFACTOR="CHAR_PRODUCT_NA";
         String MODEL="CHAR_MODEL_NA";
