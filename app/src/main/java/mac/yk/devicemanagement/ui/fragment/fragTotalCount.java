@@ -18,7 +18,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import mac.yk.devicemanagement.MyApplication;
 import mac.yk.devicemanagement.R;
-import mac.yk.devicemanagement.adapter.FormAdapter;
+import mac.yk.devicemanagement.adapter.FormTotalAdapter;
 import mac.yk.devicemanagement.net.ApiWrapper;
 import mac.yk.devicemanagement.net.ServerAPI;
 import mac.yk.devicemanagement.util.ConvertUtils;
@@ -75,7 +75,7 @@ public class fragTotalCount extends BaseFragment {
         list.addAll(ConvertUtils.array2List(arra));
         data.add(list);
         ApiWrapper<ServerAPI> wrapper=new ApiWrapper<>();
-        wrapper.targetClass(ServerAPI.class).getAPI().getTongji(MyApplication.getInstance().getUser().getUnit(),yaer)
+        wrapper.targetClass(ServerAPI.class).getAPI().getTotalCount(MyApplication.getInstance().getUser().getUnit(),yaer)
                 .compose(wrapper.<ArrayList<String[]>>applySchedulers())
                 .timeout(30, TimeUnit.SECONDS)
                 .subscribe(new Subscriber<ArrayList<String[]>>() {
@@ -111,7 +111,7 @@ public class fragTotalCount extends BaseFragment {
                         list1.add(String.valueOf(shouchitai));list1.add(String.valueOf(guding));
                         list1.add(String.valueOf(yidong)); list1.add(String.valueOf(qukongqi));
                         data.add(list1);
-                        lv.setAdapter(new FormAdapter(getContext(), data));
+                        lv.setAdapter(new FormTotalAdapter(getContext(), data));
 
                     }
                 });

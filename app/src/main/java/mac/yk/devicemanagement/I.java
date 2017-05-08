@@ -4,6 +4,7 @@ public interface I {
     String TABLENAME="tableName";
     String UNIT="unit";
     String YEAR="year";
+    String MEMORY="memory";
     interface UNCAUGHT{
         String PATH="/Users/mac-yk/Downloads/Server/";
         String FILE_NAME="fileName";
@@ -33,7 +34,7 @@ public interface I {
         String GETPICCOUNT="getPicCount";
         String GETCOUNT="getCount";
         String CONTROL_D="controlD";
-
+        String GET_STATUS_COUNT="getStatusCount";
     }
     interface CONTROL_D{
         String CONTROL_TYPE="control_type";

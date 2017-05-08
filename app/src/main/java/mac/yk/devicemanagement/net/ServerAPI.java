@@ -26,7 +26,11 @@ public interface ServerAPI {
     Observable<Result<String>> getyujing();
 
     @GET(I.REQUEST.PATH+"?request="+I.REQUEST.TONGJI)
-    Observable<Result<ArrayList<String[]>>> getTongji(@Query(I.UNIT) int unit,@Query("year") String yaer );
+    Observable<Result<ArrayList<String[]>>> getTotalCount(@Query(I.UNIT) int unit,@Query("year") String year );
+
+    @GET(I.REQUEST.PATH+"?request="+I.REQUEST.GET_STATUS_COUNT)
+    Observable<Result<ArrayList<String[]>>> getStatusCount(@Query(I.UNIT) int unit,@Query("year") String year ,
+                                                           @Query(I.MEMORY) int memory);
 
     @GET(I.REQUEST.PATH+"?request="+I.REQUEST.CHAXUN)
     Observable<Result<String[]>> chaxun(@Query(I.DEVICE.DID) String Did);
