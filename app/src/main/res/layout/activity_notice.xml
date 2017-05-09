@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+     android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    <android.support.v4.view.ViewPager
+        android:id="@+id/viewPager"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+    </android.support.v4.view.ViewPager>
+    <LinearLayout
+        android:layout_alignParentBottom="true"
+        android:background="@color/gray2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <TextView
+            android:id="@+id/item_notice"
+            android:padding="5dp"
+            android:textColor="@color/white"
+            android:gravity="center"
+            android:text="公告"
+            android:layout_weight="1"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content" />
+        <View style="@style/vertical_layout"/>
+        <TextView
+            android:id="@+id/item_attachment"
+            android:padding="5dp"
+            android:textColor="@color/white"
+            android:gravity="center"
+            android:text="附件"
+            android:layout_weight="1"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content" />
+    </LinearLayout>
+</RelativeLayout>

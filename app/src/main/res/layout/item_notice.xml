@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/gray2"
+    android:paddingTop="5dp"
+>
+    <TextView
+        android:paddingLeft="10dp"
+        android:id="@+id/notice_position"
+        android:textColor="@color/white"
+        android:text="1."
+        android:textSize="25sp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+    <TextView
+        android:layout_toRightOf="@+id/notice_position"
+        android:textSize="25sp"
+        android:id="@+id/notice_title"
+        android:textColor="@color/white"
+        android:text="afdafafafa"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+    <TextView
+        android:layout_toRightOf="@+id/notice_position"
+        android:id="@+id/notice_time"
+        android:textSize="25sp"
+        android:textColor="@color/white"
+        android:layout_below="@+id/notice_title"
+        android:text="111111"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+    <ImageView
+        android:visibility="gone"
+        android:src="@drawable/edit"
+        android:layout_toLeftOf="@+id/iv_delete"
+        android:layout_marginRight="10dp"
+        android:id="@+id/iv_edit"
+        android:layout_width="25dp"
+        android:layout_height="25dp" />
+    <ImageView
+        android:visibility="gone"
+        android:layout_marginRight="15dp"
+        android:id="@+id/iv_delete"
+        android:src="@drawable/delete"
+        android:layout_alignParentRight="true"
+        android:layout_width="25dp"
+        android:layout_height="25dp" />
+</RelativeLayout>
