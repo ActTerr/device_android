@@ -48,7 +48,7 @@ public class FormTotalAdapter extends BaseAdapter {
 		// TODO Auto-generated method stub
 		ArrayList<String> list = lists.get(index);
 		if(view == null){
-			view = inflater.inflate(R.layout.form_item, null);
+			view = inflater.inflate(R.layout.item_total_form, null);
 		}
 		TextView textView1 = (TextView) view.findViewById(R.id.text1);
 		TextView textView2 = (TextView) view.findViewById(R.id.text2);
