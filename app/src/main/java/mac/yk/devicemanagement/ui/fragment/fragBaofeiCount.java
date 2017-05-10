@@ -26,10 +26,10 @@ import mac.yk.devicemanagement.util.L;
 import rx.Subscriber;
 
 /**
- * Created by mac-yk on 2017/4/30.
+ * Created by mac-yk on 2017/5/10.
  */
 
-public class fragTotalCount extends BaseFragment {
+public class fragBaofeiCount extends BaseFragment {
     @BindView(R.id.list)
     ListView lv;
     ArrayList<ArrayList<String>> data;
@@ -54,11 +54,11 @@ public class fragTotalCount extends BaseFragment {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-            if(item.getItemId()==R.id.all){
-                yaer="all";
+        if(item.getItemId()==R.id.all){
+            yaer="all";
         }else {
-                yaer=String.valueOf(item.getItemId()).substring(1);
-            }
+            yaer=String.valueOf(item.getItemId()).substring(1);
+        }
         return true;
     }
 
@@ -75,7 +75,7 @@ public class fragTotalCount extends BaseFragment {
         list.addAll(ConvertUtils.array2List(arra));
         data.add(list);
         ApiWrapper<ServerAPI> wrapper=new ApiWrapper<>();
-        wrapper.targetClass(ServerAPI.class).getAPI().getTotalCount(MyApplication.getInstance().getUser().getUnit(),yaer,"default")
+        wrapper.targetClass(ServerAPI.class).getAPI().getBaofeiCount(MyApplication.getInstance().getUser().getUnit(),yaer,"报废")
                 .compose(wrapper.<ArrayList<String[]>>applySchedulers())
                 .timeout(30, TimeUnit.SECONDS)
                 .subscribe(new Subscriber<ArrayList<String[]>>() {
@@ -117,5 +117,4 @@ public class fragTotalCount extends BaseFragment {
                 });
 
     }
-
 }

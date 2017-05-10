@@ -26,11 +26,14 @@ public interface ServerAPI {
     Observable<Result<String>> getyujing();
 
     @GET(I.REQUEST.PATH+"?request="+I.REQUEST.TONGJI)
-    Observable<Result<ArrayList<String[]>>> getTotalCount(@Query(I.UNIT) int unit,@Query("year") String year );
+    Observable<Result<ArrayList<String[]>>> getTotalCount(@Query(I.UNIT) int unit,@Query("year") String year ,@Query(I.TYPE) String type);
 
     @GET(I.REQUEST.PATH+"?request="+I.REQUEST.GET_STATUS_COUNT)
     Observable<Result<ArrayList<String[]>>> getStatusCount(@Query(I.UNIT) int unit,@Query("year") String year ,
                                                            @Query(I.MEMORY) int memory);
+
+    @GET(I.REQUEST.PATH+"?request="+I.REQUEST.GET_BAOFEI_COUNT)
+    Observable<Result<ArrayList<String[]>>> getBaofeiCount(@Query(I.UNIT) int unit,@Query("year") String year ,@Query(I.TYPE)String type);
 
     @GET(I.REQUEST.PATH+"?request="+I.REQUEST.CHAXUN)
     Observable<Result<String[]>> chaxun(@Query(I.DEVICE.DID) String Did);
@@ -64,7 +67,8 @@ public interface ServerAPI {
 
     @GET(I.REQUEST.PATH+"?request="+I.REQUEST.BAOFEI)
     Observable<Result<String>> baofei(@Query(I.USER.NAME) String name
-            ,@Query(I.BAOFEI.DID) String Did,@Query(I.BAOFEI.REMARK) String remark);
+            ,@Query(I.BAOFEI.DID) String Did,@Query(I.BAOFEI.REMARK) String remark,@Query(I.BAOFEI.STATION) String unit
+    ,@Query(I.BAOFEI.TYPE) String type);
 
     @GET(I.REQUEST.PATH+"?request="+I.REQUEST.CONTROL)
     Observable<Result<String>> control(@Query(I.DEVICE2.STATUS) String status,@Query(I.DEVICE2.DID) String Did);
@@ -80,7 +84,7 @@ public interface ServerAPI {
                                                @Query(I.DEVICE.STATUS) int status);
 
     @GET(I.REQUEST.PATH+"?request="+I.REQUEST.GETPICCOUNT)
-    Observable<Result<Integer>> getCount(@Query(I.DEVICE.DNAME )int dName,@Query(I.PIC.TYPE) String type);
+    Observable<Result<Integer>> getPicCount(@Query(I.DEVICE.DNAME )int dName,@Query(I.PIC.TYPE) String type);
 
     @POST(I.REQUEST.PATH+"?request="+I.REQUEST.UPLOADUNCAUGHT)
     @Multipart
@@ -90,4 +94,7 @@ public interface ServerAPI {
 
     @GET(I.REQUEST.PATH+"?request="+I.REQUEST.CONTROL_D)
     Observable<Result<String>> controlD(@Query(I.CONTROL_D.CONTROL_TYPE)String control,@Query(I.DEVICE2.DID) String Did);
+
+
+
 }

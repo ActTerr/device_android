@@ -208,7 +208,7 @@ public class lunboView extends ViewPager {
         deviceOld = MyApplication.getDeviceOld();
         L.e("main", "execute getcount");
         ApiWrapper<ServerAPI> wrapper = new ApiWrapper<>();
-        subscription = wrapper.targetClass(ServerAPI.class).getAPI().getCount(deviceOld.getDname(), I.PIC.DEVICE)
+        subscription = wrapper.targetClass(ServerAPI.class).getAPI().getPicCount(deviceOld.getDname(), I.PIC.DEVICE)
                 .compose(wrapper.<Integer>applySchedulers())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(AndroidSchedulers.mainThread())

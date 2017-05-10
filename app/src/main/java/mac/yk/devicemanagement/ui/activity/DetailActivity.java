@@ -294,7 +294,7 @@ public class DetailActivity extends BaseActivity {
             progressDialog.show();
             ApiWrapper<ServerAPI> wrapper = new ApiWrapper<>();
             subscription = wrapper.targetClass(ServerAPI.class).getAPI().baofei(user.getName()
-                    ,  id, remark.getText().toString())
+                    ,  id, remark.getText().toString(),data[16],data[21])
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
                     .compose(wrapper.<String>applySchedulers())

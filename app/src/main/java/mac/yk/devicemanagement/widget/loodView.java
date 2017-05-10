@@ -117,7 +117,7 @@ public class loodView extends FrameLayout {
     }
     private void initCount() {
         ApiWrapper<ServerAPI> wrapper = new ApiWrapper<>();
-        subscription = wrapper.targetClass(ServerAPI.class).getAPI().getCount(Dname, I.PIC.DEVICE)
+        subscription = wrapper.targetClass(ServerAPI.class).getAPI().getPicCount(Dname, I.PIC.DEVICE)
                 .compose(wrapper.<Integer>applySchedulers())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(AndroidSchedulers.mainThread())

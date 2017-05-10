@@ -35,10 +35,10 @@ import mac.yk.devicemanagement.MyApplication;
 import mac.yk.devicemanagement.R;
 import mac.yk.devicemanagement.net.ApiWrapper;
 import mac.yk.devicemanagement.net.ServerAPI;
+import mac.yk.devicemanagement.ui.fragment.fragBaofeiCount;
 import mac.yk.devicemanagement.ui.fragment.fragCount;
 import mac.yk.devicemanagement.ui.fragment.fragDevice;
 import mac.yk.devicemanagement.ui.fragment.fragMain;
-import mac.yk.devicemanagement.ui.fragment.fragScrap;
 import mac.yk.devicemanagement.util.ActivityUtils;
 import mac.yk.devicemanagement.util.ExceptionFilter;
 import mac.yk.devicemanagement.util.L;
@@ -70,8 +70,8 @@ public class MainActivity extends BaseActivity {
     TextView mTv;
 
     fragDevice fragDevice;
-    fragScrap fragScrap;
     fragCount fragCount;
+    fragBaofeiCount fragBaofeiCount;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -111,7 +111,7 @@ public class MainActivity extends BaseActivity {
 
     private void init() {
         fragDevice = new fragDevice();
-        fragScrap=new fragScrap();
+        fragBaofeiCount=new fragBaofeiCount();
         fragCount =new fragCount();
         context = this;
         builder = new AlertDialog.Builder(this);
@@ -193,7 +193,7 @@ public class MainActivity extends BaseActivity {
                         ActivityUtils.changeFragment(getSupportFragmentManager(), fragCount, R.id.frame);
                         break;
                     case R.id.bf_tongji:
-                        ActivityUtils.changeFragment(getSupportFragmentManager(), fragScrap, R.id.frame);
+                        ActivityUtils.changeFragment(getSupportFragmentManager(), fragBaofeiCount, R.id.frame);
                         break;
                 }
                 item.setChecked(true);
