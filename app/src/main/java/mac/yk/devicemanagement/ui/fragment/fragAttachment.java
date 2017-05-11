@@ -37,7 +37,10 @@ public class fragAttachment extends BaseFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.frag_notice, container, false);
-        getAttachments(getArguments().getLong("Nid"));
+       Long nid= getArguments().getLong("Nid",0);
+        if (nid!=0){
+            getAttachments(nid);
+        }
 
         ButterKnife.bind(this, view);
         return view;

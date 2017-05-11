@@ -7,6 +7,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.view.ViewPager;
 import android.view.View;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -27,22 +28,25 @@ public class NoticeDetailActivity extends BaseActivity {
 
     VPAdapter vpAdapter;
     @BindView(R.id.checkll)
-     LinearLayout checkll;
-    public  Handler handler;
-    public static int open=1;
-    public static int close=0;
+    LinearLayout checkll;
+    public Handler handler;
+    public static int open = 1;
+    public static int close = 0;
+    @BindView(R.id.item_attachment)
+    TextView itemAttachment;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_notice);
         ButterKnife.bind(this);
         init();
-        handler=new Handler(){
+        handler = new Handler() {
             @Override
             public void handleMessage(Message msg) {
-                if (msg.what==open){
+                if (msg.what == open) {
                     checkll.setVisibility(View.VISIBLE);
-                }else {
+                } else {
                     checkll.setVisibility(View.GONE);
                 }
             }
@@ -64,10 +68,15 @@ public class NoticeDetailActivity extends BaseActivity {
         vpAdapter.addFragment(fragNoticeDetail, "公告");
 
         Bundle budle2 = new Bundle();
-        budle2.putLong("Nid", notice.getNid());
-        fragAttachment fragAttachment = new fragAttachment();
-        fragAttachment.setArguments(budle2);
-        vpAdapter.addFragment(fragAttachment, "附件");
+        if (notice != null) {
+            budle2.putLong("Nid", notice.getNid());
+            fragAttachment fragAttachment = new fragAttachment();
+            fragAttachment.setArguments(budle2);
+            vpAdapter.addFragment(fragAttachment, "附件");
+        }else {
+            itemAttachment.setVisibility(View.GONE);
+        }
+
         viewPager.setAdapter(vpAdapter);
     }
 

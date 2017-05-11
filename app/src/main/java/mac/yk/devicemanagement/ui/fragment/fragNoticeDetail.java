@@ -1,16 +1,18 @@
 package mac.yk.devicemanagement.ui.fragment;
 
+import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.google.gson.Gson;
@@ -44,14 +46,12 @@ public class fragNoticeDetail extends BaseFragment {
     EditText noticeTitle;
     @BindView(R.id.notice_common)
     EditText noticeCommon;
-    @BindView(R.id.btn_save)
-    Button btnSave;
     @BindView(R.id.iv_delete)
     ImageView ivDelete;
     @BindView(R.id.iv_edit)
     ImageView ivEdit;
 
-    String TAG="fragNoticeDetail";
+    String TAG = "fragNoticeDetail";
     ProgressDialog dialog;
     Notice notice;
     boolean isEdit;
@@ -60,13 +60,19 @@ public class fragNoticeDetail extends BaseFragment {
     TextView noticeTime;
 
     Handler handler;
+    @BindView(R.id.btn_ll)
+    LinearLayout btnLl;
+    @BindView(R.id.division)
+    View division;
+
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.frag_notice_detail, container, false);
         ButterKnife.bind(this, view);
-        NoticeDetailActivity activity= (NoticeDetailActivity) getActivity();
-        handler=activity.handler;
+        NoticeDetailActivity activity = (NoticeDetailActivity) getActivity();
+        handler = activity.handler;
         context = getContext();
         dialog = new ProgressDialog(context);
         getBundle();
@@ -81,7 +87,9 @@ public class fragNoticeDetail extends BaseFragment {
             setEditStatus();
         } else {
             setUNEditStatus();
-            noticeTitle.setText(notice.getTitle());
+            String title = notice.getTitle();
+            noticeTitle.setText(title);
+//            String common = ;
             noticeCommon.setText(notice.getCommon());
             noticeTime.setText(ConvertUtils.Date2String(notice.getDate()));
         }
@@ -94,43 +102,52 @@ public class fragNoticeDetail extends BaseFragment {
         }
 
     }
-    private void setEditStatus(){
+
+    private void setEditStatus() {
         handler.sendEmptyMessage(NoticeDetailActivity.close);
-        isEdit=true;
-        btnSave.setVisibility(View.VISIBLE);
+        isEdit = true;
+        btnLl.setVisibility(View.VISIBLE);
         noticeCommon.setFocusable(true);
         noticeCommon.setFocusableInTouchMode(true);
         noticeTitle.setFocusable(true);
         noticeTitle.setFocusableInTouchMode(true);
         noticeTitle.requestFocus();
         noticeCommon.requestFocus();
+        division.setVisibility(View.GONE);
     }
+
     private void setUNEditStatus() {
-        L.e(TAG,"execute unedit");
+        L.e(TAG, "execute unedit");
         handler.sendEmptyMessage(NoticeDetailActivity.open);
-        isEdit=false;
-        btnSave.setVisibility(View.GONE);
+        isEdit = false;
+        btnLl.setVisibility(View.GONE);
         noticeCommon.setFocusable(false);
         noticeCommon.setFocusableInTouchMode(false);
         noticeTitle.setFocusable(false);
         noticeTitle.setFocusableInTouchMode(false);
+        division.setVisibility(View.VISIBLE);
     }
 
     private void getBundle() {
         Bundle bundle = getArguments();
         notice = (Notice) bundle.getSerializable("notice");
-        L.e(TAG,notice.getNid()+"");
+        L.e(TAG, notice.getNid() + "");
         isEdit = bundle.getBoolean("isEdit");
     }
 
-    @OnClick({R.id.btn_save, R.id.iv_delete, R.id.iv_edit})
+    @OnClick({R.id.btn_save, R.id.iv_delete, R.id.iv_edit, R.id.btn_cancel})
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.btn_save:
                 postSaveNotice();
                 break;
+            case R.id.btn_cancel:
+                noticeCommon.setText(notice.getCommon());
+                noticeTitle.setText(notice.getTitle());
+                setUNEditStatus();
+                break;
             case R.id.iv_delete:
-                postDelete();
+                showDeleteDialog();
                 break;
             case R.id.iv_edit:
                 if (isEdit) {
@@ -142,7 +159,27 @@ public class fragNoticeDetail extends BaseFragment {
         }
     }
 
+    private void showDeleteDialog() {
+        AlertDialog dialog = new AlertDialog.Builder(context)
+                .setTitle("确定删除该条公告吗？")
+                .setPositiveButton("确定", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        postDelete();
+                        dialog.dismiss();
+                    }
+                })
+                .setNegativeButton("取消", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                }).create();
+        dialog.show();
+    }
+
     private void postDelete() {
+
         dialog.show();
         ApiWrapper<ServerAPI> wrapper = new ApiWrapper<>();
         wrapper.targetClass(ServerAPI.class).getAPI().deleteNotice(notice.getNid())
@@ -207,8 +244,6 @@ public class fragNoticeDetail extends BaseFragment {
                     }
                 });
     }
-
-
 
 
 }
