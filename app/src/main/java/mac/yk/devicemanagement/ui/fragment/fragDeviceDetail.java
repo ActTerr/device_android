@@ -25,7 +25,7 @@ import mac.yk.devicemanagement.widget.loodView;
  * Created by mac-yk on 2017/3/3.
  */
 
-public class fragDetail extends BaseFragment implements Observer {
+public class fragDeviceDetail extends BaseFragment implements Observer {
 
     Observer observer;
     @BindView(R.id.loodView)

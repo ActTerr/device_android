@@ -9,7 +9,7 @@ import com.wujay.fund.GestureVerifyActivity;
 
 import mac.yk.devicemanagement.R;
 import mac.yk.devicemanagement.bean.Notice;
-import mac.yk.devicemanagement.ui.activity.DetailActivity;
+import mac.yk.devicemanagement.ui.activity.DeviceDetailActivity;
 import mac.yk.devicemanagement.ui.activity.GestureActivity;
 import mac.yk.devicemanagement.ui.activity.LoginActivity;
 import mac.yk.devicemanagement.ui.activity.MainActivity;
@@ -24,7 +24,7 @@ import mac.yk.devicemanagement.ui.activity.SetActivity;
 
 public class MFGT {
     public static void gotoDetailActivity(Context context, String[] deviceOld){
-        Intent intent=new Intent(context,DetailActivity.class);
+        Intent intent=new Intent(context,DeviceDetailActivity.class);
         intent.putExtra("deviceOld", deviceOld);
         L.e("main", deviceOld.toString());
         startActivity(context,intent);

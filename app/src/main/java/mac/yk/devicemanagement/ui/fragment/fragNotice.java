@@ -29,7 +29,7 @@ import mac.yk.devicemanagement.util.ToastUtil;
 import rx.Observer;
 
 /**
- * Created by mac-yk on 2017/5/9.
+ * 公告列表
  */
 
 public class fragNotice extends BaseFragment {

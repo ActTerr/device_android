@@ -8,13 +8,13 @@ import java.util.Date;
  */
 
 public class Notice implements Serializable {
-    long Nid;
+    long nid;
     String title;
     Date date;
     String common;
 
     public Notice(long nid, String title, Date date, String common) {
-        Nid = nid;
+        this.nid = nid;
         this.title = title;
         this.date = date;
         this.common = common;
@@ -33,11 +33,11 @@ public class Notice implements Serializable {
     }
 
     public long getNid() {
-        return Nid;
+        return nid;
     }
 
     public void setNid(long nid) {
-        Nid = nid;
+        this.nid = nid;
     }
 
     public Date getDate() {

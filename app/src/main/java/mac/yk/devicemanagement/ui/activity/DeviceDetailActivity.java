@@ -31,7 +31,7 @@ import mac.yk.devicemanagement.bean.Status;
 import mac.yk.devicemanagement.bean.User;
 import mac.yk.devicemanagement.net.ApiWrapper;
 import mac.yk.devicemanagement.net.ServerAPI;
-import mac.yk.devicemanagement.ui.fragment.fragDetail;
+import mac.yk.devicemanagement.ui.fragment.fragDeviceDetail;
 import mac.yk.devicemanagement.util.ActivityUtils;
 import mac.yk.devicemanagement.util.ExceptionFilter;
 import mac.yk.devicemanagement.util.MFGT;
@@ -42,12 +42,12 @@ import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 
 
-public class DetailActivity extends BaseActivity {
+public class DeviceDetailActivity extends BaseActivity {
     ProgressDialog progressDialog;
     String[] data;
     Activity context;
     boolean isDianchi = false;
-    fragDetail fragD;
+    fragDeviceDetail fragD;
     Dialog dialog;
     @BindView(R.id.toolBar)
     Toolbar toolBar;
@@ -99,7 +99,7 @@ public class DetailActivity extends BaseActivity {
         ActionBar ab = getSupportActionBar();
         ab.setHomeAsUpIndicator(R.drawable.ic_menu);
         ab.setDisplayHomeAsUpEnabled(true);
-        fragD = new fragDetail();
+        fragD = new fragDeviceDetail();
         Bundle bundle=new Bundle();
         bundle.putStringArray("data",data);
         fragD.setArguments(bundle);

@@ -6,6 +6,7 @@ public interface I {
     String YEAR="year";
     String MEMORY="memory";
     String TYPE="type";
+    String BEAN="bean";
     interface UNCAUGHT{
         String PATH="/Users/mac-yk/Downloads/Server/";
         String FILE_NAME="fileName";
@@ -23,7 +24,7 @@ public interface I {
         String CONTROL="control";
         String SAVE="save";
         String LOGOUT="logOut";
-        String SERVER_ROOT="http://192.168.0.37:8080/deviceManagement/";
+        String SERVER_ROOT="http://192.168.1.101:8080/deviceManagement/";
         String XUNJIAN="xunjian";
         String XIUJUN="xiujun";
         String LOGIN="login";

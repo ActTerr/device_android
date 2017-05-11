@@ -17,7 +17,7 @@
         <activity android:name=".ui.activity.MainActivity">
 
         </activity>
-        <activity android:name=".ui.activity.DetailActivity"
+        <activity android:name=".ui.activity.DeviceDetailActivity"
             android:windowSoftInputMode = "adjustPan">
 
         </activity>
@@ -39,6 +39,7 @@
                 <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />
             </intent-filter>
         </receiver>
+        <activity android:name=".ui.activity.NoticeDetailActivity"/>
     </application>
 
 </manifest>

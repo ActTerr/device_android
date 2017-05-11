@@ -66,7 +66,7 @@ public class NoticeAdapter extends RecyclerView.Adapter<NoticeAdapter.NoticeView
                             .setPositiveButton("确定", new DialogInterface.OnClickListener() {
                                 @Override
                                 public void onClick(DialogInterface dialog, int which) {
-                                    postDelete(String.valueOf(notice.getNid()));
+                                    postDelete(notice.getNid());
                                     dialog.dismiss();
                                 }
                             })
@@ -90,7 +90,12 @@ public class NoticeAdapter extends RecyclerView.Adapter<NoticeAdapter.NoticeView
         holder.noticePosition.setText(position + 1 + ".");
         holder.noticeTitle.setText(notice.getTitle());
         holder.noticeTime.setText(notice.getDate().toString());
-
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                MFGT.gotoNoticeDetail(context,false,notice);
+            }
+        });
     }
 
 
@@ -101,7 +106,7 @@ public class NoticeAdapter extends RecyclerView.Adapter<NoticeAdapter.NoticeView
 
 
 
-    private void postDelete(String Nid) {
+    private void postDelete(long Nid) {
         dialog.show();
         ApiWrapper<ServerAPI> wrapper=new ApiWrapper<>();
         wrapper.targetClass(ServerAPI.class).getAPI().deleteNotice(Nid)

@@ -3,7 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/gray2">
-    <TextView
+    <EditText
         android:layout_centerHorizontal="true"
         android:layout_alignParentTop="true"
         android:text="title"
@@ -18,34 +18,50 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
     <ScrollView
+
         android:id="@+id/slv"
         android:layout_weight="1"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="match_parent">
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
         <EditText
-            android:editable="false"
             android:id="@+id/notice_common"
-            android:textSize="30sp"
+            android:textSize="20sp"
             android:textColor="@color/white"
             android:text="ssssss"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
+        <TextView
+            android:layout_marginTop="20dp"
+            android:layout_marginLeft="230dp"
+            android:textColor="@color/white"
+            android:text="aaaaa"
+            android:id="@+id/notice_time"
+            android:textSize="20sp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+        </LinearLayout>
     </ScrollView>
-    <view
+    <View
         android:background="@color/white"
         android:layout_width="match_parent"
         android:layout_height="1dp"/>
     <Button
 
+        android:id="@+id/btn_save"
         android:text="保存"
         android:textColor="@color/white"
-        android:visibility="visible"
+        android:visibility="gone"
         android:background="@color/gray2"
         android:layout_alignParentBottom="true"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
     </LinearLayout>
     <ImageView
+        android:visibility="gone"
         android:layout_marginBottom="15dp"
         android:layout_alignStart="@+id/iv_edit"
         android:layout_above="@+id/iv_edit"
@@ -54,6 +70,7 @@
         android:layout_width="30dp"
         android:layout_height="30dp" />
     <ImageView
+        android:visibility="gone"
         android:id="@+id/iv_edit"
         android:layout_marginRight="20dp"
         android:layout_marginBottom="70dp"

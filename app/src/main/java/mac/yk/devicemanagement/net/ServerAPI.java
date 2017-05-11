@@ -3,6 +3,7 @@ package mac.yk.devicemanagement.net;
 import java.util.ArrayList;
 
 import mac.yk.devicemanagement.I;
+import mac.yk.devicemanagement.bean.Attachment;
 import mac.yk.devicemanagement.bean.DeviceOld;
 import mac.yk.devicemanagement.bean.Notice;
 import mac.yk.devicemanagement.bean.Result;
@@ -100,5 +101,14 @@ public interface ServerAPI {
     Observable<Result<ArrayList<Notice>>> getNotice(@Query(I.MEMORY) int memory);
 
     @GET(I.REQUEST.PATH+"?request="+I.REQUEST.DELETE_NOTICE)
-    Observable<Result<String>> deleteNotice(@Query(I.NOTICE.NID)String Nid);
+    Observable<Result<String>> deleteNotice(@Query(I.NOTICE.NID)long  Nid);
+
+    @GET(I.REQUEST.PATH+"?request="+I.REQUEST.UPDATE_NOTICE)
+    Observable<Result<String>> updateNotice(@Query(I.NOTICE.NID) long Nid, @Query(I.BEAN) String notice);
+
+
+    @GET(I.REQUEST.PATH+"?request="+I.REQUEST.GET_ATTACHMENT)
+    Observable<Result<ArrayList<Attachment>>> getAttachment(@Query(I.ATTACHMENT.NID) long Nid);
+
+
 }
