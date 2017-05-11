@@ -4,13 +4,31 @@
     android:layout_height="match_parent"
     >
 
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/rv"
+    <LinearLayout
+        android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
+    <android.support.v7.widget.RecyclerView
+        android:background="@color/gray2"
+        android:id="@+id/rv"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1">
 
     </android.support.v7.widget.RecyclerView>
+    <TextView
+        android:id="@+id/add_history"
+        android:padding="5dp"
+        android:gravity="center"
+        android:textColor="@color/white"
+        android:text="加载历史公告..."
+        android:background="@color/gray2"
+        android:layout_alignParentBottom="true"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+    </LinearLayout>
     <ImageView
+        android:id="@+id/iv_add"
         android:layout_marginRight="20dp"
         android:layout_marginBottom="50dp"
         android:layout_alignParentRight="true"

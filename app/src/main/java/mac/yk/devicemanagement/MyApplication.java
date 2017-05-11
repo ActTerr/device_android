@@ -8,7 +8,6 @@ import com.squareup.leakcanary.RefWatcher;
 
 import java.util.ArrayList;
 
-import mac.yk.devicemanagement.bean.DeviceOld;
 import mac.yk.devicemanagement.bean.Status;
 import mac.yk.devicemanagement.bean.User;
 
@@ -18,11 +17,11 @@ import mac.yk.devicemanagement.bean.User;
 
 public class MyApplication extends Application {
     public static Context context;
-    public static MyApplication instance=new MyApplication();
+    public  static MyApplication instance=new MyApplication();
     public static MyApplication getInstance(){
         return instance;
     }
-    public static boolean isDianchi;
+    private   boolean isDianchi;
 
     private RefWatcher refWatcher;
     @Override
@@ -33,28 +32,17 @@ public class MyApplication extends Application {
 //        CrashHandler.getInstance().init(getApplicationContext());
     }
 
-    public static DeviceOld getDeviceOld() {
-        return deviceOld;
+    public static Context getAppContext(){
+        return context;
     }
 
-    public static void setDeviceOld(DeviceOld deviceOld) {
-        MyApplication.deviceOld = deviceOld;
-    }
+    private Status status;
 
-    private static DeviceOld deviceOld =new DeviceOld();
-//    static ArrayList<Observer> observers;
-//    public static void addObserver(Fragment fragment){
-//        Observer observer= (Observer) fragment;
-//        observers.add(observer);
-//        deviceOld.addObserver(observer);
-//    }
-    static Status status;
-
-    public static Status getStatus() {
+    public  Status getStatus() {
         return status;
     }
 
-    public static void setStatus(Status s) {
+    public  void setStatus(Status s) {
         status = s;
     }
 
@@ -79,22 +67,22 @@ public class MyApplication extends Application {
     }
 
 
-    public static void setFlag(boolean b) {
+    public  void setFlag(boolean b) {
         isDianchi=b;
     }
-    public static boolean getFlag(){
+    public  boolean getFlag(){
         return isDianchi;
     }
 
     static ArrayList<Activity> activities=new ArrayList<>();
-    public static void addActivity(Activity activity){
+    public  void addActivity(Activity activity){
         activities.add(activity);
     }
-    public static void rmActivity(Activity activity){
+    public  void rmActivity(Activity activity){
         activities.remove(activity);
     }
 
-    public static ArrayList<Activity> getActivities() {
+    public  ArrayList<Activity> getActivities() {
         return activities;
     }
 

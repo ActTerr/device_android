@@ -7,6 +7,8 @@
     <item android:id="@+id/bf_tongji"
         android:icon="@drawable/baofei"
         android:title="报废统计"/>
+    <item android:id="@+id/notice"
+        android:title="公告信息"/>
     <item android:id="@+id/yujing"
         android:icon="@drawable/yujing"
         android:title="预警信息"/>

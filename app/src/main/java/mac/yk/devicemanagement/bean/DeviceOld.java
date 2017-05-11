@@ -86,7 +86,7 @@ public class DeviceOld extends Observable implements Serializable {
         return
 //                "name:"+ConvertUtils.getDname(dname)+"\n"+
                 "设备ID:" + did + "\n" +
-                        "当前状态:" + ConvertUtils.getStatus(MyApplication.getFlag(), status) + "\n" +
+                        "当前状态:" + ConvertUtils.getStatus(MyApplication.getInstance().getFlag(), status) + "\n" +
                         "出厂日期:" + ConvertUtils.Date2String(chuchang) + "\n" +
                         "上次巡检日期:" + ConvertUtils.Date2String(xunjian);
     }

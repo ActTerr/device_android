@@ -8,10 +8,12 @@ import com.wujay.fund.GestureEditActivity;
 import com.wujay.fund.GestureVerifyActivity;
 
 import mac.yk.devicemanagement.R;
+import mac.yk.devicemanagement.bean.Notice;
 import mac.yk.devicemanagement.ui.activity.DetailActivity;
 import mac.yk.devicemanagement.ui.activity.GestureActivity;
 import mac.yk.devicemanagement.ui.activity.LoginActivity;
 import mac.yk.devicemanagement.ui.activity.MainActivity;
+import mac.yk.devicemanagement.ui.activity.NoticeDetailActivity;
 import mac.yk.devicemanagement.ui.activity.RecordActivity;
 import mac.yk.devicemanagement.ui.activity.SaveActivity;
 import mac.yk.devicemanagement.ui.activity.SetActivity;
@@ -70,5 +72,11 @@ public class MFGT {
     public static void finish(Activity activity){
         activity.finish();
         activity.overridePendingTransition(R.anim.push_right_in,R.anim.push_right_out);
+    }
+    public static void gotoNoticeDetail(Context context, boolean isEdit, Notice notice){
+        Intent intent=new Intent(context, NoticeDetailActivity.class);
+        intent.putExtra("isEdit",isEdit);
+        intent.putExtra("notice",notice);
+        startActivity(context,intent);
     }
 }

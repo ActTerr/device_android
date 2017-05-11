@@ -26,4 +26,8 @@ public class ToastUtil {
     public static void showNoMore(Context context) {
         Toast.makeText(context, "没有更多数据", Toast.LENGTH_SHORT).show();
     }
+
+    public static void showException(Context context){
+        Toast.makeText(context, "出现异常", Toast.LENGTH_SHORT).show();
+    }
 }

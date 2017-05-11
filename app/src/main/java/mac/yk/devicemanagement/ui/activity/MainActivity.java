@@ -39,6 +39,7 @@ import mac.yk.devicemanagement.ui.fragment.fragBaofeiCount;
 import mac.yk.devicemanagement.ui.fragment.fragCount;
 import mac.yk.devicemanagement.ui.fragment.fragDevice;
 import mac.yk.devicemanagement.ui.fragment.fragMain;
+import mac.yk.devicemanagement.ui.fragment.fragNotice;
 import mac.yk.devicemanagement.util.ActivityUtils;
 import mac.yk.devicemanagement.util.ExceptionFilter;
 import mac.yk.devicemanagement.util.L;
@@ -72,6 +73,7 @@ public class MainActivity extends BaseActivity {
     fragDevice fragDevice;
     fragCount fragCount;
     fragBaofeiCount fragBaofeiCount;
+    fragNotice fragNotice;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -116,6 +118,7 @@ public class MainActivity extends BaseActivity {
         context = this;
         builder = new AlertDialog.Builder(this);
         progressDialog = new ProgressDialog(this);
+        fragNotice=new fragNotice();
     }
 
     private void setNavView() {
@@ -195,6 +198,8 @@ public class MainActivity extends BaseActivity {
                     case R.id.bf_tongji:
                         ActivityUtils.changeFragment(getSupportFragmentManager(), fragBaofeiCount, R.id.frame);
                         break;
+                    case R.id.notice:
+                        ActivityUtils.changeFragment(getSupportFragmentManager(),fragNotice,R.id.frame);
                 }
                 item.setChecked(true);
                 drawLayout.closeDrawers();

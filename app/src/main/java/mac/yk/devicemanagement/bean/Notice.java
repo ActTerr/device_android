@@ -1,17 +1,20 @@
 package mac.yk.devicemanagement.bean;
 
+import java.io.Serializable;
+import java.util.Date;
+
 /**
  * Created by mac-yk on 2017/5/9.
  */
 
-public class Notice {
-    String Nid;
+public class Notice implements Serializable {
+    long Nid;
     String title;
-    String date;
+    Date date;
     String common;
 
-    public Notice(String id, String title, String date, String common) {
-        this.Nid = id;
+    public Notice(long nid, String title, Date date, String common) {
+        Nid = nid;
         this.title = title;
         this.date = date;
         this.common = common;
@@ -20,13 +23,6 @@ public class Notice {
     public Notice() {
     }
 
-    public String getId() {
-        return Nid;
-    }
-
-    public void setId(String id) {
-        this.Nid = id;
-    }
 
     public String getTitle() {
         return title;
@@ -36,11 +32,19 @@ public class Notice {
         this.title = title;
     }
 
-    public String getDate() {
+    public long getNid() {
+        return Nid;
+    }
+
+    public void setNid(long nid) {
+        Nid = nid;
+    }
+
+    public Date getDate() {
         return date;
     }
 
-    public void setDate(String date) {
+    public void setDate(Date date) {
         this.date = date;
     }
 

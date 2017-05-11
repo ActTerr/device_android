@@ -79,7 +79,7 @@ public class DetailActivity extends BaseActivity {
         data= (String[]) getIntent().getSerializableExtra("deviceOld");
         MyApplication.getInstance().setData(data);
         mStatus=new Status(data[0],data[11]);
-        MyApplication.setStatus(mStatus);
+        MyApplication.getInstance().setStatus(mStatus);
 //        L.e("main", "detail:" + deviceOld.toString());
         if (data == null) {
             MFGT.finish(context);
@@ -87,7 +87,7 @@ public class DetailActivity extends BaseActivity {
             id = String.valueOf(data[0]);
             if (data[2].equals("电池")) {
                 isDianchi = true;
-                MyApplication.setFlag(true);
+                MyApplication.getInstance().setFlag(true);
             }
             if (mStatus.getStatus().equals("报废")) {
                 isBaofei = true;

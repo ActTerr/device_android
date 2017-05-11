@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 import mac.yk.devicemanagement.I;
 import mac.yk.devicemanagement.bean.DeviceOld;
+import mac.yk.devicemanagement.bean.Notice;
 import mac.yk.devicemanagement.bean.Result;
 import mac.yk.devicemanagement.bean.Scrap;
 import mac.yk.devicemanagement.bean.User;
@@ -95,6 +96,9 @@ public interface ServerAPI {
     @GET(I.REQUEST.PATH+"?request="+I.REQUEST.CONTROL_D)
     Observable<Result<String>> controlD(@Query(I.CONTROL_D.CONTROL_TYPE)String control,@Query(I.DEVICE2.DID) String Did);
 
+    @GET(I.REQUEST.PATH+"?request="+I.REQUEST.GET_NOTICE)
+    Observable<Result<ArrayList<Notice>>> getNotice(@Query(I.MEMORY) int memory);
 
-
+    @GET(I.REQUEST.PATH+"?request="+I.REQUEST.DELETE_NOTICE)
+    Observable<Result<String>> deleteNotice(@Query(I.NOTICE.NID)String Nid);
 }

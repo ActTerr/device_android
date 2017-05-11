@@ -78,13 +78,13 @@ public class BaseActivity extends AppCompatActivity implements Observer,NetBroad
     @Override
     protected void onResume() {
         super.onResume();
-        MyApplication.addActivity(this);
+        MyApplication.getInstance().addActivity(this);
     }
 
     @Override
     protected void onPause() {
         super.onPause();
-        MyApplication.rmActivity(this);
+        MyApplication.getInstance().rmActivity(this);
     }
 
     /**
@@ -113,7 +113,7 @@ public class BaseActivity extends AppCompatActivity implements Observer,NetBroad
     public void onNetChange(int netMobile) {
         // TODO Auto-generated method stub
         this.netMobile = netMobile;
-       ArrayList<Activity> activities=MyApplication.getActivities();
+       ArrayList<Activity> activities=MyApplication.getInstance().getActivities();
         Activity activity=activities.get(activities.size()-1);
         mTv= (TextView) activity.findViewById(R.id.netView);
         if (netMobile== NetUtil.NETWORK_NONE){

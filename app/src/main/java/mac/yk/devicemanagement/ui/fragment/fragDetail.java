@@ -46,7 +46,7 @@ public class fragDetail extends BaseFragment implements Observer {
         View view = inflater.inflate(R.layout.frag_detail, container, false);
         ButterKnife.bind(this, view);
         observer = this;
-        status=MyApplication.getStatus();
+        status=MyApplication.getInstance().getStatus();
         data = getArguments().getStringArray("data");
         deviceStatus.setText("设备状态："+ConvertUtils.getStatus(false, Integer.parseInt(status.getStatus())));
         status.addObserver(observer);
