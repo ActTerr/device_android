@@ -198,4 +198,15 @@ public interface I {
         String TABLENAME="ATTACHMENT";
     }
 
+    interface FILE{
+        String TABLENAME="FILE";
+        String DOWNLOADID="downloadId";
+        String TOOLSIZE="toolSize";
+        String COMPLETEDSIZE="completedSize";
+        String URL="url";
+        String DIRPATH="DirPath";
+        String FILENAME="fileName";
+        String STATUS="downloadStatus";
+    }
+
 }

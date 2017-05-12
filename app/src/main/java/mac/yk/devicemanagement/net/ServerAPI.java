@@ -110,5 +110,9 @@ public interface ServerAPI {
     @GET(I.REQUEST.PATH+"?request="+I.REQUEST.GET_ATTACHMENT)
     Observable<Result<ArrayList<Attachment>>> getAttachment(@Query(I.ATTACHMENT.NID) long Nid);
 
+    @GET(I.REQUEST.PATH+"?request="+I.REQUEST.UPLOAD_ATTACHMENT)
+    Observable<Result<String>> updateAttachment(@Query(I.ATTACHMENT.AID) long Aid,@Query(I.ATTACHMENT.NAME) String name);
 
+    @GET(I.REQUEST.PATH+"?request="+I.REQUEST.DELETE_ATTACHMENT)
+    Observable<Result<String>> deleteAttachment(@Query(I.ATTACHMENT.AID) long Aid);
 }
