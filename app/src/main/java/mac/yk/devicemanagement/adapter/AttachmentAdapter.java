@@ -11,13 +11,18 @@ import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.PopupWindow;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.Date;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import mac.yk.devicemanagement.I;
 import mac.yk.devicemanagement.MyApplication;
 import mac.yk.devicemanagement.R;
 import mac.yk.devicemanagement.bean.Attachment;
@@ -37,19 +42,48 @@ import rx.Subscriber;
 
 public class AttachmentAdapter extends RecyclerView.Adapter<AttachmentAdapter.AttachmentViewHolder> {
 
-    ArrayList<Attachment> attachments;
+
     Context context;
-    boolean isFinish;
+
     boolean isEdit;
     boolean admin;
-    ArrayList<String> names = new ArrayList<>();
     ProgressDialog dialog;
+    //已选中要下载的
+    ArrayList<String> names = new ArrayList<>();
 
-    public AttachmentAdapter(ArrayList<Attachment> attachments, Context context, Boolean isFinish) {
-        this.attachments = attachments;
+    ArrayList<FileEntry> fileEntries = new ArrayList<>();
+
+
+    public AttachmentAdapter(ArrayList<Attachment> attachments, Context context) {
         this.context = context;
-        this.isFinish = isFinish;
         dialog = new ProgressDialog(context);
+        getFileEntries(attachments);
+    }
+
+    /**
+     * 根据服务器获得列表，转换成entry实体，未下载就新建一个，最后按时间进行排序
+     *
+     * @param attachments
+     */
+    private void getFileEntries(ArrayList<Attachment> attachments) {
+        dbFile dbfile = dbFile.getInstance(context);
+        for (Attachment a : attachments) {
+            FileEntry fileEntry = dbfile.getFile(a.getAid());
+            if (fileEntry != null) {
+                fileEntries.add(fileEntry);
+            } else {
+                FileEntry fileEntry1 = new FileEntry(a.getAid(), 0L, 0L, OpenFileUtil.getUrl(a.getName()),
+                        OpenFileUtil.getPath(a.getName()),
+                        a.getName(), I.DOWNLOAD_STATUS.NOT);
+                fileEntries.add(fileEntry1);
+            }
+        }
+        Collections.sort(fileEntries, new Comparator<FileEntry>() {
+            @Override
+            public int compare(FileEntry o1, FileEntry o2) {
+                return (int) (o1.getDownloadId() - o2.getDownloadId());
+            }
+        });
     }
 
     @Override
@@ -62,7 +96,8 @@ public class AttachmentAdapter extends RecyclerView.Adapter<AttachmentAdapter.At
 
     @Override
     public void onBindViewHolder(final AttachmentViewHolder holder, int position) {
-        final Attachment attachment = attachments.get(position);
+        final FileEntry entry = fileEntries.get(position);
+        final int status=entry.getDownloadStatus();
         if (admin) {
             holder.ivDelete.setVisibility(View.VISIBLE);
             holder.ivEdit.setVisibility(View.VISIBLE);
@@ -75,7 +110,7 @@ public class AttachmentAdapter extends RecyclerView.Adapter<AttachmentAdapter.At
             holder.ivDelete.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    postDelete(attachment);
+                    postDelete(entry);
                 }
             });
             holder.ivCancel.setOnClickListener(new View.OnClickListener() {
@@ -87,21 +122,27 @@ public class AttachmentAdapter extends RecyclerView.Adapter<AttachmentAdapter.At
             holder.ivSave.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    postSave(attachment.getAid(), holder.attachmentName.getText().toString(), holder);
+                    postSave(entry.getDownloadId(), holder.attachmentName.getText().toString(), holder);
                 }
             });
-        } else if (isFinish) {
+        }
+        if (status==I.DOWNLOAD_STATUS.FINISH) {
             holder.cbAt.setVisibility(View.GONE);
         }
+        if (isEdit) {
+            setEditStatus(holder);
+        } else {
+            setUnEditStatus(holder);
+        }
 
-        holder.attachmentName.setText(attachment.getName());
-        holder.uploadTime.setText(ConvertUtils.Date2String(attachment.getDate()));
-        holder.ivDocument.setImageResource(OpenFileUtil.getPic(attachment.getName()));
+        holder.attachmentName.setText(entry.getFileName());
+        holder.uploadTime.setText(ConvertUtils.Date2String(new Date(entry.getDownloadId())));
+        holder.ivDocument.setImageResource(OpenFileUtil.getPic(entry.getFileName()));
 
         holder.cbAt.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                names.add(attachment.getName());
+                names.add(entry.getFileName());
             }
         });
 
@@ -111,10 +152,10 @@ public class AttachmentAdapter extends RecyclerView.Adapter<AttachmentAdapter.At
                 if (admin) {
                     showSelectPopuWindow(holder.ivDocument);
                 } else {
-                    if (isFinish) {
-                        openFile(attachment.getAid());
+                    if (status==I.DOWNLOAD_STATUS.FINISH) {
+                        openFile(entry.getSaveDirPath());
                     } else {
-                        downLoadFile(attachment.getAid());
+                        downLoadFile(entry);
                     }
                 }
             }
@@ -136,18 +177,17 @@ public class AttachmentAdapter extends RecyclerView.Adapter<AttachmentAdapter.At
 //            this.view = view;
 //        }
 //    }
+
     /**
      * 使用代理模式实现下载
-     *
-     * @param aid
      */
-    private void downLoadFile(long aid) {
+    private void downLoadFile(FileEntry entry) {
 
     }
 
-    private void openFile(long aid) {
-        FileEntry fileEntry= dbFile.getInstance(context).getFile(aid);
-        Intent intent= OpenFileUtil.openFile(fileEntry.getSaveDirPath());
+    private void openFile(String path) {
+
+        Intent intent = OpenFileUtil.openFile(path);
         context.startActivity(intent);
     }
 
@@ -191,10 +231,10 @@ public class AttachmentAdapter extends RecyclerView.Adapter<AttachmentAdapter.At
     }
 
 
-    private void postDelete(final Attachment attachment) {
+    private void postDelete(final FileEntry entry) {
         dialog.show();
         ApiWrapper<ServerAPI> wrapper = new ApiWrapper<>();
-        wrapper.targetClass(ServerAPI.class).getAPI().deleteAttachment(attachment.getAid())
+        wrapper.targetClass(ServerAPI.class).getAPI().deleteAttachment(entry.getDownloadId())
                 .compose(wrapper.<String>applySchedulers())
                 .subscribe(new Subscriber<String>() {
                     @Override
@@ -214,7 +254,7 @@ public class AttachmentAdapter extends RecyclerView.Adapter<AttachmentAdapter.At
                     public void onNext(String s) {
                         dialog.dismiss();
                         ToastUtil.showToast(context, "删除成功！");
-                        attachments.remove(attachment);
+                        fileEntries.remove(entry);
                         notifyDataSetChanged();
                     }
                 });
@@ -234,7 +274,7 @@ public class AttachmentAdapter extends RecyclerView.Adapter<AttachmentAdapter.At
 
     @Override
     public int getItemCount() {
-        return attachments.size();
+        return fileEntries.size();
     }
 
     @OnClick({R.id.check_file, R.id.update_file})
@@ -265,7 +305,8 @@ public class AttachmentAdapter extends RecyclerView.Adapter<AttachmentAdapter.At
         ImageView ivEdit;
         @BindView(R.id.iv_delete)
         ImageView ivDelete;
-
+        @BindView(R.id.pb)
+        ProgressBar pb;
         public AttachmentViewHolder(View itemView) {
             super(itemView);
             ButterKnife.bind(this, itemView);

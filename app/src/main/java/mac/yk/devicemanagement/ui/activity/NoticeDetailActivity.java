@@ -67,11 +67,11 @@ public class NoticeDetailActivity extends BaseActivity {
         fragNoticeDetail.setArguments(bundle);
         vpAdapter.addFragment(fragNoticeDetail, "公告");
 
-        Bundle budle2 = new Bundle();
+        Bundle bundle2 = new Bundle();
         if (notice != null) {
-            budle2.putLong("Nid", notice.getNid());
+            bundle2.putLong("Nid", notice.getNid());
             fragAttachment fragAttachment = new fragAttachment();
-            fragAttachment.setArguments(budle2);
+            fragAttachment.setArguments(bundle2);
             vpAdapter.addFragment(fragAttachment, "附件");
         }else {
             itemAttachment.setVisibility(View.GONE);

@@ -24,7 +24,7 @@ public interface I {
         String CONTROL="control";
         String SAVE="save";
         String LOGOUT="logOut";
-        String SERVER_ROOT="http://192.168.1.101:8080/deviceManagement/";
+        String SERVER_ROOT="http://192.168.0.37:8080/deviceManagement/";
         String XUNJIAN="xunjian";
         String XIUJUN="xiujun";
         String LOGIN="login";
@@ -207,6 +207,12 @@ public interface I {
         String DIRPATH="DirPath";
         String FILENAME="fileName";
         String STATUS="downloadStatus";
+    }
+
+    interface DOWNLOAD_STATUS{
+        int NOT=0;
+        int FINISH=1;
+        int STOP=2;
     }
 
 }

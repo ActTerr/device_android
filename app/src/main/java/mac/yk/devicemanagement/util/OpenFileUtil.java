@@ -2,9 +2,11 @@ package mac.yk.devicemanagement.util;
 
 import android.content.Intent;
 import android.net.Uri;
+import android.os.Environment;
 
 import java.io.File;
 
+import mac.yk.devicemanagement.I;
 import mac.yk.devicemanagement.R;
 
 /**
@@ -12,6 +14,15 @@ import mac.yk.devicemanagement.R;
  */
 
 public class OpenFileUtil {
+    public static String getPath(String name){
+       return Environment.getExternalStorageDirectory().getAbsolutePath() + "/Attachment/"+name;
+    }
+
+    public static String getUrl(String name){
+        return I.REQUEST.SERVER_ROOT+"?request=downloadFile&name="+name;
+    }
+
+
     public static Intent openFile(String filePath){
 
         File file = new File(filePath);
