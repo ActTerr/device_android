@@ -7,6 +7,13 @@ public interface I {
     String MEMORY="memory";
     String TYPE="type";
     String BEAN="bean";
+    String FLAG="flag";
+
+    interface UPADATE_TYPE{
+        String RENAME="0";
+        String REFILE="1";
+    }
+
     interface UNCAUGHT{
         String PATH="/Users/mac-yk/Downloads/Server/";
         String FILE_NAME="fileName";
@@ -24,7 +31,7 @@ public interface I {
         String CONTROL="control";
         String SAVE="save";
         String LOGOUT="logOut";
-        String SERVER_ROOT="http://192.168.0.37:8080/deviceManagement/";
+        String SERVER_ROOT="http://192.168.1.101:8080/deviceManagement/";
         String XUNJIAN="xunjian";
         String XIUJUN="xiujun";
         String LOGIN="login";
@@ -43,8 +50,10 @@ public interface I {
         String UPDATE_NOTICE="updateNotice";
         String GET_ATTACHMENT="getAttachment";
         String DELETE_ATTACHMENT="deleteAttachment";
-        String DOWNLOAD_ATTACHMENT="downAttachment";
-        String UPLOAD_ATTACHMENT="uploadAttachment";
+        String ADD_ATTACHMENT="addAttachment";
+        String UPDATE_ATTACHMENT="updateAttachment";
+        String DOWNLOAD_FILE="downFile";
+        String UPLOAD_FILE="uploadFile";
     }
     interface CONTROL_D{
         String CONTROL_TYPE="control_type";
@@ -196,23 +205,19 @@ public interface I {
         String DATE="DATE";
         String NAME="NAME";
         String TABLENAME="ATTACHMENT";
+        String NEW_NAME="newName";
     }
 
     interface FILE{
         String TABLENAME="FILE";
-        String DOWNLOADID="downloadId";
+        String AID="Aid";
         String TOOLSIZE="toolSize";
         String COMPLETEDSIZE="completedSize";
         String URL="url";
         String DIRPATH="DirPath";
         String FILENAME="fileName";
         String STATUS="downloadStatus";
-    }
-
-    interface DOWNLOAD_STATUS{
-        int NOT=0;
-        int FINISH=1;
-        int STOP=2;
+        String NID="Nid";
     }
 
 }

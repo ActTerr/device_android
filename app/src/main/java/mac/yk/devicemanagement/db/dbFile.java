@@ -41,28 +41,30 @@ public class dbFile implements db{
         StringBuilder sb=new StringBuilder();
         sb.append("CREATE TABLE IF NOT EXISTS ")
                 .append(I.FILE.TABLENAME).append("(")
-                .append(I.FILE.DOWNLOADID).append(" LONG,")
+                .append(I.FILE.AID).append(" LONG,")
                 .append(I.FILE.TOOLSIZE).append(" LONG,")
                 .append(I.FILE.COMPLETEDSIZE).append(" LONG,")
                 .append(I.FILE.URL).append(" TEXT,")
                 .append(I.FILE.FILENAME).append(" TEXT,")
-                .append(I.FILE.STATUS).append(" INT)");
+                .append(I.FILE.STATUS).append(" INT,")
+                .append(I.FILE.NID).append(" TEXT)");
     }
 
     public FileEntry getFile(long Aid){
         FileEntry fileEntry=new FileEntry();
         SQLiteDatabase db=dbHelper.getReadableDatabase();
-        String sql="SELECT * FROM "+I.FILE.TABLENAME+" where "+I.FILE.DOWNLOADID+"=?";
+        String sql="SELECT * FROM "+I.FILE.TABLENAME+" where "+I.FILE.AID+"=?";
         Cursor cursor=db.rawQuery(sql,new String[]{String.valueOf(Aid)});
        if(cursor!=null){
          if(cursor.moveToNext()){
              fileEntry.setCompletedSize(cursor.getLong(cursor.getColumnIndex(I.FILE.COMPLETEDSIZE)));
-             fileEntry.setDownloadId(cursor.getLong(cursor.getColumnIndex(I.FILE.DOWNLOADID)));
+             fileEntry.setAid(cursor.getLong(cursor.getColumnIndex(I.FILE.AID)));
              fileEntry.setDownloadStatus(cursor.getInt(cursor.getColumnIndex(I.FILE.STATUS)));
              fileEntry.setFileName(cursor.getString(cursor.getColumnIndex(I.FILE.FILENAME)));
              fileEntry.setSaveDirPath(cursor.getString(cursor.getColumnIndex(I.FILE.DIRPATH)));
              fileEntry.setToolSize(cursor.getLong(cursor.getColumnIndex(I.FILE.TOOLSIZE)));
              fileEntry.setUrl(cursor.getString(cursor.getColumnIndex(I.FILE.URL)));
+             fileEntry.setNid(cursor.getLong(cursor.getColumnIndex(I.FILE.NID)));
          }
        }
        return fileEntry;
@@ -71,12 +73,13 @@ public class dbFile implements db{
     public boolean insertFile(FileEntry fileEntry){
         SQLiteDatabase db=dbHelper.getWritableDatabase();
         ContentValues contentValues=new ContentValues();
-        contentValues.put(I.FILE.DOWNLOADID,fileEntry.getDownloadId());
+        contentValues.put(I.FILE.AID,fileEntry.getAid());
         contentValues.put(I.FILE.TOOLSIZE,fileEntry.getToolSize());
         contentValues.put(I.FILE.COMPLETEDSIZE,fileEntry.getCompletedSize());
         contentValues.put(I.FILE.URL,fileEntry.getUrl());
         contentValues.put(I.FILE.FILENAME,fileEntry.getFileName());
         contentValues.put(I.FILE.STATUS,fileEntry.getDownloadStatus());
+        contentValues.put(I.FILE.NID,fileEntry.getNid());
         if (db.isOpen()){
           return   db.replace(I.FILE.TABLENAME,null,contentValues)==1;
         }else {

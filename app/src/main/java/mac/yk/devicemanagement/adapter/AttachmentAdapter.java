@@ -1,5 +1,6 @@
 package mac.yk.devicemanagement.adapter;
 
+import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
@@ -14,6 +15,13 @@ import android.widget.PopupWindow;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import com.ipaulpro.afilechooser.utils.FileUtils;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
+
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -42,7 +50,7 @@ import rx.Subscriber;
 
 public class AttachmentAdapter extends RecyclerView.Adapter<AttachmentAdapter.AttachmentViewHolder> {
 
-
+    private static int REQUEST_CHOOSER=1234;
     Context context;
 
     boolean isEdit;
@@ -53,11 +61,14 @@ public class AttachmentAdapter extends RecyclerView.Adapter<AttachmentAdapter.At
 
     ArrayList<FileEntry> fileEntries = new ArrayList<>();
 
-
+    AttachmentViewHolder memoryHolder;
+    PopupWindow popupWindow;
+    PopuHolder popuHolder;
     public AttachmentAdapter(ArrayList<Attachment> attachments, Context context) {
         this.context = context;
         dialog = new ProgressDialog(context);
         getFileEntries(attachments);
+        EventBus.getDefault().register(this);
     }
 
     /**
@@ -150,7 +161,7 @@ public class AttachmentAdapter extends RecyclerView.Adapter<AttachmentAdapter.At
             @Override
             public void onClick(View v) {
                 if (admin) {
-                    showSelectPopuWindow(holder.ivDocument);
+                    showSelectPopuWindow(holder.ivDocument,entry,holder);
                 } else {
                     if (status==I.DOWNLOAD_STATUS.FINISH) {
                         openFile(entry.getSaveDirPath());
@@ -162,22 +173,49 @@ public class AttachmentAdapter extends RecyclerView.Adapter<AttachmentAdapter.At
         });
     }
 
-    private void showSelectPopuWindow(ImageView iv) {
-        PopupWindow popupWindow = new PopupWindow(context);
+    private void showSelectPopuWindow(ImageView iv, FileEntry entry, AttachmentViewHolder holder) {
+        popupWindow= new PopupWindow(context);
         View view = View.inflate(context, R.layout.item_popu_file, null);
-//        PopuHolder popuHolder=new PopuHolder(view);
+        popuHolder=new PopuHolder(view,entry,holder);
         popupWindow.setContentView(view);
         popupWindow.showAsDropDown(iv);
     }
 
-//    class PopuHolder{
-//       View view;
-//
-//        public PopuHolder(View view) {
-//            this.view = view;
-//        }
-//    }
+    class PopuHolder{
+       View view;
+        FileEntry entry;
+        AttachmentViewHolder holder;
+        public PopuHolder(View view,FileEntry entry,AttachmentViewHolder holder) {
+            this.view = view;
+            this.entry=entry;
+        }
+        @OnClick({R.id.check_file, R.id.update_file})
+        public void onClick(View view) {
+            switch (view.getId()) {
+                case R.id.check_file:
+                    openFile(entry.getSaveDirPath());
+                    popupWindow.dismiss();
+                    popuHolder=null;
+                    break;
+                case R.id.update_file:
+                    Intent getContentIntent = FileUtils.createGetContentIntent();
+                    Intent intent = Intent.createChooser(getContentIntent, "Select a file");
+                    Activity activity= (Activity) context;
+                    activity.startActivityForResult(intent, REQUEST_CHOOSER);
+                    memoryHolder=holder;
+                    popupWindow.dismiss();
+                    popuHolder=null;
+                    break;
+            }
+        }
+    }
 
+    @Subscribe(threadMode=ThreadMode.MAIN)
+    public void getEventFile(File file){
+        memoryHolder.ivDocument.setImageResource(OpenFileUtil.getPic(file.getPath()));
+        memoryHolder.attachmentName.setText(file.getName());
+
+    }
     /**
      * 使用代理模式实现下载
      */
@@ -277,15 +315,7 @@ public class AttachmentAdapter extends RecyclerView.Adapter<AttachmentAdapter.At
         return fileEntries.size();
     }
 
-    @OnClick({R.id.check_file, R.id.update_file})
-    public void onClick(View view) {
-        switch (view.getId()) {
-            case R.id.check_file:
-                break;
-            case R.id.update_file:
-                break;
-        }
-    }
+
 
 
     class AttachmentViewHolder extends RecyclerView.ViewHolder {

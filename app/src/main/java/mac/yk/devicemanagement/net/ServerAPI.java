@@ -97,6 +97,7 @@ public interface ServerAPI {
     @GET(I.REQUEST.PATH+"?request="+I.REQUEST.CONTROL_D)
     Observable<Result<String>> controlD(@Query(I.CONTROL_D.CONTROL_TYPE)String control,@Query(I.DEVICE2.DID) String Did);
 
+
     @GET(I.REQUEST.PATH+"?request="+I.REQUEST.GET_NOTICE)
     Observable<Result<ArrayList<Notice>>> getNotice(@Query(I.MEMORY) int memory);
 
@@ -110,9 +111,14 @@ public interface ServerAPI {
     @GET(I.REQUEST.PATH+"?request="+I.REQUEST.GET_ATTACHMENT)
     Observable<Result<ArrayList<Attachment>>> getAttachment(@Query(I.ATTACHMENT.NID) long Nid);
 
-    @GET(I.REQUEST.PATH+"?request="+I.REQUEST.UPLOAD_ATTACHMENT)
-    Observable<Result<String>> updateAttachment(@Query(I.ATTACHMENT.AID) long Aid,@Query(I.ATTACHMENT.NAME) String name);
+    @GET(I.REQUEST.PATH+"?request="+I.REQUEST.UPDATE_ATTACHMENT)
+    Observable<Result<String>> updateAttachment(@Query(I.ATTACHMENT.AID) long Aid,@Query(I.ATTACHMENT.NAME) String name,
+                                                @Query(I.ATTACHMENT.NEW_NAME) String newName,@Query(I.TYPE) String type);
 
     @GET(I.REQUEST.PATH+"?request="+I.REQUEST.DELETE_ATTACHMENT)
     Observable<Result<String>> deleteAttachment(@Query(I.ATTACHMENT.AID) long Aid);
+
+    @Multipart
+    Observable<Result<String>> addAttachment(@Part("file\";filename=file\"") RequestBody file,
+                                           @Query(I.BEAN) long Nid,@Query(I.FILE.TOOLSIZE) long total);
 }

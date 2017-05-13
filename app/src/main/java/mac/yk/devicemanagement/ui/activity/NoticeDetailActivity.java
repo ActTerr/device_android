@@ -1,5 +1,7 @@
 package mac.yk.devicemanagement.ui.activity;
 
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -8,6 +10,12 @@ import android.support.v4.view.ViewPager;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+
+import com.ipaulpro.afilechooser.utils.FileUtils;
+
+import org.greenrobot.eventbus.EventBus;
+
+import java.io.File;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -23,6 +31,9 @@ import mac.yk.devicemanagement.ui.fragment.fragNoticeDetail;
  */
 
 public class NoticeDetailActivity extends BaseActivity {
+
+    private static final int REQUEST_CHOOSER = 1234;
+
     @BindView(R.id.viewPager)
     ViewPager viewPager;
 
@@ -89,6 +100,26 @@ public class NoticeDetailActivity extends BaseActivity {
                 break;
             case R.id.item_attachment:
                 viewPager.setCurrentItem(1);
+                break;
+        }
+    }
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        switch (requestCode) {
+            case REQUEST_CHOOSER:
+                if (resultCode == RESULT_OK) {
+
+                    final Uri uri = data.getData();
+
+                    // Get the File path from the Uri
+                    String path = FileUtils.getPath(this, uri);
+
+                    // Alternatively, use FileUtils.getFile(Context, Uri)
+                    if (path != null && FileUtils.isLocal(path)) {
+                        File file = new File(path);
+                        EventBus.getDefault().post(file);
+                    }
+                }
                 break;
         }
     }

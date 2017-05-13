@@ -1,51 +1,64 @@
 package mac.yk.devicemanagement.bean;
 
+import java.io.Serializable;
+
 /**
  * Created by mac-yk on 2017/5/12.
  */
 
-public class FileEntry {
+public class FileEntry implements Serializable{
 
-    private Long downloadId;
-    private Long toolSize;
-    private Long completedSize;
+    private long Aid;
+    private long toolSize;
+    private long completedSize;
     private String url;
     private String saveDirPath;
     private String fileName;
     private int downloadStatus;
+    private long Nid;
+    
 
-    public FileEntry(Long downloadId, Long toolSize, Long completedSize, String url,
-                     String saveDirPath, String fileName, int downloadStatus) {
+    public FileEntry(long Aid, long toolSize, long completedSize, String url,
+                     String saveDirPath, String fileName, int downloadStatus,long Nid) {
         this.toolSize = toolSize;
         this.completedSize = completedSize;
         this.url = url;
         this.saveDirPath = saveDirPath;
         this.fileName = fileName;
         this.downloadStatus = downloadStatus;
-        this.downloadId=downloadId;
+        this.Aid=Aid;
+        this.Nid=Nid;
     }
 
-    public Long getDownloadId() {
-        return downloadId;
+    public long getAid() {
+        return Aid;
     }
 
-    public void setDownloadId(Long downloadId) {
-        this.downloadId = downloadId;
+    public void setAid(long aid) {
+        Aid = aid;
     }
 
-    public Long getToolSize() {
+    public long getNid() {
+        return Nid;
+    }
+
+    public void setNid(long nid) {
+        Nid = nid;
+    }
+
+    public long getToolSize() {
         return toolSize;
     }
 
-    public void setToolSize(Long toolSize) {
+    public void setToolSize(long toolSize) {
         this.toolSize = toolSize;
     }
 
-    public Long getCompletedSize() {
+    public long getCompletedSize() {
         return completedSize;
     }
 
-    public void setCompletedSize(Long completedSize) {
+    public void setCompletedSize(long completedSize) {
         this.completedSize = completedSize;
     }
 
@@ -80,6 +93,10 @@ public class FileEntry {
     public void setDownloadStatus(int downloadStatus) {
         this.downloadStatus = downloadStatus;
     }
+
+
+
+
 
     public FileEntry() {
     }
