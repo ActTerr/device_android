@@ -12,11 +12,14 @@ import mac.yk.devicemanagement.bean.User;
 import mac.yk.devicemanagement.bean.Weixiu;
 import mac.yk.devicemanagement.bean.Xunjian;
 import okhttp3.RequestBody;
+import okhttp3.ResponseBody;
+import retrofit2.Call;
 import retrofit2.http.GET;
 import retrofit2.http.Multipart;
 import retrofit2.http.POST;
 import retrofit2.http.Part;
 import retrofit2.http.Query;
+import retrofit2.http.Url;
 import rx.Observable;
 
 /**
@@ -118,7 +121,11 @@ public interface ServerAPI {
     @GET(I.REQUEST.PATH+"?request="+I.REQUEST.DELETE_ATTACHMENT)
     Observable<Result<String>> deleteAttachment(@Query(I.ATTACHMENT.AID) long Aid);
 
+    @POST(I.REQUEST.PATH+"?request="+I.REQUEST.ADD_ATTACHMENT)
     @Multipart
     Observable<Result<String>> addAttachment(@Part("file\";filename=file\"") RequestBody file,
                                            @Query(I.BEAN) long Nid,@Query(I.FILE.TOOLSIZE) long total);
+
+    @GET(I.REQUEST.PATH+"?request="+I.REQUEST.DOWNLOAD_FILE)
+    Call<ResponseBody> downloadFile(@Url String url );
 }

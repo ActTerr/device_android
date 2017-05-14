@@ -38,6 +38,7 @@ import mac.yk.devicemanagement.bean.FileEntry;
 import mac.yk.devicemanagement.db.dbFile;
 import mac.yk.devicemanagement.net.ApiWrapper;
 import mac.yk.devicemanagement.net.ServerAPI;
+import mac.yk.devicemanagement.service.FileService;
 import mac.yk.devicemanagement.util.ConvertUtils;
 import mac.yk.devicemanagement.util.ExceptionFilter;
 import mac.yk.devicemanagement.util.OpenFileUtil;
@@ -203,6 +204,7 @@ public class AttachmentAdapter extends RecyclerView.Adapter<AttachmentAdapter.At
                     Activity activity= (Activity) context;
                     activity.startActivityForResult(intent, REQUEST_CHOOSER);
                     memoryHolder=holder;
+                    memoryHolder.itemView.setTag(entry);
                     popupWindow.dismiss();
                     popuHolder=null;
                     break;
@@ -218,6 +220,13 @@ public class AttachmentAdapter extends RecyclerView.Adapter<AttachmentAdapter.At
     public void getEventFile(File file){
         memoryHolder.ivDocument.setImageResource(OpenFileUtil.getPic(file.getPath()));
         memoryHolder.attachmentName.setText(file.getName());
+        Intent intent=new Intent();
+        intent.setClass(context,FileService.class);
+        intent.putExtra("type",0);
+       FileEntry entry= (FileEntry) memoryHolder.itemView.getTag();
+        intent.putExtra("entry",entry);
+        context.startService(intent);
+
     }
 
     /**
@@ -230,7 +239,7 @@ public class AttachmentAdapter extends RecyclerView.Adapter<AttachmentAdapter.At
     }
 
     /**
-     * 上传完成
+     * 上传或者下载完成
      * @param finish
      */
     @Subscribe(threadMode=ThreadMode.MAIN)
@@ -246,7 +255,10 @@ public class AttachmentAdapter extends RecyclerView.Adapter<AttachmentAdapter.At
      * 使用代理模式实现下载
      */
     private void downLoadFile(FileEntry entry) {
-
+        Intent intent=new Intent(context,FileService.class);
+        intent.putExtra("type",1);
+        intent.putExtra("entry",entry);
+        context.startService(intent);
     }
 
     private void openFile(String path) {
