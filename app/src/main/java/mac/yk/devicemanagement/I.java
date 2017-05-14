@@ -220,4 +220,10 @@ public interface I {
         String NID="Nid";
     }
 
+    interface DOWNLOAD_STATUS{
+        int NOT=0;
+        int DOWNLOADING=1;
+        int STOP=2;
+        int FINISH=3;
+    }
 }

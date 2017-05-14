@@ -85,14 +85,14 @@ public class AttachmentAdapter extends RecyclerView.Adapter<AttachmentAdapter.At
             } else {
                 FileEntry fileEntry1 = new FileEntry(a.getAid(), 0L, 0L, OpenFileUtil.getUrl(a.getName()),
                         OpenFileUtil.getPath(a.getName()),
-                        a.getName(), I.DOWNLOAD_STATUS.NOT);
+                        a.getName(), I.DOWNLOAD_STATUS.NOT,a.getNid());
                 fileEntries.add(fileEntry1);
             }
         }
         Collections.sort(fileEntries, new Comparator<FileEntry>() {
             @Override
             public int compare(FileEntry o1, FileEntry o2) {
-                return (int) (o1.getDownloadId() - o2.getDownloadId());
+                return (int) (o1.getAid() - o2.getAid());
             }
         });
     }
@@ -133,7 +133,7 @@ public class AttachmentAdapter extends RecyclerView.Adapter<AttachmentAdapter.At
             holder.ivSave.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    postSave(entry.getDownloadId(), holder.attachmentName.getText().toString(), holder);
+                    postSave(entry, holder.attachmentName.getText().toString(), holder);
                 }
             });
         }
@@ -147,7 +147,7 @@ public class AttachmentAdapter extends RecyclerView.Adapter<AttachmentAdapter.At
         }
 
         holder.attachmentName.setText(entry.getFileName());
-        holder.uploadTime.setText(ConvertUtils.Date2String(new Date(entry.getDownloadId())));
+        holder.uploadTime.setText(ConvertUtils.Date2String(new Date(entry.getAid())));
         holder.ivDocument.setImageResource(OpenFileUtil.getPic(entry.getFileName()));
 
         holder.cbAt.setOnClickListener(new View.OnClickListener() {
@@ -210,12 +210,38 @@ public class AttachmentAdapter extends RecyclerView.Adapter<AttachmentAdapter.At
         }
     }
 
+    /**
+     * 文件选择之后传过来的file
+     * @param file
+     */
     @Subscribe(threadMode=ThreadMode.MAIN)
     public void getEventFile(File file){
         memoryHolder.ivDocument.setImageResource(OpenFileUtil.getPic(file.getPath()));
         memoryHolder.attachmentName.setText(file.getName());
-
     }
+
+    /**
+     * service传过来的进度
+     * @param i
+     */
+    @Subscribe(threadMode=ThreadMode.MAIN)
+    public void getPrograss(int i){
+        memoryHolder.pb.setProgress(i);
+    }
+
+    /**
+     * 上传完成
+     * @param finish
+     */
+    @Subscribe(threadMode=ThreadMode.MAIN)
+    public void isFinish(boolean finish){
+        if (finish){
+            memoryHolder.pb.setVisibility(View.GONE);
+        }
+    }
+    
+    
+    
     /**
      * 使用代理模式实现下载
      */
@@ -230,10 +256,10 @@ public class AttachmentAdapter extends RecyclerView.Adapter<AttachmentAdapter.At
     }
 
 
-    private void postSave(long id, String text, final AttachmentViewHolder holder) {
+    private void postSave(FileEntry entry, String text, final AttachmentViewHolder holder) {
         dialog.show();
         ApiWrapper<ServerAPI> wrapper = new ApiWrapper<>();
-        wrapper.targetClass(ServerAPI.class).getAPI().updateAttachment(id, text)
+        wrapper.targetClass(ServerAPI.class).getAPI().updateAttachment(entry.getAid(),entry.getFileName(), text,"0")
                 .compose(wrapper.<String>applySchedulers())
                 .subscribe(new Subscriber<String>() {
                     @Override
@@ -272,7 +298,7 @@ public class AttachmentAdapter extends RecyclerView.Adapter<AttachmentAdapter.At
     private void postDelete(final FileEntry entry) {
         dialog.show();
         ApiWrapper<ServerAPI> wrapper = new ApiWrapper<>();
-        wrapper.targetClass(ServerAPI.class).getAPI().deleteAttachment(entry.getDownloadId())
+        wrapper.targetClass(ServerAPI.class).getAPI().deleteAttachment(entry.getAid())
                 .compose(wrapper.<String>applySchedulers())
                 .subscribe(new Subscriber<String>() {
                     @Override
