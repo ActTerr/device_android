@@ -62,7 +62,7 @@ public class dbUser implements db {
             values.put(I.USER.NAME,user.getName());
             values.put(I.USER.UNIT,user.getUnit());
         if (database.isOpen()){
-            return database.replace(I.USER.TABLENAME,null,values)!=-1;
+            return database.insert(I.USER.TABLENAME,null,values)==1;
         }else {
             return false;
         }

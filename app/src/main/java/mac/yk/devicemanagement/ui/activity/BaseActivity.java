@@ -13,7 +13,7 @@ import java.util.ArrayList;
 import java.util.Observable;
 import java.util.Observer;
 
-import mac.yk.devicemanagement.MyApplication;
+import mac.yk.devicemanagement.MyMemory;
 import mac.yk.devicemanagement.R;
 import mac.yk.devicemanagement.Receiver.NetBroadcastReceiver;
 import mac.yk.devicemanagement.util.NetUtil;
@@ -78,13 +78,13 @@ public class BaseActivity extends AppCompatActivity implements Observer,NetBroad
     @Override
     protected void onResume() {
         super.onResume();
-        MyApplication.getInstance().addActivity(this);
+        MyMemory.getInstance().addActivity(this);
     }
 
     @Override
     protected void onPause() {
         super.onPause();
-        MyApplication.getInstance().rmActivity(this);
+        MyMemory.getInstance().rmActivity(this);
     }
 
     /**
@@ -113,7 +113,7 @@ public class BaseActivity extends AppCompatActivity implements Observer,NetBroad
     public void onNetChange(int netMobile) {
         // TODO Auto-generated method stub
         this.netMobile = netMobile;
-       ArrayList<Activity> activities=MyApplication.getInstance().getActivities();
+       ArrayList<Activity> activities= MyMemory.getInstance().getActivities();
         Activity activity=activities.get(activities.size()-1);
         mTv= (TextView) activity.findViewById(R.id.netView);
         if (netMobile== NetUtil.NETWORK_NONE){

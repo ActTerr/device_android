@@ -25,7 +25,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import mac.yk.devicemanagement.I;
-import mac.yk.devicemanagement.MyApplication;
+import mac.yk.devicemanagement.MyMemory;
 import mac.yk.devicemanagement.R;
 import mac.yk.devicemanagement.bean.Status;
 import mac.yk.devicemanagement.bean.User;
@@ -77,9 +77,9 @@ public class DeviceDetailActivity extends BaseActivity {
         progressDialog = new ProgressDialog(context);
         dialog = new Dialog(context);
         data= (String[]) getIntent().getSerializableExtra("deviceOld");
-        MyApplication.getInstance().setData(data);
+        MyMemory.getInstance().setData(data);
         mStatus=new Status(data[0],data[11]);
-        MyApplication.getInstance().setStatus(mStatus);
+        MyMemory.getInstance().setStatus(mStatus);
 //        L.e("main", "detail:" + deviceOld.toString());
         if (data == null) {
             MFGT.finish(context);
@@ -87,13 +87,13 @@ public class DeviceDetailActivity extends BaseActivity {
             id = String.valueOf(data[0]);
             if (data[2].equals("电池")) {
                 isDianchi = true;
-                MyApplication.getInstance().setFlag(true);
+                MyMemory.getInstance().setFlag(true);
             }
             if (mStatus.getStatus().equals("报废")) {
                 isBaofei = true;
             }
         }
-        user=MyApplication.getInstance().getUser();
+        user= MyMemory.getInstance().getUser();
         setTitle("设备详情");
         setSupportActionBar(toolBar);
         ActionBar ab = getSupportActionBar();
@@ -109,7 +109,7 @@ public class DeviceDetailActivity extends BaseActivity {
             setUpNavView(navView);
             ImageView imageView = (ImageView) navView.getHeaderView(0).findViewById(R.id.avatar);
             TextView textView = (TextView) navView.getHeaderView(0).findViewById(R.id.nav_name);
-            textView.setText(MyApplication.getInstance().getUser().getName());
+            textView.setText(MyMemory.getInstance().getUser().getName());
             imageView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {

@@ -41,7 +41,7 @@ import java.util.concurrent.TimeUnit;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import mac.yk.devicemanagement.I;
-import mac.yk.devicemanagement.MyApplication;
+import mac.yk.devicemanagement.MyMemory;
 import mac.yk.devicemanagement.R;
 import mac.yk.devicemanagement.net.ApiWrapper;
 import mac.yk.devicemanagement.net.ServerAPI;
@@ -103,7 +103,7 @@ public class loodView extends FrameLayout {
     public loodView(@NonNull Context context, @Nullable AttributeSet attrs, @AttrRes int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         this.context = context;
-        Dname= ConvertUtils.getDname(MyApplication.getInstance().getData()[2]);
+        Dname= ConvertUtils.getDname(MyMemory.getInstance().getData()[2]);
         initCount();
     }
     public loodView(Context context) {

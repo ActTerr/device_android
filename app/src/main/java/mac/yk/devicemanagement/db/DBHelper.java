@@ -29,6 +29,7 @@ public class DBHelper extends SQLiteOpenHelper {
     @Override
     public void onCreate(SQLiteDatabase db) {
         dbUser.getInstance(context).onCreate(db);
+        dbFile.getInstance(context).onCreate(db);
     }
 
     @Override

@@ -11,6 +11,9 @@ import okio.ForwardingSink;
 import okio.Okio;
 import okio.Sink;
 
+/**
+ * Created by guoli on 2016/7/4.
+ */
 public class UploadFileRequestBody extends RequestBody {
 
     private RequestBody mRequestBody;
@@ -24,18 +27,18 @@ public class UploadFileRequestBody extends RequestBody {
         this.mProgressListener = progressListener ;
     }
 
+
     public UploadFileRequestBody(RequestBody requestBody, ProgressListener progressListener) {
         this.mRequestBody = requestBody;
         this.mProgressListener = progressListener;
     }
 
-    //返回了requestBody的类型，想什么form-data/MP3/MP4/png等等等格式
+
     @Override
     public MediaType contentType() {
         return mRequestBody.contentType();
     }
 
-    //返回了本RequestBody的长度，也就是上传的totalLength
     @Override
     public long contentLength() throws IOException {
         return mRequestBody.contentLength();
@@ -69,9 +72,9 @@ public class UploadFileRequestBody extends RequestBody {
                 }
                 //增加当前写入的字节数
                 bytesWritten += byteCount;
-                //回调上传接口
+                //回调
                 mProgressListener.onProgress(bytesWritten, contentLength, bytesWritten == contentLength);
             }
         };
     }
-    }
+}

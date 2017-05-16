@@ -7,35 +7,36 @@ import java.util.Date;
  */
 
 public class Attachment {
-    long Nid;
-    long Aid;
+    long nid;
+    long aid;
     Date date;
     String name;
 
-    public Attachment(long nid, long aid, Date date, String name) {
-        Nid = nid;
-        Aid = aid;
-        this.date = date;
-        this.name = name;
-    }
 
     public Attachment() {
     }
 
+    public Attachment(long nid, long aid, Date date, String name) {
+        this.nid = nid;
+        this.aid = aid;
+        this.date = date;
+        this.name = name;
+    }
+
     public long getNid() {
-        return Nid;
+        return nid;
     }
 
     public void setNid(long nid) {
-        Nid = nid;
+        this.nid = nid;
     }
 
     public long getAid() {
-        return Aid;
+        return aid;
     }
 
     public void setAid(long aid) {
-        Aid = aid;
+        this.aid = aid;
     }
 
     public Date getDate() {
@@ -52,5 +53,15 @@ public class Attachment {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    @Override
+    public String toString() {
+        return "Attachment{" +
+                "nid=" + nid +
+                ", aid=" + aid +
+                ", date=" + date +
+                ", name='" + name + '\'' +
+                '}';
     }
 }

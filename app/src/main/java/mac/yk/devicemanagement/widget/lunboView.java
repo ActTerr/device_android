@@ -26,7 +26,6 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 import mac.yk.devicemanagement.I;
-import mac.yk.devicemanagement.MyApplication;
 import mac.yk.devicemanagement.R;
 import mac.yk.devicemanagement.bean.DeviceOld;
 import mac.yk.devicemanagement.net.ApiWrapper;

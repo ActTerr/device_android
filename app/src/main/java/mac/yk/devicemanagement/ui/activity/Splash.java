@@ -11,7 +11,7 @@ import android.widget.RelativeLayout;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import mac.yk.devicemanagement.MyApplication;
+import mac.yk.devicemanagement.MyMemory;
 import mac.yk.devicemanagement.R;
 import mac.yk.devicemanagement.bean.User;
 import mac.yk.devicemanagement.db.dbUser;
@@ -47,7 +47,7 @@ public class Splash extends AppCompatActivity {
                     MFGT.finish((Activity) context);
                 } else {
                     User user= dbUser.getInstance(context).select2(name);
-                    MyApplication.getInstance().setUser(user);
+                    MyMemory.getInstance().setUser(user);
 //                    ToastUtil.showToast(context,user.toString());
                     L.e(TAG,user.toString());
                     boolean gesture = SpUtil.getGesture(context);

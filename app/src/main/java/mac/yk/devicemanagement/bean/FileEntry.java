@@ -11,18 +11,16 @@ public class FileEntry implements Serializable{
     private long Aid;
     private long toolSize;
     private long completedSize;
-    private String url;
     private String saveDirPath;
     private String fileName;
     private int downloadStatus;
     private long Nid;
     
 
-    public FileEntry(long Aid, long toolSize, long completedSize, String url,
+    public FileEntry(long Aid, long toolSize, long completedSize,
                      String saveDirPath, String fileName, int downloadStatus,long Nid) {
         this.toolSize = toolSize;
         this.completedSize = completedSize;
-        this.url = url;
         this.saveDirPath = saveDirPath;
         this.fileName = fileName;
         this.downloadStatus = downloadStatus;
@@ -62,13 +60,7 @@ public class FileEntry implements Serializable{
         this.completedSize = completedSize;
     }
 
-    public String getUrl() {
-        return url;
-    }
 
-    public void setUrl(String url) {
-        this.url = url;
-    }
 
     public String getSaveDirPath() {
         return saveDirPath;
@@ -94,9 +86,18 @@ public class FileEntry implements Serializable{
         this.downloadStatus = downloadStatus;
     }
 
-
-
-
+    @Override
+    public String toString() {
+        return "FileEntry{" +
+                "Aid=" + Aid +
+                ", toolSize=" + toolSize +
+                ", completedSize=" + completedSize +
+                ", saveDirPath='" + saveDirPath + '\'' +
+                ", fileName='" + fileName + '\'' +
+                ", downloadStatus=" + downloadStatus +
+                ", Nid=" + Nid +
+                '}';
+    }
 
     public FileEntry() {
     }

@@ -15,7 +15,7 @@ import java.util.ArrayList;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import mac.yk.devicemanagement.MyApplication;
+import mac.yk.devicemanagement.MyMemory;
 import mac.yk.devicemanagement.R;
 import mac.yk.devicemanagement.bean.Notice;
 import mac.yk.devicemanagement.bean.User;
@@ -55,7 +55,7 @@ public class NoticeAdapter extends RecyclerView.Adapter<NoticeAdapter.NoticeView
     @Override
     public void onBindViewHolder(NoticeViewHolder holder, int position) {
         final Notice notice = list.get(position);
-        user = MyApplication.getInstance().getUser();
+        user = MyMemory.getInstance().getUser();
         if (user.getGrade()== 0) {
             holder.ivDelete.setVisibility(View.VISIBLE);
             holder.ivDelete.setOnClickListener(new View.OnClickListener() {

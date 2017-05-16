@@ -14,7 +14,7 @@ import java.util.Observer;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import mac.yk.devicemanagement.MyApplication;
+import mac.yk.devicemanagement.MyMemory;
 import mac.yk.devicemanagement.R;
 import mac.yk.devicemanagement.adapter.DetailAdapter;
 import mac.yk.devicemanagement.bean.Status;
@@ -46,7 +46,7 @@ public class fragDeviceDetail extends BaseFragment implements Observer {
         View view = inflater.inflate(R.layout.frag_detail, container, false);
         ButterKnife.bind(this, view);
         observer = this;
-        status=MyApplication.getInstance().getStatus();
+        status= MyMemory.getInstance().getStatus();
         data = getArguments().getStringArray("data");
         deviceStatus.setText("设备状态："+ConvertUtils.getStatus(false, Integer.parseInt(status.getStatus())));
         status.addObserver(observer);

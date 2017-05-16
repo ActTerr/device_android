@@ -17,7 +17,7 @@ import java.util.ArrayList;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-import mac.yk.devicemanagement.MyApplication;
+import mac.yk.devicemanagement.MyMemory;
 import mac.yk.devicemanagement.R;
 import mac.yk.devicemanagement.adapter.NoticeAdapter;
 import mac.yk.devicemanagement.bean.Notice;
@@ -63,7 +63,7 @@ public class fragNotice extends BaseFragment {
     }
 
     private void showIv() {
-        if (MyApplication.getInstance().getUser().getGrade() == 0) {
+        if (MyMemory.getInstance().getUser().getGrade() == 0) {
             ivAdd.setVisibility(View.VISIBLE);
         } else {
             ivAdd.setVisibility(View.GONE);

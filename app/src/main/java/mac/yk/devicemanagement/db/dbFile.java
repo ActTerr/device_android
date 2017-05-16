@@ -4,9 +4,13 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.database.sqlite.SQLiteException;
 
 import mac.yk.devicemanagement.I;
 import mac.yk.devicemanagement.bean.FileEntry;
+import mac.yk.devicemanagement.util.L;
+
+import static android.content.ContentValues.TAG;
 
 /**
  * Created by mac-yk on 2017/5/12.
@@ -44,29 +48,38 @@ public class dbFile implements db{
                 .append(I.FILE.AID).append(" LONG,")
                 .append(I.FILE.TOOLSIZE).append(" LONG,")
                 .append(I.FILE.COMPLETEDSIZE).append(" LONG,")
-                .append(I.FILE.URL).append(" TEXT,")
                 .append(I.FILE.FILENAME).append(" TEXT,")
+                .append(I.FILE.DIRPATH).append(" TEXT,")
                 .append(I.FILE.STATUS).append(" INT,")
                 .append(I.FILE.NID).append(" TEXT)");
+        db.execSQL(sb.toString());
     }
 
-    public FileEntry getFile(long Aid){
-        FileEntry fileEntry=new FileEntry();
+    public FileEntry getFile(String name){
+        FileEntry fileEntry=null;
         SQLiteDatabase db=dbHelper.getReadableDatabase();
-        String sql="SELECT * FROM "+I.FILE.TABLENAME+" where "+I.FILE.AID+"=?";
-        Cursor cursor=db.rawQuery(sql,new String[]{String.valueOf(Aid)});
+        String sql="SELECT * FROM "+I.FILE.TABLENAME+" where "+I.FILE.FILENAME+"=?";
+        Cursor cursor=null;
+        try{
+            cursor=db.rawQuery(sql,new String[]{String.valueOf(name)});
+        }catch (SQLiteException e){
+            L.e(TAG,"没找到！");
+            return fileEntry;
+        }
        if(cursor!=null){
          if(cursor.moveToNext()){
+             fileEntry=new FileEntry();
              fileEntry.setCompletedSize(cursor.getLong(cursor.getColumnIndex(I.FILE.COMPLETEDSIZE)));
              fileEntry.setAid(cursor.getLong(cursor.getColumnIndex(I.FILE.AID)));
              fileEntry.setDownloadStatus(cursor.getInt(cursor.getColumnIndex(I.FILE.STATUS)));
              fileEntry.setFileName(cursor.getString(cursor.getColumnIndex(I.FILE.FILENAME)));
              fileEntry.setSaveDirPath(cursor.getString(cursor.getColumnIndex(I.FILE.DIRPATH)));
              fileEntry.setToolSize(cursor.getLong(cursor.getColumnIndex(I.FILE.TOOLSIZE)));
-             fileEntry.setUrl(cursor.getString(cursor.getColumnIndex(I.FILE.URL)));
              fileEntry.setNid(cursor.getLong(cursor.getColumnIndex(I.FILE.NID)));
+             L.e(TAG,"查询创建完成！");
          }
        }
+       cursor.close();
        return fileEntry;
     }
 
@@ -76,15 +89,20 @@ public class dbFile implements db{
         contentValues.put(I.FILE.AID,fileEntry.getAid());
         contentValues.put(I.FILE.TOOLSIZE,fileEntry.getToolSize());
         contentValues.put(I.FILE.COMPLETEDSIZE,fileEntry.getCompletedSize());
-        contentValues.put(I.FILE.URL,fileEntry.getUrl());
         contentValues.put(I.FILE.FILENAME,fileEntry.getFileName());
         contentValues.put(I.FILE.STATUS,fileEntry.getDownloadStatus());
         contentValues.put(I.FILE.NID,fileEntry.getNid());
+        contentValues.put(I.FILE.DIRPATH,fileEntry.getSaveDirPath());
         if (db.isOpen()){
-          return   db.replace(I.FILE.TABLENAME,null,contentValues)==1;
+          return   db.insert(I.FILE.TABLENAME,null,contentValues)!=-1;
         }else {
             return false;
         }
+    }
+
+    public boolean deleteFile(String name){
+        SQLiteDatabase db=dbHelper.getWritableDatabase();
+        return db.delete(I.FILE.TABLENAME,I.FILE.FILENAME+"=?",new String[]{name})==1;
     }
 
 

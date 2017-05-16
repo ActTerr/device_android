@@ -16,7 +16,7 @@ import java.util.concurrent.TimeUnit;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import mac.yk.devicemanagement.MyApplication;
+import mac.yk.devicemanagement.MyMemory;
 import mac.yk.devicemanagement.R;
 import mac.yk.devicemanagement.adapter.FormTotalAdapter;
 import mac.yk.devicemanagement.net.ApiWrapper;
@@ -75,7 +75,7 @@ public class fragBaofeiCount extends BaseFragment {
         list.addAll(ConvertUtils.array2List(arra));
         data.add(list);
         ApiWrapper<ServerAPI> wrapper=new ApiWrapper<>();
-        wrapper.targetClass(ServerAPI.class).getAPI().getBaofeiCount(MyApplication.getInstance().getUser().getUnit(),yaer,"报废")
+        wrapper.targetClass(ServerAPI.class).getAPI().getBaofeiCount(MyMemory.getInstance().getUser().getUnit(),yaer,"报废")
                 .compose(wrapper.<ArrayList<String[]>>applySchedulers())
                 .timeout(30, TimeUnit.SECONDS)
                 .subscribe(new Subscriber<ArrayList<String[]>>() {

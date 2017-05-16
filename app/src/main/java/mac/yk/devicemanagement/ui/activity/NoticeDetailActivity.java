@@ -25,6 +25,8 @@ import mac.yk.devicemanagement.adapter.VPAdapter;
 import mac.yk.devicemanagement.bean.Notice;
 import mac.yk.devicemanagement.ui.fragment.fragAttachment;
 import mac.yk.devicemanagement.ui.fragment.fragNoticeDetail;
+import mac.yk.devicemanagement.util.L;
+import mac.yk.devicemanagement.util.OpenFileUtil;
 
 /**
  * Created by mac-yk on 2017/5/9.
@@ -45,7 +47,7 @@ public class NoticeDetailActivity extends BaseActivity {
     public static int close = 0;
     @BindView(R.id.item_attachment)
     TextView itemAttachment;
-
+    String TAG="NoticeDetailActivity";
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -105,6 +107,7 @@ public class NoticeDetailActivity extends BaseActivity {
     }
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        L.e(TAG,"activityresult");
         switch (requestCode) {
             case REQUEST_CHOOSER:
                 if (resultCode == RESULT_OK) {
@@ -117,7 +120,11 @@ public class NoticeDetailActivity extends BaseActivity {
                     // Alternatively, use FileUtils.getFile(Context, Uri)
                     if (path != null && FileUtils.isLocal(path)) {
                         File file = new File(path);
-                        EventBus.getDefault().post(file);
+                        File newFile=new File(OpenFileUtil.getPath(file.getName()));
+                        if(file.renameTo(newFile)){
+                            L.e(TAG,file.getAbsolutePath());
+                        }
+                        EventBus.getDefault().post(newFile);
                     }
                 }
                 break;

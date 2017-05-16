@@ -17,7 +17,7 @@ import android.widget.Toast;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-import mac.yk.devicemanagement.MyApplication;
+import mac.yk.devicemanagement.MyMemory;
 import mac.yk.devicemanagement.R;
 import mac.yk.devicemanagement.bean.DeviceOld;
 import mac.yk.devicemanagement.net.ApiWrapper;
@@ -89,7 +89,7 @@ public class SaveActivity extends BaseActivity implements View.OnClickListener {
 
         ApiWrapper<ServerAPI> wrapper=new ApiWrapper<>();
         subscription=wrapper.targetClass(ServerAPI.class).getAPI().
-                saveDevice(MyApplication.getInstance().getUser().getName(),ConvertUtils.getjson(deviceOld))
+                saveDevice(MyMemory.getInstance().getUser().getName(),ConvertUtils.getjson(deviceOld))
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .compose(wrapper.<String>applySchedulers())

@@ -11,7 +11,7 @@ import android.widget.Toast;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import mac.yk.devicemanagement.MyApplication;
+import mac.yk.devicemanagement.MyMemory;
 import mac.yk.devicemanagement.R;
 import mac.yk.devicemanagement.bean.User;
 import mac.yk.devicemanagement.db.dbUser;
@@ -71,7 +71,7 @@ public class LoginActivity extends BaseActivity{
                   }
                }
                 Intent intent = new Intent(context, MainActivity.class);
-                 MyApplication.getInstance().setUser(user);
+                 MyMemory.getInstance().setUser(user);
              SpUtil.saveLoginUser(context,name.getText().toString());
              startActivity(intent);
              MFGT.finish((Activity) context);

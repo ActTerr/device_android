@@ -21,7 +21,7 @@ import java.lang.reflect.Method;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import mac.yk.devicemanagement.MyApplication;
+import mac.yk.devicemanagement.MyMemory;
 import mac.yk.devicemanagement.R;
 import mac.yk.devicemanagement.ui.fragment.fragRecord;
 import mac.yk.devicemanagement.util.ActivityUtils;
@@ -90,7 +90,7 @@ public class RecordActivity extends BaseActivity {
             setUpNavView(navView);
             ImageView imageView= (ImageView) navView.getHeaderView(0).findViewById(R.id.avatar);
             TextView textView= (TextView) navView.getHeaderView(0).findViewById(R.id.nav_name);
-            textView.setText(MyApplication.getInstance().getUser().getName());
+            textView.setText(MyMemory.getInstance().getUser().getName());
             imageView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {

@@ -1,6 +1,8 @@
 package mac.yk.devicemanagement.ui.fragment;
 
+import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
@@ -10,6 +12,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import com.ipaulpro.afilechooser.utils.FileUtils;
 
 import java.util.ArrayList;
 
@@ -21,7 +25,10 @@ import mac.yk.devicemanagement.adapter.AttachmentAdapter;
 import mac.yk.devicemanagement.bean.Attachment;
 import mac.yk.devicemanagement.net.ApiWrapper;
 import mac.yk.devicemanagement.net.ServerAPI;
+import mac.yk.devicemanagement.util.L;
 import rx.Subscriber;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.schedulers.Schedulers;
 
 /**
  * Created by mac-yk on 2017/5/9.
@@ -39,6 +46,7 @@ public class fragAttachment extends BaseFragment {
     AttachmentAdapter adapter;
     Context context;
 
+    String TAG="fragAttachment";
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -47,6 +55,9 @@ public class fragAttachment extends BaseFragment {
        Long nid= getArguments().getLong("Nid",0);
         addHistory.setVisibility(View.GONE);
         context=getContext();
+        adapter=new AttachmentAdapter(context);
+        rv.setAdapter(adapter);
+        rv.setLayoutManager(new LinearLayoutManager(context));
         if (nid!=0){
             getAttachments(nid);
         }
@@ -60,6 +71,8 @@ public class fragAttachment extends BaseFragment {
         ApiWrapper<ServerAPI> wrapper = new ApiWrapper<>();
         wrapper.targetClass(ServerAPI.class).getAPI().getAttachment(nid)
                 .compose(wrapper.<ArrayList<Attachment>>applySchedulers())
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Subscriber<ArrayList<Attachment>>() {
                     @Override
                     public void onCompleted() {
@@ -73,9 +86,10 @@ public class fragAttachment extends BaseFragment {
 
                     @Override
                     public void onNext(ArrayList<Attachment> attachments) {
-                        adapter=new AttachmentAdapter(attachments,context);
-                        rv.setAdapter(adapter);
-                        rv.setLayoutManager(new LinearLayoutManager(context));
+                        adapter.getFileEntries(attachments);
+                        L.e(TAG, String.valueOf(attachments.get(0).getNid()));
+                        adapter.notifyDataSetChanged();
+
                     }
                 });
     }
@@ -85,8 +99,17 @@ public class fragAttachment extends BaseFragment {
         switch (view.getId()) {
 
             case R.id.iv_add:
-
+                selectFile();
                 break;
         }
     }
+
+    private void selectFile() {
+        Intent getContentIntent = FileUtils.createGetContentIntent();
+        Intent intent = Intent.createChooser(getContentIntent, "Select a file");
+        Activity activity= (Activity) context;
+        activity.startActivityForResult(intent, AttachmentAdapter.REQUEST_CHOOSER);
+    }
+
+
 }

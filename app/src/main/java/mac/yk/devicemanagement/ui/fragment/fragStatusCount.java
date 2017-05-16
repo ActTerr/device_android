@@ -17,7 +17,7 @@ import java.util.concurrent.TimeUnit;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import mac.yk.devicemanagement.MyApplication;
+import mac.yk.devicemanagement.MyMemory;
 import mac.yk.devicemanagement.R;
 import mac.yk.devicemanagement.adapter.FormStatusAdapter;
 import mac.yk.devicemanagement.net.ApiWrapper;
@@ -96,7 +96,7 @@ public class fragStatusCount extends BaseFragment {
         dialog.show();
         isAdding=true;
         ApiWrapper<ServerAPI> wrapper = new ApiWrapper<>();
-        wrapper.targetClass(ServerAPI.class).getAPI().getStatusCount(MyApplication.getInstance().getUser().getUnit(), year, memory)
+        wrapper.targetClass(ServerAPI.class).getAPI().getStatusCount(MyMemory.getInstance().getUser().getUnit(), year, memory)
                 .compose(wrapper.<ArrayList<String[]>>applySchedulers())
                 .timeout(30, TimeUnit.SECONDS)
                 .subscribe(new Subscriber<ArrayList<String[]>>() {

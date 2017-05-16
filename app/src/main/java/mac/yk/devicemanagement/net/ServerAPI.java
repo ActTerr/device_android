@@ -1,6 +1,7 @@
 package mac.yk.devicemanagement.net;
 
 import java.util.ArrayList;
+import java.util.Map;
 
 import mac.yk.devicemanagement.I;
 import mac.yk.devicemanagement.bean.Attachment;
@@ -18,6 +19,7 @@ import retrofit2.http.GET;
 import retrofit2.http.Multipart;
 import retrofit2.http.POST;
 import retrofit2.http.Part;
+import retrofit2.http.PartMap;
 import retrofit2.http.Query;
 import retrofit2.http.Url;
 import rx.Observable;
@@ -119,12 +121,17 @@ public interface ServerAPI {
                                                 @Query(I.ATTACHMENT.NEW_NAME) String newName,@Query(I.TYPE) String type);
 
     @GET(I.REQUEST.PATH+"?request="+I.REQUEST.DELETE_ATTACHMENT)
-    Observable<Result<String>> deleteAttachment(@Query(I.ATTACHMENT.AID) long Aid);
+    Observable<Result<String>> deleteAttachment(@Query(I.ATTACHMENT.NAME) String filename);
+
+
+
 
     @POST(I.REQUEST.PATH+"?request="+I.REQUEST.ADD_ATTACHMENT)
     @Multipart
-    Observable<Result<String>> addAttachment(@Part("file\";filename=file\"") RequestBody file,
-                                           @Query(I.BEAN) long Nid,@Query(I.FILE.TOOLSIZE) long total);
+    Observable<Result<Attachment>> addAttachment(@PartMap Map<String, RequestBody> externalFileParameters,
+                                             @Query(I.FILE.FILENAME) String name,
+                                           @Query(I.ATTACHMENT.NID) long Nid,@Query(I.FILE.COMPLETEDSIZE) long total);
+
 
     @GET(I.REQUEST.PATH+"?request="+I.REQUEST.DOWNLOAD_FILE)
     Call<ResponseBody> downloadFile(@Url String url );

@@ -31,8 +31,10 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import mac.yk.devicemanagement.I;
-import mac.yk.devicemanagement.MyApplication;
+import mac.yk.devicemanagement.MyMemory;
 import mac.yk.devicemanagement.R;
+import mac.yk.devicemanagement.bean.User;
+import mac.yk.devicemanagement.db.dbUser;
 import mac.yk.devicemanagement.net.ApiWrapper;
 import mac.yk.devicemanagement.net.ServerAPI;
 import mac.yk.devicemanagement.ui.fragment.fragBaofeiCount;
@@ -80,6 +82,7 @@ public class MainActivity extends BaseActivity {
         setContentView(R.layout.activity_currency);
         View view = View.inflate(this, R.layout.dialog_yujing, null);
         ButterKnife.bind(this);
+
         boolean netConnect = this.isNetConnect();
         if (netConnect) {
             mTv.setVisibility(View.GONE);
@@ -112,10 +115,12 @@ public class MainActivity extends BaseActivity {
     }
 
     private void init() {
+        context = this;
+        User user = dbUser.getInstance(context).select2(SpUtil.getLoginUser(context));
+        MyMemory.getInstance().setUser(user);
         fragDevice = new fragDevice();
         fragBaofeiCount=new fragBaofeiCount();
         fragCount =new fragCount();
-        context = this;
         builder = new AlertDialog.Builder(this);
         progressDialog = new ProgressDialog(this);
         fragNotice=new fragNotice();
@@ -128,8 +133,8 @@ public class MainActivity extends BaseActivity {
 
             ImageView imageView = (ImageView) navView.getHeaderView(0).findViewById(R.id.avatar);
             TextView textView = (TextView) navView.getHeaderView(0).findViewById(R.id.nav_name);
-            textView.setText(MyApplication.getInstance().getUser().getName());
-            L.e("main", "name:" + MyApplication.getInstance().getUser().getName());
+
+            textView.setText(MyMemory.getInstance().getUser().getName());
             imageView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {

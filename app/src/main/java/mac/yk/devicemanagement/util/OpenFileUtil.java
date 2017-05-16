@@ -15,8 +15,11 @@ import mac.yk.devicemanagement.R;
 
 public class OpenFileUtil {
     public static String getPath(String name){
+
        return Environment.getExternalStorageDirectory().getAbsolutePath() + "/Attachment/"+name;
     }
+
+
 
     public static String getUrl(String name){
         return I.REQUEST.SERVER_ROOT+"?request=downloadFile&name="+name;
@@ -50,7 +53,7 @@ public class OpenFileUtil {
             return getPdfFileIntent(filePath);
         }else if(end.equals("chm")){
             return getChmFileIntent(filePath);
-        }else if(end.equals("txt")){
+        }else if(end.equals("txt")||end.equals("rtf")){
             return getTextFileIntent(filePath,false);
         }else{
             return getAllIntent(filePath);

@@ -13,7 +13,7 @@ import android.widget.Toast;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-import mac.yk.devicemanagement.MyApplication;
+import mac.yk.devicemanagement.MyMemory;
 import mac.yk.devicemanagement.R;
 import mac.yk.devicemanagement.net.ApiWrapper;
 import mac.yk.devicemanagement.net.ServerAPI;
@@ -47,7 +47,7 @@ public class SetActivity extends BaseActivity{
         ButterKnife.bind(this);
         context = this;
         pd = new ProgressDialog(context);
-        user.setText(MyApplication.getInstance().getUser().getName());
+        user.setText(MyMemory.getInstance().getUser().getName());
 
     }
 
@@ -66,7 +66,7 @@ public class SetActivity extends BaseActivity{
             case R.id.logOut:
                 pd.show();
                 ApiWrapper<ServerAPI> wrapper = new ApiWrapper<>();
-               subscription= wrapper.targetClass(ServerAPI.class).getAPI().logOut(MyApplication.getInstance().getUser().getName())
+               subscription= wrapper.targetClass(ServerAPI.class).getAPI().logOut(MyMemory.getInstance().getUser().getName())
                         .compose(wrapper.<String>applySchedulers())
                        .subscribeOn(Schedulers.io())
                        .observeOn(AndroidSchedulers.mainThread())
@@ -88,7 +88,7 @@ public class SetActivity extends BaseActivity{
                             @Override
                             public void onNext(String s) {
                                 pd.dismiss();
-                                MyApplication.getInstance().setUser(null);
+                                MyMemory.getInstance().setUser(null);
                                 SpUtil.saveLoginUser(context, null);
                                 MFGT.gotoLoginActivity(context);
                                 MFGT.finish((Activity) context);

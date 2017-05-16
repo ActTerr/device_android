@@ -36,9 +36,10 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" />
     <ProgressBar
+        android:visibility="gone"
         android:id="@+id/pb"
         style="?android:attr/progressBarStyleHorizontal"
-        android:progress="20"
+        android:max="100"
         android:layout_marginLeft="40dp"
         android:layout_below="@+id/upload_time"
         android:layout_width="250dp"
@@ -77,5 +78,14 @@
         android:layout_alignParentRight="true"
         android:layout_width="25dp"
         android:layout_height="25dp" />
+    <ImageView
+        android:id="@+id/control"
+        android:visibility="gone"
+        android:layout_marginLeft="10dp"
+        android:layout_toRightOf="@+id/pb"
+        android:layout_below="@id/upload_time"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:src="@color/blue"/>
 
 </RelativeLayout>
