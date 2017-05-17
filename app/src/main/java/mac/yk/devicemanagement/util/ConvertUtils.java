@@ -70,6 +70,7 @@ public class ConvertUtils {
 
     /**
      * 待完善
+     *
      * @param Dname
      * @return
      */
@@ -184,16 +185,50 @@ public class ConvertUtils {
             case 20:
                 return
                         "满洲里站";
-            case 21:
-                return "大庆站";
-            case 22:
-                return "加格达奇站";
-            case 23:
-                return "海拉尔站";
-            case 24:
-                return "依图里河站";
         }
         return null;
     }
+
+    public static String getServiceStation(int i) {
+        switch (i) {
+            case 1:
+                return "哈尔滨站";
+            case 2:
+                return "哈尔滨东站";
+            case 3:
+                return "哈尔滨南站";
+            case 4:
+                return "绥化站";
+            case 5:
+                return
+                        "齐齐哈尔站";
+            case 6:
+                return
+                        "三间房站";
+            case 7:
+                return "大庆站";
+            case 8:
+                return
+                        "加格达奇站";
+            case 9:
+                return "牡丹江站";
+            case 10:
+                return
+                        "鸡西站";
+            case 11:
+                return
+                        "佳木斯站";
+            case 12:
+
+                return "海拉尔站";
+            case 13:
+                return
+                        "依图里河站";
+            case 14:
+                return "满洲里站";
+        }
+        return null;
+    }
+
 
 }

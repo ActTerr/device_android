@@ -13,10 +13,6 @@
         android:id="@+id/yunxing"
         android:title="运行" />
 
-    <item
-        android:icon="@drawable/xunjian"
-        android:id="@+id/xunjian"
-        android:title="巡检" />
 
     <item android:title="报废"
         android:id="@+id/baofei"

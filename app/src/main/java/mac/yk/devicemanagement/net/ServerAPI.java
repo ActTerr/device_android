@@ -21,7 +21,6 @@ import retrofit2.http.POST;
 import retrofit2.http.Part;
 import retrofit2.http.PartMap;
 import retrofit2.http.Query;
-import retrofit2.http.Url;
 import rx.Observable;
 
 /**
@@ -41,6 +40,9 @@ public interface ServerAPI {
 
     @GET(I.REQUEST.PATH+"?request="+I.REQUEST.GET_BAOFEI_COUNT)
     Observable<Result<ArrayList<String[]>>> getBaofeiCount(@Query(I.UNIT) int unit,@Query("year") String year ,@Query(I.TYPE)String type);
+
+    @GET(I.REQUEST.PATH+"?request="+I.REQUEST.GET_SERVICE_COUNT)
+    Observable<Result<ArrayList<String[]>>> getServiceCount(@Query(I.UNIT) int unit);
 
     @GET(I.REQUEST.PATH+"?request="+I.REQUEST.CHAXUN)
     Observable<Result<String[]>> chaxun(@Query(I.DEVICE.DID) String Did);
@@ -64,12 +66,13 @@ public interface ServerAPI {
 
     @GET(I.REQUEST.PATH+"?request="+I.REQUEST.XUNJIAN)
     Observable<Result<String>> xunjian(@Query(I.USER.NAME) String userName
-            ,@Query(I.DEVICE2.DID) String did,
-                               @Query(I.DEVICE2.STATUS) String status,@Query(I.XUNJIAN.REMARK) String remark);
+            ,@Query(I.DEVICE2.DID) String did, @Query(I.DEVICE2.STATUS) String status,
+                                       @Query(I.XUNJIAN.REMARK) String remark,@Query(I.USER.UNIT) String unit);
 
     @GET(I.REQUEST.PATH+"?request="+I.REQUEST.XIUJUN)
     Observable<Result<String>> xiujun(@Query(I.WEIXIU.USER) String userName
             ,@Query(I.DEVICE.DID) String did, @Query(I.WEIXIU.TRANSLATE) boolean translate,
+                                      @Query(I.WEIXIU.TYPE) String type,
                                        @Query(I.WEIXIU.REMARK) String remark);
 
     @GET(I.REQUEST.PATH+"?request="+I.REQUEST.BAOFEI)
@@ -133,6 +136,9 @@ public interface ServerAPI {
                                            @Query(I.ATTACHMENT.NID) long Nid,@Query(I.FILE.COMPLETEDSIZE) long total);
 
 
-    @GET(I.REQUEST.PATH+"?request="+I.REQUEST.DOWNLOAD_FILE)
-    Call<ResponseBody> downloadFile(@Url String url );
+    @POST(I.REQUEST.PATH+"?request="+I.REQUEST.DOWNLOAD_FILE)
+    Call<ResponseBody> downloadFile(@Query(I.FILE.FILENAME) String name,@Query(I.FILE.COMPLETEDSIZE) long completed );
+
+
+
 }

@@ -31,7 +31,7 @@ public interface I {
         String CONTROL="control";
         String SAVE="save";
         String LOGOUT="logOut";
-        String SERVER_ROOT="http://192.168.1.101:8080/deviceManagement/";
+        String SERVER_ROOT="http://192.168.0.26:8080/deviceManagement/";
         String XUNJIAN="xunjian";
         String XIUJUN="xiujun";
         String LOGIN="login";
@@ -45,6 +45,7 @@ public interface I {
         String CONTROL_D="controlD";
         String GET_STATUS_COUNT="getStatusCount";
         String GET_BAOFEI_COUNT="getBaofeiCount";
+        String GET_SERVICE_COUNT="getServiceCount";
         String GET_NOTICE="getNotice";
         String DELETE_NOTICE="deleteNotice";
         String UPDATE_NOTICE="updateNotice";
@@ -127,13 +128,14 @@ public interface I {
 
     interface WEIXIU{
         String ID="ID";
-        String TABLENAME="SERVICE";
+        String TABLENAME="WEIXIU";
         String WXDATE="WX_DATE";
         String DID="DID";
         String USER="WX_USER";
         String TRANSLATE="ISTRANSLATE";
         String REMARK="REMARK";
         String XJDATE="XJ_DATE";
+        String TYPE="WX_TYPE";
     }
     interface XUNJIAN{
         String TABLENAME="XUNJIAN";

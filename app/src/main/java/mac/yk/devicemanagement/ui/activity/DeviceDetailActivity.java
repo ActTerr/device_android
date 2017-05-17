@@ -3,6 +3,7 @@ package mac.yk.devicemanagement.ui.activity;
 import android.app.Activity;
 import android.app.Dialog;
 import android.app.ProgressDialog;
+import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
@@ -16,6 +17,7 @@ import android.view.View;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.PopupWindow;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -33,6 +35,7 @@ import mac.yk.devicemanagement.net.ApiWrapper;
 import mac.yk.devicemanagement.net.ServerAPI;
 import mac.yk.devicemanagement.ui.fragment.fragDeviceDetail;
 import mac.yk.devicemanagement.util.ActivityUtils;
+import mac.yk.devicemanagement.util.ConvertUtils;
 import mac.yk.devicemanagement.util.ExceptionFilter;
 import mac.yk.devicemanagement.util.MFGT;
 import mac.yk.devicemanagement.util.ToastUtil;
@@ -67,6 +70,7 @@ public class DeviceDetailActivity extends BaseActivity {
     @BindView(R.id.netView)
     TextView mTv;
     User user;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -76,9 +80,9 @@ public class DeviceDetailActivity extends BaseActivity {
         context = this;
         progressDialog = new ProgressDialog(context);
         dialog = new Dialog(context);
-        data= (String[]) getIntent().getSerializableExtra("deviceOld");
+        data = (String[]) getIntent().getSerializableExtra("deviceOld");
         MyMemory.getInstance().setData(data);
-        mStatus=new Status(data[0],data[11]);
+        mStatus = new Status(data[0], data[11]);
         MyMemory.getInstance().setStatus(mStatus);
 //        L.e("main", "detail:" + deviceOld.toString());
         if (data == null) {
@@ -93,15 +97,15 @@ public class DeviceDetailActivity extends BaseActivity {
                 isBaofei = true;
             }
         }
-        user= MyMemory.getInstance().getUser();
+        user = MyMemory.getInstance().getUser();
         setTitle("设备详情");
         setSupportActionBar(toolBar);
         ActionBar ab = getSupportActionBar();
         ab.setHomeAsUpIndicator(R.drawable.ic_menu);
         ab.setDisplayHomeAsUpEnabled(true);
         fragD = new fragDeviceDetail();
-        Bundle bundle=new Bundle();
-        bundle.putStringArray("data",data);
+        Bundle bundle = new Bundle();
+        bundle.putStringArray("data", data);
         fragD.setArguments(bundle);
         ActivityUtils.addFragmentToActivity(getSupportFragmentManager(), fragD, R.id.frame);
         if (navView != null) {
@@ -130,10 +134,10 @@ public class DeviceDetailActivity extends BaseActivity {
 
     private int getMenu() {
 
-        switch (user.getGrade()){
+        switch (user.getGrade()) {
             case 0:
             case 1:
-                if (isDianchi){
+                if (isDianchi) {
                     return R.menu.menu_battery_detail;
                 }
                 return R.menu.menu_device_detail;
@@ -151,42 +155,42 @@ public class DeviceDetailActivity extends BaseActivity {
                 if (isBaofei) {
                     Toast.makeText(context, "设备已报废！不可操作！", Toast.LENGTH_SHORT).show();
                 }
-                if (item.getItemId()!=R.id.record&&user.getAuthority()==0){
-                    ToastUtil.showToast(context,"该帐号没有权限操作！");
+                if (item.getItemId() != R.id.record && user.getAuthority() == 0) {
+                    ToastUtil.showToast(context, "该帐号没有权限操作！");
                 }
                 switch (item.getItemId()) {
                     case R.id.beiyong:
-                        if (!mStatus.getStatus().equals("运行")){
+                        if (!mStatus.getStatus().equals("运行")) {
                             ToastUtil.showcannotControl(context);
-                        }else {
+                        } else {
                             postControl("备用");
                         }
                         break;
                     case R.id.daiyong:
-                        if (!mStatus.getStatus().equals("备用")){
+                        if (!mStatus.getStatus().equals("备用")) {
                             ToastUtil.showcannotControl(context);
-                        }else {
+                        } else {
                             postControl("待用");
                         }
                         break;
                     case R.id.yunxing:
-                        if (!mStatus.getStatus().equals("待用")){
+                        if (!mStatus.getStatus().equals("待用")) {
                             ToastUtil.showcannotControl(context);
-                        }else {
+                        } else {
                             postControl("运行");
                         }
                         break;
                     case R.id.xunjian:
-                        if (!mStatus.getStatus().equals("备用")){
+                        if (!mStatus.getStatus().equals("备用")) {
                             ToastUtil.showcannotControl(context);
-                        }else {
+                        } else {
                             showXunJianDialog();
                         }
                         break;
                     case R.id.xiujun:
-                        if (!mStatus.getStatus().equals("维修")){
+                        if (!mStatus.getStatus().equals("维修")) {
                             ToastUtil.showcannotControl(context);
-                        }else {
+                        } else {
                             showXiujunDialog();
                         }
                         break;
@@ -198,28 +202,28 @@ public class DeviceDetailActivity extends BaseActivity {
                         postBaofei();
                         break;
                     case R.id.shiyong:
-                        if (!mStatus.getStatus().equals("使用")){
-                         ToastUtil.showcannotControl(context);
-                        }else {
+                        if (!mStatus.getStatus().equals("使用")) {
+                            ToastUtil.showcannotControl(context);
+                        } else {
                             postControlD(I.CONTROL_D.SHIYONG);
                         }
                         break;
                     case R.id.Ddaiyong:
-                        if (!mStatus.getStatus().equals("待用")){
+                        if (!mStatus.getStatus().equals("待用")) {
                             ToastUtil.showcannotControl(context);
-                        }else {
+                        } else {
                             postControlD(I.CONTROL_D.D_DAIYONG);
                         }
                         break;
                     case R.id.weixiu:
-                        if (!mStatus.getStatus().equals("待修")){
+                        if (!mStatus.getStatus().equals("待修")) {
                             ToastUtil.showcannotControl(context);
-                        }else {
+                        } else {
                             postControl("维修");
                         }
                         break;
                     case R.id.chongdian:
-                            postControlD(I.CONTROL_D.CHONGDIAN);
+                        postControlD(I.CONTROL_D.CHONGDIAN);
 
                         break;
                 }
@@ -232,8 +236,8 @@ public class DeviceDetailActivity extends BaseActivity {
 
     private void postControlD(String s) {
         dialog.show();
-        ApiWrapper<ServerAPI> wrapper=new ApiWrapper<>();
-        wrapper.targetClass(ServerAPI.class).getAPI().controlD(s,mStatus.getDid())
+        ApiWrapper<ServerAPI> wrapper = new ApiWrapper<>();
+        wrapper.targetClass(ServerAPI.class).getAPI().controlD(s, mStatus.getDid())
                 .compose(wrapper.<String>applySchedulers())
                 .subscribe(new Subscriber<String>() {
                     @Override
@@ -244,8 +248,8 @@ public class DeviceDetailActivity extends BaseActivity {
                     @Override
                     public void onError(Throwable e) {
                         dialog.dismiss();
-                        if(ExceptionFilter.filter(context,e)){
-                            ToastUtil.showToast(context,"操作失败");
+                        if (ExceptionFilter.filter(context, e)) {
+                            ToastUtil.showToast(context, "操作失败");
                         }
                     }
 
@@ -256,7 +260,6 @@ public class DeviceDetailActivity extends BaseActivity {
                     }
                 });
     }
-
 
 
     public class BaofeiHolder {
@@ -294,7 +297,7 @@ public class DeviceDetailActivity extends BaseActivity {
             progressDialog.show();
             ApiWrapper<ServerAPI> wrapper = new ApiWrapper<>();
             subscription = wrapper.targetClass(ServerAPI.class).getAPI().baofei(user.getName()
-                    ,  id, remark.getText().toString(),data[16],data[21])
+                    , id, remark.getText().toString(), data[16], data[21])
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
                     .compose(wrapper.<String>applySchedulers())
@@ -394,17 +397,64 @@ public class DeviceDetailActivity extends BaseActivity {
         EditText remark;
 
         View v;
+        @BindView(R.id.type)
+        TextView type;
+        @BindView(R.id.show_select)
+        ImageView showSelect;
+
+        boolean isShow;
+        PopupWindow popupWindow;
 
         public xiujunHoler() {
             v = View.inflate(context, R.layout.dialog_currency, null);
             ButterKnife.bind(this, v);
+            initPopuWindow();
+        }
+
+        private void initPopuWindow() {
+            View view = View.inflate(context, getViewId(), null);
+            initpopuHolder(view);
+            popupWindow = new PopupWindow(view, ConvertUtils.dp2px(context, 50),
+                    ConvertUtils.dp2px(context, view.getHeight()));
+
+            popupWindow.setTouchable(true);
+            popupWindow.setOutsideTouchable(true);
+            popupWindow.setFocusable(true);
+            popupWindow.setBackgroundDrawable(new BitmapDrawable());
+
+        }
+
+        private void initpopuHolder(View v) {
+            switch (data[2]) {
+                case "手持台":
+                    new shouchitaiHolder(v);
+                    break;
+                case "机控器":
+                    new jikongqiHolder(v);
+                    break;
+                case "区控器":
+                    new qukongqiHolder(v);
+                    break;
+            }
+        }
+
+        private int getViewId() {
+            switch (data[2]) {
+                case "手持台":
+                    return R.layout.item_popu_diantai;
+                case "机控器":
+                    return R.layout.item_popu_jikongqi;
+                case "区控器":
+                    return R.layout.item_popu_qukongqi;
+            }
+            return 0;
         }
 
         public View getV() {
             return v;
         }
 
-        @OnClick({R.id.cb_no, R.id.cb_yes, R.id.btn_commit})
+        @OnClick({R.id.cb_no, R.id.cb_yes, R.id.btn_commit, R.id.show_select})
         public void onClick(View view) {
             boolean translate = false;
             switch (view.getId()) {
@@ -421,10 +471,91 @@ public class DeviceDetailActivity extends BaseActivity {
                 case R.id.btn_commit:
                     dialog.dismiss();
                     progressDialog.show();
-                    postXiuJu(translate, remark.getText().toString());
+                    postXiuJu(translate,type.getText().toString(),remark.getText().toString());
+                    break;
+                case R.id.show_select:
+                    if (isShow) {
+                        showSelect.setImageResource(R.mipmap.up);
+                        isShow = false;
+                        popupWindow.dismiss();
+                    } else {
+                        showSelect.setImageResource(R.mipmap.down);
+                        isShow = true;
+                        popupWindow.showAsDropDown(showSelect);
+                    }
                     break;
             }
+
         }
+
+        class shouchitaiHolder {
+            View v;
+
+            public shouchitaiHolder(View v) {
+                this.v = v;
+                ButterKnife.bind(this, v);
+            }
+
+            @OnClick({R.id.waike, R.id.zhuban, R.id.yuyin, R.id.xinling, R.id.other})
+            public void onClick(View view) {
+                switch (view.getId()) {
+                    case R.id.waike:
+                    case R.id.zhuban:
+                    case R.id.yuyin:
+                    case R.id.xinling:
+                    case R.id.other:
+                        TextView tv = (TextView) view;
+                        type.setText(tv.getText());
+                        popupWindow.dismiss();
+                }
+            }
+        }
+
+        class jikongqiHolder {
+            View v;
+
+            public jikongqiHolder(View v) {
+                this.v = v;
+                ButterKnife.bind(this, v);
+            }
+
+
+            @OnClick({R.id.waike, R.id.zhuban, R.id.dengxian, R.id.other})
+            public void onClick(View view) {
+                switch (view.getId()) {
+                    case R.id.waike:
+                    case R.id.zhuban:
+                    case R.id.dengxian:
+                    case R.id.other:
+                        TextView tv = (TextView) view;
+                        type.setText(tv.getText());
+                        popupWindow.dismiss();
+                }
+            }
+        }
+
+        class qukongqiHolder{
+            View v;
+
+            public qukongqiHolder(View v) {
+                this.v = v;
+                ButterKnife.bind(this, v);
+            }
+
+
+            @OnClick({R.id.yuyin, R.id.other})
+            public void onClick(View view) {
+                switch (view.getId()) {
+                    case R.id.yuyin:
+                    case R.id.other:
+                        TextView tv = (TextView) view;
+                        type.setText(tv.getText());
+                        popupWindow.dismiss();
+                }
+            }
+        }
+
+
     }
 
     public class xunjianHolder {
@@ -488,10 +619,10 @@ public class DeviceDetailActivity extends BaseActivity {
         }
     }
 
-    private void postXiuJu(boolean translate, String remark) {
+    private void postXiuJu(boolean translate,String type, String remark) {
         ApiWrapper<ServerAPI> wrapper = new ApiWrapper<>();
         subscription = wrapper.targetClass(ServerAPI.class).getAPI()
-                .xiujun("", id, translate, remark)
+                .xiujun(user.getName(), id, translate,type, remark)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .compose(wrapper.<String>applySchedulers())
@@ -530,7 +661,7 @@ public class DeviceDetailActivity extends BaseActivity {
     private void postXunJian(final String status, String remark) {
         ApiWrapper<ServerAPI> wrapper = new ApiWrapper<>();
         subscription = wrapper.targetClass(ServerAPI.class).getAPI()
-                .xunjian("", id, status, remark)
+                .xunjian(user.getName(), id, status, remark, ConvertUtils.getServiceStation(user.getUnit()))
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .compose(wrapper.<String>applySchedulers())

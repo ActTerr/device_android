@@ -28,7 +28,6 @@ import mac.yk.devicemanagement.bean.Attachment;
 import mac.yk.devicemanagement.bean.FileEntry;
 import mac.yk.devicemanagement.bean.Result;
 import mac.yk.devicemanagement.db.dbFile;
-import mac.yk.devicemanagement.net.ApiWrapper;
 import mac.yk.devicemanagement.net.ProgressListener;
 import mac.yk.devicemanagement.net.RetrofitUtil;
 import mac.yk.devicemanagement.net.ServerAPI;
@@ -183,9 +182,8 @@ public class FileService extends IntentService implements IFile{
 
     @Override
     public void downloadFile(FileEntry entry) {
-        ApiWrapper<ServerAPI> wrapper=new ApiWrapper<>();
-        Call<ResponseBody> call = wrapper.targetClass(ServerAPI.class).getAPI()
-                .downloadFile(OpenFileUtil.getUrl(entry.getFileName()));
+        ServerAPI server=RetrofitUtil.createService(ServerAPI.class);
+        Call<ResponseBody> call = server.downloadFile(entry.getFileName(),entry.getCompletedSize());
 
         call.enqueue(new Callback<ResponseBody>() {
             @Override
@@ -230,9 +228,9 @@ public class FileService extends IntentService implements IFile{
                     outputStream.write(fileReader, 0, read);
 
                     fileSizeDownloaded += read;
-                    int prograss= (int) (fileSizeDownloaded/fileSize*100);
+                    int progress= (int) (fileSizeDownloaded/fileSize*100);
                     L.e(TAG,"进度:"+fileSizeDownloaded+"/"+fileSize);
-                    EventBus.getDefault().post(prograss);
+                    EventBus.getDefault().post(progress);
                     Log.d(TAG, "file download: " + fileSizeDownloaded + " of " + fileSize);
                 }
 

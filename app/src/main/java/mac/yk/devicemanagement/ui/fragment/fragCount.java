@@ -6,12 +6,15 @@ import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import mac.yk.devicemanagement.MyMemory;
 import mac.yk.devicemanagement.R;
 import mac.yk.devicemanagement.adapter.VPAdapter;
+import mac.yk.devicemanagement.bean.User;
 
 /**
  * Created by mac-yk on 2017/5/8.
@@ -21,19 +24,30 @@ public class fragCount extends BaseFragment {
     @BindView(R.id.vp)
     ViewPager vp;
     VPAdapter VPAdapter;
+
+    User user;
+    @BindView(R.id.select)
+    LinearLayout selectL;
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.frag_count_main, container, false);
         ButterKnife.bind(this, view);
+        user = MyMemory.getInstance().getUser();
         setUpViewPager();
         return view;
     }
 
     private void setUpViewPager() {
-       VPAdapter = new VPAdapter(getChildFragmentManager());
-        VPAdapter.addFragment(new fragTotalCount(), "统计分析");
-        VPAdapter.addFragment(new fragStatusCount(), "状态统计");
+        VPAdapter = new VPAdapter(getChildFragmentManager());
+        if (user.getGrade() == 2) {
+            VPAdapter.addFragment(new fragServiceCount(), "维修统计");
+            selectL.setVisibility(View.GONE);
+        } else {
+            VPAdapter.addFragment(new fragTotalCount(), "统计分析");
+            VPAdapter.addFragment(new fragStatusCount(), "状态统计");
+        }
         vp.setAdapter(VPAdapter);
     }
 

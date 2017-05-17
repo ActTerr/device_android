@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:id="@+id/xunjian"
+        android:title="巡检"/>
     <item android:id="@+id/weixiu"
         android:title="维修"/>
     <item android:id="@+id/xiujun"
