@@ -6,8 +6,6 @@
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
-        <item name="android:textColor">@color/white</item>
-        <item name="android:background">@color/gray2</item>
         //将系统自定义的divider设置成自定义的
         <item name="android:listDivider">@drawable/divider</item>
         //修改系统menu的背景

@@ -10,6 +10,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
+import android.widget.Button;
 import android.widget.ListView;
 
 import java.util.ArrayList;
@@ -17,6 +18,7 @@ import java.util.concurrent.TimeUnit;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 import mac.yk.devicemanagement.MyMemory;
 import mac.yk.devicemanagement.R;
 import mac.yk.devicemanagement.adapter.FormStatusAdapter;
@@ -39,19 +41,22 @@ public class fragStatusCount extends BaseFragment {
     ListView lv;
     FormStatusAdapter adapter;
 
-    boolean isAdding=false;
-    String TAG="fragStatusCount";
+    boolean isAdding = false;
+    String TAG = "fragStatusCount";
+    @BindView(R.id.add_from)
+    Button addFrom;
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.frag_count, container, false);
         ButterKnife.bind(this, view);
+
         setHasOptionsMenu(true);
         dialog = new ProgressDialog(getContext());
         data = new ArrayList<>();
-        adapter=new FormStatusAdapter(getContext(),data);
+        adapter = new FormStatusAdapter(getContext(), data);
         lv.setAdapter(adapter);
-        initData();
 //        String[] arra = new String[]{"", "备用", "待用", "运行", "待修", "维修"};
 //        list.addAll(ConvertUtils.array2List(arra));
         setListener();
@@ -63,10 +68,10 @@ public class fragStatusCount extends BaseFragment {
         lv.setOnScrollListener(new AbsListView.OnScrollListener() {
             @Override
             public void onScrollStateChanged(AbsListView view, int scrollState) {
-                int lastPosition=lv.getLastVisiblePosition();
-                if(scrollState== AbsListView.OnScrollListener.SCROLL_STATE_IDLE&&lastPosition==adapter.getCount()-1&&memory!=20&&!isAdding){
+                int lastPosition = lv.getLastVisiblePosition();
+                if (scrollState == AbsListView.OnScrollListener.SCROLL_STATE_IDLE && lastPosition == adapter.getCount() - 1 && memory != 20 && !isAdding) {
                     initData();
-                    L.e(TAG,"add");
+                    L.e(TAG, "add");
                 }
             }
 
@@ -94,7 +99,7 @@ public class fragStatusCount extends BaseFragment {
 
     private void initData() {
         dialog.show();
-        isAdding=true;
+        isAdding = true;
         ApiWrapper<ServerAPI> wrapper = new ApiWrapper<>();
         wrapper.targetClass(ServerAPI.class).getAPI().getStatusCount(MyMemory.getInstance().getUser().getUnit(), year, memory)
                 .compose(wrapper.<ArrayList<String[]>>applySchedulers())
@@ -113,13 +118,34 @@ public class fragStatusCount extends BaseFragment {
                     @Override
                     public void onNext(ArrayList<String[]> strings) {
                         dialog.dismiss();
-                        isAdding=false;
+                        isAdding = false;
                         for (String[] s : strings) {
-                                data.add(ConvertUtils.array2List(s));
+                            data.add(ConvertUtils.array2List(s));
                         }
                         adapter.notifyDataSetChanged();
-                        memory+=5;
+                        memory += 5;
                     }
                 });
     }
+
+    @Override
+    public void onHiddenChanged(boolean hidden) {
+        super.onHiddenChanged(hidden);
+
+    }
+
+    @OnClick(R.id.add_from)
+    public void onClick() {
+        addFrom.setVisibility(View.GONE);
+        initData();
+    }
+
+//    @Override
+//    public void setUserVisibleHint(boolean isVisibleToUser) {
+//        super.setUserVisibleHint(isVisibleToUser);
+//        if (isVisibleToUser&&data.size()==0){
+//            L.e("切换至status");
+//            initData();
+//        }
+//    }
 }

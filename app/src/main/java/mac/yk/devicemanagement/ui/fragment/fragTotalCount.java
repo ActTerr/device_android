@@ -9,6 +9,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ListView;
 
 import java.util.ArrayList;
@@ -16,6 +17,7 @@ import java.util.concurrent.TimeUnit;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 import mac.yk.devicemanagement.MyMemory;
 import mac.yk.devicemanagement.R;
 import mac.yk.devicemanagement.adapter.FormTotalAdapter;
@@ -39,32 +41,35 @@ public class fragTotalCount extends BaseFragment {
     int yidong;
     int qukongqi;
 
-    String yaer="all";
+    String yaer = "all";
     ProgressDialog dialog;
+    @BindView(R.id.add_from)
+    Button addFrom;
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.frag_count, container, false);
         ButterKnife.bind(this, view);
-        dialog=new ProgressDialog(getContext());
-        initView();
+        L.e("cao", "onCreate");
+        dialog = new ProgressDialog(getContext());
         setHasOptionsMenu(true);
         return view;
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-            if(item.getItemId()==R.id.all){
-                yaer="all";
-        }else {
-                yaer=String.valueOf(item.getItemId()).substring(1);
-            }
+        if (item.getItemId() == R.id.all) {
+            yaer = "all";
+        } else {
+            yaer = String.valueOf(item.getItemId()).substring(1);
+        }
         return true;
     }
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        inflater.inflate(R.menu.menu_year,menu);
+        inflater.inflate(R.menu.menu_year, menu);
     }
 
     private void initView() {
@@ -74,8 +79,8 @@ public class fragTotalCount extends BaseFragment {
         String[] arra = new String[]{"顺号", "单位", "手持电台", "固定机控器", "移动机控器", "区控器"};
         list.addAll(ConvertUtils.array2List(arra));
         data.add(list);
-        ApiWrapper<ServerAPI> wrapper=new ApiWrapper<>();
-        wrapper.targetClass(ServerAPI.class).getAPI().getTotalCount(MyMemory.getInstance().getUser().getUnit(),yaer,"default")
+        ApiWrapper<ServerAPI> wrapper = new ApiWrapper<>();
+        wrapper.targetClass(ServerAPI.class).getAPI().getTotalCount(MyMemory.getInstance().getUser().getUnit(), yaer, "default")
                 .compose(wrapper.<ArrayList<String[]>>applySchedulers())
                 .timeout(30, TimeUnit.SECONDS)
                 .subscribe(new Subscriber<ArrayList<String[]>>() {
@@ -92,24 +97,26 @@ public class fragTotalCount extends BaseFragment {
                     @Override
                     public void onNext(ArrayList<String[]> strings) {
                         dialog.dismiss();
-                        for(int i=0;i<strings.size();i++){
-                            ArrayList<String> list=new ArrayList<String>();
-                            list.add(i+1+"");
-                            list.add(ConvertUtils.getUnitName(i+1));
+                        for (int i = 0; i < strings.size(); i++) {
+                            ArrayList<String> list = new ArrayList<String>();
+                            list.add(i + 1 + "");
+                            list.add(ConvertUtils.getUnitName(i + 1));
                             list.addAll(ConvertUtils.array2List(strings.get(i)));
-                            shouchitai+=Integer.parseInt(strings.get(i)[0]);
-                            guding+=Integer.parseInt(strings.get(i)[1]);
-                            yidong+=Integer.parseInt(strings.get(i)[2]);
-                            qukongqi+=Integer.parseInt(strings.get(i)[3]);
-                            L.e(i+"",list.toString());
+                            shouchitai += Integer.parseInt(strings.get(i)[0]);
+                            guding += Integer.parseInt(strings.get(i)[1]);
+                            yidong += Integer.parseInt(strings.get(i)[2]);
+                            qukongqi += Integer.parseInt(strings.get(i)[3]);
+                            L.e(i + "", list.toString());
                             data.add(list);
                         }
 
-                        ArrayList<String> list1=new ArrayList<String>();
+                        ArrayList<String> list1 = new ArrayList<String>();
                         list1.add("");
                         list1.add("合计");
-                        list1.add(String.valueOf(shouchitai));list1.add(String.valueOf(guding));
-                        list1.add(String.valueOf(yidong)); list1.add(String.valueOf(qukongqi));
+                        list1.add(String.valueOf(shouchitai));
+                        list1.add(String.valueOf(guding));
+                        list1.add(String.valueOf(yidong));
+                        list1.add(String.valueOf(qukongqi));
                         data.add(list1);
                         lv.setAdapter(new FormTotalAdapter(getContext(), data));
 
@@ -118,4 +125,16 @@ public class fragTotalCount extends BaseFragment {
 
     }
 
+    @Override
+    public void onHiddenChanged(boolean hidden) {
+        super.onHiddenChanged(hidden);
+
+    }
+
+
+    @OnClick(R.id.add_from)
+    public void onClick() {
+        addFrom.setVisibility(View.GONE);
+        initView();
+    }
 }

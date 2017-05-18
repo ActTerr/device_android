@@ -6,6 +6,7 @@ import java.util.Map;
 import mac.yk.devicemanagement.I;
 import mac.yk.devicemanagement.bean.Attachment;
 import mac.yk.devicemanagement.bean.DeviceOld;
+import mac.yk.devicemanagement.bean.DeviceResume;
 import mac.yk.devicemanagement.bean.Notice;
 import mac.yk.devicemanagement.bean.Result;
 import mac.yk.devicemanagement.bean.Scrap;
@@ -30,6 +31,11 @@ import rx.Observable;
 public interface ServerAPI {
     @GET(I.REQUEST.PATH+"?request="+I.REQUEST.YUJING)
     Observable<Result<String>> getyujing();
+
+    @GET(I.REQUEST.PATH+"?request="+I.REQUEST.GET_DEVICE_RESUME)
+    Observable<Result<ArrayList<DeviceResume>>> getDeviceResume(@Query(I.DEVICE2.UNIT_ID) String unit,@Query(I.DEVICE2.CATEGROY) String category,
+                                                                @Query(I.DEVICE2.TYPE) String type,@Query(I.DEVICE2.STATUS) String status,
+                                                                @Query(I.PAGE) int page);
 
     @GET(I.REQUEST.PATH+"?request="+I.REQUEST.TONGJI)
     Observable<Result<ArrayList<String[]>>> getTotalCount(@Query(I.UNIT) int unit,@Query("year") String year ,@Query(I.TYPE) String type);
@@ -125,7 +131,6 @@ public interface ServerAPI {
 
     @GET(I.REQUEST.PATH+"?request="+I.REQUEST.DELETE_ATTACHMENT)
     Observable<Result<String>> deleteAttachment(@Query(I.ATTACHMENT.NAME) String filename);
-
 
 
 

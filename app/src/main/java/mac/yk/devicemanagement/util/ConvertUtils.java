@@ -50,8 +50,11 @@ public class ConvertUtils {
     }
 
     public static String Date2String(Date date) {
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-        return sdf.format(date);
+        if (date!=null){
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+            return sdf.format(date);
+        }
+        return "";
     }
 
     public static String getDname(int Dname) {

@@ -1,6 +1,5 @@
 package mac.yk.devicemanagement.ui.activity;
 
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Context;
@@ -39,7 +38,6 @@ import mac.yk.devicemanagement.net.ApiWrapper;
 import mac.yk.devicemanagement.net.ServerAPI;
 import mac.yk.devicemanagement.ui.fragment.fragBaofeiCount;
 import mac.yk.devicemanagement.ui.fragment.fragCount;
-import mac.yk.devicemanagement.ui.fragment.fragDevice;
 import mac.yk.devicemanagement.ui.fragment.fragMain;
 import mac.yk.devicemanagement.ui.fragment.fragNotice;
 import mac.yk.devicemanagement.util.ActivityUtils;
@@ -72,7 +70,6 @@ public class MainActivity extends BaseActivity {
     @BindView(R.id.netView)
     TextView mTv;
 
-    fragDevice fragDevice;
     fragCount fragCount;
     fragBaofeiCount fragBaofeiCount;
     fragNotice fragNotice;
@@ -118,7 +115,6 @@ public class MainActivity extends BaseActivity {
         context = this;
         User user = dbUser.getInstance(context).select2(SpUtil.getLoginUser(context));
         MyMemory.getInstance().setUser(user);
-        fragDevice = new fragDevice();
         fragBaofeiCount=new fragBaofeiCount();
         fragCount =new fragCount();
         builder = new AlertDialog.Builder(this);
@@ -213,29 +209,6 @@ public class MainActivity extends BaseActivity {
         });
     }
 
-    Observer<String[]> obChaxun = new Observer<String[]>() {
-        @Override
-        public void onCompleted() {
-
-        }
-
-        @Override
-        public void onError(Throwable e) {
-            progressDialog.dismiss();
-            if (ExceptionFilter.filter(context, e)) {
-                L.e("main", "gotoSave");
-                MFGT.gotoSaveActivity(MainActivity.this, id);
-            }
-        }
-
-        @Override
-        public void onNext(String[] deviceOld) {
-            progressDialog.dismiss();
-            L.e("main", deviceOld.toString());
-            MFGT.gotoDetailActivity(MainActivity.this, deviceOld);
-            MFGT.finish((Activity) context);
-        }
-    };
 
     @Override
     protected void onActivityResult(final int requestCode, int resultCode, final Intent data) {
@@ -245,14 +218,8 @@ public class MainActivity extends BaseActivity {
             Bundle bundle = data.getExtras();
             if (bundle != null) {
                 id = (bundle.getString("result"));
-                L.e("main", id + "");
-                ApiWrapper<ServerAPI> network = new ApiWrapper<>();
-                subscription = network.targetClass(ServerAPI.class).
-                        getAPI().chaxun(id)
-                        .subscribeOn(Schedulers.io())
-                        .observeOn(AndroidSchedulers.mainThread())
-                        .compose(network.<String[]>applySchedulers())
-                        .subscribe(obChaxun);
+                MFGT.gotoDetailActivity(context,false,id);
+                finish();
             }
 
         }

@@ -3,13 +3,16 @@
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/gray2"
-    android:layout_marginTop="20dp"
-    android:layout_marginLeft="10dp">
+    android:paddingTop="20dp"
+    android:paddingLeft="20dp"
+    >
     <TextView
+        android:id="@+id/title"
         android:text="请选择维修类别"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" />
     <LinearLayout
+        android:id="@+id/ll"
         android:orientation="horizontal"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content">
@@ -26,6 +29,7 @@
             android:layout_height="30dp" />
     </LinearLayout>
     <TextView
+        android:id="@+id/dia_title"
         android:layout_marginTop="10dp"
         android:text="是否更换硬件"
         android:layout_width="wrap_content"

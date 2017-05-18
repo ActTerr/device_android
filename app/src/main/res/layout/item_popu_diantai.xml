@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical" android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    android:background="@color/gray2">
 
     <TextView
-
+        android:textColor="@color/white"
         android:layout_marginTop="3dp"
         android:id="@+id/waike"
         android:layout_gravity="center"
@@ -17,7 +18,7 @@
         android:layout_width="match_parent"
         android:layout_height="1dp"/>
     <TextView
-
+        android:textColor="@color/white"
         android:layout_marginTop="3dp"
         android:id="@+id/zhuban"
         android:layout_gravity="center"
@@ -29,7 +30,7 @@
         android:background="@color/white"
         android:layout_width="match_parent"
         android:layout_height="1dp"/>
-    <TextView
+    <TextView     android:textColor="@color/white"
         android:layout_marginTop="3dp"
         android:id="@+id/yuyin"
         android:layout_gravity="center"
@@ -41,7 +42,7 @@
         android:background="@color/white"
         android:layout_width="match_parent"
         android:layout_height="1dp"/>
-    <TextView
+    <TextView     android:textColor="@color/white"
         android:layout_marginTop="3dp"
         android:id="@+id/xinling"
         android:layout_gravity="center"
@@ -53,7 +54,7 @@
         android:background="@color/white"
         android:layout_width="match_parent"
         android:layout_height="1dp"/>
-    <TextView
+    <TextView     android:textColor="@color/white"
         android:layout_marginTop="3dp"
         android:id="@+id/other"
         android:layout_gravity="center"

@@ -158,7 +158,7 @@ public class RecordActivity extends BaseActivity {
 
     @Override
     public void onBackPressed() {
-        MFGT.gotoDetailActivity(context, deviceOld);
+        MFGT.gotoDetailActivity(context, true,deviceOld[0]);
         MFGT.finish((Activity) context);
     }
 }

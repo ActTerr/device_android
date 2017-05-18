@@ -68,7 +68,7 @@
             </intent-filter>
         </activity>
         <service android:name=".service.FileService"/>
-
+        <activity android:name=".ui.activity.DeviceListActivity"/>
     </application>
 
 </manifest>

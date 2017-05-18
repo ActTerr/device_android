@@ -48,7 +48,7 @@ public class fragDeviceDetail extends BaseFragment implements Observer {
         observer = this;
         status= MyMemory.getInstance().getStatus();
         data = getArguments().getStringArray("data");
-        deviceStatus.setText("设备状态："+ConvertUtils.getStatus(false, Integer.parseInt(status.getStatus())));
+        deviceStatus.setText("设备状态："+status.getStatus());
         status.addObserver(observer);
         rv.setAdapter(new DetailAdapter(getContext(), data));
         rv.setLayoutManager(new GridLayoutManager(getContext(),1));

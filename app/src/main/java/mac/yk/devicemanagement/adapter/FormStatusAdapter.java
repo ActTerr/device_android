@@ -1,7 +1,6 @@
 package mac.yk.devicemanagement.adapter;
 
 import android.content.Context;
-import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,12 +11,13 @@ import java.util.ArrayList;
 
 import mac.yk.devicemanagement.R;
 import mac.yk.devicemanagement.util.ConvertUtils;
+import mac.yk.devicemanagement.util.MFGT;
 
 /**
  * Created by mac-yk on 2017/5/8.
  */
 
-public class FormStatusAdapter extends BaseAdapter{
+public class FormStatusAdapter extends BaseAdapter {
 
     private Context context;
     private LayoutInflater inflater;
@@ -49,9 +49,9 @@ public class FormStatusAdapter extends BaseAdapter{
     }
 
     @Override
-    public View getView(int index, View view, ViewGroup arg2) {
+    public View getView(final int index, View view, ViewGroup arg2) {
         // TODO Auto-generated method stub
-        ArrayList<String> list = lists.get(index);
+        final ArrayList<String> list = lists.get(index);
         if(view == null){
             view = inflater.inflate(R.layout.item_status_form, null);
         }
@@ -69,6 +69,7 @@ public class FormStatusAdapter extends BaseAdapter{
         TextView textView4 = (TextView) view.findViewById(R.id.text4);
         TextView textView5 = (TextView) view.findViewById(R.id.text5);
         TextView textView6 = (TextView) view.findViewById(R.id.text6);
+        TextView textView7= (TextView) view.findViewById(R.id.text7);
 
         textView1.setText(list.get(0));
         textView2.setText(list.get(1));
@@ -77,15 +78,53 @@ public class FormStatusAdapter extends BaseAdapter{
         textView5.setText(list.get(4));
         textView6.setText(list.get(5));
 
-        textView1.setTextColor(Color.WHITE);
-        textView2.setTextColor(Color.WHITE);
-        textView3.setTextColor(Color.WHITE);
-        textView4.setTextColor(Color.WHITE);
-        textView5.setTextColor(Color.WHITE);
-        textView6.setTextColor(Color.WHITE);
+//        textView7.setText(list.get(6));
 
+        textView2.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                MFGT.gotoDeviceListActivity(context,index/5+1,
+                        list.get(0),"备用");
+            }
+        });
+        textView3.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                MFGT.gotoDeviceListActivity(context,index/5+1,
+                        list.get(0),"待用");
 
+            }
+        });
+        textView4.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                MFGT.gotoDeviceListActivity(context,index/5+1,
+                        list.get(0),"运行");
+            }
+        });
+        textView5.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                MFGT.gotoDeviceListActivity(context,index/5+1
+                        ,list.get(0),"待修");
+            }
+        });
+        textView6.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                MFGT.gotoDeviceListActivity(context,index/5+1
+                        ,list.get(0),"维修");
+            }
+        });
+        textView7.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                MFGT.gotoDeviceListActivity(context,index/5+1
+                        ,list.get(0),"修竣");
+            }
+        });
         return view;
     }
+
 
 }

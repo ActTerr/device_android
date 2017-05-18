@@ -1,7 +1,6 @@
 package mac.yk.devicemanagement.ui.activity;
 
 import android.app.Activity;
-import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
@@ -14,9 +13,11 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.PopupWindow;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -37,6 +38,7 @@ import mac.yk.devicemanagement.ui.fragment.fragDeviceDetail;
 import mac.yk.devicemanagement.util.ActivityUtils;
 import mac.yk.devicemanagement.util.ConvertUtils;
 import mac.yk.devicemanagement.util.ExceptionFilter;
+import mac.yk.devicemanagement.util.L;
 import mac.yk.devicemanagement.util.MFGT;
 import mac.yk.devicemanagement.util.ToastUtil;
 import rx.Observer;
@@ -51,7 +53,6 @@ public class DeviceDetailActivity extends BaseActivity {
     Activity context;
     boolean isDianchi = false;
     fragDeviceDetail fragD;
-    Dialog dialog;
     @BindView(R.id.toolBar)
     Toolbar toolBar;
     @BindView(R.id.nav_view)
@@ -61,7 +62,7 @@ public class DeviceDetailActivity extends BaseActivity {
 
     Status mStatus;
     /**
-     * dialog
+     * progressDialog
      */
 
     String id;
@@ -71,6 +72,8 @@ public class DeviceDetailActivity extends BaseActivity {
     TextView mTv;
     User user;
 
+    boolean isFromList;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -79,23 +82,39 @@ public class DeviceDetailActivity extends BaseActivity {
         ButterKnife.bind(this);
         context = this;
         progressDialog = new ProgressDialog(context);
-        dialog = new Dialog(context);
-        data = (String[]) getIntent().getSerializableExtra("deviceOld");
+        String did = getIntent().getStringExtra("Did");
+        isFromList = getIntent().getBooleanExtra("isFromList", false);
+        getDevice(did);
+
+        Log.e("main", "setArgument执行");
+    }
+
+    private int getMenu() {
+
+        switch (user.getGrade()) {
+            case 0:
+            case 1:
+                if (isDianchi) {
+                    return R.menu.menu_battery_detail;
+                }
+                return R.menu.menu_device_detail;
+            case 2:
+                return R.menu.menu_service_detail;
+        }
+        return 0;
+    }
+
+    private void initView() {
         MyMemory.getInstance().setData(data);
         mStatus = new Status(data[0], data[11]);
         MyMemory.getInstance().setStatus(mStatus);
-//        L.e("main", "detail:" + deviceOld.toString());
-        if (data == null) {
-            MFGT.finish(context);
-        } else {
-            id = String.valueOf(data[0]);
-            if (data[2].equals("电池")) {
-                isDianchi = true;
-                MyMemory.getInstance().setFlag(true);
-            }
-            if (mStatus.getStatus().equals("报废")) {
-                isBaofei = true;
-            }
+        id = String.valueOf(data[0]);
+        if (data[2].equals("电池")) {
+            isDianchi = true;
+            MyMemory.getInstance().setFlag(true);
+        }
+        if (mStatus.getStatus().equals("报废")) {
+            isBaofei = true;
         }
         user = MyMemory.getInstance().getUser();
         setTitle("设备详情");
@@ -129,22 +148,38 @@ public class DeviceDetailActivity extends BaseActivity {
             //如果不是电池该项不可见
             navView.getMenu().getItem(3).setVisible(false);
         }
-        Log.e("main", "setArgument执行");
     }
 
-    private int getMenu() {
+    private void getDevice(String id) {
+        progressDialog.show();
+        ApiWrapper<ServerAPI> network = new ApiWrapper<>();
+        subscription = network.targetClass(ServerAPI.class).
+                getAPI().chaxun(id)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .compose(network.<String[]>applySchedulers())
+                .subscribe(new Observer<String[]>() {
+                    @Override
+                    public void onCompleted() {
 
-        switch (user.getGrade()) {
-            case 0:
-            case 1:
-                if (isDianchi) {
-                    return R.menu.menu_battery_detail;
-                }
-                return R.menu.menu_device_detail;
-            case 2:
-                return R.menu.menu_service_detail;
-        }
-        return 0;
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        progressDialog.dismiss();
+                        if (ExceptionFilter.filter(context, e)) {
+                            L.e("main", "gotoSave");
+                        }
+                    }
+
+                    @Override
+                    public void onNext(String[] deviceOld) {
+                        data = deviceOld;
+                        progressDialog.dismiss();
+                        L.e("main", deviceOld.toString());
+                        initView();
+                    }
+                });
     }
 
 
@@ -154,9 +189,15 @@ public class DeviceDetailActivity extends BaseActivity {
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
                 if (isBaofei) {
                     Toast.makeText(context, "设备已报废！不可操作！", Toast.LENGTH_SHORT).show();
+                    return false;
                 }
                 if (item.getItemId() != R.id.record && user.getAuthority() == 0) {
                     ToastUtil.showToast(context, "该帐号没有权限操作！");
+                    return false;
+                }
+                if (isFromList) {
+                    ToastUtil.showToast(context, "请扫描进入详情后操作！");
+                    return false;
                 }
                 switch (item.getItemId()) {
                     case R.id.beiyong:
@@ -235,7 +276,7 @@ public class DeviceDetailActivity extends BaseActivity {
     }
 
     private void postControlD(String s) {
-        dialog.show();
+        progressDialog.show();
         ApiWrapper<ServerAPI> wrapper = new ApiWrapper<>();
         wrapper.targetClass(ServerAPI.class).getAPI().controlD(s, mStatus.getDid())
                 .compose(wrapper.<String>applySchedulers())
@@ -247,7 +288,7 @@ public class DeviceDetailActivity extends BaseActivity {
 
                     @Override
                     public void onError(Throwable e) {
-                        dialog.dismiss();
+                        progressDialog.dismiss();
                         if (ExceptionFilter.filter(context, e)) {
                             ToastUtil.showToast(context, "操作失败");
                         }
@@ -255,7 +296,7 @@ public class DeviceDetailActivity extends BaseActivity {
 
                     @Override
                     public void onNext(String s) {
-                        dialog.dismiss();
+                        progressDialog.dismiss();
                         mStatus.setStatus(s);
                     }
                 });
@@ -293,7 +334,7 @@ public class DeviceDetailActivity extends BaseActivity {
 
         @OnClick(R.id.btn_commit)
         public void onClick(View view) {
-            dialog.dismiss();
+            progressDialog.dismiss();
             progressDialog.show();
             ApiWrapper<ServerAPI> wrapper = new ApiWrapper<>();
             subscription = wrapper.targetClass(ServerAPI.class).getAPI().baofei(user.getName()
@@ -327,9 +368,9 @@ public class DeviceDetailActivity extends BaseActivity {
 
     private void postBaofei() {
         BaofeiHolder baofei = new BaofeiHolder();
-        dialog.setContentView(baofei.getV());
-        dialog.setTitle(null);
-        dialog.show();
+        progressDialog.setContentView(baofei.getV());
+        progressDialog.setTitle(null);
+        progressDialog.show();
     }
 
     @Override
@@ -469,9 +510,9 @@ public class DeviceDetailActivity extends BaseActivity {
                     translate = true;
                     break;
                 case R.id.btn_commit:
-                    dialog.dismiss();
+                    progressDialog.dismiss();
                     progressDialog.show();
-                    postXiuJu(translate,type.getText().toString(),remark.getText().toString());
+                    postXiuJu(translate, type.getText().toString(), remark.getText().toString());
                     break;
                 case R.id.show_select:
                     if (isShow) {
@@ -534,7 +575,7 @@ public class DeviceDetailActivity extends BaseActivity {
             }
         }
 
-        class qukongqiHolder{
+        class qukongqiHolder {
             View v;
 
             public qukongqiHolder(View v) {
@@ -569,10 +610,18 @@ public class DeviceDetailActivity extends BaseActivity {
         CheckBox cbYes;
         @BindView(R.id.remark)
         EditText remark;
+        @BindView(R.id.title)
+        TextView title;
+        @BindView(R.id.ll)
+        LinearLayout ll;
+        @BindView(R.id.btn_commit)
+        Button btnCommit;
 
         public xunjianHolder() {
             v = View.inflate(context, R.layout.dialog_currency, null);
             ButterKnife.bind(this, v);
+            title.setVisibility(View.GONE);
+            ll.setVisibility(View.GONE);
             diaTitle.setText("设备状态");
             remark.setHint("如有问题请备注");
             cbNo.setText("异常");
@@ -596,7 +645,7 @@ public class DeviceDetailActivity extends BaseActivity {
                     cbNo.setChecked(false);
                     break;
                 case R.id.btn_commit:
-                    dialog.dismiss();
+                    progressDialog.dismiss();
                     progressDialog.show();
                     String status;
                     if (cbYes.isChecked()) {
@@ -613,16 +662,16 @@ public class DeviceDetailActivity extends BaseActivity {
     private void showXiujunDialog() {
         if (!isDianchi) {
             xiujunHoler xiujunHoler = new xiujunHoler();
-            dialog.setContentView(xiujunHoler.getV());
-            dialog.setTitle(null);
-            dialog.show();
+            progressDialog.setContentView(xiujunHoler.getV());
+            progressDialog.setTitle(null);
+            progressDialog.show();
         }
     }
 
-    private void postXiuJu(boolean translate,String type, String remark) {
+    private void postXiuJu(boolean translate, String type, String remark) {
         ApiWrapper<ServerAPI> wrapper = new ApiWrapper<>();
         subscription = wrapper.targetClass(ServerAPI.class).getAPI()
-                .xiujun(user.getName(), id, translate,type, remark)
+                .xiujun(user.getName(), id, translate, type, remark)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .compose(wrapper.<String>applySchedulers())
@@ -652,9 +701,9 @@ public class DeviceDetailActivity extends BaseActivity {
     private void showXunJianDialog() {
         if (!isDianchi) {
             xunjianHolder xunjianHolder = new xunjianHolder();
-            dialog.setContentView(xunjianHolder.getV());
-            dialog.setTitle(null);
-            dialog.show();
+            progressDialog.setContentView(xunjianHolder.getV());
+            progressDialog.setTitle(null);
+            progressDialog.show();
         }
     }
 

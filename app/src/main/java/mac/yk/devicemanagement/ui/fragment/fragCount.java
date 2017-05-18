@@ -20,7 +20,7 @@ import mac.yk.devicemanagement.bean.User;
  * Created by mac-yk on 2017/5/8.
  */
 
-public class fragCount extends BaseFragment {
+public class fragCount extends BaseFragment{
     @BindView(R.id.vp)
     ViewPager vp;
     VPAdapter VPAdapter;
@@ -29,6 +29,9 @@ public class fragCount extends BaseFragment {
     @BindView(R.id.select)
     LinearLayout selectL;
 
+    fragTotalCount fragTotalCount;
+    fragStatusCount fragStatusCount;
+    fragServiceCount fragServiceCount;
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -45,23 +48,32 @@ public class fragCount extends BaseFragment {
             VPAdapter.addFragment(new fragServiceCount(), "维修统计");
             selectL.setVisibility(View.GONE);
         } else {
-            VPAdapter.addFragment(new fragTotalCount(), "统计分析");
-            VPAdapter.addFragment(new fragStatusCount(), "状态统计");
+            fragTotalCount=new fragTotalCount();
+            fragStatusCount=new fragStatusCount();
+            fragServiceCount=new fragServiceCount();
+            VPAdapter.addFragment(fragTotalCount, "统计分析");
+            VPAdapter.addFragment(fragStatusCount, "状态统计");
+            VPAdapter.addFragment(fragServiceCount,"维修点统计");
         }
         vp.setAdapter(VPAdapter);
     }
 
-    @OnClick({R.id.total_count, R.id.status_count})
+    @OnClick({R.id.total_count, R.id.status_count,R.id.service_count})
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.total_count:
                 vp.setCurrentItem(0);
+
                 break;
             case R.id.status_count:
                 vp.setCurrentItem(1);
                 break;
+            case R.id.service_count:
+                vp.setCurrentItem(2);
+                break;
         }
     }
+
 
 
 }

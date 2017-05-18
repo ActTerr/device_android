@@ -8,6 +8,18 @@ public interface I {
     String TYPE="type";
     String BEAN="bean";
     String FLAG="flag";
+    String PAGE="page";
+
+
+    interface DEVICE_RESUME{
+        String USE_DATE="USE_DATE";
+        String SCRAP_DATE="SCRAP_DATE";
+        String USE_UNIT="USE_UNIT";
+        String USE_LOCAL="USE_LOCAL";
+        String REMARK="REMARK";
+        String DID="DID";
+        String CHECK_DATE="CHECK_DATE";
+    }
 
     interface UPADATE_TYPE{
         String RENAME="0";
@@ -55,6 +67,7 @@ public interface I {
         String UPDATE_ATTACHMENT="updateAttachment";
         String DOWNLOAD_FILE="downFile";
         String UPLOAD_FILE="uploadFile";
+        String GET_DEVICE_RESUME="getDeviceResume";
     }
     interface CONTROL_D{
         String CONTROL_TYPE="control_type";
