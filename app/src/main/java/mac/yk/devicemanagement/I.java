@@ -7,8 +7,8 @@ public interface I {
     String MEMORY="memory";
     String TYPE="type";
     String BEAN="bean";
-    String FLAG="flag";
     String PAGE="page";
+    String STATION_TYPE="sType";
 
 
     interface DEVICE_RESUME{
@@ -43,7 +43,7 @@ public interface I {
         String CONTROL="control";
         String SAVE="save";
         String LOGOUT="logOut";
-        String SERVER_ROOT="http://192.168.0.26:8080/deviceManagement/";
+        String SERVER_ROOT="http://192.168.1.101:8080/deviceManagement/";
         String XUNJIAN="xunjian";
         String XIUJUN="xiujun";
         String LOGIN="login";

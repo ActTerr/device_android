@@ -33,7 +33,7 @@ public interface ServerAPI {
     Observable<Result<String>> getyujing();
 
     @GET(I.REQUEST.PATH+"?request="+I.REQUEST.GET_DEVICE_RESUME)
-    Observable<Result<ArrayList<DeviceResume>>> getDeviceResume(@Query(I.DEVICE2.UNIT_ID) String unit,@Query(I.DEVICE2.CATEGROY) String category,
+    Observable<Result<ArrayList<DeviceResume>>> getDeviceResume(@Query(I.STATION_TYPE) String stype,@Query(I.DEVICE2.UNIT_ID) String unit,@Query(I.DEVICE2.CATEGROY) String category,
                                                                 @Query(I.DEVICE2.TYPE) String type,@Query(I.DEVICE2.STATUS) String status,
                                                                 @Query(I.PAGE) int page);
 

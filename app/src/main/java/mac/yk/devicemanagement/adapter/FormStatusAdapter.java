@@ -77,20 +77,19 @@ public class FormStatusAdapter extends BaseAdapter {
         textView4.setText(list.get(3));
         textView5.setText(list.get(4));
         textView6.setText(list.get(5));
-
-//        textView7.setText(list.get(6));
+        textView7.setText(list.get(6));
 
         textView2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                MFGT.gotoDeviceListActivity(context,index/5+1,
+                MFGT.gotoDeviceListActivity(context,"0",index/5+1,
                         list.get(0),"备用");
             }
         });
         textView3.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                MFGT.gotoDeviceListActivity(context,index/5+1,
+                MFGT.gotoDeviceListActivity(context,"0",index/5+1,
                         list.get(0),"待用");
 
             }
@@ -98,28 +97,28 @@ public class FormStatusAdapter extends BaseAdapter {
         textView4.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                MFGT.gotoDeviceListActivity(context,index/5+1,
+                MFGT.gotoDeviceListActivity(context,"0",index/5+1,
                         list.get(0),"运行");
             }
         });
         textView5.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                MFGT.gotoDeviceListActivity(context,index/5+1
+                MFGT.gotoDeviceListActivity(context,"0",index/5+1
                         ,list.get(0),"待修");
             }
         });
         textView6.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                MFGT.gotoDeviceListActivity(context,index/5+1
+                MFGT.gotoDeviceListActivity(context,"0",index/5+1
                         ,list.get(0),"维修");
             }
         });
         textView7.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                MFGT.gotoDeviceListActivity(context,index/5+1
+                MFGT.gotoDeviceListActivity(context,"0",index/5+1
                         ,list.get(0),"修竣");
             }
         });

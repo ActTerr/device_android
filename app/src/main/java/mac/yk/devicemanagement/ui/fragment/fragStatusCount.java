@@ -57,8 +57,6 @@ public class fragStatusCount extends BaseFragment {
         data = new ArrayList<>();
         adapter = new FormStatusAdapter(getContext(), data);
         lv.setAdapter(adapter);
-//        String[] arra = new String[]{"", "备用", "待用", "运行", "待修", "维修"};
-//        list.addAll(ConvertUtils.array2List(arra));
         setListener();
         return view;
     }

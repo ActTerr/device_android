@@ -45,24 +45,25 @@ public class DeviceListActivity extends BaseActivity {
         String unit= String.valueOf(intent.getIntExtra("unit",0));
         String category=intent.getStringExtra("category");
         String status=intent.getStringExtra("status");
-        getData(unit,category,status);
+        String sType=intent.getStringExtra("sType");
+        getData(sType,unit,category,status);
         list=new ArrayList<>();
         deviceResumeAdapter=new DeviceResumeAdapter(list,context);
         rv.setAdapter(deviceResumeAdapter);
         gl=new GridLayoutManager(context,1);
         rv.setLayoutManager(gl);
-        setListener(unit,category,status);
+        setListener(sType,unit,category,status);
 
     }
 
-    private void setListener(final String unit, final String category, final String status) {
+    private void setListener(final String sType,final String unit, final String category, final String status) {
         rv.setOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
             public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
                 int lastposition=gl.findLastVisibleItemPosition();
                 if (lastposition==list.size()-1&&newState==RecyclerView.SCROLL_STATE_IDLE&&isMore){
                     page++;
-                    getData(unit,category,status);
+                    getData(sType,unit,category,status);
                 }
             }
 
@@ -74,7 +75,7 @@ public class DeviceListActivity extends BaseActivity {
 
     }
 
-    private void getData(String unit, String category, String status) {
+    private void getData(String sType,String unit, String category, String status) {
         String type;
         if (category.equals("固定机控器")){
             type="数字固定";
@@ -84,8 +85,9 @@ public class DeviceListActivity extends BaseActivity {
             type=null;
         }
         pd.show();
+        
         ApiWrapper<ServerAPI> wrapper=new ApiWrapper<>();
-        wrapper.targetClass(ServerAPI.class).getAPI().getDeviceResume(unit,category,type,status,page)
+        wrapper.targetClass(ServerAPI.class).getAPI().getDeviceResume(sType,unit,category,type,status,page)
         .compose(wrapper.<ArrayList<DeviceResume>>applySchedulers())
         .subscribe(new Subscriber<ArrayList<DeviceResume>>() {
             @Override

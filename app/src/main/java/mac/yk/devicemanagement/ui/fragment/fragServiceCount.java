@@ -6,6 +6,7 @@ import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AbsListView;
 import android.widget.Button;
 import android.widget.ListView;
 
@@ -24,6 +25,8 @@ import mac.yk.devicemanagement.util.ConvertUtils;
 import mac.yk.devicemanagement.util.L;
 import rx.Subscriber;
 
+import static android.content.ContentValues.TAG;
+
 /**
  * Created by mac-yk on 2017/5/17.
  */
@@ -34,29 +37,49 @@ public class fragServiceCount extends BaseFragment {
     ProgressDialog dialog;
 
     ArrayList<ArrayList<String>> data;
-    int shouchitai;
-    int guding;
-    int yidong;
-    int qukongqi;
     @BindView(R.id.add_from)
     Button addFrom;
 
+    FormServiceAdapter adapter;
+    boolean isAdding = false;
+    int memory;
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.frag_count, container, false);
         ButterKnife.bind(this, view);
         dialog = new ProgressDialog(getContext());
+        data = new ArrayList<>();
+        adapter = new FormServiceAdapter(getContext(), data);
+        lv.setAdapter(adapter);
+        setListener();
         return view;
     }
 
-    private void initView() {
+    private void setListener() {
+
+        lv.setOnScrollListener(new AbsListView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(AbsListView view, int scrollState) {
+                int lastPosition = lv.getLastVisiblePosition();
+                if (scrollState == AbsListView.OnScrollListener.SCROLL_STATE_IDLE && lastPosition == adapter.getCount() - 1 &&memory != 20 && !isAdding) {
+                    initData();
+                    L.e(TAG, "add");
+                }
+            }
+
+            @Override
+            public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
+
+            }
+        });
+    }
+
+
+
+    private void initData() {
         dialog.show();
-        data = new ArrayList<>();
-        final ArrayList<String> list = new ArrayList<>();
-        String[] arra = new String[]{"状态", "手持电台", "固定机控器", "移动机控器", "区控器"};
-        list.addAll(ConvertUtils.array2List(arra));
-        data.add(list);
+        isAdding = true;
         ApiWrapper<ServerAPI> wrapper = new ApiWrapper<>();
         wrapper.targetClass(ServerAPI.class).getAPI().getServiceCount(MyMemory.getInstance().getUser().getUnit())
                 .compose(wrapper.<ArrayList<String[]>>applySchedulers())
@@ -75,54 +98,21 @@ public class fragServiceCount extends BaseFragment {
                     @Override
                     public void onNext(ArrayList<String[]> strings) {
                         dialog.dismiss();
-                        for (int i = 0; i < strings.size(); i++) {
-                            ArrayList<String> list = new ArrayList<String>();
-                            list.add("待修");
-                            list.addAll(ConvertUtils.array2List(strings.get(i)));
-                            shouchitai += Integer.parseInt(strings.get(i)[0]);
-                            guding += Integer.parseInt(strings.get(i)[1]);
-                            yidong += Integer.parseInt(strings.get(i)[2]);
-                            qukongqi += Integer.parseInt(strings.get(i)[3]);
-                            L.e(i + "", list.toString());
-                            data.add(list);
+                        isAdding = false;
+                        for (String[] s : strings) {
+                            data.add(ConvertUtils.array2List(s));
                         }
-
-                        ArrayList<String> list1 = new ArrayList<String>();
-                        list1.add("");
-                        list1.add("合计");
-                        list1.add(String.valueOf(shouchitai));
-                        list1.add(String.valueOf(guding));
-                        list1.add(String.valueOf(yidong));
-                        list1.add(String.valueOf(qukongqi));
-                        data.add(list1);
-                        lv.setAdapter(new FormServiceAdapter(getContext(), data));
-
+                        adapter.notifyDataSetChanged();
+                        memory+= 5;
                     }
                 });
-
     }
 
-    @Override
-    public void onHiddenChanged(boolean hidden) {
-        super.onHiddenChanged(hidden);
-
-    }
 
     @OnClick(R.id.add_from)
     public void onClick() {
         addFrom.setVisibility(View.GONE);
-        initView();
+        initData();
     }
-
-
-//    @Override
-//    public void setUserVisibleHint(boolean isVisibleToUser) {
-//        super.setUserVisibleHint(isVisibleToUser);
-//        if (isVisibleToUser&&data==null){
-//            L.e("切换至service");
-//
-//            initView();
-//        }
-//    }
 
 }

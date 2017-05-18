@@ -30,7 +30,6 @@ import mac.yk.devicemanagement.util.ConvertUtils;
 import mac.yk.devicemanagement.util.ExceptionFilter;
 import mac.yk.devicemanagement.util.L;
 import mac.yk.devicemanagement.util.ToastUtil;
-import rx.Observer;
 import rx.Subscriber;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
@@ -73,7 +72,6 @@ public class fragScrap extends BaseFragment {
         pd = new ProgressDialog(context);
         rv.setAdapter(scrapAdapter);
         rv.setLayoutManager(gridLayoutManager);
-        getTongji();
         setListener();
         setHasOptionsMenu(true);
         initMemory();
@@ -103,36 +101,7 @@ public class fragScrap extends BaseFragment {
 //    }
 
 
-    Observer<Integer[]> obTongji = new Observer<Integer[]>() {
-        @Override
-        public void onCompleted() {
 
-        }
-
-        @Override
-        public void onError(Throwable e) {
-            if (ExceptionFilter.filter(context, e)) {
-                ToastUtil.showToast(context, "查询失败");
-            }
-        }
-
-        @Override
-        public void onNext(Integer[] integers) {
-            L.e("integer", integers.toString());
-            tongji = integers;
-            setTitle();
-        }
-    };
-
-
-    private void getTongji() {
-//        ApiWrapper<ServerAPI> network = new ApiWrapper<>();
-//        subscription = network.targetClass(ServerAPI.class).getAPI().getTongji(I.BAOFEI.TABLENAME)
-//                .compose(network.<Integer[]>applySchedulers())
-//                .subscribeOn(Schedulers.io())
-//                .observeOn(AndroidSchedulers.mainThread())
-//                .subscribe(obTongji);
-    }
 
     private void setTitle() {
         if (tongji!=null){

@@ -31,11 +31,12 @@ public class MFGT {
         startActivity(context,intent);
     }
 
-    public static void gotoDeviceListActivity(Context context,int unit,String category,String status){
+    public static void gotoDeviceListActivity(Context context,String sType,int unit,String category,String status){
         Intent intent=new Intent(context,DeviceListActivity.class);
         intent.putExtra("unit",unit);
         intent.putExtra("category",category);
         intent.putExtra("status",status);
+        intent.putExtra("gsType",sType);
         startActivity(context,intent);
     }
 

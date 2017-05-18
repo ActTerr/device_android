@@ -50,10 +50,13 @@ public class fragCount extends BaseFragment{
         } else {
             fragTotalCount=new fragTotalCount();
             fragStatusCount=new fragStatusCount();
-            fragServiceCount=new fragServiceCount();
+
             VPAdapter.addFragment(fragTotalCount, "统计分析");
             VPAdapter.addFragment(fragStatusCount, "状态统计");
-            VPAdapter.addFragment(fragServiceCount,"维修点统计");
+            if(user.getGrade()==0){
+                fragServiceCount=new fragServiceCount();
+                VPAdapter.addFragment(fragServiceCount,"维修点统计");
+            }
         }
         vp.setAdapter(VPAdapter);
     }
@@ -63,7 +66,6 @@ public class fragCount extends BaseFragment{
         switch (view.getId()) {
             case R.id.total_count:
                 vp.setCurrentItem(0);
-
                 break;
             case R.id.status_count:
                 vp.setCurrentItem(1);
