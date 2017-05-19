@@ -32,8 +32,9 @@ public interface I {
         String FILE="file";
     }
     interface REQUEST{
+        String CHECK_BATTERY="checkBattery";
         String UPLOADUNCAUGHT="uploadUncaught";
-        String PATH="Server";
+        String PATH="Server?request=";
         String PARAM="request";
         String DOWNWEIXIU="downloadWeiXiu";
         String DOWNXUNJIAN="downloadXunJian";
@@ -203,7 +204,7 @@ public interface I {
         String EXPECT_TIME="EXPECT_TIME";
         String THEORY_DURATION="THEORY_DURATION";
         String STATUS="STATUS";
-
+        String UNIT_ID="UNIT_ID";
     }
 
     interface NOTICE{

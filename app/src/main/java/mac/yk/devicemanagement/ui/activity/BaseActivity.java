@@ -15,7 +15,7 @@ import java.util.Observer;
 
 import mac.yk.devicemanagement.MyMemory;
 import mac.yk.devicemanagement.R;
-import mac.yk.devicemanagement.Receiver.NetBroadcastReceiver;
+import mac.yk.devicemanagement.receiver.NetBroadcastReceiver;
 import mac.yk.devicemanagement.util.NetUtil;
 import rx.Subscription;
 

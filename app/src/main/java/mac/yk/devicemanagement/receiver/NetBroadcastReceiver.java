@@ -1,4 +1,4 @@
-package mac.yk.devicemanagement.Receiver;
+package mac.yk.devicemanagement.receiver;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;

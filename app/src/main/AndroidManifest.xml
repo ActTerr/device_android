@@ -34,7 +34,7 @@
         <activity android:name=".ui.activity.SetActivity" />
         <activity android:name=".ui.activity.GestureActivity"></activity>
         <activity android:name=".ui.activity.AuxiliaryActivity"></activity>
-        <receiver android:name=".Receiver.NetBroadcastReceiver">
+        <receiver android:name=".receiver.NetBroadcastReceiver">
             <intent-filter>
                 <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />
             </intent-filter>
@@ -69,6 +69,11 @@
         </activity>
         <service android:name=".service.FileService"/>
         <activity android:name=".ui.activity.DeviceListActivity"/>
+
+        <service android:name=".service.BatteryService"/>
+        <receiver android:name=".receiver.MyReceiver">
+
+        </receiver>
     </application>
 
 </manifest>
