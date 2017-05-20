@@ -18,7 +18,7 @@ import mac.yk.devicemanagement.MyMemory;
 import mac.yk.devicemanagement.R;
 import mac.yk.devicemanagement.adapter.DetailAdapter;
 import mac.yk.devicemanagement.bean.Status;
-import mac.yk.devicemanagement.util.ConvertUtils;
+import mac.yk.devicemanagement.util.L;
 import mac.yk.devicemanagement.widget.loodView;
 
 /**
@@ -60,7 +60,8 @@ public class fragDeviceDetail extends BaseFragment implements Observer {
     @Override
     public void update(Observable o, Object arg) {
         status= (Status) o;
-        deviceStatus.setText("设备状态："+ConvertUtils.getStatus(false, Integer.parseInt(status.getStatus())));
+        L.e("deviceDetail","statusupdate:"+status.getStatus());
+        deviceStatus.setText("设备状态："+status.getStatus());
     }
 
     @Override

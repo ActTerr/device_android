@@ -14,14 +14,24 @@ public class Battery implements Parcelable{
     long theory_duration;
     String status;
     String unit_id;
+    String type;
 
-    public Battery(String did, long start_time, long used_duration, long theory_duration, String status, String unit_id) {
+    public Battery(String did, long start_time, long used_duration, long theory_duration, String status, String unit_id,String type) {
         this.did = did;
         this.start_time = start_time;
         this.used_duration = used_duration;
         this.theory_duration = theory_duration;
         this.status = status;
         this.unit_id = unit_id;
+        this.type=type;
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
     }
 
     public Battery() {
@@ -34,6 +44,7 @@ public class Battery implements Parcelable{
         theory_duration = in.readLong();
         status = in.readString();
         unit_id = in.readString();
+        type=in.readString();
     }
 
     public static final Creator<Battery> CREATOR = new Creator<Battery>() {
@@ -109,5 +120,6 @@ public class Battery implements Parcelable{
         dest.writeLong(theory_duration);
         dest.writeString(status);
         dest.writeString(unit_id);
+        dest.writeString(type);
     }
 }

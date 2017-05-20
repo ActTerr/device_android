@@ -201,10 +201,10 @@ public interface I {
         String DID="DID";
         String START_TIME="START_TIME";
         String USED_DURATION="USED_DURATION";
-        String EXPECT_TIME="EXPECT_TIME";
         String THEORY_DURATION="THEORY_DURATION";
         String STATUS="STATUS";
         String UNIT_ID="UNIT_ID";
+        String TYPE="TYPE";
     }
 
     interface NOTICE{

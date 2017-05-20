@@ -75,7 +75,6 @@ public class LoginActivity extends BaseActivity{
              SpUtil.saveLoginUser(context,name.getText().toString());
              startActivity(intent);
              MFGT.finish((Activity) context);
-
          }
      };
     public void onLogin(View view) {

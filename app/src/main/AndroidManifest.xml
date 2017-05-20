@@ -2,6 +2,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="mac.yk.devicemanagement">
 
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
@@ -68,12 +69,22 @@
             </intent-filter>
         </activity>
         <service android:name=".service.FileService"/>
+        <service android:name=".service.BatteryService"/>
         <activity android:name=".ui.activity.DeviceListActivity"/>
 
-        <service android:name=".service.BatteryService"/>
+        <!--<service android:name=".service.BatteryService"-->
+            <!--android:process="check"-->
+            <!--&gt;-->
+        <!--</service>-->
         <receiver android:name=".receiver.MyReceiver">
-
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED"/>
+                <action android:name="check"/>
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
         </receiver>
+        <activity
+            android:name=".ui.activity.BatteryListActivity"/>
     </application>
 
 </manifest>

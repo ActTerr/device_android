@@ -109,7 +109,7 @@ public class DeviceDetailActivity extends BaseActivity {
         mStatus = new Status(data[0], data[11]);
         MyMemory.getInstance().setStatus(mStatus);
         id = String.valueOf(data[0]);
-        if (data[2].equals("电池")) {
+        if (data[2].contains("电池")) {
             isDianchi = true;
             MyMemory.getInstance().setFlag(true);
         }
@@ -243,14 +243,14 @@ public class DeviceDetailActivity extends BaseActivity {
                         postBaofei();
                         break;
                     case R.id.shiyong:
-                        if (!mStatus.getStatus().equals("使用")) {
+                        if (mStatus.getStatus().equals("使用")) {
                             ToastUtil.showcannotControl(context);
                         } else {
                             postControlD(I.CONTROL_D.SHIYONG);
                         }
                         break;
                     case R.id.Ddaiyong:
-                        if (!mStatus.getStatus().equals("待用")) {
+                        if (mStatus.getStatus().equals("待用")) {
                             ToastUtil.showcannotControl(context);
                         } else {
                             postControlD(I.CONTROL_D.D_DAIYONG);
@@ -280,6 +280,8 @@ public class DeviceDetailActivity extends BaseActivity {
         ApiWrapper<ServerAPI> wrapper = new ApiWrapper<>();
         wrapper.targetClass(ServerAPI.class).getAPI().controlD(s, mStatus.getDid())
                 .compose(wrapper.<String>applySchedulers())
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Subscriber<String>() {
                     @Override
                     public void onCompleted() {
@@ -296,8 +298,10 @@ public class DeviceDetailActivity extends BaseActivity {
 
                     @Override
                     public void onNext(String s) {
+                        ToastUtil.showControlSuccess(context);
                         progressDialog.dismiss();
                         mStatus.setStatus(s);
+
                     }
                 });
     }
