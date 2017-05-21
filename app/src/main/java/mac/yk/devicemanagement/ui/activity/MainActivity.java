@@ -29,6 +29,7 @@ import java.lang.reflect.Method;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import cn.jpush.android.api.JPushInterface;
 import mac.yk.devicemanagement.I;
 import mac.yk.devicemanagement.MyMemory;
 import mac.yk.devicemanagement.R;
@@ -79,7 +80,10 @@ public class MainActivity extends BaseActivity {
         setContentView(R.layout.activity_currency);
         View view = View.inflate(this, R.layout.dialog_yujing, null);
         ButterKnife.bind(this);
-
+        if (SpUtil.getLoginUser(this).equals("")){
+            L.e("main","user null");
+            MFGT.gotoLoginActivity(this);
+        }
         boolean netConnect = this.isNetConnect();
         if (netConnect) {
             mTv.setVisibility(View.GONE);
@@ -101,6 +105,19 @@ public class MainActivity extends BaseActivity {
         setNavView();
         if (!SpUtil.getPrompt(this)) {
             getYujing();
+        }
+        isFromNotification();
+    }
+
+    private void isFromNotification() {
+        Intent intent = getIntent();
+        if (null != intent) {
+            Bundle bundle = getIntent().getExtras();
+            String content = bundle.getString(JPushInterface.EXTRA_ALERT);
+            if (content.equals("您有一条新公告!")){
+                L.e("main","切换frag");
+                ActivityUtils.changeFragment(getSupportFragmentManager(),fragNotice,R.id.frame);
+            }
         }
     }
 
@@ -201,6 +218,7 @@ public class MainActivity extends BaseActivity {
                         break;
                     case R.id.notice:
                         ActivityUtils.changeFragment(getSupportFragmentManager(),fragNotice,R.id.frame);
+                        break;
                 }
                 item.setChecked(true);
                 drawLayout.closeDrawers();

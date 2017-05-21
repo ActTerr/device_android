@@ -48,7 +48,6 @@ public class Splash extends AppCompatActivity {
                 } else {
                     User user= dbUser.getInstance(context).select2(name);
                     MyMemory.getInstance().setUser(user);
-//                    ToastUtil.showToast(context,user.toString());
                     L.e(TAG,user.toString());
                     boolean gesture = SpUtil.getGesture(context);
                     if (gesture) {

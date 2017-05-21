@@ -101,9 +101,8 @@ public class BatteryService extends IntentService {
 
 
         AlarmManager manager = (AlarmManager) getSystemService(ALARM_SERVICE);
-//        int halfhour= 30 * 60 * 1000;
-        int testtime = 20 * 1000;
-        long triggerAtTime = SystemClock.elapsedRealtime() + testtime;
+        int hour= 60 * 60 * 1000;
+        long triggerAtTime = SystemClock.elapsedRealtime() + hour;
         Intent i = new Intent(this, MyReceiver.class);
         PendingIntent pi = PendingIntent.getBroadcast(this, 0, i, 0);
         manager.set(AlarmManager.ELAPSED_REALTIME_WAKEUP, triggerAtTime, pi);
