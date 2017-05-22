@@ -50,9 +50,9 @@ public class RecordActivity extends BaseActivity {
         ButterKnife.bind(this);
         context=this;
 
-       deviceOld = (String[]) getIntent().getSerializableExtra("deviceOld");
+        String Did=getIntent().getStringExtra("Did");
 
-        if (deviceOld ==null) {
+        if (Did ==null) {
             MFGT.finish((Activity) context);
         } else {
             init();

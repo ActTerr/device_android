@@ -166,7 +166,7 @@ public class MainActivity extends BaseActivity {
             ImageView imageView = (ImageView) navView.getHeaderView(0).findViewById(R.id.avatar);
             TextView textView = (TextView) navView.getHeaderView(0).findViewById(R.id.nav_name);
 
-            textView.setText(MyMemory.getInstance().getUser().getName());
+            textView.setText(MyMemory.getInstance().getUser().getName().trim());
             imageView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {

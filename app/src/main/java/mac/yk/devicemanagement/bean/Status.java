@@ -29,7 +29,8 @@ public class Status extends Observable{
 
     public void setStatus(String status) {
         this.status = status;
-        notifyObservers();
+        setChanged();
+        notifyObservers(this);
     }
 
 }

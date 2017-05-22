@@ -171,7 +171,6 @@ public class DeviceDetailActivity extends BaseActivity {
                     public void onNext(String[] deviceOld) {
                         data = deviceOld;
                         progressDialog.dismiss();
-                        L.e("main", deviceOld.toString());
                         initView();
                     }
                 });
@@ -294,7 +293,7 @@ public class DeviceDetailActivity extends BaseActivity {
         }
     }
 
-    private void postDaiyong(String local) {
+    private void postDaiyong(final String local) {
         progressDialog.show();
         ApiWrapper<ServerAPI> wrapper = new ApiWrapper<>();
         wrapper.targetClass(ServerAPI.class).getAPI().daiyong(id,local)
@@ -320,10 +319,11 @@ public class DeviceDetailActivity extends BaseActivity {
                         ToastUtil.showControlSuccess(context);
                         progressDialog.dismiss();
                         mStatus.setStatus(s);
-
+                        fragD.refreshUsePosition(s,local);
                     }
                 });
     }
+
 
     private void postControlD(String s) {
         progressDialog.show();
@@ -351,7 +351,7 @@ public class DeviceDetailActivity extends BaseActivity {
                         ToastUtil.showControlSuccess(context);
                         progressDialog.dismiss();
                         mStatus.setStatus(s);
-
+                        fragD.refreshStatus(s);
                     }
                 });
     }
@@ -415,6 +415,7 @@ public class DeviceDetailActivity extends BaseActivity {
                             progressDialog.dismiss();
                             mStatus.setStatus(s);
                             ToastUtil.showControlSuccess(context);
+                            fragD.refreshStatus(s);
                         }
                     });
         }
@@ -457,6 +458,8 @@ public class DeviceDetailActivity extends BaseActivity {
             progressDialog.dismiss();
             mStatus.setStatus(s);
             ToastUtil.showControlSuccess(context);
+            fragD.refreshStatus(s);
+
         }
     };
 
@@ -496,9 +499,9 @@ public class DeviceDetailActivity extends BaseActivity {
 
         private void initPopuWindow() {
             View view = View.inflate(context, getViewId(), null);
-            initpopuHolder(view);
+            initpopuHolder(view,showSelect);
             popupWindow = new PopupWindow(view, ConvertUtils.dp2px(context, 50),
-                    ConvertUtils.dp2px(context, view.getHeight()));
+                    ConvertUtils.dp2px(context,  ConvertUtils.dp2px(context, 100)));
 
             popupWindow.setTouchable(true);
             popupWindow.setOutsideTouchable(true);
@@ -507,16 +510,16 @@ public class DeviceDetailActivity extends BaseActivity {
 
         }
 
-        private void initpopuHolder(View v) {
+        private void initpopuHolder(View v,ImageView iv) {
             switch (data[2]) {
                 case "手持台":
-                    new shouchitaiHolder(v);
+                    new shouchitaiHolder(v,iv);
                     break;
                 case "机控器":
-                    new jikongqiHolder(v);
+                    new jikongqiHolder(v,iv);
                     break;
                 case "区控器":
-                    new qukongqiHolder(v);
+                    new qukongqiHolder(v,iv);
                     break;
             }
         }
@@ -552,7 +555,7 @@ public class DeviceDetailActivity extends BaseActivity {
                     translate = true;
                     break;
                 case R.id.btn_commit:
-                    progressDialog.dismiss();
+                    dialog.dismiss();
                     progressDialog.show();
                     postXiuJu(translate, type.getText().toString(), remark.getText().toString());
                     break;
@@ -573,9 +576,10 @@ public class DeviceDetailActivity extends BaseActivity {
 
         class shouchitaiHolder {
             View v;
-
-            public shouchitaiHolder(View v) {
+            ImageView iv;
+            public shouchitaiHolder(View v,ImageView iv) {
                 this.v = v;
+                this.iv=iv;
                 ButterKnife.bind(this, v);
             }
 
@@ -590,15 +594,17 @@ public class DeviceDetailActivity extends BaseActivity {
                         TextView tv = (TextView) view;
                         type.setText(tv.getText());
                         popupWindow.dismiss();
+                        iv.setImageResource(R.mipmap.up);
                 }
             }
         }
 
         class jikongqiHolder {
             View v;
-
-            public jikongqiHolder(View v) {
+            ImageView iv;
+            public jikongqiHolder(View v,ImageView iv) {
                 this.v = v;
+                this.iv=iv;
                 ButterKnife.bind(this, v);
             }
 
@@ -613,15 +619,17 @@ public class DeviceDetailActivity extends BaseActivity {
                         TextView tv = (TextView) view;
                         type.setText(tv.getText());
                         popupWindow.dismiss();
+                        iv.setImageResource(R.mipmap.up);
                 }
             }
         }
 
         class qukongqiHolder {
             View v;
-
-            public qukongqiHolder(View v) {
+            ImageView iv;
+            public qukongqiHolder(View v,ImageView iv) {
                 this.v = v;
+                this.iv=iv;
                 ButterKnife.bind(this, v);
             }
 
@@ -634,6 +642,7 @@ public class DeviceDetailActivity extends BaseActivity {
                         TextView tv = (TextView) view;
                         type.setText(tv.getText());
                         popupWindow.dismiss();
+                        iv.setImageResource(R.mipmap.up);
                 }
             }
         }
@@ -690,9 +699,9 @@ public class DeviceDetailActivity extends BaseActivity {
                     dialog.dismiss();
                     String status;
                     if (cbYes.isChecked()) {
-                        status = "1";
+                        status = "良好";
                     } else {
-                        status = "0";
+                        status = "异常";
                     }
                     postXunJian(status, remark.getText().toString());
                     break;
@@ -736,6 +745,7 @@ public class DeviceDetailActivity extends BaseActivity {
                         progressDialog.dismiss();
                         mStatus.setStatus(s);
                         ToastUtil.showControlSuccess(context);
+                        fragD.refreshStatus(s);
                     }
                 });
     }
@@ -775,6 +785,7 @@ public class DeviceDetailActivity extends BaseActivity {
                         progressDialog.dismiss();
                         mStatus.setStatus(s);
                         ToastUtil.showControlSuccess(context);
+                        fragD.refreshStatus(s);
                     }
                 });
 

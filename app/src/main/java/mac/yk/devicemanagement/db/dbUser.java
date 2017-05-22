@@ -59,7 +59,7 @@ public class dbUser implements db {
             values.put(I.USER.ACCOUNTS,user.getAccounts());
             values.put(I.USER.AUTHORITY,user.getAuthority());
             values.put(I.USER.GRADE,user.getGrade());
-            values.put(I.USER.NAME,user.getName());
+            values.put(I.USER.NAME,user.getName().trim());
             values.put(I.USER.UNIT,user.getUnit());
         if (database.isOpen()){
             return database.insert(I.USER.TABLENAME,null,values)==1;

@@ -38,6 +38,7 @@ public class fragDeviceDetail extends BaseFragment implements Observer {
 
     Status status;
 
+    DetailAdapter adapter;
 
     @Nullable
     @Override
@@ -50,7 +51,8 @@ public class fragDeviceDetail extends BaseFragment implements Observer {
         data = getArguments().getStringArray("data");
         deviceStatus.setText("设备状态："+status.getStatus());
         status.addObserver(observer);
-        rv.setAdapter(new DetailAdapter(getContext(), data));
+        adapter=new DetailAdapter(getContext(), data);
+        rv.setAdapter(adapter);
         rv.setLayoutManager(new GridLayoutManager(getContext(),1));
         return view;
     }
@@ -69,7 +71,19 @@ public class fragDeviceDetail extends BaseFragment implements Observer {
         super.onDestroyView();
         lllView.destory();
         status.deleteObserver(this);
+
     }
 
 
+    public void refreshStatus(String status) {
+        data[11]=status;
+        adapter.notifyDataSetChanged();
+    }
+
+
+    public void refreshUsePosition(String status,String local) {
+        data[11]=status;
+        data[8]=local;
+        adapter.notifyDataSetChanged();
+    }
 }

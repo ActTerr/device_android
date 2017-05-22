@@ -52,7 +52,7 @@ public interface ServerAPI {
     Observable<Result<ArrayList<String[]>>> getServiceCount(@Query(I.UNIT) int unit);
 
     @GET(I.REQUEST.PATH+I.REQUEST.CHAXUN)
-    Observable<Result<String[]>> chaxun(@Query(I.DEVICE.DID) String Did);
+    Observable<Result<String[]>> chaxun(@Query(I.DEVICE2.DID) String Did);
 
     @GET(I.REQUEST.PATH+I.REQUEST.SAVE)
     Observable<Result<String>> saveDevice(@Query(I.USER.NAME) String name,@Query(I.DEVICE.TABLENAME) String device);
@@ -73,18 +73,18 @@ public interface ServerAPI {
 
     @GET(I.REQUEST.PATH+I.REQUEST.XUNJIAN)
     Observable<Result<String>> xunjian(@Query(I.USER.NAME) String userName
-            ,@Query(I.DEVICE2.DID) String did, @Query(I.DEVICE2.STATUS) String status,
+            ,@Query(I.DEVICE2.DID) String did, @Query(I.XUNJIAN.STATUS) String status,
                                        @Query(I.XUNJIAN.REMARK) String remark,@Query(I.USER.UNIT) String unit);
 
     @GET(I.REQUEST.PATH+I.REQUEST.XIUJUN)
     Observable<Result<String>> xiujun(@Query(I.WEIXIU.USER) String userName
-            ,@Query(I.DEVICE.DID) String did, @Query(I.WEIXIU.TRANSLATE) boolean translate,
+            ,@Query(I.DEVICE2.DID) String did, @Query(I.WEIXIU.TRANSLATE) boolean translate,
                                       @Query(I.WEIXIU.TYPE) String type,
                                        @Query(I.WEIXIU.REMARK) String remark);
 
     @GET(I.REQUEST.PATH+I.REQUEST.BAOFEI)
     Observable<Result<String>> baofei(@Query(I.USER.NAME) String name
-            ,@Query(I.BAOFEI.DID) String Did,@Query(I.BAOFEI.REMARK) String remark,@Query(I.BAOFEI.STATION) String unit
+            ,@Query(I.DEVICE2.DID) String Did,@Query(I.BAOFEI.REMARK) String remark,@Query(I.BAOFEI.STATION) String unit
     ,@Query(I.BAOFEI.TYPE) String type);
 
     @GET(I.REQUEST.PATH+I.REQUEST.CONTROL)

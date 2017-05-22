@@ -354,12 +354,16 @@ public class loodView extends FrameLayout {
 
     private void startPlay() {
         scheduledExecutorService = Executors.newSingleThreadScheduledExecutor();
-        scheduledExecutorService.scheduleAtFixedRate(new LoopTask(), 1, 3, TimeUnit.SECONDS);
+        if (scheduledExecutorService!=null){
+            scheduledExecutorService.scheduleAtFixedRate(new LoopTask(), 1, 3, TimeUnit.SECONDS);
+        }
 
     }
 
     private void stopPlay() {
-        scheduledExecutorService.shutdown();
+        if (scheduledExecutorService!=null){
+            scheduledExecutorService.shutdown();
+        }
     }
 
     public void destory() {
