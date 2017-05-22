@@ -57,14 +57,16 @@ public class fragBaofeiCount extends BaseFragment {
         if(item.getItemId()==R.id.all){
             yaer="all";
         }else {
-            yaer=String.valueOf(item.getItemId()).substring(1);
+            yaer = String.valueOf(item.getTitle());
         }
         return true;
     }
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        inflater.inflate(R.menu.menu_year,menu);
+        if (menu.size()<5){
+            inflater.inflate(R.menu.menu_year,menu);
+        }
     }
 
     private void initView() {

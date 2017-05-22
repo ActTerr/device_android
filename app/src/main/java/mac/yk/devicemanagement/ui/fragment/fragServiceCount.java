@@ -53,6 +53,7 @@ public class fragServiceCount extends BaseFragment {
         adapter = new FormServiceAdapter(getContext(), data);
         lv.setAdapter(adapter);
         setListener();
+
         return view;
     }
 

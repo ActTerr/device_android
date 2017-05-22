@@ -8,6 +8,8 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
@@ -25,6 +27,7 @@ import com.xys.libzxing.zxing.activity.CaptureActivity;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
+import java.util.ArrayList;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -74,6 +77,9 @@ public class MainActivity extends BaseActivity {
     fragCount fragCount;
     fragBaofeiCount fragBaofeiCount;
     fragNotice fragNotice;
+
+    ArrayList<Fragment> fragments;
+    int showId;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -117,7 +123,20 @@ public class MainActivity extends BaseActivity {
                 String content = bundle.getString(JPushInterface.EXTRA_ALERT,"");
                 if (content.equals("您有一条新公告!")){
                     L.e("main","切换frag");
-                    ActivityUtils.changeFragment(getSupportFragmentManager(),fragNotice,R.id.frame);
+                    FragmentManager manager=getSupportFragmentManager();
+                    if(fragments.contains(fragCount)){
+                        ActivityUtils.changeFragment(manager, fragNotice,fragments.get(showId));
+                        for(int i=0;i<fragments.size();i++){
+                            if(fragments.get(i)==fragNotice){
+                                showId=i;
+                            }
+                        }
+                    }else {
+                        fragNotice=new fragNotice();
+                        showId=fragments.size();
+                        fragments.add(fragments.size(),fragNotice);
+                        ActivityUtils.addFragmentToActivity(manager,fragNotice,R.id.frame);
+                    }
                 }
             }
         }
@@ -131,14 +150,12 @@ public class MainActivity extends BaseActivity {
     }
 
     private void init() {
+        fragments=new ArrayList<>();
         context = this;
         User user = dbUser.getInstance(context).select2(SpUtil.getLoginUser(context));
         MyMemory.getInstance().setUser(user);
-        fragBaofeiCount=new fragBaofeiCount();
-        fragCount =new fragCount();
         builder = new AlertDialog.Builder(this);
         progressDialog = new ProgressDialog(this);
-        fragNotice=new fragNotice();
     }
 
     private void setNavView() {
@@ -176,7 +193,7 @@ public class MainActivity extends BaseActivity {
                 scan(I.CONTROL.START);
                 break;
         }
-        return super.onOptionsItemSelected(item);
+        return true;
     }
 
     public void scan(int id) {
@@ -207,19 +224,56 @@ public class MainActivity extends BaseActivity {
         navView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+                FragmentManager manager=getSupportFragmentManager();
                 switch (item.getItemId()) {
                     case yujing:
                         getYujing();
                         break;
                     case R.id.tongji:
+                            if(fragments.contains(fragCount)){
+                                ActivityUtils.changeFragment(manager, fragCount,fragments.get(showId));
+                                for(int i=0;i<fragments.size();i++){
+                                    if(fragments.get(i)==fragCount){
+                                       showId=i;
+                                    }
+                                }
+                            }else {
+                                fragCount=new fragCount();
+                                showId=fragments.size();
+                                fragments.add(fragments.size(),fragCount);
+                                ActivityUtils.addFragmentToActivity(manager,fragCount,R.id.frame);
+                            }
 
-                        ActivityUtils.changeFragment(getSupportFragmentManager(), fragCount, R.id.frame);
                         break;
                     case R.id.bf_tongji:
-                        ActivityUtils.changeFragment(getSupportFragmentManager(), fragBaofeiCount, R.id.frame);
+                        if(fragments.contains(fragBaofeiCount)){
+                            ActivityUtils.changeFragment(manager, fragBaofeiCount,fragments.get(showId));
+                            for(int i=0;i<fragments.size();i++){
+                                if(fragments.get(i)==fragBaofeiCount){
+                                    showId=i;
+                                }
+                            }
+                        }else {
+                            fragBaofeiCount=new fragBaofeiCount();
+                            showId=fragments.size();
+                            fragments.add(fragments.size(),fragBaofeiCount);
+                            ActivityUtils.addFragmentToActivity(manager,fragBaofeiCount,R.id.frame);
+                        }
                         break;
                     case R.id.notice:
-                        ActivityUtils.changeFragment(getSupportFragmentManager(),fragNotice,R.id.frame);
+                        if(fragments.contains(fragNotice)){
+                            ActivityUtils.changeFragment(manager, fragNotice,fragments.get(showId));
+                            for(int i=0;i<fragments.size();i++){
+                                if(fragments.get(i)==fragNotice){
+                                    showId=i;
+                                }
+                            }
+                        }else {
+                            fragNotice=new fragNotice();
+                            showId=fragments.size();
+                            fragments.add(fragments.size(),fragNotice);
+                            ActivityUtils.addFragmentToActivity(manager,fragNotice,R.id.frame);
+                        }
                         break;
                 }
                 item.setChecked(true);

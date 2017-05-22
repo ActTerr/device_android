@@ -38,15 +38,16 @@ public class ActivityUtils {
         checkNotNull(fragmentManager);
         checkNotNull(fragment);
         FragmentTransaction transaction = fragmentManager.beginTransaction();
-        transaction.add(frameId, fragment);
+        transaction.add(frameId, fragment).show(fragment);
         transaction.commit();
     }
 
-    public static void changeFragment(@NonNull FragmentManager fragmentManager,@NonNull Fragment fragment,int frameId){
+    public static void changeFragment(@NonNull FragmentManager fragmentManager,@NonNull Fragment fragment
+            ,@NonNull Fragment afterfragment){
         checkNotNull(fragmentManager);
         checkNotNull(fragment);
         FragmentTransaction transaction=fragmentManager.beginTransaction();
-        transaction.replace(frameId,fragment).commit();
+        transaction.hide(afterfragment).show(fragment).commit();
     }
 
 

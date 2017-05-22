@@ -487,7 +487,7 @@ public class DeviceDetailActivity extends BaseActivity {
 
         boolean isShow;
         PopupWindow popupWindow;
-
+        boolean translate = false;
         public xiujunHoler() {
             v = View.inflate(context, R.layout.dialog_currency, null);
             ButterKnife.bind(this, v);
@@ -539,7 +539,7 @@ public class DeviceDetailActivity extends BaseActivity {
 
         @OnClick({R.id.cb_no, R.id.cb_yes, R.id.btn_commit, R.id.show_select})
         public void onClick(View view) {
-            boolean translate = false;
+
             switch (view.getId()) {
                 case R.id.cb_no:
                     cbNo.setChecked(true);

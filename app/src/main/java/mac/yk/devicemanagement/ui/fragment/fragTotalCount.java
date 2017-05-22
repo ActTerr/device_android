@@ -21,10 +21,13 @@ import butterknife.OnClick;
 import mac.yk.devicemanagement.MyMemory;
 import mac.yk.devicemanagement.R;
 import mac.yk.devicemanagement.adapter.FormTotalAdapter;
+import mac.yk.devicemanagement.bean.User;
 import mac.yk.devicemanagement.net.ApiWrapper;
 import mac.yk.devicemanagement.net.ServerAPI;
 import mac.yk.devicemanagement.util.ConvertUtils;
+import mac.yk.devicemanagement.util.ExceptionFilter;
 import mac.yk.devicemanagement.util.L;
+import mac.yk.devicemanagement.util.ToastUtil;
 import rx.Subscriber;
 
 /**
@@ -41,11 +44,13 @@ public class fragTotalCount extends BaseFragment {
     int yidong;
     int qukongqi;
 
-    String yaer = "all";
+    String year = "all";
     ProgressDialog dialog;
     @BindView(R.id.add_from)
     Button addFrom;
 
+    String TAG="totalCount";
+    User user;
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -54,22 +59,28 @@ public class fragTotalCount extends BaseFragment {
         L.e("cao", "onCreate");
         dialog = new ProgressDialog(getContext());
         setHasOptionsMenu(true);
+        user=MyMemory.getInstance().getUser();
+
         return view;
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == R.id.all) {
-            yaer = "all";
+            year = "all";
         } else {
-            yaer = String.valueOf(item.getItemId()).substring(1);
+            year = String.valueOf(item.getTitle());
         }
+        initView();
         return true;
     }
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        inflater.inflate(R.menu.menu_year, menu);
+        L.e(TAG,menu.size()+"menu size");
+        if (menu.size()<5){
+            inflater.inflate(R.menu.menu_year,menu);
+        }
     }
 
     private void initView() {
@@ -80,7 +91,7 @@ public class fragTotalCount extends BaseFragment {
         list.addAll(ConvertUtils.array2List(arra));
         data.add(list);
         ApiWrapper<ServerAPI> wrapper = new ApiWrapper<>();
-        wrapper.targetClass(ServerAPI.class).getAPI().getTotalCount(MyMemory.getInstance().getUser().getUnit(), yaer, "default")
+        wrapper.targetClass(ServerAPI.class).getAPI().getTotalCount(user.getUnit(), year, "default")
                 .compose(wrapper.<ArrayList<String[]>>applySchedulers())
                 .timeout(30, TimeUnit.SECONDS)
                 .subscribe(new Subscriber<ArrayList<String[]>>() {
@@ -91,7 +102,9 @@ public class fragTotalCount extends BaseFragment {
 
                     @Override
                     public void onError(Throwable e) {
-
+                        if (ExceptionFilter.filter(getContext(),e)){
+                            ToastUtil.showException(getContext());
+                        }
                     }
 
                     @Override
@@ -110,14 +123,16 @@ public class fragTotalCount extends BaseFragment {
                             data.add(list);
                         }
 
-                        ArrayList<String> list1 = new ArrayList<String>();
-                        list1.add("");
-                        list1.add("合计");
-                        list1.add(String.valueOf(shouchitai));
-                        list1.add(String.valueOf(guding));
-                        list1.add(String.valueOf(yidong));
-                        list1.add(String.valueOf(qukongqi));
-                        data.add(list1);
+                        if(user.getGrade()==0){
+                            ArrayList<String> list1 = new ArrayList<String>();
+                            list1.add("");
+                            list1.add("合计");
+                            list1.add(String.valueOf(shouchitai));
+                            list1.add(String.valueOf(guding));
+                            list1.add(String.valueOf(yidong));
+                            list1.add(String.valueOf(qukongqi));
+                            data.add(list1);
+                        }
                         lv.setAdapter(new FormTotalAdapter(getContext(), data));
 
                     }
@@ -125,11 +140,6 @@ public class fragTotalCount extends BaseFragment {
 
     }
 
-    @Override
-    public void onHiddenChanged(boolean hidden) {
-        super.onHiddenChanged(hidden);
-
-    }
 
 
     @OnClick(R.id.add_from)

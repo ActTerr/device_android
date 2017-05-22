@@ -107,14 +107,14 @@ public class RecordActivity extends BaseActivity {
                 switch (item.getItemId()){
                     case R.id.weixiu:
                         if (!isWeixiu){
-                            ActivityUtils.changeFragment(getSupportFragmentManager(),fragment,R.id.frame);
+                            ActivityUtils.changeFragment(getSupportFragmentManager(),fragment,fragment2);
                             isWeixiu=true;
                         }
                         L.e("main","执行切换weixiu");
                         break;
                     case R.id.xunjian:
                         if (isWeixiu){
-                            ActivityUtils.changeFragment(getSupportFragmentManager(),fragment2,R.id.frame);
+                            ActivityUtils.changeFragment(getSupportFragmentManager(),fragment2,fragment);
                             isWeixiu=false;
                         }
                         break;

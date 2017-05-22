@@ -8,38 +8,6 @@
         android:icon="@drawable/ic_action_scan"
         android:visible="true"
         app:showAsAction="always"/>
-    <item android:id="@+id/select_status"
-        android:icon="@drawable/all_white"
-        app:showAsAction="always"
-        android:visible="false"
-        android:title=""/>
-    <item android:id="@+id/select_name"
-        android:icon="@drawable/select_white"
-        android:visible="false"
-        app:showAsAction="always"
-        android:title=""
-        />
 
-    <item
-        android:id="@+id/diantai"
-        android:icon="@drawable/diantai_white"
-        app:showAsAction="never"
-        android:visible="false"
-        android:title="电台"/>
-    <item android:id="@+id/dianchi"
-        android:icon="@drawable/dianchi_white"
-        app:showAsAction="never"
-        android:visible="false"
-        android:title="电池"/>
-    <item android:id="@+id/jikongqi"
-        android:icon="@drawable/jikongqi_white"
-        android:visible="false"
-        app:showAsAction="never"
-        android:title="机控器"/>
-    <item android:id="@+id/qukongqi"
-        android:icon="@drawable/qukong_white"
-        android:visible="false"
-        app:showAsAction="never"
-        android:title="区控器"/>
 
 </menu>

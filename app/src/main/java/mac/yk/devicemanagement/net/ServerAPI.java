@@ -39,7 +39,7 @@ public interface ServerAPI {
                                                                 @Query(I.PAGE) int page);
 
     @GET(I.REQUEST.PATH+I.REQUEST.TONGJI)
-    Observable<Result<ArrayList<String[]>>> getTotalCount(@Query(I.UNIT) int unit,@Query("year") String year ,@Query(I.TYPE) String type);
+    Observable<Result<ArrayList<String[]>>> getTotalCount(@Query(I.UNIT) int unit,@Query(I.YEAR) String year ,@Query(I.TYPE) String type);
 
     @GET(I.REQUEST.PATH+I.REQUEST.GET_STATUS_COUNT)
     Observable<Result<ArrayList<String[]>>> getStatusCount(@Query(I.UNIT) int unit,@Query("year") String year ,
