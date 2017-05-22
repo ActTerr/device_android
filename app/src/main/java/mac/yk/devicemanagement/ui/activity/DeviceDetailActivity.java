@@ -1,6 +1,7 @@
 package mac.yk.devicemanagement.ui.activity;
 
 import android.app.Activity;
+import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
@@ -60,6 +61,7 @@ public class DeviceDetailActivity extends BaseActivity {
     @BindView(R.id.drawLayout)
     DrawerLayout drawLayout;
 
+    Dialog dialog;
     Status mStatus;
     /**
      * progressDialog
@@ -81,6 +83,7 @@ public class DeviceDetailActivity extends BaseActivity {
         setContentView(R.layout.activity_currency);
         ButterKnife.bind(this);
         context = this;
+        dialog=new Dialog(context);
         progressDialog = new ProgressDialog(context);
         String did = getIntent().getStringExtra("Did");
         isFromList = getIntent().getBooleanExtra("isFromList", false);
@@ -139,14 +142,6 @@ public class DeviceDetailActivity extends BaseActivity {
                     MFGT.gotoSetActivity(context);
                 }
             });
-        }
-        if (isDianchi) {
-
-            navView.getMenu().getItem(4).setTitle("充电");
-            navView.getMenu().getItem(5).setTitle("充满");
-        } else {
-            //如果不是电池该项不可见
-            navView.getMenu().getItem(3).setVisible(false);
         }
     }
 
@@ -211,7 +206,7 @@ public class DeviceDetailActivity extends BaseActivity {
                         if (!mStatus.getStatus().equals("备用")) {
                             ToastUtil.showcannotControl(context);
                         } else {
-                            postControl("待用");
+                            showDaiyong();
                         }
                         break;
                     case R.id.yunxing:
@@ -273,6 +268,61 @@ public class DeviceDetailActivity extends BaseActivity {
                 return false;
             }
         });
+    }
+
+    private void showDaiyong() {
+        DaiYongHolder daiyong=new DaiYongHolder();
+        dialog.setContentView(daiyong.v);
+        dialog.setTitle(null);
+        dialog.show();
+    }
+
+    class DaiYongHolder {
+        View v;
+        @BindView(R.id.et_use_local)
+        EditText etUseLocal;
+
+        public DaiYongHolder() {
+            v = View.inflate(context, R.layout.item_dialog_daiyong, null);
+            ButterKnife.bind(this,v);
+        }
+
+        @OnClick(R.id.btn_commit)
+        public void onClick() {
+            dialog.dismiss();
+            postDaiyong(etUseLocal.getText().toString());
+        }
+    }
+
+    private void postDaiyong(String local) {
+        progressDialog.show();
+        ApiWrapper<ServerAPI> wrapper = new ApiWrapper<>();
+        wrapper.targetClass(ServerAPI.class).getAPI().daiyong(id,local)
+                .compose(wrapper.<String>applySchedulers())
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Subscriber<String>() {
+                    @Override
+                    public void onCompleted() {
+
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        progressDialog.dismiss();
+                        if (ExceptionFilter.filter(context, e)) {
+                            ToastUtil.showToast(context, "操作失败");
+                        }
+                    }
+
+                    @Override
+                    public void onNext(String s) {
+                        ToastUtil.showControlSuccess(context);
+                        progressDialog.dismiss();
+                        mStatus.setStatus(s);
+
+                    }
+                });
     }
 
     private void postControlD(String s) {
@@ -338,7 +388,7 @@ public class DeviceDetailActivity extends BaseActivity {
 
         @OnClick(R.id.btn_commit)
         public void onClick(View view) {
-            progressDialog.dismiss();
+            dialog.dismiss();
             progressDialog.show();
             ApiWrapper<ServerAPI> wrapper = new ApiWrapper<>();
             subscription = wrapper.targetClass(ServerAPI.class).getAPI().baofei(user.getName()
@@ -372,9 +422,10 @@ public class DeviceDetailActivity extends BaseActivity {
 
     private void postBaofei() {
         BaofeiHolder baofei = new BaofeiHolder();
-        progressDialog.setContentView(baofei.getV());
-        progressDialog.setTitle(null);
-        progressDialog.show();
+
+        dialog.setContentView(baofei.getV());
+        dialog.setTitle(null);
+        dialog.show();
     }
 
     @Override
@@ -417,19 +468,6 @@ public class DeviceDetailActivity extends BaseActivity {
                 .observeOn(AndroidSchedulers.mainThread())
                 .compose(network.<String>applySchedulers())
                 .subscribe(obControl);
-    }
-
-    private int getControl(int cid) {
-        switch (cid) {
-            case R.id.beiyong:
-                return I.CONTROL.BEIYONG;
-            case R.id.daiyong:
-                return I.CONTROL.DAIYONG;
-            case R.id.yunxing:
-                return I.CONTROL.YUNXING;
-
-        }
-        return 0;
     }
 
 
@@ -649,8 +687,7 @@ public class DeviceDetailActivity extends BaseActivity {
                     cbNo.setChecked(false);
                     break;
                 case R.id.btn_commit:
-                    progressDialog.dismiss();
-                    progressDialog.show();
+                    dialog.dismiss();
                     String status;
                     if (cbYes.isChecked()) {
                         status = "1";
@@ -666,13 +703,14 @@ public class DeviceDetailActivity extends BaseActivity {
     private void showXiujunDialog() {
         if (!isDianchi) {
             xiujunHoler xiujunHoler = new xiujunHoler();
-            progressDialog.setContentView(xiujunHoler.getV());
-            progressDialog.setTitle(null);
-            progressDialog.show();
+            dialog.setContentView(xiujunHoler.getV());
+            dialog.setTitle(null);
+            dialog.show();
         }
     }
 
     private void postXiuJu(boolean translate, String type, String remark) {
+        progressDialog.show();
         ApiWrapper<ServerAPI> wrapper = new ApiWrapper<>();
         subscription = wrapper.targetClass(ServerAPI.class).getAPI()
                 .xiujun(user.getName(), id, translate, type, remark)
@@ -705,9 +743,9 @@ public class DeviceDetailActivity extends BaseActivity {
     private void showXunJianDialog() {
         if (!isDianchi) {
             xunjianHolder xunjianHolder = new xunjianHolder();
-            progressDialog.setContentView(xunjianHolder.getV());
-            progressDialog.setTitle(null);
-            progressDialog.show();
+            dialog.setContentView(xunjianHolder.getV());
+            dialog.setTitle(null);
+            dialog.show();
         }
     }
 

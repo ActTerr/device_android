@@ -113,10 +113,12 @@ public class MainActivity extends BaseActivity {
         Intent intent = getIntent();
         if (null != intent) {
             Bundle bundle = getIntent().getExtras();
-            String content = bundle.getString(JPushInterface.EXTRA_ALERT);
-            if (content.equals("您有一条新公告!")){
-                L.e("main","切换frag");
-                ActivityUtils.changeFragment(getSupportFragmentManager(),fragNotice,R.id.frame);
+            if (bundle!=null){
+                String content = bundle.getString(JPushInterface.EXTRA_ALERT,"");
+                if (content.equals("您有一条新公告!")){
+                    L.e("main","切换frag");
+                    ActivityUtils.changeFragment(getSupportFragmentManager(),fragNotice,R.id.frame);
+                }
             }
         }
     }

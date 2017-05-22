@@ -363,8 +363,10 @@ public class loodView extends FrameLayout {
     }
 
     public void destory() {
-        scheduledExecutorService.shutdown();
-        scheduledExecutorService = null;
+        if (scheduledExecutorService!=null){
+            scheduledExecutorService.shutdown();
+            scheduledExecutorService = null;
+        }
     }
 
     class LoopTask implements Runnable {

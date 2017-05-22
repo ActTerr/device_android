@@ -149,4 +149,6 @@ public interface ServerAPI {
     @GET(I.REQUEST.PATH+I.REQUEST.CHECK_BATTERY)
     Observable<Result<ArrayList<Battery>>> checkBattery(@Query(I.BATTERY.UNIT_ID) String unit);
 
+    @GET(I.REQUEST.PATH+I.REQUEST.DAIYONG)
+    Observable<Result<String>> daiyong(@Query(I.DEVICE2.DID) String did,@Query(I.DEVICE2.USE_POSITION) String usePosition);
 }
