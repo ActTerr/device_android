@@ -142,10 +142,12 @@ public class fragRecord extends BaseFragment {
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        L.e(TAG,"menu size:"+menu.size());
                 inflater.inflate(R.menu.menu_record,menu);
                 itemRecent = menu.getItem(0);
                 itemReverse = menu.getItem(1);
     }
+
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {

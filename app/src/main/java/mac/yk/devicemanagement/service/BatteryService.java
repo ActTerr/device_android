@@ -23,6 +23,7 @@ import mac.yk.devicemanagement.receiver.MyReceiver;
 import mac.yk.devicemanagement.ui.activity.BatteryListActivity;
 import mac.yk.devicemanagement.util.ExceptionFilter;
 import mac.yk.devicemanagement.util.L;
+import mac.yk.devicemanagement.util.SpUtil;
 import mac.yk.devicemanagement.util.ToastUtil;
 import rx.Subscriber;
 import rx.android.schedulers.AndroidSchedulers;
@@ -53,7 +54,7 @@ public class BatteryService extends IntentService {
         final ApiWrapper<ServerAPI> wrapper = new ApiWrapper<>();
         String user = mac.yk.devicemanagement.util.SpUtil.getLoginUser(getApplicationContext());
 
-        if (!user.equals("")) {
+        if (!user.equals("")&& SpUtil.getCheck(context)) {
             final User user1 = dbUser.getInstance(getApplicationContext()).select2(user);
 
             wrapper.targetClass(ServerAPI.class).getAPI().checkBattery(String.valueOf(user1.getUnit()))
@@ -96,16 +97,17 @@ public class BatteryService extends IntentService {
 
                         }
                     });
+            AlarmManager manager = (AlarmManager) getSystemService(ALARM_SERVICE);
+            int hour= 60 * 60 * 1000;
+            long triggerAtTime = SystemClock.elapsedRealtime() + hour;
+            Intent i = new Intent(this, MyReceiver.class);
+            PendingIntent pi = PendingIntent.getBroadcast(this, 0, i, 0);
+            manager.set(AlarmManager.ELAPSED_REALTIME_WAKEUP, triggerAtTime, pi);
 
         }
 
 
-        AlarmManager manager = (AlarmManager) getSystemService(ALARM_SERVICE);
-        int hour= 60 * 60 * 1000;
-        long triggerAtTime = SystemClock.elapsedRealtime() + hour;
-        Intent i = new Intent(this, MyReceiver.class);
-        PendingIntent pi = PendingIntent.getBroadcast(this, 0, i, 0);
-        manager.set(AlarmManager.ELAPSED_REALTIME_WAKEUP, triggerAtTime, pi);
+
     }
 
     @Override

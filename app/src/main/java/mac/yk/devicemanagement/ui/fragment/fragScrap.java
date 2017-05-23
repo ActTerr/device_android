@@ -13,6 +13,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -44,7 +45,7 @@ public class fragScrap extends BaseFragment {
     TextView tv;
     @BindView(R.id.rv)
     RecyclerView rv;
-    final static String TAG="fragScrap";
+    final static String TAG = "fragScrap";
     int page = 1;
     int selected = 0;
     ScrapAdapter scrapAdapter;
@@ -59,8 +60,11 @@ public class fragScrap extends BaseFragment {
     boolean show = true;
     @BindView(R.id.Prompt)
     TextView Prompt;
-    ArrayList<Integer> pages=new ArrayList<>();
-    ArrayList<Boolean> mores=new ArrayList<>();
+    ArrayList<Integer> pages = new ArrayList<>();
+    ArrayList<Boolean> mores = new ArrayList<>();
+    @BindView(R.id.btn_top)
+    Button btnTop;
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -72,6 +76,7 @@ public class fragScrap extends BaseFragment {
         pd = new ProgressDialog(context);
         rv.setAdapter(scrapAdapter);
         rv.setLayoutManager(gridLayoutManager);
+        btnTop.setVisibility(View.GONE);
         setListener();
         setHasOptionsMenu(true);
         initMemory();
@@ -80,7 +85,7 @@ public class fragScrap extends BaseFragment {
     }
 
     private void initMemory() {
-        for (int i=0;i<4;i++){
+        for (int i = 0; i < 4; i++) {
             pages.add(1);
             mores.add(true);
         }
@@ -101,10 +106,8 @@ public class fragScrap extends BaseFragment {
 //    }
 
 
-
-
     private void setTitle() {
-        if (tongji!=null){
+        if (tongji != null) {
             if (selected == 0) {
                 int count = 0;
                 for (int i = 1; i < 5; i++) {
@@ -184,8 +187,8 @@ public class fragScrap extends BaseFragment {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        pages.add(selected,page);
-        mores.add(selected,isMore);
+        pages.add(selected, page);
+        mores.add(selected, isMore);
         switch (item.getItemId()) {
             case R.id.dianchi:
                 selected = I.DNAME.DIANCHI;
@@ -200,21 +203,21 @@ public class fragScrap extends BaseFragment {
                 selected = I.DNAME.JIKONGQI;
                 break;
         }
-        if (show){
-            if (selected!=0){
+        if (show) {
+            if (selected != 0) {
                 Prompt.setVisibility(View.GONE);
-                show=false;
+                show = false;
             }
         }
-        if (item.getItemId()==R.id.action_capture){
+        if (item.getItemId() == R.id.action_capture) {
             return true;
         }
-        page=pages.get(selected);
-        isMore=mores.get(selected);
-        if (page==1&&isMore){
+        page = pages.get(selected);
+        isMore = mores.get(selected);
+        if (page == 1 && isMore) {
             scrapAdapter.clear();
             downData();
-        }else {
+        } else {
             SetSelectedList(null);
         }
         setTitle();

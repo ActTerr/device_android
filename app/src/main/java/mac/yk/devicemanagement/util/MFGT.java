@@ -17,7 +17,7 @@ import mac.yk.devicemanagement.ui.activity.MainActivity;
 import mac.yk.devicemanagement.ui.activity.NoticeDetailActivity;
 import mac.yk.devicemanagement.ui.activity.RecordActivity;
 import mac.yk.devicemanagement.ui.activity.SaveActivity;
-import mac.yk.devicemanagement.ui.activity.SetActivity;
+import mac.yk.devicemanagement.ui.activity.UserActivity;
 
 /**
  * Created by mac-yk on 2017/3/2.
@@ -61,7 +61,7 @@ public class MFGT {
         startActivity(context,intent);
     }
     public static void gotoSetActivity(Context context){
-        Intent intent=new Intent(context, SetActivity.class);
+        Intent intent=new Intent(context, UserActivity.class);
         startActivity(context,intent);
     }
 

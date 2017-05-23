@@ -63,7 +63,7 @@
         </activity>
         <activity android:name=".ui.activity.LoginActivity" />
         <activity android:name=".ui.activity.RecordActivity"></activity>
-        <activity android:name=".ui.activity.SetActivity" />
+        <activity android:name=".ui.activity.UserActivity" />
         <activity android:name=".ui.activity.GestureActivity"></activity>
         <activity android:name=".ui.activity.AuxiliaryActivity"></activity>
         <receiver android:name=".receiver.NetBroadcastReceiver">

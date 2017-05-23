@@ -6,7 +6,10 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -25,7 +28,7 @@ import rx.Subscriber;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 
-public class SetActivity extends BaseActivity{
+public class UserActivity extends BaseActivity {
 
     @BindView(R.id.user)
     TextView user;
@@ -38,6 +41,20 @@ public class SetActivity extends BaseActivity{
 
     Context context;
     ProgressDialog pd;
+    @BindView(R.id.netView)
+    TextView netView;
+    @BindView(R.id.open)
+    Button open;
+    @BindView(R.id.close)
+    Button close;
+    @BindView(R.id.rlPasswd)
+    RelativeLayout rlPasswd;
+    @BindView(R.id.logOut)
+    Button logOut;
+    @BindView(R.id.activity_set)
+    LinearLayout activitySet;
+    @BindView(R.id.btn_back)
+    RelativeLayout btnBack;
 
 
     @Override
@@ -51,7 +68,7 @@ public class SetActivity extends BaseActivity{
 
     }
 
-    @OnClick({R.id.rlUser, R.id.rlPasswd, R.id.logOut, R.id.auxiliary})
+    @OnClick({R.id.rlUser, R.id.rlPasswd, R.id.logOut, R.id.auxiliary, R.id.open, R.id.close})
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.rlUser:
@@ -66,10 +83,10 @@ public class SetActivity extends BaseActivity{
             case R.id.logOut:
                 pd.show();
                 ApiWrapper<ServerAPI> wrapper = new ApiWrapper<>();
-               subscription= wrapper.targetClass(ServerAPI.class).getAPI().logOut(MyMemory.getInstance().getUser().getName())
+                subscription = wrapper.targetClass(ServerAPI.class).getAPI().logOut(MyMemory.getInstance().getUser().getName())
                         .compose(wrapper.<String>applySchedulers())
-                       .subscribeOn(Schedulers.io())
-                       .observeOn(AndroidSchedulers.mainThread())
+                        .subscribeOn(Schedulers.io())
+                        .observeOn(AndroidSchedulers.mainThread())
                         .subscribe(new Subscriber<String>() {
                             @Override
                             public void onCompleted() {
@@ -79,8 +96,8 @@ public class SetActivity extends BaseActivity{
                             @Override
                             public void onError(Throwable e) {
                                 pd.dismiss();
-                                if (          ExceptionFilter.filter(context,e)){
-                                    ToastUtil.showToast(context,"请求失败");
+                                if (ExceptionFilter.filter(context, e)) {
+                                    ToastUtil.showToast(context, "请求失败");
                                 }
 
                             }
@@ -94,8 +111,30 @@ public class SetActivity extends BaseActivity{
                                 MFGT.finish((Activity) context);
                             }
                         });
-
+                break;
+            case R.id.open:
+                setCheckOpen();
+                break;
+            case R.id.close:
+                setCheckClose();
+                break;
         }
     }
+
+    private void setCheckClose() {
+        SpUtil.setCheck(context,false);
+        close.setVisibility(View.INVISIBLE);
+        open.setVisibility(View.VISIBLE);
+        btnBack.setBackground(getResources().getDrawable(R.drawable.backw));
+    }
+
+    private void setCheckOpen() {
+        SpUtil.setCheck(context,true);
+        open.setVisibility(View.INVISIBLE);
+        close.setVisibility(View.VISIBLE);
+        btnBack.setBackground(getResources().getDrawable(R.drawable.back));
+
+    }
+
 
 }

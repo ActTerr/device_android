@@ -40,4 +40,12 @@ public class SpUtil {
     public static int getGestureType(Context context){
         return getDefault(context).getInt("type",0);
     }
+
+    public static void setCheck(Context context,boolean check){
+        getDefault(context).edit().putBoolean("check",check).apply();
+    }
+
+    public static boolean getCheck(Context context){
+        return getDefault(context).getBoolean("check",false);
+    }
 }

@@ -4,6 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
+    android:background="@color/gray2"
     >
     <include layout="@layout/item_title2"/>
     <ImageView
@@ -13,16 +14,19 @@
         android:layout_height="200dp" />
     <RelativeLayout
         android:id="@+id/rlUser"
-        android:padding="5dp"
+        android:padding="10dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         >
         <TextView
+            android:textColor="@color/white"
             android:textSize="25sp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="账号"/>
+            android:text="用户"/>
         <TextView
+            android:textColor="@color/white"
+            android:layout_marginRight="10dp"
             android:id="@+id/user"
             android:textSize="25sp"
             android:text="XXXXXX"
@@ -30,43 +34,78 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
     </RelativeLayout>
+
     <View
         android:layout_marginLeft="10dp"
         android:layout_marginRight="10dp"
         android:layout_width="match_parent"
         android:layout_height="1dp"
-        android:background="@color/gray"/>
+        android:background="@color/white"/>
     <RelativeLayout
         android:id="@+id/auxiliary"
-        android:padding="5dp"
+        android:padding="10dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         >
         <TextView
+            android:textColor="@color/white"
             android:textSize="25sp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="辅助功能"/>
-
-            android:textSize="25sp"
-            android:src="@drawable/ic_launcher"
+            android:text="所属单位"/>
+        <TextView
+            android:layout_marginRight="10dp"
             android:layout_alignParentRight="true"
+            android:text="xxx"
+            android:id="@+id/unit"
+            android:textColor="@color/white"
+            android:textSize="25sp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
+
+    </RelativeLayout>
+
+    <View
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/white"/>
+    <RelativeLayout
+        android:padding="10dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        >
+        <TextView
+
+            android:textColor="@color/white"
+            android:textSize="25sp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="夜间模式(关闭电池监测)"
+
+            />
+        <include
+            layout="@layout/item_button"/>
+
+
     </RelativeLayout>
     <View
         android:layout_marginLeft="10dp"
         android:layout_marginRight="10dp"
         android:layout_width="match_parent"
         android:layout_height="1dp"
-        android:background="@color/gray"/>
+        android:background="@color/white"/>
+
     <RelativeLayout
+
         android:id="@+id/rlPasswd"
-        android:padding="5dp"
+        android:padding="10dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal">
         <TextView
+            android:textColor="@color/white"
             android:textSize="25sp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -74,10 +113,11 @@
         <ImageView
             android:id="@+id/lock"
             android:layout_toLeftOf="@+id/shoushiText"
-            android:src="@mipmap/ic_launcher"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+            android:src="@mipmap/lock"
+            android:layout_width="30dp"
+            android:layout_height="30dp"  />
         <TextView
+            android:textColor="@color/white"
             android:layout_toLeftOf="@+id/right_btn"
             android:id="@+id/shoushiText"
             android:textSize="25sp"
@@ -85,21 +125,22 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
         <ImageView
+            android:layout_marginLeft="10dp"
             android:id="@+id/right_btn"
             android:layout_alignParentRight="true"
-            android:src="@mipmap/ic_launcher"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+            android:src="@mipmap/right"
+            android:layout_width="30dp"
+            android:layout_height="30dp" />
     </RelativeLayout>
     <View
         android:layout_marginLeft="10dp"
         android:layout_marginRight="10dp"
         android:layout_width="match_parent"
         android:layout_height="1dp"
-        android:background="@color/gray"/>
+        android:background="@color/white"/>
     <Button
-        android:layout_marginLeft="10dp"
-        android:layout_marginRight="10dp"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
         android:id="@+id/logOut"
         android:text="退出当前账号"
         android:background="@color/google_red"

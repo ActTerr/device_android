@@ -25,6 +25,7 @@ import mac.yk.devicemanagement.MyMemory;
 import mac.yk.devicemanagement.R;
 import mac.yk.devicemanagement.ui.fragment.fragRecord;
 import mac.yk.devicemanagement.util.ActivityUtils;
+import mac.yk.devicemanagement.util.L;
 import mac.yk.devicemanagement.util.MFGT;
 
 public class RecordActivity extends BaseActivity {
@@ -96,6 +97,10 @@ public class RecordActivity extends BaseActivity {
         }
     }
 
+    /**
+     * 懒加载fragment
+     * @param navView
+     */
     private void setUpNavView(final NavigationView navView) {
         navView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
             @Override
@@ -136,7 +141,11 @@ public class RecordActivity extends BaseActivity {
     }
 
 
-
+    /**
+     * 重写了Activity的该方法,会在点击menu的时候回调，返回true则不往下传递了，false则传递给fragment
+     * @param item
+     * @return
+     */
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
@@ -144,7 +153,8 @@ public class RecordActivity extends BaseActivity {
                 drawLayout.openDrawer(GravityCompat.START);
                 return true;
         }
-        return super.onOptionsItemSelected(item);
+        L.e("test",super.onOptionsItemSelected(item)+"");
+        return false;
     }
 
 
