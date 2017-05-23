@@ -292,7 +292,7 @@ public class MainActivity extends BaseActivity {
             Bundle bundle = data.getExtras();
             if (bundle != null) {
                 id = (bundle.getString("result"));
-                MFGT.gotoDetailActivity(context,false,id);
+                MFGT.gotoDetailActivity(context,false,false,id);
                 finish();
             }
 

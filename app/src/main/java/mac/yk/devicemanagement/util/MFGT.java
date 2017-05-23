@@ -24,9 +24,10 @@ import mac.yk.devicemanagement.ui.activity.SetActivity;
  */
 
 public class MFGT {
-    public static void gotoDetailActivity(Context context, boolean isFromList,String Did){
+    public static void gotoDetailActivity(Context context, boolean isFromList,boolean isBack,String Did){
         Intent intent=new Intent(context,DeviceDetailActivity.class);
         intent.putExtra("isFromList",isFromList);
+        intent.putExtra("isBack",isBack);
         intent.putExtra("Did",Did);
         startActivity(context,intent);
     }

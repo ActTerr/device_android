@@ -51,7 +51,7 @@ public class DeviceResumeAdapter extends RecyclerView.Adapter<DeviceResumeAdapte
         holder.ll.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                MFGT.gotoDetailActivity(context,true,deviceResume.getDid());
+                MFGT.gotoDetailActivity(context,true,false,deviceResume.getDid());
             }
         });
     }

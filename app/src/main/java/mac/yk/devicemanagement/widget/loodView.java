@@ -183,7 +183,7 @@ public class loodView extends FrameLayout {
         initIndicator();
         for (int i = 0; i < count; i++) {
 
-            String imagesUrl = I.REQUEST.SERVER_ROOT + I.REQUEST.PATH + "?request=" + I.REQUEST.DOWNPIC + "&" + I.DEVICE.DNAME + "=" +
+            String imagesUrl = I.REQUEST.SERVER_ROOT + I.REQUEST.PATH + "?request=" + I.REQUEST.DOWNPIC + "&" + I.DEVICE2.CATEGROY+ "=" +
                     Dname + "&" + I.PIC.PID + "=" + i + "&" + I.PIC.TYPE + "=" + I.PIC.DEVICE;
             L.e("TAG", imagesUrl);
             Uri uri = Uri.parse(imagesUrl);

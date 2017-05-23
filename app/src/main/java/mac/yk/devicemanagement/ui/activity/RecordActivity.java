@@ -25,12 +25,11 @@ import mac.yk.devicemanagement.MyMemory;
 import mac.yk.devicemanagement.R;
 import mac.yk.devicemanagement.ui.fragment.fragRecord;
 import mac.yk.devicemanagement.util.ActivityUtils;
-import mac.yk.devicemanagement.util.L;
 import mac.yk.devicemanagement.util.MFGT;
 
 public class RecordActivity extends BaseActivity {
 
-    fragRecord fragment,fragment2;
+    fragRecord weixiuFragment,xunjianFragment;
 
     @BindView(R.id.toolBar)
     Toolbar toolBar;
@@ -39,7 +38,7 @@ public class RecordActivity extends BaseActivity {
     @BindView(R.id.drawLayout)
     DrawerLayout drawLayout;
     Context context;
-    String[] deviceOld;
+    String Did;
     boolean isWeixiu=true;
     @BindView(R.id.netView)
     TextView mTv;
@@ -48,37 +47,33 @@ public class RecordActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_currency);
         ButterKnife.bind(this);
+
         context=this;
 
-        String Did=getIntent().getStringExtra("Did");
+        Did=getIntent().getStringExtra("Did");
 
         if (Did ==null) {
             MFGT.finish((Activity) context);
         } else {
             init();
-            fragment = (fragRecord) getSupportFragmentManager().findFragmentById(R.id.frame);
+            weixiuFragment = (fragRecord) getSupportFragmentManager().findFragmentById(R.id.frame);
             Bundle bundle1 = new Bundle();
-            bundle1.putString("id", String.valueOf(deviceOld[0]));
+            bundle1.putString("id", Did); 
             bundle1.putBoolean("flag", true);
-            if (fragment==null){
+            if (weixiuFragment==null){
                 Log.e("main","fragment从空被赋值");
-                fragment=new fragRecord();
+                weixiuFragment=new fragRecord();
             }
-            fragment.setArguments(bundle1);
-            ActivityUtils.addFragmentToActivity(getSupportFragmentManager(),fragment,R.id.frame);
+            weixiuFragment.setArguments(bundle1);
+            ActivityUtils.addFragmentToActivity(getSupportFragmentManager(),weixiuFragment,R.id.frame);
 
-            fragment2 = (fragRecord) getSupportFragmentManager().findFragmentById(R.id.frame);
-            Bundle bundle2 = new Bundle();
-            bundle2.putString("id", String.valueOf(deviceOld[0]));
-            bundle2.putBoolean("flag", false);
-            if (fragment2==null){
-                fragment2=new fragRecord();
-            }
-            fragment2.setArguments(bundle2);
-//            ActivityUtils.addFragmentToActivity(getSupportFragmentManager(), fragment2, R.id.frame);
+
+
         }
 
     }
+
+
 
     private void init() {
         setSupportActionBar(toolBar);
@@ -86,6 +81,7 @@ public class RecordActivity extends BaseActivity {
         ab.setHomeAsUpIndicator(R.drawable.ic_menu);
         ab.setDisplayHomeAsUpEnabled(true);
         if (navView != null) {
+
             navView.inflateMenu(R.menu.menu_record_frag);
             setUpNavView(navView);
             ImageView imageView= (ImageView) navView.getHeaderView(0).findViewById(R.id.avatar);
@@ -107,15 +103,28 @@ public class RecordActivity extends BaseActivity {
                 switch (item.getItemId()){
                     case R.id.weixiu:
                         if (!isWeixiu){
-                            ActivityUtils.changeFragment(getSupportFragmentManager(),fragment,fragment2);
+                            ActivityUtils.changeFragment(getSupportFragmentManager(),weixiuFragment,xunjianFragment);
                             isWeixiu=true;
+                            toolBar.setTitle("维修记录");
+
                         }
-                        L.e("main","执行切换weixiu");
                         break;
                     case R.id.xunjian:
+//                        xunjianFragment= (fragRecord) getSupportFragmentManager().findFragmentById(R.id.frame);
+                        if(!getSupportFragmentManager().getFragments().contains(xunjianFragment)){
+                            Bundle bundle2 = new Bundle();
+                            bundle2.putString("id", String.valueOf(Did));
+                            bundle2.putBoolean("flag", false);
+                            if (xunjianFragment==null){
+                                xunjianFragment=new fragRecord();
+                            }
+                            xunjianFragment.setArguments(bundle2);
+                            ActivityUtils.addFragmentToActivity(getSupportFragmentManager(), xunjianFragment, R.id.frame);
+                        }
                         if (isWeixiu){
-                            ActivityUtils.changeFragment(getSupportFragmentManager(),fragment2,fragment);
+                            ActivityUtils.changeFragment(getSupportFragmentManager(),xunjianFragment,weixiuFragment);
                             isWeixiu=false;
+                            toolBar.setTitle("巡检记录");
                         }
                         break;
                 }
@@ -126,6 +135,8 @@ public class RecordActivity extends BaseActivity {
         });
     }
 
+
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
@@ -135,6 +146,7 @@ public class RecordActivity extends BaseActivity {
         }
         return super.onOptionsItemSelected(item);
     }
+
 
     @Override
     public boolean onMenuOpened(int featureId, Menu menu) {
@@ -158,7 +170,7 @@ public class RecordActivity extends BaseActivity {
 
     @Override
     public void onBackPressed() {
-        MFGT.gotoDetailActivity(context, true,deviceOld[0]);
+        MFGT.gotoDetailActivity(context, true,true,Did);
         MFGT.finish((Activity) context);
     }
 }

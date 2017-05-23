@@ -46,7 +46,7 @@ public class BatteryAdapter extends RecyclerView.Adapter<BatteryAdapter.BatteryV
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                MFGT.gotoDetailActivity(context,true,battery.getDid());
+                MFGT.gotoDetailActivity(context,true,false,battery.getDid());
             }
         });
     }

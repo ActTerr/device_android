@@ -47,8 +47,8 @@ public class xunjianAdapter extends RecyclerView.Adapter<XjViewHolder> {
         Xunjian xunjian=xjlist.get(position);
         holder.xJianDate.setText(ConvertUtils.Date2String(xunjian.getXjDate()));
         holder.xjUser.setText(xunjian.getXjUser());
-        holder.status.setText(ConvertUtils.getXunjianStatus(xunjian.getStatus()));
-        if (xunjian.getStatus()==0){
+        holder.status.setText(xunjian.getStatus());
+        if (xunjian.getStatus().equals("异常")){
             holder.cause.setText(xunjian.getCause());
         }else {
             holder.cause.setVisibility(View.GONE);

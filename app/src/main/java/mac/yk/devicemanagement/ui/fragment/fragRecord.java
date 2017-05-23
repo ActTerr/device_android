@@ -47,7 +47,6 @@ import rx.schedulers.Schedulers;
  */
 
 public class fragRecord extends BaseFragment {
-    
     boolean isDesc=true;
     Handler handler=new Handler(){
         @Override
@@ -95,8 +94,8 @@ public class fragRecord extends BaseFragment {
         context= getContext();
         llm=new LinearLayoutManager(context);
         L.e("TAG","frag解析完布局"+page);
-        init();
         setHasOptionsMenu(true);
+        init();
         return view;
     }
 
@@ -128,6 +127,7 @@ public class fragRecord extends BaseFragment {
                 Download(ACTION_DOWNLOAD);
                 getActivity().setTitle("巡检记录");
                 adapter=new xunjianAdapter(context);
+                L.e(TAG,"巡检adapter被创建");
             }
         }
         rv.setAdapter(adapter);
@@ -137,20 +137,25 @@ public class fragRecord extends BaseFragment {
     }
     MenuItem itemRecent;
     MenuItem itemReverse;
+
+
+
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        inflater.inflate(R.menu.menu_record,menu);
-        itemRecent = menu.getItem(0);
-        itemReverse = menu.getItem(1);
+                inflater.inflate(R.menu.menu_record,menu);
+                itemRecent = menu.getItem(0);
+                itemReverse = menu.getItem(1);
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if(item.getItemId()==R.id.recent){
+            L.e("recent");
             isDesc=true;
             item.setIcon(R.drawable.recent_selected);
             itemReverse.setIcon(R.drawable.reverse);
         }else {
+            L.e("reverse");
             itemRecent.setIcon(R.drawable.recent);
             item.setIcon(R.drawable.reverse_selected);
             isDesc=false;
@@ -331,6 +336,7 @@ public class fragRecord extends BaseFragment {
                         pd.dismiss();
                         if (ExceptionFilter.filter(context, e)) {
 //                            srl.setRefreshing(false);
+                            xunjianAdapter = (xunjianAdapter) adapter;
                             tvRefresh.setText("刷新失败");
                             isMore = false;
 
@@ -342,12 +348,11 @@ public class fragRecord extends BaseFragment {
                     public void onNext(Xunjian[] result) {
 //                        srl.setRefreshing(false);
                         pd.dismiss();
+                        L.e("adapter被赋值");
                         xunjianAdapter = (xunjianAdapter) adapter;
                         ArrayList<Xunjian> xunjianLists = ConvertUtils.array2List(result);
                         L.e("TAG", "down size:" + xunjianLists.size());
-                        if (xunjianLists.size() < 10) {
-                            isMore = false;
-                        }
+
                         if (Action == ACTION_ADD) {
                             xunjianList.addAll(xunjianLists);
                         } else {
@@ -356,7 +361,9 @@ public class fragRecord extends BaseFragment {
                                 }
                                 xunjianList.addAll(xunjianLists);
                             isMore = true;
-
+                        }
+                        if (xunjianLists.size() < 10) {
+                            isMore = false;
                         }
                         tvRefresh.setText("加载成功");
                         setListSort();
@@ -386,7 +393,8 @@ public class fragRecord extends BaseFragment {
                         if (ExceptionFilter.filter(context, e)) {
 //                            srl.setRefreshing(false);
                             isMore=false;
-                            weixiuAdapter.setLast(true);
+                            weixiuAdapter= (weixiuAdapter) adapter;
+                                weixiuAdapter.setLast(true);
                             tvRefresh.setText("刷新失败");
                             delayToInvisible();
                         }
@@ -398,10 +406,6 @@ public class fragRecord extends BaseFragment {
                         weixiuAdapter= (weixiuAdapter) adapter;
                         ArrayList<Weixiu> weixius = ConvertUtils.array2List(result);
                         L.e("TAG", "down size:" + weixius.size());
-                        if (weixius.size() < 10) {
-                            isMore = false;
-                            weixiuAdapter.setLast(true);
-                        }
                         if (Action == ACTION_ADD) {
                             wxList.addAll(weixius);
 
@@ -411,6 +415,11 @@ public class fragRecord extends BaseFragment {
                                 }
                                 wxList.addAll(weixius);
                             isMore = true;
+                        }
+
+                        if (weixius.size() < 10) {
+                            isMore = false;
+                            weixiuAdapter.setLast(true);
                         }
                         setListSort();
                         tvRefresh.setText("加载成功");
@@ -441,4 +450,5 @@ public class fragRecord extends BaseFragment {
     public void onClick() {
         rv.scrollToPosition(0);
     }
+
 }

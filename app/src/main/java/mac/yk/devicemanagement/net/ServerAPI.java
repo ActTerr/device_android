@@ -6,7 +6,6 @@ import java.util.Map;
 import mac.yk.devicemanagement.I;
 import mac.yk.devicemanagement.bean.Attachment;
 import mac.yk.devicemanagement.bean.Battery;
-import mac.yk.devicemanagement.bean.DeviceOld;
 import mac.yk.devicemanagement.bean.DeviceResume;
 import mac.yk.devicemanagement.bean.Notice;
 import mac.yk.devicemanagement.bean.Result;
@@ -55,7 +54,7 @@ public interface ServerAPI {
     Observable<Result<String[]>> chaxun(@Query(I.DEVICE2.DID) String Did);
 
     @GET(I.REQUEST.PATH+I.REQUEST.SAVE)
-    Observable<Result<String>> saveDevice(@Query(I.USER.NAME) String name,@Query(I.DEVICE.TABLENAME) String device);
+    Observable<Result<String>> saveDevice(@Query(I.USER.NAME) String name,@Query(I.DEVICE2.TABLE_NAME) String device);
 
     @GET(I.REQUEST.PATH+I.REQUEST.LOGIN)
     Observable<Result<User>> login(@Query(I.USER.ACCOUNTS) String name, @Query(I.USER.PASSWD) String passwd);
@@ -64,15 +63,15 @@ public interface ServerAPI {
     Observable<Result<String>> logOut(@Query(I.USER.NAME) String name);
 
     @GET(I.REQUEST.PATH+I.REQUEST.DOWNWEIXIU)
-    Observable<Result<Weixiu[]>> downLoadWeixiu(@Query(I.DEVICE.DID) String did, @Query(I.DOWNLOAD.PAGE) int page,
+    Observable<Result<Weixiu[]>> downLoadWeixiu(@Query(I.WEIXIU.DID) String did, @Query(I.DOWNLOAD.PAGE) int page,
                                                 @Query(I.DOWNLOAD.SIZE) int size);
 
     @GET(I.REQUEST.PATH+I.REQUEST.DOWNXUNJIAN)
-    Observable<Result<Xunjian[]>> downloadXunJian (@Query(I.DEVICE.DID) String did, @Query(I.DOWNLOAD.PAGE) int page,
+    Observable<Result<Xunjian[]>> downloadXunJian (@Query(I.XUNJIAN.DID) String did, @Query(I.DOWNLOAD.PAGE) int page,
                                            @Query(I.DOWNLOAD.SIZE) int size);
 
     @GET(I.REQUEST.PATH+I.REQUEST.XUNJIAN)
-    Observable<Result<String>> xunjian(@Query(I.USER.NAME) String userName
+    Observable<Result<String>> xunjian(@Query(I.XUNJIAN.USER) String userName
             ,@Query(I.DEVICE2.DID) String did, @Query(I.XUNJIAN.STATUS) String status,
                                        @Query(I.XUNJIAN.REMARK) String remark,@Query(I.USER.UNIT) String unit);
 
@@ -83,7 +82,7 @@ public interface ServerAPI {
                                        @Query(I.WEIXIU.REMARK) String remark);
 
     @GET(I.REQUEST.PATH+I.REQUEST.BAOFEI)
-    Observable<Result<String>> baofei(@Query(I.USER.NAME) String name
+    Observable<Result<String>> baofei(@Query(I.BAOFEI.USER) String name,@Query(I.BAOFEI.DNAME) String category
             ,@Query(I.DEVICE2.DID) String Did,@Query(I.BAOFEI.REMARK) String remark,@Query(I.BAOFEI.STATION) String unit
     ,@Query(I.BAOFEI.TYPE) String type);
 
@@ -95,13 +94,9 @@ public interface ServerAPI {
     Observable<Result<Scrap[]>> downScrap(@Query(I.DOWNLOAD.PAGE) int page,@Query(I.DOWNLOAD.SIZE) int size,
                                           @Query(I.BAOFEI.DNAME) int dName);
 
-    @GET(I.REQUEST.PATH+I.REQUEST.DOWNDEVICE)
-    Observable<Result<DeviceOld[]>> downDevice(@Query(I.DOWNLOAD.PAGE) int page, @Query(I.DOWNLOAD.SIZE) int size,
-                                               @Query(I.DEVICE.DNAME)int dname,
-                                               @Query(I.DEVICE.STATUS) int status);
 
     @GET(I.REQUEST.PATH+I.REQUEST.GETPICCOUNT)
-    Observable<Result<Integer>> getPicCount(@Query(I.DEVICE.DNAME )int dName,@Query(I.PIC.TYPE) String type);
+    Observable<Result<Integer>> getPicCount(@Query(I.DEVICE2.CATEGROY )int dName,@Query(I.PIC.TYPE) String type);
 
     @POST(I.REQUEST.PATH+I.REQUEST.UPLOADUNCAUGHT)
     @Multipart

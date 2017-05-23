@@ -6,9 +6,9 @@ import java.util.Date;
 public class Xunjian implements Serializable {
     Date xjDate;
     String xjUser;
-    int status;
+    String status;
     String cause;
-    public Xunjian(Date xjDate, String xjUser, int status, String cause) {
+    public Xunjian(Date xjDate, String xjUser, String status, String cause) {
         super();
         this.xjDate = xjDate;
         this.xjUser = xjUser;
@@ -31,10 +31,10 @@ public class Xunjian implements Serializable {
     public void setXjUser(String xjUser) {
         this.xjUser = xjUser;
     }
-    public int getStatus() {
+    public String getStatus() {
         return status;
     }
-    public void setStatus(int status) {
+    public void setStatus(String status) {
         this.status = status;
     }
     public String getCause() {

@@ -75,19 +75,28 @@ public class DeviceDetailActivity extends BaseActivity {
     User user;
 
     boolean isFromList;
-
+    boolean backToRecord;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Fresco.initialize(this);
         setContentView(R.layout.activity_currency);
         ButterKnife.bind(this);
+        user = MyMemory.getInstance().getUser();
         context = this;
-        dialog=new Dialog(context);
+        dialog = new Dialog(context);
         progressDialog = new ProgressDialog(context);
         String did = getIntent().getStringExtra("Did");
         isFromList = getIntent().getBooleanExtra("isFromList", false);
-        getDevice(did);
+        backToRecord=getIntent().getBooleanExtra("isBack",false);
+        if(backToRecord){
+            data=MyMemory.getInstance().getData();
+            if(data!=null){
+                initView();
+            }
+        } else {
+            getDevice(did);
+        }
 
         Log.e("main", "setArgument执行");
     }
@@ -119,7 +128,7 @@ public class DeviceDetailActivity extends BaseActivity {
         if (mStatus.getStatus().equals("报废")) {
             isBaofei = true;
         }
-        user = MyMemory.getInstance().getUser();
+
         setTitle("设备详情");
         setSupportActionBar(toolBar);
         ActionBar ab = getSupportActionBar();
@@ -168,9 +177,10 @@ public class DeviceDetailActivity extends BaseActivity {
                     }
 
                     @Override
-                    public void onNext(String[] deviceOld) {
-                        data = deviceOld;
+                    public void onNext(String[] devices) {
+                        data = devices;
                         progressDialog.dismiss();
+                        MyMemory.getInstance().setData(devices);
                         initView();
                     }
                 });
@@ -270,7 +280,7 @@ public class DeviceDetailActivity extends BaseActivity {
     }
 
     private void showDaiyong() {
-        DaiYongHolder daiyong=new DaiYongHolder();
+        DaiYongHolder daiyong = new DaiYongHolder();
         dialog.setContentView(daiyong.v);
         dialog.setTitle(null);
         dialog.show();
@@ -283,7 +293,7 @@ public class DeviceDetailActivity extends BaseActivity {
 
         public DaiYongHolder() {
             v = View.inflate(context, R.layout.item_dialog_daiyong, null);
-            ButterKnife.bind(this,v);
+            ButterKnife.bind(this, v);
         }
 
         @OnClick(R.id.btn_commit)
@@ -296,7 +306,7 @@ public class DeviceDetailActivity extends BaseActivity {
     private void postDaiyong(final String local) {
         progressDialog.show();
         ApiWrapper<ServerAPI> wrapper = new ApiWrapper<>();
-        wrapper.targetClass(ServerAPI.class).getAPI().daiyong(id,local)
+        wrapper.targetClass(ServerAPI.class).getAPI().daiyong(id, local)
                 .compose(wrapper.<String>applySchedulers())
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
@@ -319,7 +329,7 @@ public class DeviceDetailActivity extends BaseActivity {
                         ToastUtil.showControlSuccess(context);
                         progressDialog.dismiss();
                         mStatus.setStatus(s);
-                        fragD.refreshUsePosition(s,local);
+                        fragD.refreshUsePosition(s, local);
                     }
                 });
     }
@@ -367,10 +377,19 @@ public class DeviceDetailActivity extends BaseActivity {
         CheckBox cbYes;
         @BindView(R.id.remark)
         EditText remark;
+        @BindView(R.id.title)
+        TextView title;
+        @BindView(R.id.ll)
+        LinearLayout ll;
+        @BindView(R.id.btn_commit)
+        Button btnCommit;
 
         public BaofeiHolder() {
             v = View.inflate(context, R.layout.dialog_currency, null);
             ButterKnife.bind(this, v);
+
+            title.setVisibility(View.GONE);
+            ll.setVisibility(View.GONE);
             cbNo.setVisibility(View.GONE);
             cbYes.setVisibility(View.GONE);
             diaTitle.setText("报废提交");
@@ -391,7 +410,7 @@ public class DeviceDetailActivity extends BaseActivity {
             dialog.dismiss();
             progressDialog.show();
             ApiWrapper<ServerAPI> wrapper = new ApiWrapper<>();
-            subscription = wrapper.targetClass(ServerAPI.class).getAPI().baofei(user.getName()
+            subscription = wrapper.targetClass(ServerAPI.class).getAPI().baofei(user.getName(), data[2]
                     , id, remark.getText().toString(), data[16], data[21])
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
@@ -491,6 +510,7 @@ public class DeviceDetailActivity extends BaseActivity {
         boolean isShow;
         PopupWindow popupWindow;
         boolean translate = false;
+
         public xiujunHoler() {
             v = View.inflate(context, R.layout.dialog_currency, null);
             ButterKnife.bind(this, v);
@@ -499,9 +519,9 @@ public class DeviceDetailActivity extends BaseActivity {
 
         private void initPopuWindow() {
             View view = View.inflate(context, getViewId(), null);
-            initpopuHolder(view,showSelect);
+            initpopuHolder(view, showSelect);
             popupWindow = new PopupWindow(view, ConvertUtils.dp2px(context, 50),
-                    ConvertUtils.dp2px(context,  ConvertUtils.dp2px(context, 100)));
+                    ConvertUtils.dp2px(context, ConvertUtils.dp2px(context, 100)));
 
             popupWindow.setTouchable(true);
             popupWindow.setOutsideTouchable(true);
@@ -510,16 +530,16 @@ public class DeviceDetailActivity extends BaseActivity {
 
         }
 
-        private void initpopuHolder(View v,ImageView iv) {
+        private void initpopuHolder(View v, ImageView iv) {
             switch (data[2]) {
                 case "手持台":
-                    new shouchitaiHolder(v,iv);
+                    new shouchitaiHolder(v, iv);
                     break;
                 case "机控器":
-                    new jikongqiHolder(v,iv);
+                    new jikongqiHolder(v, iv);
                     break;
                 case "区控器":
-                    new qukongqiHolder(v,iv);
+                    new qukongqiHolder(v, iv);
                     break;
             }
         }
@@ -577,9 +597,10 @@ public class DeviceDetailActivity extends BaseActivity {
         class shouchitaiHolder {
             View v;
             ImageView iv;
-            public shouchitaiHolder(View v,ImageView iv) {
+
+            public shouchitaiHolder(View v, ImageView iv) {
                 this.v = v;
-                this.iv=iv;
+                this.iv = iv;
                 ButterKnife.bind(this, v);
             }
 
@@ -602,9 +623,10 @@ public class DeviceDetailActivity extends BaseActivity {
         class jikongqiHolder {
             View v;
             ImageView iv;
-            public jikongqiHolder(View v,ImageView iv) {
+
+            public jikongqiHolder(View v, ImageView iv) {
                 this.v = v;
-                this.iv=iv;
+                this.iv = iv;
                 ButterKnife.bind(this, v);
             }
 
@@ -627,9 +649,10 @@ public class DeviceDetailActivity extends BaseActivity {
         class qukongqiHolder {
             View v;
             ImageView iv;
-            public qukongqiHolder(View v,ImageView iv) {
+
+            public qukongqiHolder(View v, ImageView iv) {
                 this.v = v;
-                this.iv=iv;
+                this.iv = iv;
                 ButterKnife.bind(this, v);
             }
 
