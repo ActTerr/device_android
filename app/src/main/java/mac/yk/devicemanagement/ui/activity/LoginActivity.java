@@ -72,7 +72,7 @@ public class LoginActivity extends BaseActivity{
                }
                 Intent intent = new Intent(context, MainActivity.class);
                  MyMemory.getInstance().setUser(user);
-             SpUtil.saveLoginUser(context,name.getText().toString());
+             SpUtil.saveLoginUser(context,user.getAccounts());
              startActivity(intent);
              MFGT.finish((Activity) context);
 

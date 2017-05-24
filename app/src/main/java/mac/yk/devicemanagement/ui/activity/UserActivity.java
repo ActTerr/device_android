@@ -18,8 +18,10 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import mac.yk.devicemanagement.MyMemory;
 import mac.yk.devicemanagement.R;
+import mac.yk.devicemanagement.bean.User;
 import mac.yk.devicemanagement.net.ApiWrapper;
 import mac.yk.devicemanagement.net.ServerAPI;
+import mac.yk.devicemanagement.util.ConvertUtils;
 import mac.yk.devicemanagement.util.ExceptionFilter;
 import mac.yk.devicemanagement.util.MFGT;
 import mac.yk.devicemanagement.util.SpUtil;
@@ -55,6 +57,8 @@ public class UserActivity extends BaseActivity {
     LinearLayout activitySet;
     @BindView(R.id.btn_back)
     RelativeLayout btnBack;
+    @BindView(R.id.unit)
+    TextView unit;
 
 
     @Override
@@ -64,8 +68,17 @@ public class UserActivity extends BaseActivity {
         ButterKnife.bind(this);
         context = this;
         pd = new ProgressDialog(context);
-        user.setText(MyMemory.getInstance().getUser().getName());
-
+        User u=MyMemory.getInstance().getUser();
+        user.setText(u.getName());
+        String station;
+        if (u.getGrade()==1){
+            station= ConvertUtils.getUnitName(u.getUnit());
+        }else if(u.getGrade()==0){
+            station="哈尔滨铁路局";
+        }else {
+            station=ConvertUtils.getServiceStation(u.getUnit());
+        }
+        unit.setText(station);
     }
 
     @OnClick({R.id.rlUser, R.id.rlPasswd, R.id.logOut, R.id.auxiliary, R.id.open, R.id.close})
@@ -122,14 +135,14 @@ public class UserActivity extends BaseActivity {
     }
 
     private void setCheckClose() {
-        SpUtil.setCheck(context,false);
+        SpUtil.setCheck(context, false);
         close.setVisibility(View.INVISIBLE);
         open.setVisibility(View.VISIBLE);
         btnBack.setBackground(getResources().getDrawable(R.drawable.backw));
     }
 
     private void setCheckOpen() {
-        SpUtil.setCheck(context,true);
+        SpUtil.setCheck(context, true);
         open.setVisibility(View.INVISIBLE);
         close.setVisibility(View.VISIBLE);
         btnBack.setBackground(getResources().getDrawable(R.drawable.back));

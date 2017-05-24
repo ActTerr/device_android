@@ -77,6 +77,8 @@ public class AttachmentAdapter extends RecyclerView.Adapter<AttachmentAdapter.At
         this.context = context;
         dialog = new ProgressDialog(context);
         EventBus.getDefault().register(this);
+        admin = MyMemory.getInstance().getUser().getGrade() == 0;
+        L.e(TAG,"isadmin:"+admin);
     }
 
 
@@ -120,7 +122,7 @@ public class AttachmentAdapter extends RecyclerView.Adapter<AttachmentAdapter.At
     public AttachmentViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(context).inflate(R.layout.item_attachment, parent, false);
         AttachmentViewHolder holder = new AttachmentViewHolder(view);
-        admin = MyMemory.getInstance().getUser().getGrade() == 0;
+
         return holder;
     }
 
@@ -133,6 +135,7 @@ public class AttachmentAdapter extends RecyclerView.Adapter<AttachmentAdapter.At
         final FileEntry entry = fileEntries.get(position);
         final int status = entry.getDownloadStatus();
         if (admin) {
+            L.e("wocao","丫不是admin啊");
             holder.ivDelete.setVisibility(View.VISIBLE);
             holder.ivEdit.setVisibility(View.VISIBLE);
             holder.cbAt.setVisibility(View.GONE);
@@ -190,13 +193,15 @@ public class AttachmentAdapter extends RecyclerView.Adapter<AttachmentAdapter.At
             @Override
             public void onClick(View v) {
                 if (admin) {
+                    L.e("wocao","丫不是admin啊");
                     showSelectPopuWindow(holder.ivDocument, entry, holder);
                 } else {
                     if (status == I.DOWNLOAD_STATUS.FINISH) {
                         L.e(TAG, entry.getSaveDirPath());
                         openFile(entry.getSaveDirPath());
                     } else {
-                        downLoadFile(entry);
+                        downLoadFile(entry,holder);
+//                        memoryHolder=holder;
                     }
                 }
             }
@@ -368,7 +373,8 @@ public class AttachmentAdapter extends RecyclerView.Adapter<AttachmentAdapter.At
     /**
      * 使用service实现下载
      */
-    private void downLoadFile(FileEntry entry) {
+    private void downLoadFile(FileEntry entry,AttachmentViewHolder holder) {
+        memoryHolder=holder;
         Intent intent = new Intent(context, FileService.class);
         intent.putExtra("type", 1);
         intent.putExtra("entry", entry);

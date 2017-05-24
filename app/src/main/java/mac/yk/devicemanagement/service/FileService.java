@@ -109,8 +109,6 @@ public class FileService extends IntentService implements IFile{
                 mHandler,1,entry.getCompletedSize()));
         L.e(TAG,"zuile:"+entry.getCompletedSize());
         requestBodyMap.put("file\"; filename=\"" + entry.getFileName(), fileRequestBody);
-
-
         ServerAPI serverAPI = RetrofitUtil.createService(ServerAPI.class);
         L.e(TAG,"execute");
        subscribe= serverAPI.addAttachment(requestBodyMap, entry.getFileName(), entry.getNid(), entry.getCompletedSize())
@@ -139,12 +137,6 @@ public class FileService extends IntentService implements IFile{
                         divisionFile.delete();
                     }
                 });
-
-
-//        if(subscribe==null){
-//            Toast.makeText(context, "null null null", Toast.LENGTH_SHORT).show();
-//        }
-
         MyMemory.getInstance().setEntry(entry);
         MyMemory.getInstance().setSubscribe(subscribe);
 
@@ -181,7 +173,7 @@ public class FileService extends IntentService implements IFile{
 
 
     @Override
-    public void downloadFile(FileEntry entry) {
+    public void downloadFile(final FileEntry entry) {
         ServerAPI server=RetrofitUtil.createService(ServerAPI.class);
         Call<ResponseBody> call = server.downloadFile(entry.getFileName(),entry.getCompletedSize());
 
@@ -189,7 +181,7 @@ public class FileService extends IntentService implements IFile{
             @Override
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
                 if (response.isSuccessful()){
-                    writeResponseBodyToDisk(response.body());
+                    writeResponseBodyToDisk(response.body(),entry.getFileName());
                 }
             }
 
@@ -201,11 +193,11 @@ public class FileService extends IntentService implements IFile{
     }
 
 
-    private boolean writeResponseBodyToDisk(ResponseBody body) {
+    private boolean writeResponseBodyToDisk(ResponseBody body,String name) {
         try {
             // todo change the file location/name according to your needs
-            File futureStudioIconFile = new File(getExternalFilesDir(null) + File.separator + "Future Studio Icon.png");
-
+            File futureStudioIconFile = new File(getExternalFilesDir(null) + File.separator + name);
+            L.e(TAG,"放特么这了："+futureStudioIconFile.getAbsolutePath());
             InputStream inputStream = null;
             OutputStream outputStream = null;
 

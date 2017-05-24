@@ -88,7 +88,7 @@ public class MFGT {
     public static void gotoNoticeDetail(Context context, boolean isEdit, Notice notice){
         Intent intent=new Intent(context, NoticeDetailActivity.class);
         intent.putExtra("isEdit",isEdit);
-        intent.putExtra("notice",notice);
+            intent.putExtra("notice",notice);
         startActivity(context,intent);
     }
 }

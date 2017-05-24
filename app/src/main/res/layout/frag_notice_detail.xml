@@ -10,7 +10,7 @@
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
-        android:text="title"
+        android:hint="请输入标题"
         android:textColor="@color/white"
         android:textSize="30sp" />
 
@@ -36,7 +36,7 @@
                     android:id="@+id/notice_common"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="ssssss"
+                    android:hint="请输入内容"
                     android:textColor="@color/white"
                     android:textSize="20sp" />
 
@@ -46,7 +46,6 @@
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="230dp"
                     android:layout_marginTop="20dp"
-                    android:text="aaaaa"
                     android:textColor="@color/white"
                     android:textSize="20sp" />
             </LinearLayout>

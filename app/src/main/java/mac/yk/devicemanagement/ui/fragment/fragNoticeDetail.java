@@ -25,6 +25,7 @@ import butterknife.OnClick;
 import mac.yk.devicemanagement.MyMemory;
 import mac.yk.devicemanagement.R;
 import mac.yk.devicemanagement.bean.Notice;
+import mac.yk.devicemanagement.gson.UtilGsonBuilder;
 import mac.yk.devicemanagement.net.ApiWrapper;
 import mac.yk.devicemanagement.net.ServerAPI;
 import mac.yk.devicemanagement.ui.activity.NoticeDetailActivity;
@@ -131,7 +132,6 @@ public class fragNoticeDetail extends BaseFragment {
     private void getBundle() {
         Bundle bundle = getArguments();
         notice = (Notice) bundle.getSerializable("notice");
-        L.e(TAG, notice.getNid() + "");
         isEdit = bundle.getBoolean("isEdit");
     }
 
@@ -215,7 +215,8 @@ public class fragNoticeDetail extends BaseFragment {
         dialog.show();
         final Notice sn = new Notice(System.currentTimeMillis(), noticeTitle.getText().toString(),
                 new Date(System.currentTimeMillis()), noticeCommon.getText().toString());
-        String json = new Gson().toJson(sn);
+        Gson gson= UtilGsonBuilder.create();
+        String json = gson.toJson(sn);
         ApiWrapper<ServerAPI> wrapper = new ApiWrapper<>();
         wrapper.targetClass(ServerAPI.class).getAPI().updateNotice(notice.getNid(), json)
                 .compose(wrapper.<String>applySchedulers())

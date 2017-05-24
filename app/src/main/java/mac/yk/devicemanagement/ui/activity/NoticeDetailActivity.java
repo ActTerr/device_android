@@ -25,8 +25,6 @@ import mac.yk.devicemanagement.adapter.VPAdapter;
 import mac.yk.devicemanagement.bean.Notice;
 import mac.yk.devicemanagement.ui.fragment.fragAttachment;
 import mac.yk.devicemanagement.ui.fragment.fragNoticeDetail;
-import mac.yk.devicemanagement.util.L;
-import mac.yk.devicemanagement.util.OpenFileUtil;
 
 /**
  * Created by mac-yk on 2017/5/9.
@@ -71,6 +69,9 @@ public class NoticeDetailActivity extends BaseActivity {
     private void init() {
         vpAdapter = new VPAdapter(getSupportFragmentManager());
         Notice notice = (Notice) getIntent().getSerializableExtra("notice");
+        if (notice==null){
+
+        }
         boolean isEdit = getIntent().getBooleanExtra("isEdit", false);
 
         fragNoticeDetail fragNoticeDetail = new fragNoticeDetail();
@@ -107,7 +108,6 @@ public class NoticeDetailActivity extends BaseActivity {
     }
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        L.e(TAG,"activityresult");
         switch (requestCode) {
             case REQUEST_CHOOSER:
                 if (resultCode == RESULT_OK) {
@@ -120,11 +120,7 @@ public class NoticeDetailActivity extends BaseActivity {
                     // Alternatively, use FileUtils.getFile(Context, Uri)
                     if (path != null && FileUtils.isLocal(path)) {
                         File file = new File(path);
-                        File newFile=new File(OpenFileUtil.getPath(file.getName()));
-                        if(file.renameTo(newFile)){
-                            L.e(TAG,file.getAbsolutePath());
-                        }
-                        EventBus.getDefault().post(newFile);
+                        EventBus.getDefault().post(file);
                     }
                 }
                 break;
