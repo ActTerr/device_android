@@ -40,10 +40,10 @@ import mac.yk.devicemanagement.bean.User;
 import mac.yk.devicemanagement.db.dbUser;
 import mac.yk.devicemanagement.net.ApiWrapper;
 import mac.yk.devicemanagement.net.ServerAPI;
-import mac.yk.devicemanagement.ui.fragment.fragBaofeiCount;
-import mac.yk.devicemanagement.ui.fragment.fragCount;
-import mac.yk.devicemanagement.ui.fragment.fragMain;
-import mac.yk.devicemanagement.ui.fragment.fragNotice;
+import mac.yk.devicemanagement.ui.fragment.CountFragment;
+import mac.yk.devicemanagement.ui.fragment.NoticeFragment;
+import mac.yk.devicemanagement.ui.fragment.ScrapCountFragment;
+import mac.yk.devicemanagement.ui.fragment.MainFragment;
 import mac.yk.devicemanagement.util.ActivityUtils;
 import mac.yk.devicemanagement.util.ExceptionFilter;
 import mac.yk.devicemanagement.util.L;
@@ -54,7 +54,8 @@ import rx.Observer;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 
-import static mac.yk.devicemanagement.R.id.yujing;
+import static mac.yk.devicemanagement.R.drawable.warning;
+
 
 public class MainActivity extends BaseActivity {
     String id;
@@ -74,9 +75,9 @@ public class MainActivity extends BaseActivity {
     @BindView(R.id.netView)
     TextView mTv;
 
-    fragCount fragCount;
-    fragBaofeiCount fragBaofeiCount;
-    fragNotice fragNotice;
+    CountFragment CountFragment;
+    ScrapCountFragment ScrapCountFragment;
+    NoticeFragment NoticeFragment;
 
     ArrayList<Fragment> fragments;
     int showId;
@@ -84,7 +85,7 @@ public class MainActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_currency);
-        View view = View.inflate(this, R.layout.dialog_yujing, null);
+        View view = View.inflate(this, R.layout.dialog_warning, null);
         ButterKnife.bind(this);
         if (SpUtil.getLoginUser(this).equals("")){
             L.e("main","user null");
@@ -107,7 +108,7 @@ public class MainActivity extends BaseActivity {
                         dialog.dismiss();
                     }
                 }).create();
-        ActivityUtils.addFragmentToActivity(getSupportFragmentManager(), new fragMain(), R.id.frame);
+        ActivityUtils.addFragmentToActivity(getSupportFragmentManager(), new MainFragment(), R.id.frame);
         setNavView();
         if (!SpUtil.getPrompt(this)) {
             getYujing();
@@ -124,18 +125,18 @@ public class MainActivity extends BaseActivity {
                 if (content.equals("您有一条新公告!")){
                     L.e("main","切换frag");
                     FragmentManager manager=getSupportFragmentManager();
-                    if(fragments.contains(fragCount)){
-                        ActivityUtils.changeFragment(manager, fragNotice,fragments.get(showId));
+                    if(fragments.contains(CountFragment)){
+                        ActivityUtils.changeFragment(manager, NoticeFragment,fragments.get(showId));
                         for(int i=0;i<fragments.size();i++){
-                            if(fragments.get(i)==fragNotice){
+                            if(fragments.get(i)== NoticeFragment){
                                 showId=i;
                             }
                         }
                     }else {
-                        fragNotice=new fragNotice();
+                        NoticeFragment =new NoticeFragment();
                         showId=fragments.size();
-                        fragments.add(fragments.size(),fragNotice);
-                        ActivityUtils.addFragmentToActivity(manager,fragNotice,R.id.frame);
+                        fragments.add(fragments.size(), NoticeFragment);
+                        ActivityUtils.addFragmentToActivity(manager, NoticeFragment,R.id.frame);
                     }
                 }
             }
@@ -226,54 +227,57 @@ public class MainActivity extends BaseActivity {
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
                 FragmentManager manager=getSupportFragmentManager();
                 switch (item.getItemId()) {
-                    case yujing:
+                    case warning:
                         getYujing();
                         break;
                     case R.id.tongji:
-                            if(fragments.contains(fragCount)){
-                                ActivityUtils.changeFragment(manager, fragCount,fragments.get(showId));
+                            if(fragments.contains(CountFragment)){
+                                ActivityUtils.changeFragment(manager, CountFragment,fragments.get(showId));
                                 for(int i=0;i<fragments.size();i++){
-                                    if(fragments.get(i)==fragCount){
+                                    if(fragments.get(i)== CountFragment){
                                        showId=i;
                                     }
                                 }
                             }else {
-                                fragCount=new fragCount();
+                                CountFragment =new CountFragment();
                                 showId=fragments.size();
-                                fragments.add(fragments.size(),fragCount);
-                                ActivityUtils.addFragmentToActivity(manager,fragCount,R.id.frame);
+                                fragments.add(fragments.size(), CountFragment);
+                                ActivityUtils.addFragmentToActivity(manager, CountFragment,R.id.frame);
                             }
+                            toolBar.setTitle("设备统计");
 
                         break;
                     case R.id.bf_tongji:
-                        if(fragments.contains(fragBaofeiCount)){
-                            ActivityUtils.changeFragment(manager, fragBaofeiCount,fragments.get(showId));
+                        if(fragments.contains(ScrapCountFragment)){
+                            ActivityUtils.changeFragment(manager, ScrapCountFragment,fragments.get(showId));
                             for(int i=0;i<fragments.size();i++){
-                                if(fragments.get(i)==fragBaofeiCount){
+                                if(fragments.get(i)== ScrapCountFragment){
                                     showId=i;
                                 }
                             }
                         }else {
-                            fragBaofeiCount=new fragBaofeiCount();
+                            ScrapCountFragment =new ScrapCountFragment();
                             showId=fragments.size();
-                            fragments.add(fragments.size(),fragBaofeiCount);
-                            ActivityUtils.addFragmentToActivity(manager,fragBaofeiCount,R.id.frame);
+                            fragments.add(fragments.size(), ScrapCountFragment);
+                            ActivityUtils.addFragmentToActivity(manager, ScrapCountFragment,R.id.frame);
                         }
+                        toolBar.setTitle("报废统计");
                         break;
                     case R.id.notice:
-                        if(fragments.contains(fragNotice)){
-                            ActivityUtils.changeFragment(manager, fragNotice,fragments.get(showId));
+                        if(fragments.contains(NoticeFragment)){
+                            ActivityUtils.changeFragment(manager, NoticeFragment,fragments.get(showId));
                             for(int i=0;i<fragments.size();i++){
-                                if(fragments.get(i)==fragNotice){
+                                if(fragments.get(i)== NoticeFragment){
                                     showId=i;
                                 }
                             }
                         }else {
-                            fragNotice=new fragNotice();
+                            NoticeFragment =new NoticeFragment();
                             showId=fragments.size();
-                            fragments.add(fragments.size(),fragNotice);
-                            ActivityUtils.addFragmentToActivity(manager,fragNotice,R.id.frame);
+                            fragments.add(fragments.size(), NoticeFragment);
+                            ActivityUtils.addFragmentToActivity(manager, NoticeFragment,R.id.frame);
                         }
+                        toolBar.setTitle("公告");
                         break;
                 }
                 item.setChecked(true);
@@ -315,7 +319,7 @@ public class MainActivity extends BaseActivity {
         @Override
         public void onNext(String s) {
             progressDialog.dismiss();
-            dialogHolder.yujing.setText(s);
+            dialogHolder.warning.setText(s);
             Adialog.show();
         }
     };
@@ -325,7 +329,7 @@ public class MainActivity extends BaseActivity {
         progressDialog.show();
         ApiWrapper<ServerAPI> network = new ApiWrapper<>();
         subscription = network.targetClass(ServerAPI.class).
-                getAPI().getyujing()
+                getAPI().getWarning()
                 .compose(network.<String>applySchedulers())
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
@@ -333,8 +337,8 @@ public class MainActivity extends BaseActivity {
     }
 
     class DialogHolder {
-        @BindView(R.id.yujing)
-        TextView yujing;
+        @BindView(R.id.warning)
+        TextView warning;
         @BindView(R.id.no_prompt)
         CheckBox noPrompt;
 

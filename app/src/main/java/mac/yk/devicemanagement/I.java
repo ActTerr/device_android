@@ -33,31 +33,27 @@ public interface I {
     }
     interface REQUEST{
         String CHECK_BATTERY="checkBattery";
-        String UPLOADUNCAUGHT="uploadUncaught";
+        String UPLOAD_UNCAUGHT="uploadUncaught";
         String PATH="Server?request=";
-        String PARAM="request";
-        String DOWNWEIXIU="downloadWeiXiu";
-        String DOWNXUNJIAN="downloadXunJian";
-        String YUJING="yujing";
-        String TONGJI="tongji";
-        String CHAXUN="chaxun";
+        String DOWN_SERVICE="downloadService";
+        String DOWN_CHECK="downloadCheck";
+        String WARING="waring";
+        String GET_TOTAL_COUNT="getTotalCount";
+        String FIND="find";
         String CONTROL="control";
         String SAVE="save";
         String LOGOUT="logOut";
         String SERVER_ROOT="http://192.168.0.2:8080/deviceManagement/";
-        String XUNJIAN="xunjian";
-        String XIUJUN="xiujun";
+        String CHECK="check";
+        String REPAIR="repair";
         String LOGIN="login";
-        String BAOFEI="baofei";
-        String DOWNDEVICE="downDevice";
-        String DOWNSCRAP="downScrap";
-        String YONGHOU="yonghou";
-        String DOWNPIC="downPic";
-        String GETPICCOUNT="getPicCount";
-        String GETCOUNT="getCount";
-        String CONTROL_D="controlD";
+        String SCRAP="scrap";
+        String DOWN_SCRAP="downScrap";
+        String DOWN_PIC="downPic";
+        String GET_PIC_COUNT="getPicCount";
+        String CONTROL_BAT="controlBat";
         String GET_STATUS_COUNT="getStatusCount";
-        String GET_BAOFEI_COUNT="getBaofeiCount";
+        String GET_SCRAP_COUNT="getScrapCount";
         String GET_SERVICE_COUNT="getServiceCount";
         String GET_NOTICE="getNotice";
         String DELETE_NOTICE="deleteNotice";
@@ -67,26 +63,16 @@ public interface I {
         String ADD_ATTACHMENT="addAttachment";
         String UPDATE_ATTACHMENT="updateAttachment";
         String DOWNLOAD_FILE="downFile";
-        String UPLOAD_FILE="uploadFile";
         String GET_DEVICE_RESUME="getDeviceResume";
-        String DAIYONG="daiyong";
+        String INACTIVE="inactive";
     }
-    interface CONTROL_D{
+    interface CONTROL_BAT{
         String CONTROL_TYPE="control_type";
-        String SHIYONG="shiyong";
-        String D_DAIYONG="Ddaiyong";
-        String CHONGDIAN="chongdian";
+        String USING="using";
+        String BAT_INACTIVE="bat_inactive";
+        String CHARGE="charging";
     }
-    interface BAOFEI{
-        String TYPE="TYPE";
-        String TABLENAME="BAOFEI";
-        String DID="DID";
-        String DNAME="DNAME";
-        String REMARK="REMARK";
-        String USER="BF_USER";
-        String DATE="BF_DATE";
-        String STATION="STATION";
-    }
+
     interface PIC{
         String AVATAR_SUFFIX_JPG="JPG";
         String DEVICE="DeviceOld";
@@ -102,20 +88,12 @@ public interface I {
     }
     interface CONTROL{
         int START=0;
-        int BEIYONG=1;
-        int DAIYONG=2;
-        int YUNXING=3;
-        int WEIXIU=4;
-        int XIUJUN=5;
-        int XUNJIAN=6;
-        int BAOFEI=7;
-        int YONGHOU=8;
     }
     interface DNAME{
-        int DIANTAI=1;
-        int JIKONGQI=2;
-        int QUKONGQI=3;
-        int DIANCHI=4;
+        int TRANSCEIVER=1;
+        int MACHINE_CONTROLLER=2;
+        int ZONE_CONTROLLER=3;
+        int BATTERY=4;
     }
     interface DOWNLOAD{
         String PAGE="page";
@@ -132,25 +110,38 @@ public interface I {
         String AUTHORITY="AUTHORITY";
     }
 
-    interface WEIXIU{
-        String ID="ID";
-        String TABLENAME="WEIXIU";
-        String WXDATE="WX_DATE";
+
+    interface SCRAP{
+        String TYPE="TYPE";
+        String TABLENAME="SCRAP";
         String DID="DID";
-        String USER="WX_USER";
-        String TRANSLATE="ISTRANSLATE";
+        String DNAME="DNAME";
         String REMARK="REMARK";
-        String XJDATE="XJ_DATE";
+        String USER="USER";
+        String DATE="DATE";
+        String STATION="STATION";
+    }
+    interface SERVICE{
+        String ID="ID";
+        String TABLENAME="SERVICE";
+        String SERVICE_DATE="SERVICE_DATE";
+        String DID="DID";
+        String USER="USER";
+        String TRANSLATE="TRANSLATE";
+        String REMARK="REMARK";
+        String REPAIR_DATE="REPAIR_DATE";
         String TYPE="WX_TYPE";
     }
-    interface XUNJIAN{
-        String TABLENAME="XUNJIAN";
-        String DATE="XJ_DATE";
+    interface CHECK{
+        String TABLENAME="CHECK";
+        String DATE="DATE";
         String STATUS="STATUS";
         String REMARK="REMARK";
-        String USER="XJ_USER";
+        String USER="USER";
         String DID="DID";
     }
+
+
     interface GESTURE{
         int MANUAL=1;
         int AUTO=2;
@@ -187,6 +178,7 @@ public interface I {
         String DATE_UN_USE="DATE_UN_USE";
         String DATE_IN_CHECK="DATE_IN_CHECK";
         String USE_DURATION="USE_DURATION";
+        String SERVICE_STATION="SERVICE_STATION";
     }
     interface BATTERY{
         String TABLENAME="BATTERY";
@@ -220,9 +212,9 @@ public interface I {
         String TABLENAME="FILE";
         String AID="Aid";
         String TOOLSIZE="toolSize";
-        String COMPLETEDSIZE="completedSize";
+        String COMPLETED_SIZE="completedSize";
         String URL="url";
-        String DIRPATH="DirPath";
+        String DIR_PATH="DirPath";
         String FILENAME="fileName";
         String STATUS="downloadStatus";
         String NID="Nid";

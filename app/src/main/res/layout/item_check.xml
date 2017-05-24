@@ -1,107 +1,112 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical" android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="#00000000">
+    android:layout_height="wrap_content"
+    android:background="#00000000"
+    >
     <LinearLayout
-        android:layout_marginTop="6dp"
-        android:layout_marginLeft="12dp"
+        android:layout_marginTop="5dp"
         android:orientation="horizontal"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
         <LinearLayout
             android:layout_weight="1"
+            android:padding="2dp"
+            android:layout_marginLeft="10dp"
+            android:orientation="horizontal"
             android:layout_width="0dp"
             android:layout_height="wrap_content">
             <TextView
                 android:textColor="@color/white"
-                android:text="设备ID:"
+                android:textSize="13sp"
+                android:text="巡检日期:"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content" />
             <TextView
                 android:textColor="@color/white"
-                android:id="@+id/Did"
+                android:id="@+id/checkDate"
+                android:textSize="13sp"
+                android:text=""
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content" />
         </LinearLayout>
         <LinearLayout
             android:layout_weight="1"
+            android:padding="2dp"
+            android:layout_marginLeft="10dp"
+            android:orientation="horizontal"
             android:layout_width="0dp"
             android:layout_height="wrap_content">
             <TextView
                 android:textColor="@color/white"
-                android:text="设备名称:"
+                android:textSize="13sp"
+                android:text="设备状况:"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content" />
             <TextView
                 android:textColor="@color/white"
-                android:id="@+id/devName"
+                android:id="@+id/status"
+                android:textSize="13sp"
+                android:text=""
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content" />
         </LinearLayout>
     </LinearLayout>
 
     <LinearLayout
-        android:layout_marginLeft="12dp"
         android:orientation="horizontal"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
         <LinearLayout
-
             android:layout_weight="1"
+            android:padding="2dp"
+            android:layout_marginLeft="10dp"
+            android:orientation="horizontal"
             android:layout_width="0dp"
             android:layout_height="wrap_content">
             <TextView
                 android:textColor="@color/white"
-                android:text="操作人员:"
+                android:textSize="13sp"
+                android:text="巡检人员:"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content" />
             <TextView
+                android:textColor="@color/white"
                 android:id="@+id/user"
-                android:textColor="@color/white"
+                android:textSize="13sp"
+                android:text=""
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content" />
         </LinearLayout>
         <LinearLayout
             android:layout_weight="1"
+            android:padding="2dp"
+            android:layout_marginLeft="10dp"
+            android:orientation="horizontal"
             android:layout_width="0dp"
             android:layout_height="wrap_content">
             <TextView
                 android:textColor="@color/white"
-                android:text="报废日期:"
+                android:textSize="13sp"
+                android:text="设备问题:"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content" />
             <TextView
-                android:id="@+id/ScrapDate"
                 android:textColor="@color/white"
+                android:id="@+id/cause"
+                android:textSize="13sp"
+                android:text=""
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content" />
         </LinearLayout>
-    </LinearLayout>
-    <LinearLayout
-        android:layout_marginLeft="12dp"
-        android:layout_marginRight="15dp"
-        android:orientation="horizontal"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-        <TextView
-            android:textColor="@color/white"
-            android:text="报废说明:"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
-        <TextView
-            android:textColor="@color/white"
-            android:id="@+id/remark"
-            android:text="afa"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
     </LinearLayout>
     <View
+        android:textColor="@color/white"
         android:layout_marginTop="3dp"
-        android:layout_marginLeft="12dp"
+        android:layout_marginLeft="10dp"
         android:layout_width="match_parent"
         android:layout_height="1dp"
-        android:background="@color/white"
+        android:background="@color/gray"
         android:layout_marginRight="15dp"
         />
 </LinearLayout>

@@ -41,8 +41,8 @@ public class BatteryAdapter extends RecyclerView.Adapter<BatteryAdapter.BatteryV
         holder.position.setText(position+".");
         holder.batteryType.setText(battery.getType());
         holder.theory.setText((int) (battery.getTheory_duration()/hour)+"小时");
-        long usedduration=System.currentTimeMillis()-battery.getStart_time()+battery.getUsed_duration();
-        holder.usedTime.setText((int) (usedduration/hour)+"小时");
+        long usedDuration=System.currentTimeMillis()-battery.getStart_time()+battery.getUsed_duration();
+        holder.usedTime.setText((int) (usedDuration/hour)+"小时");
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

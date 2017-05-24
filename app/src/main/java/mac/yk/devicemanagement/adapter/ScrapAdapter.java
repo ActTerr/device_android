@@ -40,7 +40,7 @@ public class ScrapAdapter extends RecyclerView.Adapter {
         if (scrap!=null){
             ScrapHolder scrapHolder= (ScrapHolder) holder;
             scrapHolder.Did.setText(String.valueOf(scrap.getDid()));
-            scrapHolder.Dname.setText(ConvertUtils.getDname(scrap.getDname()));
+            scrapHolder.devName.setText(ConvertUtils.getdevName(scrap.getdevName()));
             scrapHolder.user.setText(scrap.getUser());
             scrapHolder.ScrapDate.setText(ConvertUtils.Date2String(scrap.getScrapDate()));
             scrapHolder.remark.setText(scrap.getRemark());
@@ -75,8 +75,8 @@ public class ScrapAdapter extends RecyclerView.Adapter {
     class ScrapHolder extends RecyclerView.ViewHolder {
         @BindView(R.id.Did)
         TextView Did;
-        @BindView(R.id.Dname)
-        TextView Dname;
+        @BindView(R.id.devName)
+        TextView devName;
         @BindView(R.id.user)
         TextView user;
         @BindView(R.id.ScrapDate)

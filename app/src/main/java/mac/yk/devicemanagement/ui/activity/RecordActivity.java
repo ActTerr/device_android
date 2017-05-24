@@ -23,14 +23,14 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import mac.yk.devicemanagement.MyMemory;
 import mac.yk.devicemanagement.R;
-import mac.yk.devicemanagement.ui.fragment.fragRecord;
+import mac.yk.devicemanagement.ui.fragment.RecordFragment;
 import mac.yk.devicemanagement.util.ActivityUtils;
 import mac.yk.devicemanagement.util.L;
 import mac.yk.devicemanagement.util.MFGT;
 
 public class RecordActivity extends BaseActivity {
 
-    fragRecord weixiuFragment,xunjianFragment;
+    RecordFragment serviceFragment,checkFragment;
 
     @BindView(R.id.toolBar)
     Toolbar toolBar;
@@ -40,7 +40,7 @@ public class RecordActivity extends BaseActivity {
     DrawerLayout drawLayout;
     Context context;
     String Did;
-    boolean isWeixiu=true;
+    boolean isService=true;
     @BindView(R.id.netView)
     TextView mTv;
     @Override
@@ -57,16 +57,16 @@ public class RecordActivity extends BaseActivity {
             MFGT.finish((Activity) context);
         } else {
             init();
-            weixiuFragment = (fragRecord) getSupportFragmentManager().findFragmentById(R.id.frame);
+            serviceFragment = (RecordFragment) getSupportFragmentManager().findFragmentById(R.id.frame);
             Bundle bundle1 = new Bundle();
             bundle1.putString("id", Did); 
             bundle1.putBoolean("flag", true);
-            if (weixiuFragment==null){
+            if (serviceFragment==null){
                 Log.e("main","fragment从空被赋值");
-                weixiuFragment=new fragRecord();
+                serviceFragment=new RecordFragment();
             }
-            weixiuFragment.setArguments(bundle1);
-            ActivityUtils.addFragmentToActivity(getSupportFragmentManager(),weixiuFragment,R.id.frame);
+            serviceFragment.setArguments(bundle1);
+            ActivityUtils.addFragmentToActivity(getSupportFragmentManager(),serviceFragment,R.id.frame);
 
 
 
@@ -106,29 +106,29 @@ public class RecordActivity extends BaseActivity {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
                 switch (item.getItemId()){
-                    case R.id.weixiu:
-                        if (!isWeixiu){
-                            ActivityUtils.changeFragment(getSupportFragmentManager(),weixiuFragment,xunjianFragment);
-                            isWeixiu=true;
+                    case R.id.service:
+                        if (!isService){
+                            ActivityUtils.changeFragment(getSupportFragmentManager(),serviceFragment,checkFragment);
+                            isService=true;
                             toolBar.setTitle("维修记录");
 
                         }
                         break;
-                    case R.id.xunjian:
-//                        xunjianFragment= (fragRecord) getSupportFragmentManager().findFragmentById(R.id.frame);
-                        if(!getSupportFragmentManager().getFragments().contains(xunjianFragment)){
+                    case R.id.check:
+//                        checkFragment= (RecordFragment) getSupportFragmentManager().findFragmentById(R.id.frame);
+                        if(!getSupportFragmentManager().getFragments().contains(checkFragment)){
                             Bundle bundle2 = new Bundle();
                             bundle2.putString("id", String.valueOf(Did));
                             bundle2.putBoolean("flag", false);
-                            if (xunjianFragment==null){
-                                xunjianFragment=new fragRecord();
+                            if (checkFragment==null){
+                                checkFragment=new RecordFragment();
                             }
-                            xunjianFragment.setArguments(bundle2);
-                            ActivityUtils.addFragmentToActivity(getSupportFragmentManager(), xunjianFragment, R.id.frame);
+                            checkFragment.setArguments(bundle2);
+                            ActivityUtils.addFragmentToActivity(getSupportFragmentManager(), checkFragment, R.id.frame);
                         }
-                        if (isWeixiu){
-                            ActivityUtils.changeFragment(getSupportFragmentManager(),xunjianFragment,weixiuFragment);
-                            isWeixiu=false;
+                        if (isService){
+                            ActivityUtils.changeFragment(getSupportFragmentManager(),checkFragment,serviceFragment);
+                            isService=false;
                             toolBar.setTitle("巡检记录");
                         }
                         break;

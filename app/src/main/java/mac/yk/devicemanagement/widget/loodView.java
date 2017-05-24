@@ -97,13 +97,13 @@ public class loodView extends FrameLayout {
     View vDot7;
 
 
-    int Dname;
+    int devName;
     private ScheduledExecutorService scheduledExecutorService;
 
     public loodView(@NonNull Context context, @Nullable AttributeSet attrs, @AttrRes int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         this.context = context;
-        Dname= ConvertUtils.getDname(MyMemory.getInstance().getData()[2]);
+        devName= ConvertUtils.getdevName(MyMemory.getInstance().getData()[2]);
         initCount();
     }
     public loodView(Context context) {
@@ -117,7 +117,7 @@ public class loodView extends FrameLayout {
     }
     private void initCount() {
         ApiWrapper<ServerAPI> wrapper = new ApiWrapper<>();
-        subscription = wrapper.targetClass(ServerAPI.class).getAPI().getPicCount(Dname, I.PIC.DEVICE)
+        subscription = wrapper.targetClass(ServerAPI.class).getAPI().getPicCount(devName, I.PIC.DEVICE)
                 .compose(wrapper.<Integer>applySchedulers())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(AndroidSchedulers.mainThread())
@@ -183,8 +183,8 @@ public class loodView extends FrameLayout {
         initIndicator();
         for (int i = 0; i < count; i++) {
 
-            String imagesUrl = I.REQUEST.SERVER_ROOT + I.REQUEST.PATH + "?request=" + I.REQUEST.DOWNPIC + "&" + I.DEVICE2.CATEGROY+ "=" +
-                    Dname + "&" + I.PIC.PID + "=" + i + "&" + I.PIC.TYPE + "=" + I.PIC.DEVICE;
+            String imagesUrl = I.REQUEST.SERVER_ROOT + I.REQUEST.PATH + "?request=" + I.REQUEST.DOWN_PIC + "&" + I.DEVICE2.CATEGROY+ "=" +
+                    devName + "&" + I.PIC.PID + "=" + i + "&" + I.PIC.TYPE + "=" + I.PIC.DEVICE;
             L.e("TAG", imagesUrl);
             Uri uri = Uri.parse(imagesUrl);
             //facebook的View控件

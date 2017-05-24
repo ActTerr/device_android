@@ -21,10 +21,10 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import mac.yk.devicemanagement.R;
-import mac.yk.devicemanagement.adapter.VPAdapter;
+import mac.yk.devicemanagement.adapter.ViewPagerAdapter;
 import mac.yk.devicemanagement.bean.Notice;
-import mac.yk.devicemanagement.ui.fragment.fragAttachment;
-import mac.yk.devicemanagement.ui.fragment.fragNoticeDetail;
+import mac.yk.devicemanagement.ui.fragment.AttachmentFragment;
+import mac.yk.devicemanagement.ui.fragment.NoticeDetailFragment;
 
 /**
  * Created by mac-yk on 2017/5/9.
@@ -37,7 +37,7 @@ public class NoticeDetailActivity extends BaseActivity {
     @BindView(R.id.viewPager)
     ViewPager viewPager;
 
-    VPAdapter vpAdapter;
+    ViewPagerAdapter viewPagerAdapter;
     @BindView(R.id.checkll)
     LinearLayout checkll;
     public Handler handler;
@@ -67,31 +67,31 @@ public class NoticeDetailActivity extends BaseActivity {
     }
 
     private void init() {
-        vpAdapter = new VPAdapter(getSupportFragmentManager());
+        viewPagerAdapter = new ViewPagerAdapter(getSupportFragmentManager());
         Notice notice = (Notice) getIntent().getSerializableExtra("notice");
         if (notice==null){
 
         }
         boolean isEdit = getIntent().getBooleanExtra("isEdit", false);
 
-        fragNoticeDetail fragNoticeDetail = new fragNoticeDetail();
+        NoticeDetailFragment NoticeDetailFragment = new NoticeDetailFragment();
         Bundle bundle = new Bundle();
         bundle.putSerializable("notice", notice);
         bundle.putBoolean("isEdit", isEdit);
-        fragNoticeDetail.setArguments(bundle);
-        vpAdapter.addFragment(fragNoticeDetail, "公告");
+        NoticeDetailFragment.setArguments(bundle);
+        viewPagerAdapter.addFragment(NoticeDetailFragment, "公告");
 
         Bundle bundle2 = new Bundle();
         if (notice != null) {
             bundle2.putLong("Nid", notice.getNid());
-            fragAttachment fragAttachment = new fragAttachment();
-            fragAttachment.setArguments(bundle2);
-            vpAdapter.addFragment(fragAttachment, "附件");
+            AttachmentFragment AttachmentFragment = new AttachmentFragment();
+            AttachmentFragment.setArguments(bundle2);
+            viewPagerAdapter.addFragment(AttachmentFragment, "附件");
         }else {
             itemAttachment.setVisibility(View.GONE);
         }
 
-        viewPager.setAdapter(vpAdapter);
+        viewPager.setAdapter(viewPagerAdapter);
     }
 
 
@@ -100,6 +100,7 @@ public class NoticeDetailActivity extends BaseActivity {
         switch (view.getId()) {
             case R.id.item_notice:
                 viewPager.setCurrentItem(0);
+
                 break;
             case R.id.item_attachment:
                 viewPager.setCurrentItem(1);

@@ -47,9 +47,9 @@ public class dbFile implements db{
                 .append(I.FILE.TABLENAME).append("(")
                 .append(I.FILE.AID).append(" LONG,")
                 .append(I.FILE.TOOLSIZE).append(" LONG,")
-                .append(I.FILE.COMPLETEDSIZE).append(" LONG,")
+                .append(I.FILE.COMPLETED_SIZE).append(" LONG,")
                 .append(I.FILE.FILENAME).append(" TEXT,")
-                .append(I.FILE.DIRPATH).append(" TEXT,")
+                .append(I.FILE.DIR_PATH).append(" TEXT,")
                 .append(I.FILE.STATUS).append(" INT,")
                 .append(I.FILE.NID).append(" TEXT)");
         db.execSQL(sb.toString());
@@ -69,11 +69,11 @@ public class dbFile implements db{
        if(cursor!=null){
          if(cursor.moveToNext()){
              fileEntry=new FileEntry();
-             fileEntry.setCompletedSize(cursor.getLong(cursor.getColumnIndex(I.FILE.COMPLETEDSIZE)));
+             fileEntry.setCompletedSize(cursor.getLong(cursor.getColumnIndex(I.FILE.COMPLETED_SIZE)));
              fileEntry.setAid(cursor.getLong(cursor.getColumnIndex(I.FILE.AID)));
              fileEntry.setDownloadStatus(cursor.getInt(cursor.getColumnIndex(I.FILE.STATUS)));
              fileEntry.setFileName(cursor.getString(cursor.getColumnIndex(I.FILE.FILENAME)));
-             fileEntry.setSaveDirPath(cursor.getString(cursor.getColumnIndex(I.FILE.DIRPATH)));
+             fileEntry.setSaveDirPath(cursor.getString(cursor.getColumnIndex(I.FILE.DIR_PATH)));
              fileEntry.setToolSize(cursor.getLong(cursor.getColumnIndex(I.FILE.TOOLSIZE)));
              fileEntry.setNid(cursor.getLong(cursor.getColumnIndex(I.FILE.NID)));
              L.e(TAG,"查询创建完成！");
@@ -88,11 +88,11 @@ public class dbFile implements db{
         ContentValues contentValues=new ContentValues();
         contentValues.put(I.FILE.AID,fileEntry.getAid());
         contentValues.put(I.FILE.TOOLSIZE,fileEntry.getToolSize());
-        contentValues.put(I.FILE.COMPLETEDSIZE,fileEntry.getCompletedSize());
+        contentValues.put(I.FILE.COMPLETED_SIZE,fileEntry.getCompletedSize());
         contentValues.put(I.FILE.FILENAME,fileEntry.getFileName());
         contentValues.put(I.FILE.STATUS,fileEntry.getDownloadStatus());
         contentValues.put(I.FILE.NID,fileEntry.getNid());
-        contentValues.put(I.FILE.DIRPATH,fileEntry.getSaveDirPath());
+        contentValues.put(I.FILE.DIR_PATH,fileEntry.getSaveDirPath());
         if (db.isOpen()){
           return   db.insert(I.FILE.TABLENAME,null,contentValues)!=-1;
         }else {

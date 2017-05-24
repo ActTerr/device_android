@@ -22,10 +22,10 @@ public class Scrap {
 	public void setDid(int did) {
 		this.did = did;
 	}
-	public int getDname() {
+	public int getdevName() {
 		return dname;
 	}
-	public void setDname(int dname) {
+	public void setdevName(int dname) {
 		this.dname = dname;
 	}
 	public String getUser() {

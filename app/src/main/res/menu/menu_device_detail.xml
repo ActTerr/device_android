@@ -1,21 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <item android:id="@+id/beiyong"
-        android:icon="@drawable/beiyong"
+    <item android:id="@+id/spare"
+        android:icon="@drawable/spare"
         android:title="备用"/>
     <item
-        android:id="@+id/daiyong"
-        android:icon="@drawable/daiyong"
+        android:id="@+id/inactive"
+        android:icon="@drawable/inactive"
         android:title="待用" />
     <item
         android:icon="@drawable/using"
-        android:id="@+id/yunxing"
+        android:id="@+id/function"
         android:title="运行" />
 
 
-    <item android:title="报废"
-        android:id="@+id/baofei"
+    <item
+        android:icon="@drawable/scrap"
+        android:title="报废"
+        android:id="@+id/scrap"
         />
     <item
         android:icon="@drawable/record"

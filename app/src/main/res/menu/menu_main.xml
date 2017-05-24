@@ -5,12 +5,12 @@
         android:icon="@drawable/device"
         android:title="设备统计"/>
     <item android:id="@+id/bf_tongji"
-        android:icon="@drawable/baofei"
+        android:icon="@drawable/scrap"
         android:title="报废统计"/>
     <item android:id="@+id/notice"
         android:title="公告信息"/>
     <item android:id="@+id/yujing"
-        android:icon="@drawable/yujing"
+        android:icon="@drawable/warning"
         android:title="预警信息"/>
     
 </menu>

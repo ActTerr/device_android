@@ -86,7 +86,7 @@ public class BatteryService extends IntentService {
                                 Notification notification = new NotificationCompat.Builder(context)
                                         .setContentTitle("电池超时提醒！")
                                         .setContentText("有" + batteries.size() + "个电池已超时，快去充电！")
-                                        .setSmallIcon(R.drawable.yujing)
+                                        .setSmallIcon(R.drawable.warning)
                                         .setContentIntent(pendingIntent)
                                         .build();
                                 notification.flags |= Notification.FLAG_AUTO_CANCEL;

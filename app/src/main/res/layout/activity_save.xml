@@ -104,7 +104,7 @@
             android:textColorHint="@color/white"
             android:layout_gravity="center_vertical"
             android:layout_weight="1"
-            android:id="@+id/xunjian"
+            android:id="@+id/check"
             android:hint="请选择巡检日期"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />

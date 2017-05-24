@@ -21,7 +21,7 @@ public class MyMemory {
         }
         return instance;
     }
-    private   boolean isDianchi;
+    private   boolean isBattery;
 
     private Status status;
 
@@ -55,10 +55,10 @@ public class MyMemory {
 
 
     public  void setFlag(boolean b) {
-        isDianchi=b;
+        isBattery=b;
     }
     public  boolean getFlag(){
-        return isDianchi;
+        return isBattery;
     }
 
     static ArrayList<Activity> activities=new ArrayList<>();

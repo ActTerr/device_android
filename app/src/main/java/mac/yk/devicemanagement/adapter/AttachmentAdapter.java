@@ -227,7 +227,7 @@ public class AttachmentAdapter extends RecyclerView.Adapter<AttachmentAdapter.At
     private void showSelectPopuWindow(ImageView iv, FileEntry entry, AttachmentViewHolder holder) {
         int width = ConvertUtils.dp2px(context, 150);
         int height = ConvertUtils.dp2px(context, 100);
-        View view = LayoutInflater.from(context).inflate(R.layout.item_popu_file, null);
+        View view = LayoutInflater.from(context).inflate(R.layout.popu_file, null);
         popupWindow = new PopupWindow(view, width, height);
 //        View view = View.inflate(context, R.layout.item_popu_file, null);
         popupWindow.setOutsideTouchable(true);
@@ -337,9 +337,11 @@ public class AttachmentAdapter extends RecyclerView.Adapter<AttachmentAdapter.At
         if (memoryHolder != null) {
             memoryHolder.pb.setProgress(i);
         } else {
-            firstHolder.pb.setVisibility(View.VISIBLE);
-            firstHolder.control.setVisibility(View.VISIBLE);
-            firstHolder.pb.setProgress(i);
+            if (firstHolder==null){
+                firstHolder.pb.setVisibility(View.VISIBLE);
+                firstHolder.control.setVisibility(View.VISIBLE);
+                firstHolder.pb.setProgress(i);
+            }
         }
     }
 

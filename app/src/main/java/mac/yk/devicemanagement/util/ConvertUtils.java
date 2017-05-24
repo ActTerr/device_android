@@ -57,15 +57,15 @@ public class ConvertUtils {
         return "";
     }
 
-    public static String getDname(int Dname) {
-        switch (Dname) {
-            case I.DNAME.DIANCHI:
+    public static String getdevName(int devName) {
+        switch (devName) {
+            case I.DNAME.BATTERY:
                 return "电池";
-            case I.DNAME.DIANTAI:
+            case I.DNAME.TRANSCEIVER:
                 return "电台";
-            case I.DNAME.JIKONGQI:
+            case I.DNAME.MACHINE_CONTROLLER:
                 return "机控器";
-            case I.DNAME.QUKONGQI:
+            case I.DNAME.ZONE_CONTROLLER:
                 return "区控器";
         }
         return null;
@@ -74,70 +74,24 @@ public class ConvertUtils {
     /**
      * 待完善
      *
-     * @param Dname
+     * @param devName
      * @return
      */
-    public static int getDname(String Dname) {
-        switch (Dname) {
+    public static int getdevName(String devName) {
+        switch (devName) {
             case "电池":
-                return I.DNAME.DIANCHI;
+                return I.DNAME.BATTERY;
             case "手持台":
-                return I.DNAME.DIANTAI;
+                return I.DNAME.TRANSCEIVER;
             case "机控器":
-                return I.DNAME.JIKONGQI;
+                return I.DNAME.MACHINE_CONTROLLER;
             case "区控器":
-                return I.DNAME.QUKONGQI;
+                return I.DNAME.ZONE_CONTROLLER;
         }
         return 0;
     }
 
-    public static String getStatus(boolean isDianchi, int status) {
-        switch (status) {
-            case I.CONTROL.BAOFEI:
-                return "报废";
-            case I.CONTROL.BEIYONG:
-                return "备用";
-            case I.CONTROL.DAIYONG:
-                return "待用";
-            case I.CONTROL.WEIXIU:
-                if (isDianchi) {
-                    return "充电";
-                }
-                return "维修";
-            case I.CONTROL.YUNXING:
-                return "运行";
-            case I.CONTROL.YONGHOU:
-                return "用后";
-        }
-        return null;
-    }
 
-    public static int getStatus(String status) {
-        switch (status) {
-            case "报废":
-                return I.CONTROL.BAOFEI;
-            case "备用":
-                return I.CONTROL.BEIYONG;
-            case "待用":
-                return I.CONTROL.DAIYONG;
-            case "维修":
-            case "充电":
-                return I.CONTROL.WEIXIU;
-            case "用后":
-                return I.CONTROL.YONGHOU;
-            case "运行":
-                return I.CONTROL.YUNXING;
-        }
-        return 0;
-    }
-
-    public static String getXunjianStatus(int i) {
-        if (i == 0) {
-            return "异常";
-        } else {
-            return "良好";
-        }
-    }
 
     public static String getUnitName(int i) {
         switch (i) {

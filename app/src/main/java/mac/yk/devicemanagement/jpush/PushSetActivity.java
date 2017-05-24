@@ -38,7 +38,7 @@ public class PushSetActivity extends InstrumentedActivity implements OnClickList
 	@Override
 	public void onCreate(Bundle icicle) {
 		super.onCreate(icicle);
-		setContentView(R.layout.push_set_dialog);
+		setContentView(R.layout.dialog_push_set);
 		init();
 		initListener();
 	}

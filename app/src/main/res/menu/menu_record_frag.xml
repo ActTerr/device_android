@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
-    <item android:id="@+id/weixiu"
-        android:icon="@drawable/weixiu"
+    <item android:id="@+id/service"
+        android:icon="@drawable/service"
         android:title="维修记录"/>
-    <item android:id="@+id/xunjian"
-        android:icon="@drawable/xunjianrecord"
+    <item android:id="@+id/check"
+        android:icon="@drawable/check_record"
         android:title="巡检记录"/>
 </menu>
