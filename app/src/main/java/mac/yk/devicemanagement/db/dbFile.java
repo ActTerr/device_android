@@ -16,7 +16,7 @@ import static android.content.ContentValues.TAG;
  * Created by mac-yk on 2017/5/12.
  */
 
-public class dbFile implements db{
+public class dbFile implements db,IdbFileEntry {
     private  static dbFile instance;
     DBHelper dbHelper;
     public static dbFile getInstance(Context context){
@@ -55,7 +55,8 @@ public class dbFile implements db{
         db.execSQL(sb.toString());
     }
 
-    public FileEntry getFile(String name){
+    @Override
+    public FileEntry getFileEntry(String name){
         FileEntry fileEntry=null;
         SQLiteDatabase db=dbHelper.getReadableDatabase();
         String sql="SELECT * FROM "+I.FILE.TABLENAME+" where "+I.FILE.FILENAME+"=?";
@@ -83,7 +84,8 @@ public class dbFile implements db{
        return fileEntry;
     }
 
-    public boolean insertFile(FileEntry fileEntry){
+    @Override
+    public boolean insertFileEntry(FileEntry fileEntry){
         SQLiteDatabase db=dbHelper.getWritableDatabase();
         ContentValues contentValues=new ContentValues();
         contentValues.put(I.FILE.AID,fileEntry.getAid());
@@ -100,7 +102,33 @@ public class dbFile implements db{
         }
     }
 
-    public boolean deleteFile(String name){
+
+
+    @Override
+    public boolean updateFileStatus(String fileName,long completedSize,int status) {
+        SQLiteDatabase db=dbHelper.getWritableDatabase();
+        ContentValues contentValues=new ContentValues();
+        contentValues.put(I.FILE.COMPLETED_SIZE,completedSize);
+        contentValues.put(I.FILE.STATUS,status);
+        if (db.isOpen()){
+            return db.update(I.FILE.TABLENAME,contentValues,I.FILE.FILENAME,new String[]{fileName})==1;
+        }
+        return false;
+    }
+
+    @Override
+    public boolean updateFileName(String oldName, String newName) {
+        SQLiteDatabase db=dbHelper.getWritableDatabase();
+        ContentValues contentValues=new ContentValues();
+        contentValues.put(I.FILE.FILENAME,newName);
+        if (db.isOpen()){
+            return db.update(I.FILE.TABLENAME,contentValues,I.FILE.FILENAME,new String[]{oldName})==1;
+        }
+        return false;
+    }
+
+    @Override
+    public boolean deleteFileEntry(String name){
         SQLiteDatabase db=dbHelper.getWritableDatabase();
         return db.delete(I.FILE.TABLENAME,I.FILE.FILENAME+"=?",new String[]{name})==1;
     }

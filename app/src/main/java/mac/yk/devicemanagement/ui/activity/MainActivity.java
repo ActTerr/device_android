@@ -34,7 +34,7 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import cn.jpush.android.api.JPushInterface;
 import mac.yk.devicemanagement.I;
-import mac.yk.devicemanagement.MyMemory;
+import mac.yk.devicemanagement.application.MyMemory;
 import mac.yk.devicemanagement.R;
 import mac.yk.devicemanagement.bean.User;
 import mac.yk.devicemanagement.db.dbUser;

@@ -14,7 +14,7 @@ import mac.yk.devicemanagement.ui.activity.DeviceListActivity;
 import mac.yk.devicemanagement.ui.activity.GestureActivity;
 import mac.yk.devicemanagement.ui.activity.LoginActivity;
 import mac.yk.devicemanagement.ui.activity.MainActivity;
-import mac.yk.devicemanagement.ui.activity.NoticeDetailActivity;
+import mac.yk.devicemanagement.down.NoticeDetailActivity;
 import mac.yk.devicemanagement.ui.activity.RecordActivity;
 import mac.yk.devicemanagement.ui.activity.SaveActivity;
 import mac.yk.devicemanagement.ui.activity.UserActivity;

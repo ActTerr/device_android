@@ -21,7 +21,7 @@ import java.lang.reflect.Method;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import mac.yk.devicemanagement.MyMemory;
+import mac.yk.devicemanagement.application.MyMemory;
 import mac.yk.devicemanagement.R;
 import mac.yk.devicemanagement.ui.fragment.RecordFragment;
 import mac.yk.devicemanagement.util.ActivityUtils;

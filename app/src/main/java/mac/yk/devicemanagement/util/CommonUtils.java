@@ -18,7 +18,7 @@ import javax.mail.Session;
 import javax.mail.Transport;
 import javax.mail.internet.InternetAddress;
 
-import mac.yk.devicemanagement.MyApplication;
+import mac.yk.devicemanagement.application.MyApplication;
 
 /**
  * Created by mac-yk on 2017/3/21.

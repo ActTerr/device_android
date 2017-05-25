@@ -13,7 +13,7 @@ import java.util.ArrayList;
 import java.util.Observable;
 import java.util.Observer;
 
-import mac.yk.devicemanagement.MyMemory;
+import mac.yk.devicemanagement.application.MyMemory;
 import mac.yk.devicemanagement.R;
 import mac.yk.devicemanagement.receiver.NetBroadcastReceiver;
 import mac.yk.devicemanagement.util.NetUtil;

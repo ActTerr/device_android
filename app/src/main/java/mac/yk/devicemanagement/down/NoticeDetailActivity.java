@@ -1,4 +1,4 @@
-package mac.yk.devicemanagement.ui.activity;
+package mac.yk.devicemanagement.down;
 
 import android.content.Intent;
 import android.net.Uri;
@@ -23,8 +23,11 @@ import butterknife.OnClick;
 import mac.yk.devicemanagement.R;
 import mac.yk.devicemanagement.adapter.ViewPagerAdapter;
 import mac.yk.devicemanagement.bean.Notice;
-import mac.yk.devicemanagement.ui.fragment.AttachmentFragment;
+import mac.yk.devicemanagement.db.dbFile;
+import mac.yk.devicemanagement.net.downServer;
+import mac.yk.devicemanagement.ui.activity.BaseActivity;
 import mac.yk.devicemanagement.ui.fragment.NoticeDetailFragment;
+import mac.yk.devicemanagement.util.schedulers.SchedulerProvider;
 
 /**
  * Created by mac-yk on 2017/5/9.
@@ -46,6 +49,9 @@ public class NoticeDetailActivity extends BaseActivity {
     @BindView(R.id.item_attachment)
     TextView itemAttachment;
     String TAG="NoticeDetailActivity";
+    AttachmentFragment attachmentFragment;
+    downPresenter presenter;
+    long nid;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -62,8 +68,8 @@ public class NoticeDetailActivity extends BaseActivity {
                 }
             }
         };
-
-
+        presenter=new downPresenter(attachmentFragment,new downServer(), dbFile.getInstance(this)
+                ,SchedulerProvider.getInstance(),nid);
     }
 
     private void init() {
@@ -81,12 +87,10 @@ public class NoticeDetailActivity extends BaseActivity {
         NoticeDetailFragment.setArguments(bundle);
         viewPagerAdapter.addFragment(NoticeDetailFragment, "公告");
 
-        Bundle bundle2 = new Bundle();
         if (notice != null) {
-            bundle2.putLong("Nid", notice.getNid());
-            AttachmentFragment AttachmentFragment = new AttachmentFragment();
-            AttachmentFragment.setArguments(bundle2);
-            viewPagerAdapter.addFragment(AttachmentFragment, "附件");
+          attachmentFragment = new AttachmentFragment();
+            nid=notice.getNid();
+            viewPagerAdapter.addFragment(attachmentFragment, "附件");
         }else {
             itemAttachment.setVisibility(View.GONE);
         }

@@ -23,7 +23,7 @@ import java.util.Map;
 import java.util.concurrent.CountDownLatch;
 
 import mac.yk.devicemanagement.I;
-import mac.yk.devicemanagement.MyMemory;
+import mac.yk.devicemanagement.application.MyMemory;
 import mac.yk.devicemanagement.bean.Attachment;
 import mac.yk.devicemanagement.bean.FileEntry;
 import mac.yk.devicemanagement.bean.Result;

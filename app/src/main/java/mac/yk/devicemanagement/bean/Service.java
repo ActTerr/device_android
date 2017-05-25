@@ -57,7 +57,7 @@ public class Service implements Serializable{
     }
 
     public void setTranslate(boolean translate) {
-        translate = translate;
+        this.translate = translate;
     }
 
     @Override

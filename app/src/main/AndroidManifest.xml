@@ -71,7 +71,7 @@
                 <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />
             </intent-filter>
         </receiver>
-        <activity android:name=".ui.activity.NoticeDetailActivity"/>
+        <activity android:name=".down.NoticeDetailActivity"/>
 
         <provider
             android:name="com.ianhanniballake.localstorage.LocalStorageProvider"

@@ -1,4 +1,4 @@
-package mac.yk.devicemanagement;
+package mac.yk.devicemanagement.application;
 
 import android.app.Activity;
 

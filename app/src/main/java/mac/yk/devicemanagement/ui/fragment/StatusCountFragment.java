@@ -19,7 +19,7 @@ import java.util.concurrent.TimeUnit;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-import mac.yk.devicemanagement.MyMemory;
+import mac.yk.devicemanagement.application.MyMemory;
 import mac.yk.devicemanagement.R;
 import mac.yk.devicemanagement.adapter.FormStatusAdapter;
 import mac.yk.devicemanagement.net.ApiWrapper;
