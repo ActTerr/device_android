@@ -13,8 +13,6 @@ import android.widget.TextView;
 
 import com.ipaulpro.afilechooser.utils.FileUtils;
 
-import org.greenrobot.eventbus.EventBus;
-
 import java.io.File;
 
 import butterknife.BindView;
@@ -25,6 +23,7 @@ import mac.yk.devicemanagement.adapter.ViewPagerAdapter;
 import mac.yk.devicemanagement.bean.Notice;
 import mac.yk.devicemanagement.db.dbFile;
 import mac.yk.devicemanagement.net.downServer;
+import mac.yk.devicemanagement.service.down.FileService;
 import mac.yk.devicemanagement.ui.activity.BaseActivity;
 import mac.yk.devicemanagement.ui.fragment.NoticeDetailFragment;
 import mac.yk.devicemanagement.util.schedulers.SchedulerProvider;
@@ -52,6 +51,7 @@ public class NoticeDetailActivity extends BaseActivity {
     AttachmentFragment attachmentFragment;
     downPresenter presenter;
     long nid;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -68,8 +68,9 @@ public class NoticeDetailActivity extends BaseActivity {
                 }
             }
         };
+        FileService fileService=new FileService();
         presenter=new downPresenter(attachmentFragment,new downServer(), dbFile.getInstance(this)
-                ,SchedulerProvider.getInstance(),nid);
+                ,SchedulerProvider.getInstance(),nid,fileService);
     }
 
     private void init() {
@@ -116,16 +117,13 @@ public class NoticeDetailActivity extends BaseActivity {
         switch (requestCode) {
             case REQUEST_CHOOSER:
                 if (resultCode == RESULT_OK) {
-
                     final Uri uri = data.getData();
-
                     // Get the File path from the Uri
                     String path = FileUtils.getPath(this, uri);
-
                     // Alternatively, use FileUtils.getFile(Context, Uri)
                     if (path != null && FileUtils.isLocal(path)) {
                         File file = new File(path);
-                        EventBus.getDefault().post(file);
+                        presenter.uploadFile(file);
                     }
                 }
                 break;

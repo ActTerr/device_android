@@ -87,5 +87,14 @@
         android:layout_width="30dp"
         android:layout_height="30dp"
         android:src="@color/blue"/>
+    <TextView
+        android:padding="5dp"
+        android:layout_alignParentRight="true"
+        android:layout_below="@id/upload_time"
+        android:text="取消下载"
+        android:textColor="@color/white"
+        android:id="@+id/tv_cancel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
 
 </RelativeLayout>

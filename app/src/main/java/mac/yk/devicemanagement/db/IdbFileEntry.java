@@ -9,7 +9,8 @@ import mac.yk.devicemanagement.bean.FileEntry;
 public interface IdbFileEntry {
     boolean insertFileEntry(FileEntry fileEntry);
     boolean updateFileStatus(String fileName,long completedSize,int status);
-    boolean updateFileName(String oldName,String newName);
+    boolean updateFileName(String oldName,String newName,long updateTime);
+    boolean updateFileId(long oldId,long newId);
     FileEntry getFileEntry(String name);
     boolean deleteFileEntry(String name);
 }

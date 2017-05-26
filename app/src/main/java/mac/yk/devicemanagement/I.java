@@ -65,6 +65,7 @@ public interface I {
         String DOWNLOAD_FILE="downFile";
         String GET_DEVICE_RESUME="getDeviceResume";
         String INACTIVE="inactive";
+        String DELETE_FILE="deleteFile";
     }
     interface CONTROL_BAT{
         String CONTROL_TYPE="control_type";
@@ -221,9 +222,13 @@ public interface I {
     }
 
     interface DOWNLOAD_STATUS{
-        int NOT=0;
-        int DOWNLOADING=1;
-        int STOP=2;
-        int FINISH=3;
+        public static final int INIT = -1;
+        public static final int PREPARE = 0;
+        public static final int START = 1;
+        public static final int DOWNLOADING = 2;
+        public static final int CANCEL = 3;
+        public static final int ERROR = 4;
+        public static final int COMPLETED = 5;
+        public static final int PAUSE = 6;
     }
 }

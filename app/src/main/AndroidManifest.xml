@@ -99,8 +99,8 @@
                 <data android:mimeType="*/*" />
             </intent-filter>
         </activity>
-        <service android:name=".service.FileService"/>
-        <service android:name=".service.BatteryService"/>
+        <service android:name=".service.down.FileService"/>
+        <service android:name=".service.check.BatteryService"/>
         <activity android:name=".ui.activity.DeviceListActivity"/>
 
         <!--<service android:name=".service.BatteryService"-->

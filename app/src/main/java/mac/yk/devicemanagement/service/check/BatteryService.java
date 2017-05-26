@@ -1,4 +1,4 @@
-package mac.yk.devicemanagement.service;
+package mac.yk.devicemanagement.service.check;
 
 import android.app.AlarmManager;
 import android.app.IntentService;

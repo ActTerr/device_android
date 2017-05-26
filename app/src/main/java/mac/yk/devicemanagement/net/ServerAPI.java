@@ -140,6 +140,8 @@ public interface ServerAPI {
     @POST(I.REQUEST.PATH+I.REQUEST.DOWNLOAD_FILE)
     Call<ResponseBody> downloadFile(@Query(I.FILE.FILENAME) String name,@Query(I.FILE.COMPLETED_SIZE) long completed );
 
+    @GET(I.REQUEST.PATH+I.REQUEST.DELETE_FILE)
+    Observable<Result<String>> deleteFile(@Query(I.FILE.FILENAME) String fileName);
     
     @GET(I.REQUEST.PATH+I.REQUEST.CHECK_BATTERY)
     Observable<Result<ArrayList<Battery>>> checkBattery(@Query(I.BATTERY.UNIT_ID) String unit);

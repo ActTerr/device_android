@@ -117,15 +117,28 @@ public class dbFile implements db,IdbFileEntry {
     }
 
     @Override
-    public boolean updateFileName(String oldName, String newName) {
+    public boolean updateFileName(String oldName, String newName,long time) {
         SQLiteDatabase db=dbHelper.getWritableDatabase();
         ContentValues contentValues=new ContentValues();
         contentValues.put(I.FILE.FILENAME,newName);
+        contentValues.put(I.FILE.AID,time);
         if (db.isOpen()){
             return db.update(I.FILE.TABLENAME,contentValues,I.FILE.FILENAME,new String[]{oldName})==1;
         }
         return false;
     }
+
+    @Override
+    public boolean updateFileId(long oldId, long newId) {
+        SQLiteDatabase db=dbHelper.getWritableDatabase();
+        ContentValues contentValues=new ContentValues();
+        contentValues.put(I.FILE.AID,newId);
+        if (db.isOpen()){
+            return db.update(I.FILE.TABLENAME,contentValues,I.FILE.AID,new String[]{String.valueOf(oldId)})==1;
+        }
+        return false;
+    }
+
 
     @Override
     public boolean deleteFileEntry(String name){

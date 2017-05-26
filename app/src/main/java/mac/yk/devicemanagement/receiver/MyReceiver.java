@@ -5,7 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.widget.Toast;
 
-import mac.yk.devicemanagement.service.BatteryService;
+import mac.yk.devicemanagement.service.check.BatteryService;
 import mac.yk.devicemanagement.util.L;
 
 /**
