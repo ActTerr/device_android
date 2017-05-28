@@ -18,7 +18,7 @@
             android:layout_height="50dp" />
         <EditText
             android:background="@null"
-            android:paddingLeft="95dp"
+            android:layout_marginLeft="95dp"
             android:textColor="@color/white"
             android:textSize="20sp"
             android:id="@+id/attachment_name"
@@ -41,6 +41,7 @@
         style="?android:attr/progressBarStyleHorizontal"
         android:max="100"
         android:layout_marginLeft="40dp"
+        android:layout_marginRight="10dp"
         android:layout_below="@+id/upload_time"
         android:layout_width="250dp"
         android:layout_height="wrap_content"
@@ -79,19 +80,19 @@
         android:layout_width="25dp"
         android:layout_height="25dp" />
     <ImageView
-        android:id="@+id/control"
         android:visibility="gone"
-        android:layout_marginLeft="10dp"
+        android:id="@+id/iv_control"
         android:layout_toRightOf="@+id/pb"
         android:layout_below="@id/upload_time"
         android:layout_width="30dp"
         android:layout_height="30dp"
-        android:src="@color/blue"/>
+        android:src="@drawable/cancel"/>
     <TextView
+        android:visibility="gone"
         android:padding="5dp"
         android:layout_alignParentRight="true"
         android:layout_below="@id/upload_time"
-        android:text="取消下载"
+        android:text="取消"
         android:textColor="@color/white"
         android:id="@+id/tv_cancel"
         android:layout_width="wrap_content"

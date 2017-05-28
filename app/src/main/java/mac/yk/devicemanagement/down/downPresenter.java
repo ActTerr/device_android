@@ -18,6 +18,7 @@ import mac.yk.devicemanagement.db.IdbFileEntry;
 import mac.yk.devicemanagement.net.IDown;
 import mac.yk.devicemanagement.service.down.FileService;
 import mac.yk.devicemanagement.ui.holder.AttachmentViewHolder;
+import mac.yk.devicemanagement.util.L;
 import mac.yk.devicemanagement.util.OpenFileUtil;
 import mac.yk.devicemanagement.util.schedulers.BaseSchedulerProvider;
 import rx.Observable;
@@ -65,6 +66,7 @@ public class downPresenter implements downContract.Presenter{
         this.service=service;
         subscription=new CompositeSubscription();
         view.setPresenter(this);
+        service.setPresenter(this);
     }
 
     @Override
@@ -92,7 +94,7 @@ public class downPresenter implements downContract.Presenter{
                 }).map(new Func1<Attachment, FileEntry>() {
                     @Override
                     public FileEntry call(Attachment attachment) {
-                        return entry(attachment);
+                        return changeEntry(attachment);
                     }
                 })
                 .toList()
@@ -110,28 +112,40 @@ public class downPresenter implements downContract.Presenter{
 
                     @Override
                     public void onNext(List<FileEntry> fileEntries) {
-                        view.dismissProgressDialog();
-                        entries= (ArrayList<FileEntry>) fileEntries;
-                        sort();
-                        view.setEntries(entries);
-                        view.refreshView();
+                        showAttachments(fileEntries);
                     }
                 }));
+//                .subscribe(
+//                        // onNext
+//                        this::showAttachments,
+//                        // onError
+//                        throwable -> {view.dismissProgressDialog();
+//                                        view.toastException();}
+//                        ));
 
-
+    }
+    private void showAttachments(List<FileEntry> fileEntries){
+        view.dismissProgressDialog();
+        entries= (ArrayList<FileEntry>) fileEntries;
+        sort();
+        view.setEntries(entries);
+        view.refreshView();
     }
 
     /**
-     * 根据服务器获得列表，转换成entry实体，未下载就新建一个空的，最后按时间进行排序
+     * 根据服务器获得列表，转换成entry实体
+     * 必须统一路径
+     * 1.admin:如果空的，就New一个，
+     * 2.user:
      *
      */
-    private FileEntry entry(Attachment a) {
+    private FileEntry changeEntry(Attachment a) {
         FileEntry fileEntry = dbEntry.getFileEntry(a.getName());
         if (fileEntry == null) {
-            fileEntry = new FileEntry(a.getAid(), 0L, 0L,
+            fileEntry = new FileEntry(a.getAid(),0L, 0L,
                     OpenFileUtil.getPath(a.getName()),
                     a.getName(), I.DOWNLOAD_STATUS.INIT, a.getNid());
-
+            dbEntry.insertFileEntry(fileEntry);
         }
         return fileEntry;
     }
@@ -147,7 +161,7 @@ public class downPresenter implements downContract.Presenter{
 
 
     @Override
-    public void deleteAttachment(FileEntry entry) {
+    public void deleteAttachment(final FileEntry entry) {
         view.showProgressDialog();
         subscription.add(IDown.deleteAttachment(entry)
                 .subscribeOn(mSchedulerProvider.io())
@@ -179,7 +193,7 @@ public class downPresenter implements downContract.Presenter{
     }
 
     @Override
-    public void updateAttachment(FileEntry entry, String text, String type, AttachmentViewHolder holder) {
+    public void updateAttachment(final FileEntry entry, final String text, final String type, final AttachmentViewHolder holder) {
         view.showProgressDialog();
         subscription.add(IDown.updateAttachment(entry,text,type)
               .subscribeOn(mSchedulerProvider.io())
@@ -202,7 +216,6 @@ public class downPresenter implements downContract.Presenter{
                 if (type.equals("1")){
                     Intent getContentIntent = FileUtils.createGetContentIntent();
                     Intent intent = Intent.createChooser(getContentIntent, "Select a file");
-                    view.showProgress(holder);
                     dbEntry.deleteFileEntry(entry.getFileName());
                     entries.remove(entry);
                     view.refreshView();
@@ -234,6 +247,7 @@ public class downPresenter implements downContract.Presenter{
             entry.setAid(System.currentTimeMillis());
             entry.setDownloadStatus(I.DOWNLOAD_STATUS.INIT);
             entry.setToolSize(file.length());
+            L.e(TAG, String.valueOf(file.length()));
             entries.add(entry);
             sort();
             view.refreshView();
@@ -243,13 +257,14 @@ public class downPresenter implements downContract.Presenter{
     }
 
     @Override
-    public void downloadFile(FileEntry entry,AttachmentViewHolder holder) {
-         service.downloadFile(entry,holder);
+    public void downloadFile(FileEntry entry) {
+
+         service.downloadFile(entry);
     }
 
     @Override
     public void downloadFiles(ArrayList<FileEntry> entries,ArrayList<AttachmentViewHolder> holders) {
-        service.downloadFiles(entries,holders);
+        service.downloadFiles(entries);
     }
 
     @Override
@@ -294,12 +309,37 @@ public class downPresenter implements downContract.Presenter{
 
 
     @Override
-    public void updateProgress(int i, AttachmentViewHolder holder) {
-
+    public void updateProgress(String name,long completed) {
+        for (FileEntry entry:entries){
+            if (entry.getFileName().equals(name)){
+                entry.setCompletedSize(completed);
+                entry.setDownloadStatus(I.DOWNLOAD_STATUS.DOWNLOADING);
+            }
+        }
+        L.e(TAG,"execute update process");
+        view.refreshView();
     }
 
     @Override
-    public void transferFinish(AttachmentViewHolder holder) {
+    public void transferFinish(FileEntry ent) {
+        L.e(TAG,"上传完成");
+        for (FileEntry entry:entries){
+            if (entry.getFileName().equals(entry.getFileName())){
+                entry=ent;
+            }
+        }
         view.refreshView();
     }
+
+    @Override
+    public void startDownload(String name, long totalSize) {
+        for (FileEntry entry:entries){
+            if (entry.getFileName().equals(name)){
+                entry.setToolSize(totalSize);
+                dbEntry.updateFileTotal(name,totalSize);
+            }
+        }
+    }
+
+
 }

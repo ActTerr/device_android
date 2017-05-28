@@ -16,13 +16,11 @@ import mac.yk.devicemanagement.ui.holder.AttachmentViewHolder;
 
 public interface downContract {
     interface View extends BaseView<Presenter>{
-        void showProgress(int i,AttachmentViewHolder holder);
         void refreshView();
 //        void setUnEditStatus(AttachmentViewHolder holder);
 //        void setEditStatus(AttachmentViewHolder holder);
         void showProgressDialog();
         void dismissProgressDialog();
-        void showProgress(AttachmentViewHolder holder);
         void toastException();
         void toastString(String s);
         void choseFile(Intent intent);
@@ -42,7 +40,7 @@ public interface downContract {
          * 调用service
           */
         void uploadFile(File file);
-        void downloadFile(FileEntry entry,  AttachmentViewHolder holder);
+        void downloadFile(FileEntry entry);
         void downloadFiles(ArrayList<FileEntry> entries,  ArrayList<AttachmentViewHolder> holders);
         /**
          * 调用db
@@ -58,7 +56,8 @@ public interface downContract {
         void stopUpload(String name);
         void cancelUpload(String name);
 
-        void updateProgress(int i, AttachmentViewHolder holder);
-        void transferFinish(AttachmentViewHolder holder);
+        void updateProgress(String name,long completed);
+        void transferFinish(FileEntry entry);
+        void startDownload(String name,long totalSize);
     }
 }

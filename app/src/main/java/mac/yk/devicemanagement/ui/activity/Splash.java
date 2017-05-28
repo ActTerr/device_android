@@ -31,7 +31,10 @@ public class Splash extends AppCompatActivity {
         ButterKnife.bind(this);
         context = this;
         Animation animation= AnimationUtils.loadAnimation(this, R.anim.fade_in);
-        activitySplash.setAnimation(animation);
+        if (animation!=null&&activitySplash!=null){
+
+            activitySplash.setAnimation(animation);
+        }
         new Thread(new Runnable() {
             @Override
             public void run() {

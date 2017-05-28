@@ -71,6 +71,7 @@ public class NoticeDetailActivity extends BaseActivity {
         FileService fileService=new FileService();
         presenter=new downPresenter(attachmentFragment,new downServer(), dbFile.getInstance(this)
                 ,SchedulerProvider.getInstance(),nid,fileService);
+        fileService.onStartCommand(null,0,0);
     }
 
     private void init() {
@@ -118,6 +119,7 @@ public class NoticeDetailActivity extends BaseActivity {
             case REQUEST_CHOOSER:
                 if (resultCode == RESULT_OK) {
                     final Uri uri = data.getData();
+
                     // Get the File path from the Uri
                     String path = FileUtils.getPath(this, uri);
                     // Alternatively, use FileUtils.getFile(Context, Uri)

@@ -102,16 +102,30 @@ public class dbFile implements db,IdbFileEntry {
         }
     }
 
-
-
     @Override
     public boolean updateFileStatus(String fileName,long completedSize,int status) {
         SQLiteDatabase db=dbHelper.getWritableDatabase();
         ContentValues contentValues=new ContentValues();
         contentValues.put(I.FILE.COMPLETED_SIZE,completedSize);
         contentValues.put(I.FILE.STATUS,status);
+        L.e(TAG,"execute update status");
         if (db.isOpen()){
-            return db.update(I.FILE.TABLENAME,contentValues,I.FILE.FILENAME,new String[]{fileName})==1;
+            int i=db.update(I.FILE.TABLENAME,contentValues,I.FILE.FILENAME+"=?",new String[]{fileName});
+            L.e(TAG,"status:"+i);
+            return true;
+        }
+        return false;
+    }
+
+
+    @Override
+    public boolean updateFileTotal(String fileName,long totalSize) {
+        SQLiteDatabase db=dbHelper.getWritableDatabase();
+        ContentValues contentValues=new ContentValues();
+        contentValues.put(I.FILE.TOOLSIZE,totalSize);
+        L.e(TAG,"execute update total");
+        if (db.isOpen()){
+            return db.update(I.FILE.TABLENAME,contentValues,I.FILE.FILENAME+"=?",new String[]{fileName})==1;
         }
         return false;
     }
@@ -123,7 +137,7 @@ public class dbFile implements db,IdbFileEntry {
         contentValues.put(I.FILE.FILENAME,newName);
         contentValues.put(I.FILE.AID,time);
         if (db.isOpen()){
-            return db.update(I.FILE.TABLENAME,contentValues,I.FILE.FILENAME,new String[]{oldName})==1;
+            return db.update(I.FILE.TABLENAME,contentValues,I.FILE.FILENAME+"=?",new String[]{oldName})==1;
         }
         return false;
     }
@@ -134,7 +148,7 @@ public class dbFile implements db,IdbFileEntry {
         ContentValues contentValues=new ContentValues();
         contentValues.put(I.FILE.AID,newId);
         if (db.isOpen()){
-            return db.update(I.FILE.TABLENAME,contentValues,I.FILE.AID,new String[]{String.valueOf(oldId)})==1;
+            return db.update(I.FILE.TABLENAME,contentValues,I.FILE.AID+"=?",new String[]{String.valueOf(oldId)})==1;
         }
         return false;
     }
@@ -142,8 +156,12 @@ public class dbFile implements db,IdbFileEntry {
 
     @Override
     public boolean deleteFileEntry(String name){
+        L.e(TAG,"delete name:"+name);
         SQLiteDatabase db=dbHelper.getWritableDatabase();
-        return db.delete(I.FILE.TABLENAME,I.FILE.FILENAME+"=?",new String[]{name})==1;
+        if (db.isOpen()){
+            return  db.delete(I.FILE.TABLENAME,I.FILE.FILENAME+"=?",new String[]{name})==1;
+        }
+        return false;
     }
 
 

@@ -20,8 +20,6 @@ import android.widget.TextView;
 
 import com.ipaulpro.afilechooser.utils.FileUtils;
 
-import org.greenrobot.eventbus.EventBus;
-
 import java.util.ArrayList;
 import java.util.Date;
 
@@ -59,9 +57,8 @@ public class AttachmentFragment extends BaseFragment implements downContract.Vie
     Context context;
     downContract.Presenter presenter;
     boolean isEdit;
-    ArrayList<FileEntry> entries;
     String TAG = "AttachmentFragment";
-
+    ArrayList<FileEntry> fileEntries = new ArrayList<>();
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -101,20 +98,22 @@ public class AttachmentFragment extends BaseFragment implements downContract.Vie
         activity.startActivityForResult(intent, REQUEST_CHOOSER);
     }
 
-    @Override
-    public void showProgress(int i, AttachmentViewHolder holder) {
-        holder.pb.setProgress(i);
-    }
+
 
     @Override
     public void refreshView() {
+        for(FileEntry entry:fileEntries){
+            if (entry.getDownloadStatus()==I.DOWNLOAD_STATUS.DOWNLOADING){
+                L.e(TAG,"downloading"+entry.getCompletedSize());
+            }
+        }
         adapter.notifyDataSetChanged();
     }
 
     private void setUnEditStatus(AttachmentViewHolder holder) {
         holder.ivEdit.setVisibility(View.VISIBLE);
         holder.ivDelete.setVisibility(View.VISIBLE);
-        holder.ivControl.setVisibility(View.GONE);
+        holder.ivCancel.setVisibility(View.GONE);
         holder.ivSave.setVisibility(View.GONE);
         holder.attachmentName.setFocusable(false);
         holder.attachmentName.setFocusableInTouchMode(false);
@@ -124,9 +123,8 @@ public class AttachmentFragment extends BaseFragment implements downContract.Vie
     private void setEditStatus(AttachmentViewHolder holder) {
         holder.ivEdit.setVisibility(View.GONE);
         holder.ivDelete.setVisibility(View.GONE);
-        holder.ivControl.setVisibility(View.VISIBLE);
         holder.ivSave.setVisibility(View.VISIBLE);
-
+        holder.ivCancel.setVisibility(View.VISIBLE);
         holder.attachmentName.setFocusable(true);
         holder.attachmentName.setFocusableInTouchMode(true);
         holder.attachmentName.requestFocus();
@@ -143,12 +141,6 @@ public class AttachmentFragment extends BaseFragment implements downContract.Vie
         pd.dismiss();
     }
 
-    @Override
-    public void showProgress(AttachmentViewHolder holder) {
-        holder.pb.setVisibility(View.VISIBLE);
-        holder.tvCancel.setVisibility(View.VISIBLE);
-        holder.ivControl.setVisibility(View.VISIBLE);
-    }
 
     @Override
     public void toastException() {
@@ -167,7 +159,7 @@ public class AttachmentFragment extends BaseFragment implements downContract.Vie
 
     @Override
     public void setEntries(ArrayList<FileEntry> entries) {
-        this.entries = entries;
+        this.fileEntries = entries;
     }
 
     @Override
@@ -195,7 +187,7 @@ public class AttachmentFragment extends BaseFragment implements downContract.Vie
         //已选中要下载的
         ArrayList<String> names = new ArrayList<>();
 
-        ArrayList<FileEntry> fileEntries = new ArrayList<>();
+
         PopupWindow popupWindow;
         PopupHolder popupHolder;
         boolean isStop;
@@ -204,7 +196,7 @@ public class AttachmentFragment extends BaseFragment implements downContract.Vie
 
         public AttachmentAdapter(Context context) {
             this.context = context;
-            EventBus.getDefault().register(this);
+//            EventBus.getDefault().register(this);
             admin = MyMemory.getInstance().getUser().getGrade() == 0;
             L.e(TAG, "isadmin:" + admin);
         }
@@ -214,7 +206,6 @@ public class AttachmentFragment extends BaseFragment implements downContract.Vie
         public AttachmentViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
             View view = LayoutInflater.from(context).inflate(R.layout.item_attachment, parent, false);
             AttachmentViewHolder holder = new AttachmentViewHolder(view);
-
             return holder;
         }
 
@@ -223,8 +214,23 @@ public class AttachmentFragment extends BaseFragment implements downContract.Vie
 
             final FileEntry entry = fileEntries.get(position);
             final int status = entry.getDownloadStatus();
+            if (status==I.DOWNLOAD_STATUS.DOWNLOADING||status==I.DOWNLOAD_STATUS.PAUSE){
+                holder.pb.setVisibility(View.VISIBLE);
+                holder.tvCancel.setVisibility(View.VISIBLE);
+                holder.ivControl.setVisibility(View.VISIBLE);
+                int process=(int) (entry.getCompletedSize()*100/entry.getToolSize());
+                L.e(TAG,"file process:"+process);
+                holder.pb.setProgress(process);
+            }
+            if (status == I.DOWNLOAD_STATUS.COMPLETED) {
+                L.e(TAG,"完成");
+                holder.pb.setVisibility(View.GONE);
+                holder.cbAt.setVisibility(View.GONE);
+                holder.tvCancel.setVisibility(View.GONE);
+                holder.ivControl.setVisibility(View.GONE);
+            }
             if (admin) {
-                L.e("wocao", "丫不是admin啊");
+                L.e(TAG,"丫不是admin");
                 holder.ivDelete.setVisibility(View.VISIBLE);
                 holder.ivEdit.setVisibility(View.VISIBLE);
                 holder.cbAt.setVisibility(View.GONE);
@@ -241,7 +247,7 @@ public class AttachmentFragment extends BaseFragment implements downContract.Vie
                         postDelete(entry);
                     }
                 });
-                holder.ivControl.setOnClickListener(new View.OnClickListener() {
+                holder.ivCancel.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         setUnEditStatus(holder);
@@ -255,21 +261,22 @@ public class AttachmentFragment extends BaseFragment implements downContract.Vie
                     }
                 });
 
-            }
-            if (status == I.DOWNLOAD_STATUS.COMPLETED) {
-                holder.cbAt.setVisibility(View.GONE);
+                if (isEdit) {
+                    setEditStatus(holder);
+                } else {
+                    setUnEditStatus(holder);
+                }
+
+            }else {
+                holder.attachmentName.setFocusable(false);
+                holder.attachmentName.setFocusableInTouchMode(false);
             }
 
-            if (isEdit) {
-                setEditStatus(holder);
-            } else {
-                setUnEditStatus(holder);
-            }
+
 
             holder.attachmentName.setText(entry.getFileName());
             holder.uploadTime.setText(ConvertUtils.Date2String(new Date(entry.getAid())));
             holder.ivDocument.setImageResource(OpenFileUtil.getPic(entry.getFileName()));
-            L.e(TAG, "设置成功");
 
             holder.cbAt.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -281,6 +288,7 @@ public class AttachmentFragment extends BaseFragment implements downContract.Vie
             holder.ivDocument.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+                    L.e(TAG,"点击下载");
                     if (admin) {
                         L.e("wocao", "丫不是admin啊");
                         showSelectPopupWindow(holder.ivDocument, entry, holder);
@@ -289,20 +297,20 @@ public class AttachmentFragment extends BaseFragment implements downContract.Vie
                             L.e(TAG, entry.getSaveDirPath());
                             openFile(entry.getSaveDirPath());
                         } else {
-                            downLoadFile(entry, holder);
+                            downLoadFile(entry);
                         }
                     }
                 }
             });
-            holder.control.setOnClickListener(new View.OnClickListener() {
+            holder.ivControl.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     if (isStop) {
-                        holder.control.setImageResource(R.mipmap.audio);
+                        holder.ivControl.setImageResource(R.mipmap.audio);
                         uploadFile(entry.getFileName());
                         isStop = false;
                     } else {
-                        holder.control.setImageResource(R.mipmap.audio);
+                        holder.ivControl.setImageResource(R.mipmap.audio);
                         //得给一个标记
                         presenter.stopUpload(entry.getFileName());
                         isStop = true;
@@ -315,10 +323,9 @@ public class AttachmentFragment extends BaseFragment implements downContract.Vie
                     showCancelDialog(entry);
                 }
             });
-
         }
 
-        private void showCancelDialog(FileEntry entry) {
+        private void showCancelDialog(final FileEntry entry) {
             AlertDialog dialog= new AlertDialog.Builder(context)
                     .setTitle("确定取消吗下载?")
                     .setPositiveButton("确定", new DialogInterface.OnClickListener() {
@@ -400,17 +407,16 @@ public class AttachmentFragment extends BaseFragment implements downContract.Vie
         /**
          * 使用service实现下载
          */
-        private void downLoadFile(FileEntry entry, AttachmentViewHolder holder) {
+        private void downLoadFile(FileEntry entry) {
 //            Intent intent = new Intent(context, FileService.class);
 //            intent.putExtra("type", 1);
 //            intent.putExtra("entry", entry);
 //            context.startService(intent);
 //            FileService.setPresenter(presenter);
-            presenter.downloadFile(entry,holder);
+            presenter.downloadFile(entry);
         }
 
         private void openFile(String path) {
-
             Intent intent = OpenFileUtil.openFile(path);
             context.startActivity(intent);
         }

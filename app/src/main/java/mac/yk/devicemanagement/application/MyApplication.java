@@ -30,6 +30,7 @@ public class MyApplication extends Application {
     }
 
     private void mkdir() {
+
       File file=new File(Environment.getExternalStorageDirectory().getAbsolutePath() + "/Attachment/");
         if (!file.exists()){
             file.mkdir();

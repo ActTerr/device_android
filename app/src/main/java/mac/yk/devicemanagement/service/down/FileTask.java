@@ -1,9 +1,9 @@
 package mac.yk.devicemanagement.service.down;
 
 import android.content.Context;
-import android.util.Log;
-
-import org.greenrobot.eventbus.EventBus;
+import android.os.Environment;
+import android.os.Handler;
+import android.os.Message;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -12,6 +12,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.RandomAccessFile;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.CountDownLatch;
@@ -39,8 +41,6 @@ import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 
-import static android.content.ContentValues.TAG;
-
 /**
  * Created by mac-yk on 2017/5/26.
  */
@@ -52,18 +52,38 @@ public class FileTask implements FileTaskListener {
     long finished;
     Subscription subscribe;
     Context context;
-    int taskId;
     dbFile dbfile;
     boolean flag;
-    public FileTask(FileEntry fileEntry,Context context,int id) {
+    boolean downFlag=true;
+    IServiceListener listener;
+
+    String TAG="FileTask";
+    public FileTask(FileEntry fileEntry,Context context,IServiceListener listener) {
         entry=fileEntry;
         this.context=context;
-        taskId=id;
         dbfile=dbFile.getInstance(context);
+        this.listener=listener;
+
     }
+    Handler mHandler=new Handler(){
+        @Override
+        public void handleMessage(Message msg) {
+
+                listener.onTransferring(file.getName(), (Long) msg.obj);
+        }
+    };
+
+
+    public static String showDate() {
+        SimpleDateFormat sDateFormat = new SimpleDateFormat("a hh:mm");
+        String date = sDateFormat.format(new Date());
+        return date;
+    }
+
 
     @Override
     public void onStartDownload() {
+        L.e(TAG,"开始下载");
         ServerAPI server=RetrofitUtil.createService(ServerAPI.class);
         Call<ResponseBody> call = server.downloadFile(entry.getFileName(),entry.getCompletedSize());
 
@@ -84,21 +104,21 @@ public class FileTask implements FileTaskListener {
     private boolean writeResponseBodyToDisk(ResponseBody body,String name) {
         try {
             // todo change the file location/name according to your needs
-            File futureStudioIconFile = new File(context.getExternalFilesDir(null) + File.separator + name);
-            L.e(TAG,"放特么这了："+futureStudioIconFile.getAbsolutePath());
+             file =new File(Environment.getExternalStorageDirectory().getAbsolutePath() + "/Attachment/"+name);
+            L.e(TAG,"放特么这了："+file.getAbsolutePath());
             InputStream inputStream = null;
             OutputStream outputStream = null;
 
             try {
-                byte[] fileReader = new byte[4096];
+                byte[] fileReader = new byte[8192];
 
                 long fileSize = body.contentLength();
                 long fileSizeDownloaded = 0;
 
                 inputStream = body.byteStream();
-                outputStream = new FileOutputStream(futureStudioIconFile);
-
-                while (true) {
+                outputStream = new FileOutputStream(file);
+                listener.startDownload(entry.getFileName(),fileSize);
+                while (downFlag) {
                     int read = inputStream.read(fileReader);
 
                     if (read == -1) {
@@ -108,12 +128,9 @@ public class FileTask implements FileTaskListener {
                     outputStream.write(fileReader, 0, read);
 
                     fileSizeDownloaded += read;
-                    int progress= (int) (fileSizeDownloaded/fileSize*100);
+                    listener.onTransferring(file.getName(),fileSizeDownloaded);
                     L.e(TAG,"进度:"+fileSizeDownloaded+"/"+fileSize);
-                    EventBus.getDefault().post(progress);
-                    Log.d(TAG, "file download: " + fileSizeDownloaded + " of " + fileSize);
                 }
-
                 outputStream.flush();
                 onDownCompleted();
                 return true;
@@ -135,7 +152,7 @@ public class FileTask implements FileTaskListener {
 
     @Override
     public void onStartUpload() {
-
+        L.e("caonima","执行");
         if (entry.getCompletedSize()!=0){
             CountDownLatch countdown=new CountDownLatch(1);
             L.e(TAG,"分割文件");
@@ -156,7 +173,7 @@ public class FileTask implements FileTaskListener {
         }
         L.e(TAG,file.getAbsolutePath());
         Map<String, RequestBody> requestBodyMap = new HashMap<>();
-        UploadFileRequestBody fileRequestBody = new UploadFileRequestBody(file, new DefaultProgressListener(
+        UploadFileRequestBody fileRequestBody = new UploadFileRequestBody(file, new DefaultProgressListener(mHandler,
                 entry.getCompletedSize()));
         requestBodyMap.put("file\"; filename=\"" + entry.getFileName(), fileRequestBody);
         ServerAPI serverAPI = RetrofitUtil.createService(ServerAPI.class);
@@ -178,26 +195,26 @@ public class FileTask implements FileTaskListener {
                     public void onNext(Result<Attachment> attachmentResult) {
                         L.e(TAG, "上传成功");
                         Attachment s = attachmentResult.getRetData();
-                        onUploadCompleted(s.getAid());
+                        onCompletedUpload(s.getAid());
 
                     }
                 });
 
     }
 
-    @Override
-    public void onTransferring(int i) {
-        EventBus.getDefault().post(i);
-    }
+//    @Override
+//    public void onTransferring(int i) {
+//        EventBus.getDefault().post(i);
+//    }
 
     @Override
-    public boolean onPause() {
+    public boolean onPauseUpload() {
         subscribe.unsubscribe();
         L.e(TAG,"已暂停，当前上传："+finished);
         entry.setCompletedSize(finished);
         entry.setDownloadStatus(I.DOWNLOAD_STATUS.PAUSE);
         if (dbfile.updateFileStatus(entry.getFileName(),finished,I.DOWNLOAD_STATUS.PAUSE)){
-            File divisionFile=new File(OpenFileUtil.getPath("division"+taskId));
+            File divisionFile=new File(OpenFileUtil.getPath("division"+entry.getFileName()));
             divisionFile.delete();
             return true;
         }
@@ -205,8 +222,20 @@ public class FileTask implements FileTaskListener {
     }
 
     @Override
+    public boolean onPauseDownload(){
+        downFlag=false;
+        L.e(TAG,"已暂停，当前上传："+finished);
+        entry.setCompletedSize(finished);
+        entry.setDownloadStatus(I.DOWNLOAD_STATUS.PAUSE);
+        if (dbfile.updateFileStatus(entry.getFileName(),finished,I.DOWNLOAD_STATUS.PAUSE)){
+            return true;
+        }
+        return false;
+    }
+
+    @Override
     public boolean onCancelDownload() {
-        subscribe.unsubscribe();
+        downFlag=false;
         if(dbfile.updateFileStatus(entry.getFileName(),0,I.DOWNLOAD_STATUS.INIT)&&file.delete()){
             return true;
         }
@@ -215,6 +244,7 @@ public class FileTask implements FileTaskListener {
 
     @Override
     public boolean onCancelUpload(){
+        L.e(TAG,"cancel upload");
         subscribe.unsubscribe();
         if (dbfile.deleteFileEntry(entry.getFileName())&&deleteFile()){
            return true;
@@ -223,11 +253,11 @@ public class FileTask implements FileTaskListener {
     }
 
     private boolean deleteFile(){
-        CountDownLatch countdown=new CountDownLatch(1);
+        final CountDownLatch countdown=new CountDownLatch(1);
         ApiWrapper<ServerAPI> wrapper=new ApiWrapper<>();
         wrapper.targetClass(ServerAPI.class).getAPI()
                 .deleteFile(entry.getFileName())
-                .compose(wrapper.applySchedulers())
+                .compose(wrapper.<String>applySchedulers())
                 .subscribe(new Subscriber<String>() {
                     @Override
                     public void onCompleted() {
@@ -256,20 +286,30 @@ public class FileTask implements FileTaskListener {
     }
 
     @Override
-    public void onUploadCompleted(long newId) {
-        if (dbfile.updateFileStatus(file.getName(),file.length(),I.DOWNLOAD_STATUS.COMPLETED)&&
-                dbfile.updateFileId(entry.getAid(),newId)){
-            subscribe=null;
-            File divisionFile=new File(OpenFileUtil.getPath("division"));
-            divisionFile.delete();
-            EventBus.getDefault().post(taskId);
+    public void onCompletedUpload(long newId) {
+        L.e(TAG,"execute comp");
+        if (dbfile.updateFileStatus(file.getName(),file.length(),I.DOWNLOAD_STATUS.COMPLETED)){
+            L.e(TAG,"update1 suc");
+            if(dbfile.updateFileId(entry.getAid(),newId)){
+        entry.setDownloadStatus(I.DOWNLOAD_STATUS.COMPLETED);
+                L.e(TAG,"db execute suc");
+                subscribe=null;
+                File divisionFile=new File(OpenFileUtil.getPath("division"+entry.getFileName()));
+                if (divisionFile.exists()){
+                    divisionFile.delete();
+                }
+                listener.onCompletedUpload(entry);
+
+            }
+
         }
     }
 
     @Override
     public void onDownCompleted() {
         if (dbfile.updateFileStatus(file.getName(),file.length(),I.DOWNLOAD_STATUS.COMPLETED)){
-            EventBus.getDefault().post(taskId);
+            entry.setDownloadStatus(I.DOWNLOAD_STATUS.COMPLETED);
+            listener.onCompletedDownload(entry);
         }
     }
 
@@ -278,10 +318,12 @@ public class FileTask implements FileTaskListener {
 
     }
 
+
+
     private File getDivisionFile(FileEntry entry) {
         RandomAccessFile aFile;
         File file=new File(entry.getSaveDirPath());
-        File divisionFile=new File(OpenFileUtil.getPath("division"+taskId));
+        File divisionFile=new File(OpenFileUtil.getPath("division"+entry.getFileName()));
 
         FileOutputStream out;
         try {
@@ -316,14 +358,14 @@ public class FileTask implements FileTaskListener {
 
     }
 
-    class DefaultProgressListener implements ProgressListener {
+   class DefaultProgressListener implements ProgressListener {
 
-
-        //多文件上传时，index作为上传的位置的标志
-        long completed;
-        public DefaultProgressListener(long completed) {
-            this.completed=completed;
-        }
+       private Handler mHandler;
+       long completed;
+       public DefaultProgressListener(Handler mHandler, long completed) {
+           this.completed=completed;
+           this.mHandler = mHandler;
+       }
 
         @Override
         public void onProgress(long hasWrittenLen, long totalLen, boolean hasFinish) {
@@ -332,8 +374,10 @@ public class FileTask implements FileTaskListener {
             int percent = (int) ((completed+hasWrittenLen) * 100 / (totalLen+completed));
             if (percent > 100) percent = 100;
             if (percent < 0) percent = 0;
-
-            onTransferring(percent);
+            L.e(TAG,"execute transferring");
+            Message msg = Message.obtain();
+            msg.obj=finished;
+            mHandler.sendMessage(msg);
         }
     }
 }

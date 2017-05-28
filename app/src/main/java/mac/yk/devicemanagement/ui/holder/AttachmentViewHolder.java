@@ -26,15 +26,15 @@ public class AttachmentViewHolder extends RecyclerView.ViewHolder implements Ser
             @BindView(R.id.iv_save)
             public  ImageView ivSave;
             @BindView(R.id.iv_cancel)
-            public ImageView ivControl;
+            public ImageView ivCancel;
             @BindView(R.id.iv_edit)
             public ImageView ivEdit;
             @BindView(R.id.iv_delete)
             public  ImageView ivDelete;
             @BindView(R.id.pb)
             public  ProgressBar pb;
-            @BindView(R.id.control)
-            public ImageView control;
+            @BindView(R.id.iv_control)
+            public ImageView ivControl;
             @BindView(R.id.tv_cancel)
             public TextView tvCancel;
 

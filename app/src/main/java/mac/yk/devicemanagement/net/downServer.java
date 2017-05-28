@@ -24,7 +24,7 @@ public class downServer implements IDown {
         ApiWrapper<ServerAPI> wrapper = new ApiWrapper<>();
 
         return wrapper.targetClass(ServerAPI.class).getAPI().deleteAttachment(entry.getFileName())
-                .compose(wrapper.applySchedulers());
+                .compose(wrapper.<String>applySchedulers());
     }
 
     @Override
@@ -32,7 +32,7 @@ public class downServer implements IDown {
         ApiWrapper<ServerAPI> wrapper = new ApiWrapper<>();
         return wrapper.targetClass(ServerAPI.class).getAPI()
                 .updateAttachment(entry.getAid(),entry.getFileName(),text,type)
-                .compose(wrapper.applySchedulers());
+                .compose(wrapper.<String>applySchedulers());
     }
 
 

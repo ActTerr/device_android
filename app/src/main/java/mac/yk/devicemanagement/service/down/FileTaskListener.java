@@ -6,15 +6,16 @@ public interface FileTaskListener {
 
     void onStartUpload();
 
-    void onTransferring(int i);
 
-    boolean onPause();
+    boolean onPauseUpload();
+
+    boolean onPauseDownload();
 
     boolean onCancelUpload();
 
     boolean onCancelDownload();
 
-    void onUploadCompleted(long newId);
+    void onCompletedUpload(long newId);
 
     void onDownCompleted();
 

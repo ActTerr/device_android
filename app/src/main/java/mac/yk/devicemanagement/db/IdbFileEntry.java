@@ -13,4 +13,5 @@ public interface IdbFileEntry {
     boolean updateFileId(long oldId,long newId);
     FileEntry getFileEntry(String name);
     boolean deleteFileEntry(String name);
+    boolean updateFileTotal(String fileName,long totalSize);
 }
