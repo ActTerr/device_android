@@ -25,6 +25,10 @@ import android.widget.TextView;
 
 import com.xys.libzxing.zxing.activity.CaptureActivity;
 
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
+
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
@@ -34,16 +38,16 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import cn.jpush.android.api.JPushInterface;
 import mac.yk.devicemanagement.I;
-import mac.yk.devicemanagement.application.MyMemory;
 import mac.yk.devicemanagement.R;
+import mac.yk.devicemanagement.application.MyMemory;
 import mac.yk.devicemanagement.bean.User;
 import mac.yk.devicemanagement.db.dbUser;
 import mac.yk.devicemanagement.net.ApiWrapper;
 import mac.yk.devicemanagement.net.ServerAPI;
 import mac.yk.devicemanagement.ui.fragment.CountFragment;
+import mac.yk.devicemanagement.ui.fragment.MainFragment;
 import mac.yk.devicemanagement.ui.fragment.NoticeFragment;
 import mac.yk.devicemanagement.ui.fragment.ScrapCountFragment;
-import mac.yk.devicemanagement.ui.fragment.MainFragment;
 import mac.yk.devicemanagement.util.ActivityUtils;
 import mac.yk.devicemanagement.util.ExceptionFilter;
 import mac.yk.devicemanagement.util.L;
@@ -91,6 +95,7 @@ public class MainActivity extends BaseActivity {
             L.e("main","user null");
             MFGT.gotoLoginActivity(this);
         }
+        EventBus.getDefault().register(this);
         boolean netConnect = this.isNetConnect();
         if (netConnect) {
             mTv.setVisibility(View.GONE);
@@ -115,6 +120,15 @@ public class MainActivity extends BaseActivity {
         }
         isFromNotification();
     }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void getTitle(String title){
+        if (title.contains("all年")){
+            title="总"+title.substring(4);
+        }
+            toolBar.setTitle(title);
+    }
+
 
     private void isFromNotification() {
         Intent intent = getIntent();
@@ -194,7 +208,7 @@ public class MainActivity extends BaseActivity {
                 scan(I.CONTROL.START);
                 break;
         }
-        return true;
+        return super.onOptionsItemSelected(item);
     }
 
     public void scan(int id) {
@@ -213,7 +227,7 @@ public class MainActivity extends BaseActivity {
         } catch (NoSuchFieldException e) {
             e.printStackTrace();
         }
-        return true;
+        return super.onCreateOptionsMenu(menu);
     }
 
     /**

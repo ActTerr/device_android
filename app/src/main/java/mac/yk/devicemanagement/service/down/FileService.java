@@ -221,9 +221,10 @@ public class FileService extends Service implements IFile {
     }
 
     @Override
-    public void cancelDownload(String name) {
-        FileTask task = getTask(name);
-        if (task != null) {
+    public void cancelDownload(FileEntry entry) {
+        FileTask task = getTask(entry.getFileName());
+        if (task == null) {
+            task=new FileTask(entry,context,listener);
             task.onCancelDownload();
         }
     }
@@ -239,9 +240,10 @@ public class FileService extends Service implements IFile {
 
 
     @Override
-    public void cancelUpload(String name) {
-        FileTask task = getTask(name);
-        if (task != null) {
+    public void cancelUpload(FileEntry entry) {
+        FileTask task = getTask(entry.getFileName());
+        if (task == null) {
+            task=new FileTask(entry,context,listener);
             task.onCancelUpload();
         }
     }

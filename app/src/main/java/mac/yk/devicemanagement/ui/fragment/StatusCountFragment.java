@@ -4,9 +4,6 @@ import android.app.ProgressDialog;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
@@ -19,9 +16,9 @@ import java.util.concurrent.TimeUnit;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-import mac.yk.devicemanagement.application.MyMemory;
 import mac.yk.devicemanagement.R;
 import mac.yk.devicemanagement.adapter.FormStatusAdapter;
+import mac.yk.devicemanagement.application.MyMemory;
 import mac.yk.devicemanagement.net.ApiWrapper;
 import mac.yk.devicemanagement.net.ServerAPI;
 import mac.yk.devicemanagement.util.ConvertUtils;
@@ -82,24 +79,32 @@ public class StatusCountFragment extends BaseFragment {
         });
     }
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
+//    @Override
+//    public boolean onOptionsItemSelected(MenuItem item) {
+//        if (item.getItemId()==android.R.id.home){
+//            return true;
+//        }
+//        if (item.getItemId() == R.id.all) {
+//            year = "all";
+//        } else {
+//            year = String.valueOf(item.getTitle());
+//        }
+//        L.e(TAG,"select"+year);
+//        if (data.size()>0){
+//            data.clear();
+//        }
+//        EventBus.getDefault().post("状态统计");
+//        addFrom.setVisibility(View.GONE);
+//        initData();
+//        return true;
+//    }
+//
+//    @Override
+//    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+//        super.onCreateOptionsMenu(menu, inflater);
+//        inflater.inflate(R.menu.menu_year,menu);
+//    }
 
-        if (item.getItemId() == R.id.all) {
-            year = "all";
-        } else {
-            year = String.valueOf(item.getTitle());
-        }
-        initData();
-        return true;
-    }
-
-    @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        if (menu.size()<5){
-            inflater.inflate(R.menu.menu_year,menu);
-        }
-    }
 
     private void initData() {
         dialog.show();

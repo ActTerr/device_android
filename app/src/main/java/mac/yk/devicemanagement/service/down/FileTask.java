@@ -80,7 +80,71 @@ public class FileTask implements FileTaskListener {
         return date;
     }
 
-
+//    public void download(){
+//
+//            try {
+//                String path="";
+//        URL url = new URL(path);
+//        HttpURLConnection conn = (HttpURLConnection) url
+//                .openConnection();
+//        //若查询不到数据，刚建立 一个DownInfo对象
+//
+//            //数据库里存在，更新下载位置
+//            long completed=entry.getCompletedSize();
+//            long fileSize=entry.getToolSize();
+//            //设置从downlen位置开始读取
+//            conn.setRequestProperty("Range", "bytes=" + completed + "-" + fileSize);
+//
+//        conn.connect();
+//        int length = conn.getContentLength();
+//
+//        if (fileSize==0) {
+//            fileSize=length;
+//        }
+//        InputStream is = conn.getInputStream();
+//        File file = new File(entry.getSaveDirPath());
+//        if (!file.exists()) {
+//            file.mkdirs();
+//        }
+//        RandomAccessFile apkFile = new RandomAccessFile(entry.getFileName(),"rwd");
+//        apkFile.seek(completed);  //文件定位到文件末尾
+//        //设置缓存
+//        byte buf[] = new byte[1024*1024];
+//        //开始下载文件
+//        do {
+//            //对dao做处理，来实现暂停功能
+//            while (isPause) {
+//                synchronized (dao) {
+//                    try {
+//                        dao.wait();
+//                    } catch (InterruptedException e) {
+//                        e.printStackTrace();
+//                    }
+//                }
+//            }
+//            //读取流
+//            int numread = is.read(buf);
+//            //写入文件
+//            if (numread > 0) {
+//                downlen += numread;
+//                apkFile.write(buf, 0, numread);
+//            }else {
+//                //下载完成
+//                Message msg = mHandler.obtainMessage();
+//                msg.what = 1;
+//                mHandler.sendEmptyMessage(0);
+//                canceled = true;
+//                break;
+//            }
+//        } while (!canceled);//
+//        apkFile.close();
+//        is.close();
+//    } catch (MalformedURLException e) {
+//        e.printStackTrace();
+//    } catch (IOException e) {
+//        e.printStackTrace();
+//    }
+//    }
     @Override
     public void onStartDownload() {
         L.e(TAG,"开始下载");
@@ -91,6 +155,7 @@ public class FileTask implements FileTaskListener {
             @Override
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
                 if (response.isSuccessful()){
+                    
                     writeResponseBodyToDisk(response.body(),entry.getFileName());
                 }
             }
@@ -149,7 +214,7 @@ public class FileTask implements FileTaskListener {
             return false;
         }
     }
-
+    UploadFileRequestBody fileRequestBody;
     @Override
     public void onStartUpload() {
         L.e("caonima","执行");
@@ -173,7 +238,7 @@ public class FileTask implements FileTaskListener {
         }
         L.e(TAG,file.getAbsolutePath());
         Map<String, RequestBody> requestBodyMap = new HashMap<>();
-        UploadFileRequestBody fileRequestBody = new UploadFileRequestBody(file, new DefaultProgressListener(mHandler,
+       fileRequestBody= new UploadFileRequestBody(file, new DefaultProgressListener(mHandler,
                 entry.getCompletedSize()));
         requestBodyMap.put("file\"; filename=\"" + entry.getFileName(), fileRequestBody);
         ServerAPI serverAPI = RetrofitUtil.createService(ServerAPI.class);
@@ -209,7 +274,7 @@ public class FileTask implements FileTaskListener {
 
     @Override
     public boolean onPauseUpload() {
-        subscribe.unsubscribe();
+        fileRequestBody.pauseWrite();
         L.e(TAG,"已暂停，当前上传："+finished);
         entry.setCompletedSize(finished);
         entry.setDownloadStatus(I.DOWNLOAD_STATUS.PAUSE);

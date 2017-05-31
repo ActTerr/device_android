@@ -293,8 +293,8 @@ public class downPresenter implements downContract.Presenter{
     }
 
     @Override
-    public void cancelDownload(String name) {
-        service.cancelDownload(name);
+    public void cancelDownload(FileEntry entry) {
+        service.cancelDownload(entry);
     }
 
     @Override
@@ -303,8 +303,10 @@ public class downPresenter implements downContract.Presenter{
     }
 
     @Override
-    public void cancelUpload(String name) {
-        service.cancelUpload(name);
+    public void cancelUpload(FileEntry entry) {
+        service.cancelUpload(entry);
+        entries.remove(entry);
+        view.refreshView();
     }
 
 
@@ -324,7 +326,7 @@ public class downPresenter implements downContract.Presenter{
     public void transferFinish(FileEntry ent) {
         L.e(TAG,"上传完成");
         for (FileEntry entry:entries){
-            if (entry.getFileName().equals(entry.getFileName())){
+            if (entry.getFileName().equals(ent.getFileName())){
                 entry=ent;
             }
         }

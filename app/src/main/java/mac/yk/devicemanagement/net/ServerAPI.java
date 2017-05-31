@@ -6,22 +6,26 @@ import java.util.Map;
 import mac.yk.devicemanagement.I;
 import mac.yk.devicemanagement.bean.Attachment;
 import mac.yk.devicemanagement.bean.Battery;
+import mac.yk.devicemanagement.bean.Check;
 import mac.yk.devicemanagement.bean.DeviceResume;
 import mac.yk.devicemanagement.bean.Notice;
 import mac.yk.devicemanagement.bean.Result;
 import mac.yk.devicemanagement.bean.Scrap;
-import mac.yk.devicemanagement.bean.User;
 import mac.yk.devicemanagement.bean.Service;
-import mac.yk.devicemanagement.bean.Check;
+import mac.yk.devicemanagement.bean.User;
 import okhttp3.RequestBody;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
+import retrofit2.Response;
 import retrofit2.http.GET;
+import retrofit2.http.Header;
 import retrofit2.http.Multipart;
 import retrofit2.http.POST;
 import retrofit2.http.Part;
 import retrofit2.http.PartMap;
 import retrofit2.http.Query;
+import retrofit2.http.Streaming;
+import retrofit2.http.Url;
 import rx.Observable;
 
 /**
@@ -140,6 +144,10 @@ public interface ServerAPI {
     @POST(I.REQUEST.PATH+I.REQUEST.DOWNLOAD_FILE)
     Call<ResponseBody> downloadFile(@Query(I.FILE.FILENAME) String name,@Query(I.FILE.COMPLETED_SIZE) long completed );
 
+    @GET
+    @Streaming
+    Observable<Response<ResponseBody>> download(@Header("Range") String range, @Url String url);
+
     @GET(I.REQUEST.PATH+I.REQUEST.DELETE_FILE)
     Observable<Result<String>> deleteFile(@Query(I.FILE.FILENAME) String fileName);
     
@@ -148,4 +156,6 @@ public interface ServerAPI {
 
     @GET(I.REQUEST.PATH+I.REQUEST.INACTIVE)
     Observable<Result<String>> inactive(@Query(I.DEVICE2.DID) String did,@Query(I.DEVICE2.USE_POSITION) String usePosition);
+
+
 }

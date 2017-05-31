@@ -51,10 +51,10 @@ public interface downContract {
         void deleteEntry(String name);
 
         void stopDownload(String name);
-        void cancelDownload(String name);
+        void cancelDownload(FileEntry entry);
 
         void stopUpload(String name);
-        void cancelUpload(String name);
+        void cancelUpload(FileEntry entry);
 
         void updateProgress(String name,long completed);
         void transferFinish(FileEntry entry);

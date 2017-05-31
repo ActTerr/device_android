@@ -33,7 +33,13 @@ public class UploadFileRequestBody extends RequestBody {
         this.mProgressListener = progressListener;
     }
 
-
+public void pauseWrite(){
+    try {
+        bufferedSink.close();
+    } catch (IOException e) {
+        e.printStackTrace();
+    }
+}
     @Override
     public MediaType contentType() {
         return mRequestBody.contentType();
@@ -75,6 +81,7 @@ public class UploadFileRequestBody extends RequestBody {
                 //回调
                 mProgressListener.onProgress(bytesWritten, contentLength, bytesWritten == contentLength);
             }
+
         };
     }
 }

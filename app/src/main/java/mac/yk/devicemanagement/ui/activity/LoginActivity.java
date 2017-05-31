@@ -42,9 +42,6 @@ public class LoginActivity extends BaseActivity{
         setContentView(R.layout.activity_login);
         ButterKnife.bind(this);
         context = this;
-        if (name!=null){
-            ToastUtil.showToast(context,"跟我装逼呢？");
-        }
         progressDialog = new ProgressDialog(context);
 
     }

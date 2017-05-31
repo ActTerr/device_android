@@ -13,7 +13,7 @@ public interface IFile {
     void downloadFile(FileEntry entry);
     void downloadFiles(ArrayList<FileEntry> entries);
     void stopDownload(String name);
-    void cancelDownload(String name);
+    void cancelDownload(FileEntry entry);
     void stopUpload(String name);
-    void cancelUpload(String name);
+    void cancelUpload(FileEntry entry);
 }

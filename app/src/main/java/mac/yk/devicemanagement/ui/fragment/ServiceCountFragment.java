@@ -16,9 +16,9 @@ import java.util.concurrent.TimeUnit;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-import mac.yk.devicemanagement.application.MyMemory;
 import mac.yk.devicemanagement.R;
 import mac.yk.devicemanagement.adapter.FormServiceAdapter;
+import mac.yk.devicemanagement.application.MyMemory;
 import mac.yk.devicemanagement.net.ApiWrapper;
 import mac.yk.devicemanagement.net.ServerAPI;
 import mac.yk.devicemanagement.util.ConvertUtils;
@@ -75,7 +75,6 @@ public class ServiceCountFragment extends BaseFragment {
             }
         });
     }
-
 
 
     private void initData() {

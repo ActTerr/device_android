@@ -9,12 +9,14 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import org.greenrobot.eventbus.EventBus;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-import mac.yk.devicemanagement.application.MyMemory;
 import mac.yk.devicemanagement.R;
 import mac.yk.devicemanagement.adapter.ViewPagerAdapter;
+import mac.yk.devicemanagement.application.MyMemory;
 import mac.yk.devicemanagement.bean.User;
 import mac.yk.devicemanagement.util.L;
 
@@ -75,15 +77,19 @@ public class CountFragment extends BaseFragment {
         switch (view.getId()) {
             case R.id.total_count:
                 vp.setCurrentItem(0);
+                EventBus.getDefault().post("设备数量统计");
                 break;
             case R.id.status_count:
+                EventBus.getDefault().post("设备状态统计");
                 vp.setCurrentItem(1);
                 break;
             case R.id.service_count:
+                EventBus.getDefault().post("维修设备统计");
                 vp.setCurrentItem(2);
                 break;
         }
     }
+
 
 
 }

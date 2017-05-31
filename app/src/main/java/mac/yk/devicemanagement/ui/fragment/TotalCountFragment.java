@@ -12,15 +12,17 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ListView;
 
+import org.greenrobot.eventbus.EventBus;
+
 import java.util.ArrayList;
 import java.util.concurrent.TimeUnit;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-import mac.yk.devicemanagement.application.MyMemory;
 import mac.yk.devicemanagement.R;
 import mac.yk.devicemanagement.adapter.FormTotalAdapter;
+import mac.yk.devicemanagement.application.MyMemory;
 import mac.yk.devicemanagement.bean.User;
 import mac.yk.devicemanagement.net.ApiWrapper;
 import mac.yk.devicemanagement.net.ServerAPI;
@@ -39,10 +41,10 @@ public class TotalCountFragment extends BaseFragment {
     ListView lv;
     ArrayList<ArrayList<String>> data;
 
-    int shouchitai;
-    int guding;
-    int yidong;
-    int qukongqi;
+    int transceiver;
+    int fixed;
+    int move;
+    int zoneController;
 
     String year = "all";
     ProgressDialog dialog;
@@ -66,24 +68,35 @@ public class TotalCountFragment extends BaseFragment {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId()==android.R.id.home){
+            return true;
+        }
         if (item.getItemId() == R.id.all) {
             year = "all";
         } else {
             year = String.valueOf(item.getTitle());
         }
+        L.e(TAG,"select"+year);
+        if (data!=null){
+            data.clear();
+        }
+        EventBus.getDefault().post(year+"年设备数量统计");
+        addFrom.setVisibility(View.GONE);
+        
         initView();
         return true;
     }
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        L.e(TAG,menu.size()+"menu size");
-        if (menu.size()<5){
-            inflater.inflate(R.menu.menu_year,menu);
-        }
+        super.onCreateOptionsMenu(menu, inflater);
+        inflater.inflate(R.menu.menu_year,menu);
     }
 
+
+
     private void initView() {
+        EventBus.getDefault().post(year+"年设备数量统计");
         dialog.show();
         data = new ArrayList<>();
         final ArrayList<String> list = new ArrayList<>();
@@ -102,6 +115,7 @@ public class TotalCountFragment extends BaseFragment {
 
                     @Override
                     public void onError(Throwable e) {
+                        dialog.dismiss();
                         if (ExceptionFilter.filter(getContext(),e)){
                             ToastUtil.showException(getContext());
                         }
@@ -115,10 +129,10 @@ public class TotalCountFragment extends BaseFragment {
                             list.add(i + 1 + "");
                             list.add(ConvertUtils.getUnitName(i + 1));
                             list.addAll(ConvertUtils.array2List(strings.get(i)));
-                            shouchitai += Integer.parseInt(strings.get(i)[0]);
-                            guding += Integer.parseInt(strings.get(i)[1]);
-                            yidong += Integer.parseInt(strings.get(i)[2]);
-                            qukongqi += Integer.parseInt(strings.get(i)[3]);
+                             transceiver+= Integer.parseInt(strings.get(i)[0]);
+                            fixed += Integer.parseInt(strings.get(i)[1]);
+                            move += Integer.parseInt(strings.get(i)[2]);
+                            zoneController += Integer.parseInt(strings.get(i)[3]);
                             L.e(i + "", list.toString());
                             data.add(list);
                         }
@@ -127,10 +141,10 @@ public class TotalCountFragment extends BaseFragment {
                             ArrayList<String> list1 = new ArrayList<String>();
                             list1.add("");
                             list1.add("合计");
-                            list1.add(String.valueOf(shouchitai));
-                            list1.add(String.valueOf(guding));
-                            list1.add(String.valueOf(yidong));
-                            list1.add(String.valueOf(qukongqi));
+                            list1.add(String.valueOf(transceiver));
+                            list1.add(String.valueOf(fixed));
+                            list1.add(String.valueOf(move));
+                            list1.add(String.valueOf(zoneController));
                             data.add(list1);
                         }
                         lv.setAdapter(new FormTotalAdapter(getContext(), data));

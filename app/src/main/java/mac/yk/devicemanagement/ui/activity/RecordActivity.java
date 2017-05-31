@@ -158,6 +158,8 @@ public class RecordActivity extends BaseActivity {
     }
 
 
+
+
     @Override
     public boolean onMenuOpened(int featureId, Menu menu) {
         setOverflowIconVisible(featureId, menu);

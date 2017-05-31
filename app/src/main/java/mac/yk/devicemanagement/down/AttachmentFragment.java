@@ -306,11 +306,11 @@ public class AttachmentFragment extends BaseFragment implements downContract.Vie
                 @Override
                 public void onClick(View v) {
                     if (isStop) {
-                        holder.ivControl.setImageResource(R.mipmap.audio);
+                        holder.ivControl.setImageResource(R.mipmap.pause);
                         uploadFile(entry.getFileName());
                         isStop = false;
                     } else {
-                        holder.ivControl.setImageResource(R.mipmap.audio);
+                        holder.ivControl.setImageResource(R.mipmap.start);
                         //得给一个标记
                         presenter.stopUpload(entry.getFileName());
                         isStop = true;
@@ -332,9 +332,9 @@ public class AttachmentFragment extends BaseFragment implements downContract.Vie
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
                             if (admin){
-                                presenter.cancelUpload(entry.getFileName());
+                                presenter.cancelUpload(entry);
                             }else {
-                                presenter.cancelDownload(entry.getFileName());
+                                presenter.cancelDownload(entry);
                             }
                             dialog.dismiss();
                         }
