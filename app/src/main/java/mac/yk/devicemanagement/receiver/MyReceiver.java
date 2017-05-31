@@ -16,9 +16,13 @@ public class MyReceiver extends BroadcastReceiver{
     @Override
     public void onReceive(Context context, Intent intent) {
         L.e("receiver","get action");
+
         boolean alarm=intent.getBooleanExtra("alarm",false);
         Intent intent1=new Intent(context, BatteryService.class);
         intent1.putExtra("alarm",alarm);
+        if (intent.getAction().equals("check")){
+            intent1.setAction("check");
+        }
         context.startService(intent1);
     }
 }

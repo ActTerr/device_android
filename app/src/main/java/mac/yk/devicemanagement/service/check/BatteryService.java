@@ -1,17 +1,20 @@
 package mac.yk.devicemanagement.service.check;
 
 import android.app.AlarmManager;
-import android.app.IntentService;
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
+import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
+import android.os.IBinder;
 import android.support.annotation.Nullable;
 import android.support.v4.app.NotificationCompat;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import mac.yk.devicemanagement.R;
 import mac.yk.devicemanagement.bean.Battery;
@@ -21,6 +24,7 @@ import mac.yk.devicemanagement.net.ApiWrapper;
 import mac.yk.devicemanagement.net.ServerAPI;
 import mac.yk.devicemanagement.receiver.MyReceiver;
 import mac.yk.devicemanagement.ui.activity.BatteryListActivity;
+import mac.yk.devicemanagement.ui.activity.MainActivity;
 import mac.yk.devicemanagement.util.ExceptionFilter;
 import mac.yk.devicemanagement.util.L;
 import mac.yk.devicemanagement.util.SpUtil;
@@ -33,22 +37,25 @@ import rx.schedulers.Schedulers;
  * Created by mac-yk on 2017/5/18.
  */
 
-public class BatteryService extends IntentService {
+public class BatteryService extends Service {
     Context context;
     String TAG = "BatteryService";
+
+    @Override
+    public int onStartCommand(Intent intent, int flags, int startId) {
+        check(intent);
+        if(!intent.getAction().equals("check")){
+            thread.start();
+        }
+
+        return START_STICKY;
+    }
 
     /**
      * Creates an IntentService.  Invoked by your subclass's constructor.
      *
      */
-    public BatteryService() {
-        super("");
-
-    }
-
-
-    @Override
-    protected void onHandleIntent(@Nullable Intent intent) {
+    private void check(Intent intent){
         boolean alarm=intent.getBooleanExtra("alarm",false);
         L.e(TAG, "get intent and start");
         context = getApplicationContext();
@@ -57,7 +64,7 @@ public class BatteryService extends IntentService {
         long hour=  60*60 * 1000;
         long currentTime=System.currentTimeMillis();
         Date date=new Date(currentTime);
-        boolean nightMode=SpUtil.getNightMode(context);
+        boolean nightMode= SpUtil.getNightMode(context);
         boolean rest=false;
         L.e(TAG,"hour:"+date.getHours());
         if (nightMode){
@@ -115,6 +122,7 @@ public class BatteryService extends IntentService {
         }
         AlarmManager manager = (AlarmManager) getSystemService(ALARM_SERVICE);
         Intent i = new Intent(this, MyReceiver.class);
+        intent.setAction("check");
         i.putExtra("alarm",true);
         PendingIntent pi = PendingIntent.getBroadcast(this, 0, i, 0);
         long executeTime;
@@ -125,12 +133,37 @@ public class BatteryService extends IntentService {
             executeTime=futureTime;
         }
         manager.set(AlarmManager.RTC_WAKEUP, executeTime, pi);
-
     }
+
+    Thread thread = new Thread(new Runnable() {
+
+        @Override
+        public void run() {
+            Timer timer = new Timer();
+            TimerTask task = new TimerTask() {
+
+                @Override
+                public void run() {
+                    boolean b = MainActivity.isServiceWorked(BatteryService.this, "mac.yk.devicemanagement.service.check.GuardService");
+                    if(!b) {
+                        Intent service = new Intent(BatteryService.this, GuardService.class);
+                        startService(service);
+                    }
+                }
+            };
+            timer.schedule(task, 0, 1000);
+        }
+    });
 
     @Override
     public void onDestroy() {
         super.onDestroy();
         L.e(TAG, "service Destroy");
+    }
+
+    @Nullable
+    @Override
+    public IBinder onBind(Intent intent) {
+        return null;
     }
 }

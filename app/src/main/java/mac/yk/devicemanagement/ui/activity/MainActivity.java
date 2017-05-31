@@ -1,5 +1,6 @@
 package mac.yk.devicemanagement.ui.activity;
 
+import android.app.ActivityManager;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Context;
@@ -45,6 +46,7 @@ import mac.yk.devicemanagement.db.dbUser;
 import mac.yk.devicemanagement.net.ApiWrapper;
 import mac.yk.devicemanagement.net.ServerAPI;
 import mac.yk.devicemanagement.service.check.BatteryService;
+import mac.yk.devicemanagement.service.check.GuardService;
 import mac.yk.devicemanagement.ui.fragment.CountFragment;
 import mac.yk.devicemanagement.ui.fragment.MainFragment;
 import mac.yk.devicemanagement.ui.fragment.NoticeFragment;
@@ -128,6 +130,9 @@ public class MainActivity extends BaseActivity {
         L.e(TAG,"startService");
         Intent intent=new Intent(this, BatteryService.class);
         startService(intent);
+
+        Intent intent2=new Intent(this, GuardService.class);
+        startService(intent2);
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
@@ -417,7 +422,16 @@ public class MainActivity extends BaseActivity {
         }
         return super.onMenuOpened(featureId, menu);
     }
-
+    public static boolean isServiceWorked(Context context, String serviceName) {
+        ActivityManager myManager = (ActivityManager) context.getSystemService(Context.ACTIVITY_SERVICE);
+        ArrayList<ActivityManager.RunningServiceInfo> runningService = (ArrayList<ActivityManager.RunningServiceInfo>) myManager.getRunningServices(Integer.MAX_VALUE);
+        for (int i = 0; i < runningService.size(); i++) {
+            if (runningService.get(i).service.getClassName().toString().equals(serviceName)) {
+                return true;
+            }
+        }
+        return false;
+    }
 
 }
 
