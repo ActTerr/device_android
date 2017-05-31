@@ -7,11 +7,11 @@ import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
-import android.os.SystemClock;
 import android.support.annotation.Nullable;
 import android.support.v4.app.NotificationCompat;
 
 import java.util.ArrayList;
+import java.util.Date;
 
 import mac.yk.devicemanagement.R;
 import mac.yk.devicemanagement.bean.Battery;
@@ -49,12 +49,26 @@ public class BatteryService extends IntentService {
 
     @Override
     protected void onHandleIntent(@Nullable Intent intent) {
+        boolean alarm=intent.getBooleanExtra("alarm",false);
         L.e(TAG, "get intent and start");
         context = getApplicationContext();
         final ApiWrapper<ServerAPI> wrapper = new ApiWrapper<>();
         String user = mac.yk.devicemanagement.util.SpUtil.getLoginUser(getApplicationContext());
+        long hour=  60*60 * 1000;
+        long currentTime=System.currentTimeMillis();
+        Date date=new Date(currentTime);
+        boolean nightMode=SpUtil.getNightMode(context);
+        boolean rest=false;
+        L.e(TAG,"hour:"+date.getHours());
+        if (nightMode){
+            if (date.getHours()>22||date.getHours()<8){
+                rest=true;
+            }
+        }
+        int count= (int) (currentTime/hour) +1;
+        long futureTime=count*hour;
 
-        if (!user.equals("")&& SpUtil.getCheck(context)) {
+        if (!user.equals("")&&!rest&&alarm) {
             final User user1 = dbUser.getInstance(getApplicationContext()).select2(user);
 
             wrapper.targetClass(ServerAPI.class).getAPI().checkBattery(String.valueOf(user1.getUnit()))
@@ -97,16 +111,20 @@ public class BatteryService extends IntentService {
 
                         }
                     });
-            AlarmManager manager = (AlarmManager) getSystemService(ALARM_SERVICE);
-            int hour= 60 * 60 * 1000;
-            long triggerAtTime = SystemClock.elapsedRealtime() + hour;
-            Intent i = new Intent(this, MyReceiver.class);
-            PendingIntent pi = PendingIntent.getBroadcast(this, 0, i, 0);
-            manager.set(AlarmManager.ELAPSED_REALTIME_WAKEUP, triggerAtTime, pi);
 
         }
+        AlarmManager manager = (AlarmManager) getSystemService(ALARM_SERVICE);
+        Intent i = new Intent(this, MyReceiver.class);
+        i.putExtra("alarm",true);
+        PendingIntent pi = PendingIntent.getBroadcast(this, 0, i, 0);
+        long executeTime;
+        if (alarm){
+            executeTime=System.currentTimeMillis()+hour;
 
-
+        }else {
+            executeTime=futureTime;
+        }
+        manager.set(AlarmManager.RTC_WAKEUP, executeTime, pi);
 
     }
 

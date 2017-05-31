@@ -263,7 +263,7 @@ public class downPresenter implements downContract.Presenter{
     }
 
     @Override
-    public void downloadFiles(ArrayList<FileEntry> entries,ArrayList<AttachmentViewHolder> holders) {
+    public void downloadFiles(ArrayList<FileEntry> entries) {
         service.downloadFiles(entries);
     }
 

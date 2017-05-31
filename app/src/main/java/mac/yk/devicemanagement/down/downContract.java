@@ -41,7 +41,7 @@ public interface downContract {
           */
         void uploadFile(File file);
         void downloadFile(FileEntry entry);
-        void downloadFiles(ArrayList<FileEntry> entries,  ArrayList<AttachmentViewHolder> holders);
+        void downloadFiles(ArrayList<FileEntry> entries);
         /**
          * 调用db
          */

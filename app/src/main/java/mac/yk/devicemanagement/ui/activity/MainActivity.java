@@ -44,6 +44,7 @@ import mac.yk.devicemanagement.bean.User;
 import mac.yk.devicemanagement.db.dbUser;
 import mac.yk.devicemanagement.net.ApiWrapper;
 import mac.yk.devicemanagement.net.ServerAPI;
+import mac.yk.devicemanagement.service.check.BatteryService;
 import mac.yk.devicemanagement.ui.fragment.CountFragment;
 import mac.yk.devicemanagement.ui.fragment.MainFragment;
 import mac.yk.devicemanagement.ui.fragment.NoticeFragment;
@@ -85,6 +86,7 @@ public class MainActivity extends BaseActivity {
 
     ArrayList<Fragment> fragments;
     int showId;
+    String TAG="main";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -102,6 +104,7 @@ public class MainActivity extends BaseActivity {
         } else {
             mTv.setVisibility(View.VISIBLE);
         }
+        startCheck();
         init();
         initActionbar();
         dialogHolder = new DialogHolder(view);
@@ -119,6 +122,12 @@ public class MainActivity extends BaseActivity {
             getYujing();
         }
         isFromNotification();
+    }
+
+    private void startCheck() {
+        L.e(TAG,"startService");
+        Intent intent=new Intent(this, BatteryService.class);
+        startService(intent);
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)

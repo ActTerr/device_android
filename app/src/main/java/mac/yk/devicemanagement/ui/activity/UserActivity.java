@@ -79,6 +79,20 @@ public class UserActivity extends BaseActivity {
             station=ConvertUtils.getServiceStation(u.getUnit());
         }
         unit.setText(station);
+        initNightModeButton();
+    }
+
+    private void initNightModeButton() {
+        boolean nightMode=SpUtil.getNightMode(context);
+        if (nightMode){
+            open.setVisibility(View.INVISIBLE);
+            close.setVisibility(View.VISIBLE);
+            btnBack.setBackground(getResources().getDrawable(R.drawable.back));
+        }else {
+            close.setVisibility(View.INVISIBLE);
+            open.setVisibility(View.VISIBLE);
+            btnBack.setBackground(getResources().getDrawable(R.drawable.backw));
+        }
     }
 
     @OnClick({R.id.rlUser, R.id.rlPasswd, R.id.logOut, R.id.auxiliary, R.id.open, R.id.close})
@@ -135,14 +149,14 @@ public class UserActivity extends BaseActivity {
     }
 
     private void setCheckClose() {
-        SpUtil.setCheck(context, false);
+        SpUtil.setNightMode(context, false);
         close.setVisibility(View.INVISIBLE);
         open.setVisibility(View.VISIBLE);
         btnBack.setBackground(getResources().getDrawable(R.drawable.backw));
     }
 
     private void setCheckOpen() {
-        SpUtil.setCheck(context, true);
+        SpUtil.setNightMode(context, true);
         open.setVisibility(View.INVISIBLE);
         close.setVisibility(View.VISIBLE);
         btnBack.setBackground(getResources().getDrawable(R.drawable.back));

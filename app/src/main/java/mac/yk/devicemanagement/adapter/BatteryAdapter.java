@@ -38,7 +38,7 @@ public class BatteryAdapter extends RecyclerView.Adapter<BatteryAdapter.BatteryV
     public void onBindViewHolder(BatteryViewHolder holder, int position) {
         long hour=60*60*1000;
         final Battery battery=list.get(position);
-        holder.position.setText(position+".");
+        holder.position.setText(position+1+".");
         holder.batteryType.setText(battery.getType());
         holder.theory.setText((int) (battery.getTheory_duration()/hour)+"小时");
         long usedDuration=System.currentTimeMillis()-battery.getStart_time()+battery.getUsed_duration();

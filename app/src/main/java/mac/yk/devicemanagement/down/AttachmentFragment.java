@@ -59,6 +59,9 @@ public class AttachmentFragment extends BaseFragment implements downContract.Vie
     boolean isEdit;
     String TAG = "AttachmentFragment";
     ArrayList<FileEntry> fileEntries = new ArrayList<>();
+
+    ArrayList<FileEntry> downloads=new ArrayList<>();
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -81,12 +84,15 @@ public class AttachmentFragment extends BaseFragment implements downContract.Vie
     }
 
 
-    @OnClick({R.id.iv_add})
+    @OnClick({R.id.iv_add,R.id.btn_down})
     public void onClick(View view) {
         switch (view.getId()) {
 
             case R.id.iv_add:
                 selectFile();
+                break;
+            case R.id.btn_down:
+                presenter.downloadFiles(downloads);
                 break;
         }
     }
@@ -99,12 +105,11 @@ public class AttachmentFragment extends BaseFragment implements downContract.Vie
     }
 
 
-
     @Override
     public void refreshView() {
-        for(FileEntry entry:fileEntries){
-            if (entry.getDownloadStatus()==I.DOWNLOAD_STATUS.DOWNLOADING){
-                L.e(TAG,"downloading"+entry.getCompletedSize());
+        for (FileEntry entry : fileEntries) {
+            if (entry.getDownloadStatus() == I.DOWNLOAD_STATUS.DOWNLOADING) {
+                L.e(TAG, "downloading" + entry.getCompletedSize());
             }
         }
         adapter.notifyDataSetChanged();
@@ -185,13 +190,11 @@ public class AttachmentFragment extends BaseFragment implements downContract.Vie
         boolean admin;
 
         //已选中要下载的
-        ArrayList<String> names = new ArrayList<>();
 
 
         PopupWindow popupWindow;
         PopupHolder popupHolder;
         boolean isStop;
-
 
 
         public AttachmentAdapter(Context context) {
@@ -214,23 +217,23 @@ public class AttachmentFragment extends BaseFragment implements downContract.Vie
 
             final FileEntry entry = fileEntries.get(position);
             final int status = entry.getDownloadStatus();
-            if (status==I.DOWNLOAD_STATUS.DOWNLOADING||status==I.DOWNLOAD_STATUS.PAUSE){
+            if (status == I.DOWNLOAD_STATUS.DOWNLOADING || status == I.DOWNLOAD_STATUS.PAUSE) {
                 holder.pb.setVisibility(View.VISIBLE);
                 holder.tvCancel.setVisibility(View.VISIBLE);
                 holder.ivControl.setVisibility(View.VISIBLE);
-                int process=(int) (entry.getCompletedSize()*100/entry.getToolSize());
-                L.e(TAG,"file process:"+process);
+                int process = (int) (entry.getCompletedSize() * 100 / entry.getToolSize());
+                L.e(TAG, "file process:" + process);
                 holder.pb.setProgress(process);
             }
             if (status == I.DOWNLOAD_STATUS.COMPLETED) {
-                L.e(TAG,"完成");
+                L.e(TAG, "完成");
                 holder.pb.setVisibility(View.GONE);
                 holder.cbAt.setVisibility(View.GONE);
                 holder.tvCancel.setVisibility(View.GONE);
                 holder.ivControl.setVisibility(View.GONE);
             }
             if (admin) {
-                L.e(TAG,"丫不是admin");
+                L.e(TAG, "丫不是admin");
                 holder.ivDelete.setVisibility(View.VISIBLE);
                 holder.ivEdit.setVisibility(View.VISIBLE);
                 holder.cbAt.setVisibility(View.GONE);
@@ -267,11 +270,10 @@ public class AttachmentFragment extends BaseFragment implements downContract.Vie
                     setUnEditStatus(holder);
                 }
 
-            }else {
+            } else {
                 holder.attachmentName.setFocusable(false);
                 holder.attachmentName.setFocusableInTouchMode(false);
             }
-
 
 
             holder.attachmentName.setText(entry.getFileName());
@@ -281,14 +283,14 @@ public class AttachmentFragment extends BaseFragment implements downContract.Vie
             holder.cbAt.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    names.add(entry.getFileName());
+                    downloads.add(entry);
                 }
             });
 
             holder.ivDocument.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    L.e(TAG,"点击下载");
+                    L.e(TAG, "点击下载");
                     if (admin) {
                         L.e("wocao", "丫不是admin啊");
                         showSelectPopupWindow(holder.ivDocument, entry, holder);
@@ -326,14 +328,14 @@ public class AttachmentFragment extends BaseFragment implements downContract.Vie
         }
 
         private void showCancelDialog(final FileEntry entry) {
-            AlertDialog dialog= new AlertDialog.Builder(context)
+            AlertDialog dialog = new AlertDialog.Builder(context)
                     .setTitle("确定取消吗下载?")
                     .setPositiveButton("确定", new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
-                            if (admin){
+                            if (admin) {
                                 presenter.cancelUpload(entry);
-                            }else {
+                            } else {
                                 presenter.cancelDownload(entry);
                             }
                             dialog.dismiss();
@@ -346,7 +348,7 @@ public class AttachmentFragment extends BaseFragment implements downContract.Vie
                     }).create();
             dialog.show();
         }
- 
+
         private void showSelectPopupWindow(ImageView iv, FileEntry entry, AttachmentViewHolder holder) {
             int width = ConvertUtils.dp2px(context, 150);
             int height = ConvertUtils.dp2px(context, 100);
@@ -437,9 +439,7 @@ public class AttachmentFragment extends BaseFragment implements downContract.Vie
         }
 
 
-      
     }
 
-    
 
 }
