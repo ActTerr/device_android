@@ -43,6 +43,9 @@ public class BatteryService extends Service {
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
+        if (intent==null){
+            L.e(TAG,"竟然是Null？？？？？");
+        }
         check(intent);
         if(!intent.getAction().equals("check")){
             thread.start();
@@ -56,6 +59,9 @@ public class BatteryService extends Service {
      *
      */
     private void check(Intent intent){
+        if (intent==null){
+            L.e(TAG,"竟然是Null？？？？？");
+        }
         boolean alarm=intent.getBooleanExtra("alarm",false);
         L.e(TAG, "get intent and start");
         context = getApplicationContext();

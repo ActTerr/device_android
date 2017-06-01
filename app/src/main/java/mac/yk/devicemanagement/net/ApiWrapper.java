@@ -36,6 +36,7 @@ public class ApiWrapper<T> {
         return initRetrofit().create(mClazz);
     }
 
+
     private  Retrofit initRetrofit() {
         if (retrofit==null){
             HttpLoggingInterceptor loggingInterceptor = new HttpLoggingInterceptor();

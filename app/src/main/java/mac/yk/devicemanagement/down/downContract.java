@@ -26,6 +26,7 @@ public interface downContract {
         void choseFile(Intent intent);
         void setEntries(ArrayList<FileEntry> entries);
         void startService(FileEntry entry);
+        void completedDownload(FileEntry entry);
     }
     interface Presenter extends BasePresenter{
         /**
@@ -56,8 +57,10 @@ public interface downContract {
         void stopUpload(String name);
         void cancelUpload(FileEntry entry);
 
+        void refreshView();
         void updateProgress(String name,long completed);
-        void transferFinish(FileEntry entry);
+        void completedUpload(FileEntry entry);
+        void completedDownload(FileEntry entry);
         void startDownload(String name,long totalSize);
     }
 }

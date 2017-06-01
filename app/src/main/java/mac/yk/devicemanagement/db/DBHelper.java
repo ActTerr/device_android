@@ -4,6 +4,8 @@ import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
+import mac.yk.devicemanagement.util.SpUtil;
+
 /**
  * Created by mac-yk on 2017/5/4.
  */
@@ -28,12 +30,15 @@ public class DBHelper extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(SQLiteDatabase db) {
+        if (!SpUtil.getLoginUser(context).equals("")){
+            dbFile.getInstance(context).onCreate(db);
+        }
         dbUser.getInstance(context).onCreate(db);
-        dbFile.getInstance(context).onCreate(db);
     }
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
+
         dbUser.getInstance(context).onUpgrade(db,oldVersion,newVersion);
     }
 

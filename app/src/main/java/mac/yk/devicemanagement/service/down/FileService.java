@@ -10,15 +10,21 @@ import android.widget.RemoteViews;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Timer;
+import java.util.TimerTask;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 import mac.yk.devicemanagement.bean.FileEntry;
+import mac.yk.devicemanagement.db.IdbFileEntry;
 import mac.yk.devicemanagement.down.downContract;
 import mac.yk.devicemanagement.down.downPresenter;
 import mac.yk.devicemanagement.ui.holder.AttachmentViewHolder;
 import mac.yk.devicemanagement.util.L;
+import rx.Observable;
 import rx.Subscription;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.functions.Action1;
 
 /**
  * Created by mac-yk on 2017/5/13.
@@ -46,14 +52,18 @@ public class FileService extends Service implements IFile {
     private RemoteViews remoteViews;
     private NotificationManager mNotificationManager;
     private ExecutorService executorService;
-
-    public void setPresenter(downPresenter presenter){
-        this.presenter=presenter;
-    }
+    IdbFileEntry idbFileEntry;
+    Timer timer=new Timer();
+    int downCount=0;
     IServiceListener listener=new IServiceListener() {
         @Override
-        public void startDownload(String name,long total) {
-            presenter.startDownload(name,total);
+        public void startDownload() {
+
+            downCount+=1;
+            if (downCount==1){
+                L.e(TAG,"start timer");
+                timer.schedule(timerTask,0,200);
+            }
         }
 
         @Override
@@ -68,21 +78,55 @@ public class FileService extends Service implements IFile {
 
         @Override
         public void onTransferring(String name, long completed) {
-            L.e(TAG,"get progress");
-            presenter.updateProgress(name,completed);
+
         }
 
         @Override
         public void onCompletedUpload(FileEntry entry) {
-            L.e(TAG,"execute completed upload");
-            presenter.transferFinish(entry);
+
         }
 
         @Override
         public void onCompletedDownload(FileEntry entry) {
-            presenter.transferFinish(entry);
+            downCount-=1;
+            L.e(TAG,"count:"+downCount);
+            if (downCount==0){
+                L.e(TAG,"timer stop");
+                timer.cancel();
+            }
+
+        }
+
+
+    };
+    public void setPresenter(downPresenter presenter){
+        this.presenter=presenter;
+        idbFileEntry=presenter.getDbEntry();
+//        EventBus.getDefault().register(this);
+        
+    }
+
+    TimerTask timerTask=new TimerTask() {
+
+        @Override
+        public void run() {
+            if (downCount > 0) {
+                Observable.just("1").observeOn(AndroidSchedulers.mainThread())
+                        .subscribe(new Action1<String>() {
+                            @Override
+                            public void call(String s) {
+                                L.e(TAG,"timer refresh");
+                                presenter.refreshView();
+                            }
+                        });
+
+
+            }
         }
     };
+
+    
+    
 //    IServiceListener listener=new IServiceListener() {
 //        @Override
 //        public void upDateNotification() {
@@ -152,6 +196,11 @@ public class FileService extends Service implements IFile {
 
     }
 
+//    @Subscribe(threadMode = ThreadMode.MAIN)
+//    public void refreshView(boolean b){
+//        L.e(TAG,"presenter refresh");
+//        presenter.refreshView();
+//    }
 
     @Nullable
     @Override
@@ -177,7 +226,7 @@ public class FileService extends Service implements IFile {
     File file;
     @Override
     public void uploadFile(final FileEntry entry) {
-        final FileTask fileTask = new FileTask(entry, context,listener);
+        final FileTask fileTask = new FileTask(entry, context,idbFileEntry,listener);
         fileTasks.add(fileTask);
         L.e("cao","task start");
         fileTask.onStartUpload();
@@ -187,17 +236,19 @@ public class FileService extends Service implements IFile {
 
     @Override
     public void downloadFile(FileEntry entry) {
-        FileTask fileTask = new FileTask(entry, context,listener);
+
+        FileTask fileTask = new FileTask(entry, context,idbFileEntry,listener);
         fileTasks.add(fileTask);
         fileTask.onStartDownload();
     }
 
     @Override
     public void downloadFiles(ArrayList<FileEntry> entries) {
-        for (FileEntry entry : entries) {
-            FileTask fileTask = new FileTask(entry, context, listener);
-            fileTasks.add(fileTask);
-            fileTask.onStartDownload();
+        for (final FileEntry entry : entries) {
+                    FileTask fileTask = new FileTask(entry, context,idbFileEntry,listener);
+                    fileTasks.add(fileTask);
+                    fileTask.onStartDownload();
+
         }
 
     }
@@ -224,7 +275,7 @@ public class FileService extends Service implements IFile {
     public void cancelDownload(FileEntry entry) {
         FileTask task = getTask(entry.getFileName());
         if (task == null) {
-            task=new FileTask(entry,context,listener);
+            task=new FileTask(entry,context,idbFileEntry,listener);
             task.onCancelDownload();
         }
     }
@@ -243,7 +294,7 @@ public class FileService extends Service implements IFile {
     public void cancelUpload(FileEntry entry) {
         FileTask task = getTask(entry.getFileName());
         if (task == null) {
-            task=new FileTask(entry,context,listener);
+            task=new FileTask(entry,context,idbFileEntry,listener);
             task.onCancelUpload();
         }
     }

@@ -21,6 +21,7 @@ public interface FileTaskListener {
 
     void onError(FileTask fileTask, int errorCode);
 
+
     int DOWNLOAD_ERROR_FILE_NOT_FOUND = -1;
     int DOWNLOAD_ERROR_IO_ERROR = -2;
 

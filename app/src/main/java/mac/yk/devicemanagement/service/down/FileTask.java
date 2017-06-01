@@ -22,6 +22,7 @@ import mac.yk.devicemanagement.I;
 import mac.yk.devicemanagement.bean.Attachment;
 import mac.yk.devicemanagement.bean.FileEntry;
 import mac.yk.devicemanagement.bean.Result;
+import mac.yk.devicemanagement.db.IdbFileEntry;
 import mac.yk.devicemanagement.db.dbFile;
 import mac.yk.devicemanagement.net.ApiWrapper;
 import mac.yk.devicemanagement.net.ProgressListener;
@@ -33,8 +34,6 @@ import mac.yk.devicemanagement.util.OpenFileUtil;
 import mac.yk.devicemanagement.util.ToastUtil;
 import okhttp3.RequestBody;
 import okhttp3.ResponseBody;
-import retrofit2.Call;
-import retrofit2.Callback;
 import retrofit2.Response;
 import rx.Subscriber;
 import rx.Subscription;
@@ -54,22 +53,25 @@ public class FileTask implements FileTaskListener {
     Context context;
     dbFile dbfile;
     boolean flag;
-    boolean downFlag=true;
-    IServiceListener listener;
+    private boolean downFlag=true;
+    boolean start=true;
 
+    IServiceListener listener;
     String TAG="FileTask";
-    public FileTask(FileEntry fileEntry,Context context,IServiceListener listener) {
+    public FileTask(FileEntry fileEntry, Context context, IdbFileEntry dbfile,IServiceListener listener) {
         entry=fileEntry;
         this.context=context;
-        dbfile=dbFile.getInstance(context);
+        this.dbfile= (dbFile) dbfile;
         this.listener=listener;
-
     }
-    Handler mHandler=new Handler(){
+
+
+    Handler handler=new Handler(){
         @Override
         public void handleMessage(Message msg) {
+            super.handleMessage(msg);
+            listener.startDownload();
 
-                listener.onTransferring(file.getName(), (Long) msg.obj);
         }
     };
 
@@ -147,24 +149,60 @@ public class FileTask implements FileTaskListener {
 //    }
     @Override
     public void onStartDownload() {
-        L.e(TAG,"开始下载");
-        ServerAPI server=RetrofitUtil.createService(ServerAPI.class);
-        Call<ResponseBody> call = server.downloadFile(entry.getFileName(),entry.getCompletedSize());
+                new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        L.e(Thread.currentThread().toString(),"开始下载");
+                        ServerAPI serverAPI=RetrofitUtil.initDown(ServerAPI.class, new ProgressListener() {
+                            @Override
+                            public void onProgress(long hasWrittenLen, long totalLen, boolean hasFinish) {
 
-        call.enqueue(new Callback<ResponseBody>() {
-            @Override
-            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-                if (response.isSuccessful()){
-                    
-                    writeResponseBodyToDisk(response.body(),entry.getFileName());
-                }
-            }
+                                if (start){
+                                    L.e("start",hasWrittenLen+"");
+                                    start=false;
+                                    entry.setDownloadStatus(I.DOWNLOAD_STATUS.PREPARE);
+                                    entry.setToolSize(totalLen);
+                                    Message message=handler.obtainMessage();
+                                    message.sendToTarget();
+                                }else {
 
-            @Override
-            public void onFailure(Call<ResponseBody> call, Throwable t) {
-                ToastUtil.showToast(context,"下载出现异常");
-            }
-        });
+                                    entry.setCompletedSize(hasWrittenLen);
+                                    entry.setDownloadStatus(I.DOWNLOAD_STATUS.DOWNLOADING);
+
+                                    L.e(Thread.currentThread().toString(),"进度:"+hasWrittenLen+"/"+totalLen);
+
+                                }
+
+                            }
+                        });
+
+                        serverAPI.downloadFile(entry.getFileName(),entry.getCompletedSize())
+                                .subscribeOn(Schedulers.io())
+                                .observeOn(AndroidSchedulers.mainThread())
+                                .subscribe(new Subscriber<Response<ResponseBody>>() {
+                                    @Override
+                                    public void onCompleted() {
+
+                                    }
+
+                                    @Override
+                                    public void onError(Throwable e) {
+                                        ToastUtil.showToast(context,"下载失败！");
+                                    }
+
+                                    @Override
+                                    public void onNext(Response<ResponseBody> response) {
+                                        L.e(TAG,"下载成功");
+                                        writeResponseBodyToDisk( response.body(),entry.getFileName());
+                                    }
+                                });
+
+                    }
+                }).start();
+
+
+
+
     }
     private boolean writeResponseBodyToDisk(ResponseBody body,String name) {
         try {
@@ -177,27 +215,27 @@ public class FileTask implements FileTaskListener {
             try {
                 byte[] fileReader = new byte[8192];
 
-                long fileSize = body.contentLength();
-                long fileSizeDownloaded = 0;
+//                long fileSize = body.contentLength();
+//                long fileSizeDownloaded = 0;
 
                 inputStream = body.byteStream();
                 outputStream = new FileOutputStream(file);
-                listener.startDownload(entry.getFileName(),fileSize);
-                while (downFlag) {
-                    int read = inputStream.read(fileReader);
+                    while (downFlag) {
+                        int read = inputStream.read(fileReader);
 
-                    if (read == -1) {
-                        break;
+                        if (read == -1) {
+                            break;
+                        }
+
+                        outputStream.write(fileReader, 0, read);
+
+//                        fileSizeDownloaded += read;
+
                     }
+                    outputStream.flush();
+                L.e(TAG,"我草泥马啊，醉了");
+                    onDownCompleted();
 
-                    outputStream.write(fileReader, 0, read);
-
-                    fileSizeDownloaded += read;
-                    listener.onTransferring(file.getName(),fileSizeDownloaded);
-                    L.e(TAG,"进度:"+fileSizeDownloaded+"/"+fileSize);
-                }
-                outputStream.flush();
-                onDownCompleted();
                 return true;
             } catch (IOException e) {
                 return false;
@@ -238,7 +276,7 @@ public class FileTask implements FileTaskListener {
         }
         L.e(TAG,file.getAbsolutePath());
         Map<String, RequestBody> requestBodyMap = new HashMap<>();
-       fileRequestBody= new UploadFileRequestBody(file, new DefaultProgressListener(mHandler,
+       fileRequestBody= new UploadFileRequestBody(file, new DefaultProgressListener(
                 entry.getCompletedSize()));
         requestBodyMap.put("file\"; filename=\"" + entry.getFileName(), fileRequestBody);
         ServerAPI serverAPI = RetrofitUtil.createService(ServerAPI.class);
@@ -267,6 +305,16 @@ public class FileTask implements FileTaskListener {
 
     }
 
+    @Override
+    public void onDownCompleted() {
+        L.e(TAG,"complete download");
+        if (dbfile.updateFileStatus(file.getName(),file.length(),I.DOWNLOAD_STATUS.COMPLETED)){
+            entry.setDownloadStatus(I.DOWNLOAD_STATUS.COMPLETED);
+            L.e(TAG,"complete download listenr");
+            listener.onCompletedDownload(entry);
+        }
+    }
+
 //    @Override
 //    public void onTransferring(int i) {
 //        EventBus.getDefault().post(i);
@@ -274,7 +322,7 @@ public class FileTask implements FileTaskListener {
 
     @Override
     public boolean onPauseUpload() {
-        fileRequestBody.pauseWrite();
+//        fileRequestBody.pauseWrite();
         L.e(TAG,"已暂停，当前上传："+finished);
         entry.setCompletedSize(finished);
         entry.setDownloadStatus(I.DOWNLOAD_STATUS.PAUSE);
@@ -363,20 +411,15 @@ public class FileTask implements FileTaskListener {
                 if (divisionFile.exists()){
                     divisionFile.delete();
                 }
-                listener.onCompletedUpload(entry);
 
             }
 
         }
     }
 
-    @Override
-    public void onDownCompleted() {
-        if (dbfile.updateFileStatus(file.getName(),file.length(),I.DOWNLOAD_STATUS.COMPLETED)){
-            entry.setDownloadStatus(I.DOWNLOAD_STATUS.COMPLETED);
-            listener.onCompletedDownload(entry);
-        }
-    }
+
+
+
 
     @Override
     public void onError(FileTask fileTask, int errorCode) {
@@ -427,9 +470,9 @@ public class FileTask implements FileTaskListener {
 
        private Handler mHandler;
        long completed;
-       public DefaultProgressListener(Handler mHandler, long completed) {
+       public DefaultProgressListener( long completed) {
            this.completed=completed;
-           this.mHandler = mHandler;
+//           this.mHandler = mHandler;
        }
 
         @Override

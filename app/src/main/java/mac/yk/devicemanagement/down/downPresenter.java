@@ -69,6 +69,9 @@ public class downPresenter implements downContract.Presenter{
         service.setPresenter(this);
     }
 
+
+
+
     @Override
     public void subscribe() {
         getAttachments();
@@ -309,21 +312,21 @@ public class downPresenter implements downContract.Presenter{
         view.refreshView();
     }
 
+    @Override
+    public void refreshView() {
+
+        view.refreshView();
+    }
+
 
     @Override
     public void updateProgress(String name,long completed) {
-        for (FileEntry entry:entries){
-            if (entry.getFileName().equals(name)){
-                entry.setCompletedSize(completed);
-                entry.setDownloadStatus(I.DOWNLOAD_STATUS.DOWNLOADING);
-            }
-        }
-        L.e(TAG,"execute update process");
+
         view.refreshView();
     }
 
     @Override
-    public void transferFinish(FileEntry ent) {
+    public void completedUpload(FileEntry ent) {
         L.e(TAG,"上传完成");
         for (FileEntry entry:entries){
             if (entry.getFileName().equals(ent.getFileName())){
@@ -334,13 +337,23 @@ public class downPresenter implements downContract.Presenter{
     }
 
     @Override
+    public void completedDownload(FileEntry ent) {
+
+        view.completedDownload(ent);
+        view.refreshView();
+    }
+
+
+
+    @Override
     public void startDownload(String name, long totalSize) {
-        for (FileEntry entry:entries){
-            if (entry.getFileName().equals(name)){
-                entry.setToolSize(totalSize);
-                dbEntry.updateFileTotal(name,totalSize);
-            }
-        }
+
+        view.refreshView();
+    }
+
+    @NonNull
+    public IdbFileEntry getDbEntry() {
+        return dbEntry;
     }
 
 

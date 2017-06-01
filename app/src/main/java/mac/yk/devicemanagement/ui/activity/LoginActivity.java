@@ -14,6 +14,7 @@ import butterknife.ButterKnife;
 import mac.yk.devicemanagement.application.MyMemory;
 import mac.yk.devicemanagement.R;
 import mac.yk.devicemanagement.bean.User;
+import mac.yk.devicemanagement.db.DBHelper;
 import mac.yk.devicemanagement.db.dbUser;
 import mac.yk.devicemanagement.net.ApiWrapper;
 import mac.yk.devicemanagement.net.ServerAPI;
@@ -75,7 +76,7 @@ public class LoginActivity extends BaseActivity{
              SpUtil.saveLoginUser(context,user.getAccounts());
              startActivity(intent);
              MFGT.finish((Activity) context);
-
+             DBHelper.getInstance(context).onCreate(DBHelper.getInstance(context).getWritableDatabase());
          }
      };
 

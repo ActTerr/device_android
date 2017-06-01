@@ -22,6 +22,7 @@ public class RetrofitUtil {
     public static <T> T createService(Class<T> clazz) {
         if (retrofit == null) {
             synchronized (RetrofitUtil.class) {
+
                 Retrofit.Builder builder = new Retrofit.Builder();
                 retrofit = builder.baseUrl(I.REQUEST.SERVER_ROOT)
                         .client(okHttpClient)
@@ -32,4 +33,20 @@ public class RetrofitUtil {
         }
         return retrofit.create(clazz);
     }
+
+
+    public static <T> T initDown(Class<T> clazz,ProgressListener listener){
+        if (retrofit==null){
+            DownloadProgressInterceptor interceptor=new DownloadProgressInterceptor(listener);
+          OkHttpClient  okHttpClient=new OkHttpClient.Builder().addInterceptor(interceptor).build();
+            retrofit=new Retrofit.Builder()
+                    .client(okHttpClient)
+                    .baseUrl(I.REQUEST.SERVER_ROOT)
+                    .addConverterFactory(GsonConverterFactory.create())
+                    .addCallAdapterFactory(RxJavaCallAdapterFactory.create())
+                    .build();
+        }
+        return retrofit.create(clazz);
+    }
+
 }

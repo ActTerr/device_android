@@ -14,6 +14,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.PopupWindow;
 import android.widget.TextView;
@@ -60,22 +61,36 @@ public class AttachmentFragment extends BaseFragment implements downContract.Vie
     String TAG = "AttachmentFragment";
     ArrayList<FileEntry> fileEntries = new ArrayList<>();
 
-    ArrayList<FileEntry> downloads=new ArrayList<>();
+    ArrayList<FileEntry> downloads = new ArrayList<>();
+    @BindView(R.id.btn_down)
+    Button btnDown;
+    private boolean admin;
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.frag_notice, container, false);
         ButterKnife.bind(this, view);
+        initView();
+
+        getAttachments();
+
+        return view;
+    }
+
+    private void initView() {
         addHistory.setVisibility(View.GONE);
         context = getContext();
         pd = new ProgressDialog(context);
         adapter = new AttachmentAdapter(context);
         rv.setAdapter(adapter);
         rv.setLayoutManager(new LinearLayoutManager(context));
-        getAttachments();
-
-        return view;
+        admin = MyMemory.getInstance().getUser().getGrade() == 0;
+        if (!admin) {
+            ivAdd.setVisibility(View.GONE);
+        } else {
+            btnDown.setVisibility(View.GONE);
+        }
     }
 
 
@@ -84,7 +99,7 @@ public class AttachmentFragment extends BaseFragment implements downContract.Vie
     }
 
 
-    @OnClick({R.id.iv_add,R.id.btn_down})
+    @OnClick({R.id.iv_add, R.id.btn_down})
     public void onClick(View view) {
         switch (view.getId()) {
 
@@ -92,7 +107,11 @@ public class AttachmentFragment extends BaseFragment implements downContract.Vie
                 selectFile();
                 break;
             case R.id.btn_down:
+                for (FileEntry entry:downloads){
+                    L.e(TAG,"选中："+entry.getFileName());
+                }
                 presenter.downloadFiles(downloads);
+                downloads.clear();
                 break;
         }
     }
@@ -107,12 +126,13 @@ public class AttachmentFragment extends BaseFragment implements downContract.Vie
 
     @Override
     public void refreshView() {
-        for (FileEntry entry : fileEntries) {
-            if (entry.getDownloadStatus() == I.DOWNLOAD_STATUS.DOWNLOADING) {
-                L.e(TAG, "downloading" + entry.getCompletedSize());
-            }
-        }
+//        for (FileEntry entry : fileEntries) {
+//            if (entry.getDownloadStatus() == I.DOWNLOAD_STATUS.DOWNLOADING) {
+//                L.e(entry.getFileName(),  "downloading:" + entry.getCompletedSize());
+//            }
+//        }
         adapter.notifyDataSetChanged();
+        L.e(TAG,"adapter update");
     }
 
     private void setUnEditStatus(AttachmentViewHolder holder) {
@@ -177,6 +197,12 @@ public class AttachmentFragment extends BaseFragment implements downContract.Vie
     }
 
     @Override
+    public void completedDownload(FileEntry entry) {
+        downloads.remove(entry);
+        L.e(TAG,"comple:"+downloads.size());
+    }
+
+    @Override
     public void setPresenter(downContract.Presenter presenter) {
         this.presenter = presenter;
     }
@@ -187,7 +213,6 @@ public class AttachmentFragment extends BaseFragment implements downContract.Vie
         Context context;
         String TAG = "AttachmentAdapter";
         boolean isEdit;
-        boolean admin;
 
         //已选中要下载的
 
@@ -200,7 +225,7 @@ public class AttachmentFragment extends BaseFragment implements downContract.Vie
         public AttachmentAdapter(Context context) {
             this.context = context;
 //            EventBus.getDefault().register(this);
-            admin = MyMemory.getInstance().getUser().getGrade() == 0;
+
             L.e(TAG, "isadmin:" + admin);
         }
 
@@ -217,21 +242,29 @@ public class AttachmentFragment extends BaseFragment implements downContract.Vie
 
             final FileEntry entry = fileEntries.get(position);
             final int status = entry.getDownloadStatus();
-            if (status == I.DOWNLOAD_STATUS.DOWNLOADING || status == I.DOWNLOAD_STATUS.PAUSE) {
-                holder.pb.setVisibility(View.VISIBLE);
-                holder.tvCancel.setVisibility(View.VISIBLE);
-                holder.ivControl.setVisibility(View.VISIBLE);
-                int process = (int) (entry.getCompletedSize() * 100 / entry.getToolSize());
-                L.e(TAG, "file process:" + process);
-                holder.pb.setProgress(process);
+            L.e("status",entry.getDownloadStatus()+"");
+            switch (status){
+                case I.DOWNLOAD_STATUS.PREPARE:
+                case I.DOWNLOAD_STATUS.PAUSE:
+                case I.DOWNLOAD_STATUS.DOWNLOADING:
+                    L.e(entry.getFileName(),"文件准备好");
+                    holder.pb.setVisibility(View.VISIBLE);
+                    holder.tvCancel.setVisibility(View.VISIBLE);
+                    holder.ivControl.setVisibility(View.VISIBLE);
+                    int process = (int) ((entry.getCompletedSize() * 100) / entry.getToolSize());
+                    L.e(entry.getFileName(), entry.getCompletedSize()+"/"+entry.getToolSize()+" process:"+process);
+                    holder.pb.setProgress(process);
+                    break;
+                case I.DOWNLOAD_STATUS.COMPLETED:
+                    holder.pb.setVisibility(View.GONE);
+                    holder.cbAt.setVisibility(View.GONE);
+                    holder.tvCancel.setVisibility(View.GONE);
+                    holder.ivControl.setVisibility(View.GONE);
+                    L.e(entry.getFileName(), "完成");
+                    break;
+
             }
-            if (status == I.DOWNLOAD_STATUS.COMPLETED) {
-                L.e(TAG, "完成");
-                holder.pb.setVisibility(View.GONE);
-                holder.cbAt.setVisibility(View.GONE);
-                holder.tvCancel.setVisibility(View.GONE);
-                holder.ivControl.setVisibility(View.GONE);
-            }
+
             if (admin) {
                 L.e(TAG, "丫不是admin");
                 holder.ivDelete.setVisibility(View.VISIBLE);

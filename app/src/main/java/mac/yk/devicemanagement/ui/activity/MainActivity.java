@@ -106,7 +106,7 @@ public class MainActivity extends BaseActivity {
         } else {
             mTv.setVisibility(View.VISIBLE);
         }
-        startCheck();
+
         init();
         initActionbar();
         dialogHolder = new DialogHolder(view);
@@ -124,15 +124,21 @@ public class MainActivity extends BaseActivity {
             getYujing();
         }
         isFromNotification();
+        startCheck();
     }
 
     private void startCheck() {
         L.e(TAG,"startService");
-        Intent intent=new Intent(this, BatteryService.class);
-        startService(intent);
+        if(!isServiceWorked(context,BatteryService.class.getPackage()+BatteryService.class.getName())){
+            Intent intent=new Intent(this, BatteryService.class);
+            startService(intent);
+        }
 
-        Intent intent2=new Intent(this, GuardService.class);
-        startService(intent2);
+        if (!isServiceWorked(context,GuardService.class.getPackage()+GuardService.class.getName())){
+            Intent intent2=new Intent(this, GuardService.class);
+            startService(intent2);
+        }
+
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)

@@ -18,6 +18,7 @@ public class SpUtil {
     }
 
     private static SharedPreferences getDefault(Context context){
+
        return PreferenceManager.getDefaultSharedPreferences(context);
     }
 

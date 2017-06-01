@@ -9,6 +9,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -17,9 +18,9 @@ import java.util.ArrayList;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-import mac.yk.devicemanagement.application.MyMemory;
 import mac.yk.devicemanagement.R;
 import mac.yk.devicemanagement.adapter.NoticeAdapter;
+import mac.yk.devicemanagement.application.MyMemory;
 import mac.yk.devicemanagement.bean.Notice;
 import mac.yk.devicemanagement.net.ApiWrapper;
 import mac.yk.devicemanagement.net.ServerAPI;
@@ -45,6 +46,8 @@ public class NoticeFragment extends BaseFragment {
     int memory;
     @BindView(R.id.add_history)
     TextView addHistory;
+    @BindView(R.id.btn_down)
+    Button btnDown;
 
     @Nullable
     @Override
@@ -58,6 +61,7 @@ public class NoticeFragment extends BaseFragment {
         rv.setAdapter(adapter);
         rv.setLayoutManager(new LinearLayoutManager(context));
         pd = new ProgressDialog(context);
+        btnDown.setVisibility(View.GONE);
         initData();
         return view;
     }
@@ -105,7 +109,7 @@ public class NoticeFragment extends BaseFragment {
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.add_history:
-                memory+=6;
+                memory += 6;
                 initData();
                 break;
             case R.id.iv_add:

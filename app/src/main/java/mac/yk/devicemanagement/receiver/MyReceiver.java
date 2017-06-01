@@ -20,7 +20,7 @@ public class MyReceiver extends BroadcastReceiver{
         boolean alarm=intent.getBooleanExtra("alarm",false);
         Intent intent1=new Intent(context, BatteryService.class);
         intent1.putExtra("alarm",alarm);
-        if (intent.getAction().equals("check")){
+        if (intent.getAction()!=null){
             intent1.setAction("check");
         }
         context.startService(intent1);

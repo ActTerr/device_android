@@ -8,7 +8,7 @@ import mac.yk.devicemanagement.bean.FileEntry;
 
 interface IServiceListener {
 
-    void startDownload(String name,long total);
+   void startDownload();
 
      void upDateNotification();
 
@@ -23,4 +23,6 @@ interface IServiceListener {
 
 
    void onCompletedDownload(FileEntry entry);
+
+
 }
