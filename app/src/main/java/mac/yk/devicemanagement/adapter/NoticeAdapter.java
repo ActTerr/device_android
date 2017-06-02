@@ -15,8 +15,8 @@ import java.util.ArrayList;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import mac.yk.devicemanagement.application.MyMemory;
 import mac.yk.devicemanagement.R;
+import mac.yk.devicemanagement.application.MyMemory;
 import mac.yk.devicemanagement.bean.Notice;
 import mac.yk.devicemanagement.bean.User;
 import mac.yk.devicemanagement.net.ApiWrapper;
@@ -37,7 +37,6 @@ public class NoticeAdapter extends RecyclerView.Adapter<NoticeAdapter.NoticeView
 
     User user;
     ProgressDialog dialog;
-
     public NoticeAdapter(Context context, ArrayList<Notice> list) {
         this.context = context;
         this.list = list;
@@ -49,7 +48,6 @@ public class NoticeAdapter extends RecyclerView.Adapter<NoticeAdapter.NoticeView
         View view = LayoutInflater.from(context).inflate(R.layout.item_notice, parent, false);
         NoticeViewHolder viewHolder = new NoticeViewHolder(view);
         return viewHolder;
-
     }
 
     @Override
@@ -66,7 +64,7 @@ public class NoticeAdapter extends RecyclerView.Adapter<NoticeAdapter.NoticeView
                             .setPositiveButton("确定", new DialogInterface.OnClickListener() {
                                 @Override
                                 public void onClick(DialogInterface dialog, int which) {
-                                    postDelete(notice.getNid());
+                                    postDelete(notice);
                                     dialog.dismiss();
                                 }
                             })
@@ -106,10 +104,10 @@ public class NoticeAdapter extends RecyclerView.Adapter<NoticeAdapter.NoticeView
 
 
 
-    private void postDelete(long Nid) {
+    private void postDelete(final Notice notice) {
         dialog.show();
         ApiWrapper<ServerAPI> wrapper=new ApiWrapper<>();
-        wrapper.targetClass(ServerAPI.class).getAPI().deleteNotice(Nid)
+        wrapper.targetClass(ServerAPI.class).getAPI().deleteNotice(notice.getNid())
                 .compose(wrapper.<String>applySchedulers())
                 .subscribe(new Subscriber<String>() {
                     @Override
@@ -128,6 +126,8 @@ public class NoticeAdapter extends RecyclerView.Adapter<NoticeAdapter.NoticeView
                     @Override
                     public void onNext(String s) {
                         dialog.dismiss();
+                        list.remove(notice);
+                        notifyDataSetChanged();
                         ToastUtil.showToast(context,"删除成功!");
                     }
                 });

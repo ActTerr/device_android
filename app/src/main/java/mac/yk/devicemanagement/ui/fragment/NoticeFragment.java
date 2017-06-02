@@ -13,11 +13,8 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import org.greenrobot.eventbus.EventBus;
-import org.greenrobot.eventbus.Subscribe;
-import org.greenrobot.eventbus.ThreadMode;
-
 import java.util.ArrayList;
+import java.util.Observable;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -28,7 +25,9 @@ import mac.yk.devicemanagement.application.MyMemory;
 import mac.yk.devicemanagement.bean.Notice;
 import mac.yk.devicemanagement.net.ApiWrapper;
 import mac.yk.devicemanagement.net.ServerAPI;
+import mac.yk.devicemanagement.observable.Update;
 import mac.yk.devicemanagement.util.ExceptionFilter;
+import mac.yk.devicemanagement.util.L;
 import mac.yk.devicemanagement.util.MFGT;
 import mac.yk.devicemanagement.util.ToastUtil;
 import rx.Observer;
@@ -37,7 +36,7 @@ import rx.Observer;
  * 公告列表
  */
 
-public class NoticeFragment extends BaseFragment {
+public class NoticeFragment extends BaseFragment implements java.util.Observer {
     @BindView(R.id.rv)
     RecyclerView rv;
     @BindView(R.id.iv_add)
@@ -53,11 +52,15 @@ public class NoticeFragment extends BaseFragment {
     @BindView(R.id.btn_down)
     Button btnDown;
 
+    String TAG="NoticeFragment";
+    Update update=new Update();
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.frag_notice, container, false);
         ButterKnife.bind(this, view);
+        update.addObserver(this);
+        MyMemory.getInstance().setUpdate(update);
         context = getContext();
         showIv();
         data = new ArrayList<>();
@@ -67,14 +70,9 @@ public class NoticeFragment extends BaseFragment {
         pd = new ProgressDialog(context);
         btnDown.setVisibility(View.GONE);
         initData();
-        EventBus.getDefault().register(this);
         return view;
     }
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    public void refresh(boolean b){
-        data.clear();
-        initData();
-    }
+
 
     private void showIv() {
         if (MyMemory.getInstance().getUser().getGrade() == 0) {
@@ -82,6 +80,11 @@ public class NoticeFragment extends BaseFragment {
         } else {
             ivAdd.setVisibility(View.GONE);
         }
+    }
+
+    public void refresh(){
+        data.clear();
+        initData();
     }
 
     private void initData() {
@@ -128,4 +131,9 @@ public class NoticeFragment extends BaseFragment {
         }
     }
 
+    @Override
+    public void update(Observable o, Object arg) {
+        L.e(TAG,"refresh");
+        refresh();
+    }
 }

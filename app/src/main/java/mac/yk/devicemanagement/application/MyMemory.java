@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import mac.yk.devicemanagement.bean.FileEntry;
 import mac.yk.devicemanagement.bean.Status;
 import mac.yk.devicemanagement.bean.User;
+import mac.yk.devicemanagement.observable.Update;
 import rx.Subscription;
 
 /**
@@ -101,5 +102,15 @@ public class MyMemory {
 
     public void setCheck(boolean check) {
         this.check = check;
+    }
+
+    private Update update;
+
+    public Update getUpdate() {
+        return update;
+    }
+
+    public void setUpdate(Update update) {
+        this.update = update;
     }
 }

@@ -30,6 +30,7 @@ import mac.yk.devicemanagement.down.NoticeDetailActivity;
 import mac.yk.devicemanagement.gson.UtilGsonBuilder;
 import mac.yk.devicemanagement.net.ApiWrapper;
 import mac.yk.devicemanagement.net.ServerAPI;
+import mac.yk.devicemanagement.observable.Update;
 import mac.yk.devicemanagement.util.ConvertUtils;
 import mac.yk.devicemanagement.util.ExceptionFilter;
 import mac.yk.devicemanagement.util.L;
@@ -68,7 +69,7 @@ public class NoticeDetailFragment extends BaseFragment {
     @BindView(R.id.division)
     View division;
 
-
+    Update update;
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -81,7 +82,7 @@ public class NoticeDetailFragment extends BaseFragment {
         getBundle();
         initView();
         setViewStatus();
-
+        update=MyMemory.getInstance().getUpdate();
         return view;
     }
 
@@ -144,8 +145,8 @@ public class NoticeDetailFragment extends BaseFragment {
                 postSaveNotice();
                 break;
             case R.id.btn_cancel:
-                noticeCommon.setText(notice.getCommon());
-                noticeTitle.setText(notice.getTitle());
+                noticeCommon.setText(notice.getCommon()==null?"":notice.getCommon());
+                noticeTitle.setText(notice.getTitle()==null?"":notice.getTitle());
                 setUNEditStatus();
                 break;
             case R.id.iv_delete:
@@ -249,8 +250,8 @@ public class NoticeDetailFragment extends BaseFragment {
                         ToastUtil.showToast(context, "保存成功");
                         notice = sn;
                         setUNEditStatus();
-                        NoticeDetailActivity activity= (NoticeDetailActivity) context;
-                        activity.
+                        update.setUpdate(true);
+                        L.e(TAG,"update position:"+update.toString());
                     }
                 });
     }

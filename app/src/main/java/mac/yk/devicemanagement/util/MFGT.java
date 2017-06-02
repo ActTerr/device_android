@@ -9,12 +9,12 @@ import com.wujay.fund.GestureVerifyActivity;
 
 import mac.yk.devicemanagement.R;
 import mac.yk.devicemanagement.bean.Notice;
+import mac.yk.devicemanagement.down.NoticeDetailActivity;
 import mac.yk.devicemanagement.ui.activity.DeviceDetailActivity;
 import mac.yk.devicemanagement.ui.activity.DeviceListActivity;
 import mac.yk.devicemanagement.ui.activity.GestureActivity;
 import mac.yk.devicemanagement.ui.activity.LoginActivity;
 import mac.yk.devicemanagement.ui.activity.MainActivity;
-import mac.yk.devicemanagement.down.NoticeDetailActivity;
 import mac.yk.devicemanagement.ui.activity.RecordActivity;
 import mac.yk.devicemanagement.ui.activity.SaveActivity;
 import mac.yk.devicemanagement.ui.activity.UserActivity;
@@ -81,6 +81,8 @@ public class MFGT {
         Intent intent=new Intent(context, MainActivity.class);
         startActivity(context,intent);
     }
+
+
     public static void finish(Activity activity){
         activity.finish();
         activity.overridePendingTransition(R.anim.push_right_in,R.anim.push_right_out);

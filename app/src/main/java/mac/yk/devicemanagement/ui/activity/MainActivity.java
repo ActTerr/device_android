@@ -149,6 +149,12 @@ public class MainActivity extends BaseActivity {
             toolBar.setTitle(title);
     }
 
+    @Subscribe(threadMode =ThreadMode.BACKGROUND)
+    public void refresh(boolean b){
+        L.e(TAG,"get refresh message");
+        NoticeFragment.refresh();
+    }
+
 
     private void isFromNotification() {
         Intent intent = getIntent();

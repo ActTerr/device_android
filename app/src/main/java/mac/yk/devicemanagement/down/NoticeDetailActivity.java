@@ -26,7 +26,6 @@ import mac.yk.devicemanagement.net.downServer;
 import mac.yk.devicemanagement.service.down.FileService;
 import mac.yk.devicemanagement.ui.activity.BaseActivity;
 import mac.yk.devicemanagement.ui.fragment.NoticeDetailFragment;
-import mac.yk.devicemanagement.util.MFGT;
 import mac.yk.devicemanagement.util.schedulers.SchedulerProvider;
 
 /**
@@ -52,7 +51,6 @@ public class NoticeDetailActivity extends BaseActivity {
     AttachmentFragment attachmentFragment;
     downPresenter presenter;
     long nid;
-    boolean isUpdate;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -75,11 +73,8 @@ public class NoticeDetailActivity extends BaseActivity {
     private void init() {
         viewPagerAdapter = new ViewPagerAdapter(getSupportFragmentManager());
         Notice notice = (Notice) getIntent().getSerializableExtra("notice");
-        if (notice==null){
 
-        }
         boolean isEdit = getIntent().getBooleanExtra("isEdit", false);
-
         NoticeDetailFragment NoticeDetailFragment = new NoticeDetailFragment();
         Bundle bundle = new Bundle();
         bundle.putSerializable("notice", notice);
@@ -132,16 +127,7 @@ public class NoticeDetailActivity extends BaseActivity {
 
         }
 
-    public void setUpdate(boolean update) {
-        isUpdate = update;
-    }
 
-    @Override
-    public void onBackPressed() {
-        super.onBackPressed();
-        MFGT.finish(this);
-        if (isUpdate){
 
-        }
-    }
+
 }
