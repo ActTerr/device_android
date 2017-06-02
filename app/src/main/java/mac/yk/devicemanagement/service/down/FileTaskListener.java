@@ -17,7 +17,7 @@ public interface FileTaskListener {
 
     void onCompletedUpload(long newId);
 
-    void onDownCompleted();
+    void onCompletedDownload();
 
     void onError(FileTask fileTask, int errorCode);
 

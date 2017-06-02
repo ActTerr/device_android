@@ -23,13 +23,13 @@ import java.util.Date;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-import mac.yk.devicemanagement.application.MyMemory;
 import mac.yk.devicemanagement.R;
+import mac.yk.devicemanagement.application.MyMemory;
 import mac.yk.devicemanagement.bean.Notice;
+import mac.yk.devicemanagement.down.NoticeDetailActivity;
 import mac.yk.devicemanagement.gson.UtilGsonBuilder;
 import mac.yk.devicemanagement.net.ApiWrapper;
 import mac.yk.devicemanagement.net.ServerAPI;
-import mac.yk.devicemanagement.down.NoticeDetailActivity;
 import mac.yk.devicemanagement.util.ConvertUtils;
 import mac.yk.devicemanagement.util.ExceptionFilter;
 import mac.yk.devicemanagement.util.L;
@@ -249,9 +249,12 @@ public class NoticeDetailFragment extends BaseFragment {
                         ToastUtil.showToast(context, "保存成功");
                         notice = sn;
                         setUNEditStatus();
+                        NoticeDetailActivity activity= (NoticeDetailActivity) context;
+                        activity.
                     }
                 });
     }
+
 
 
 }

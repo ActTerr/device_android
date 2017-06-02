@@ -1,9 +1,6 @@
 package mac.yk.devicemanagement.down;
 
-import android.content.Intent;
 import android.support.annotation.NonNull;
-
-import com.ipaulpro.afilechooser.utils.FileUtils;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -17,7 +14,6 @@ import mac.yk.devicemanagement.bean.FileEntry;
 import mac.yk.devicemanagement.db.IdbFileEntry;
 import mac.yk.devicemanagement.net.IDown;
 import mac.yk.devicemanagement.service.down.FileService;
-import mac.yk.devicemanagement.ui.holder.AttachmentViewHolder;
 import mac.yk.devicemanagement.util.L;
 import mac.yk.devicemanagement.util.OpenFileUtil;
 import mac.yk.devicemanagement.util.schedulers.BaseSchedulerProvider;
@@ -162,11 +158,16 @@ public class downPresenter implements downContract.Presenter{
         });
     }
 
-
+    FileEntry deleteEntry;
     @Override
-    public void deleteAttachment(final FileEntry entry) {
+    public void deleteAttachment(final FileEntry entry, final boolean isUpdate, final File file) {
+        if (isUpdate){
+            deleteEntry=memory;
+        }else {
+            deleteEntry=entry;
+        }
         view.showProgressDialog();
-        subscription.add(IDown.deleteAttachment(entry)
+        subscription.add(IDown.deleteAttachment(deleteEntry)
                 .subscribeOn(mSchedulerProvider.io())
         .observeOn(mSchedulerProvider.ui())
         .subscribe(new Subscriber<String>() {
@@ -184,21 +185,28 @@ public class downPresenter implements downContract.Presenter{
             @Override
             public void onNext(String s) {
                 view.dismissProgressDialog();
-                if (dbEntry.deleteFileEntry(entry.getFileName())){
-                    entries.remove(entry);
+                if (dbEntry.deleteFileEntry(deleteEntry.getFileName())){
+                    entries.remove(deleteEntry);
+                    sort();
                     view.refreshView();
-                    view.toastString("删除成功！");
+                    if (!isUpdate){
+                        view.toastString("删除成功！");
+                    }else {
+                        uploadFile(file);
+                        memory=null;
+                    }
                 }
-
             }
         }));
 
+
     }
 
+
     @Override
-    public void updateAttachment(final FileEntry entry, final String text, final String type, final AttachmentViewHolder holder) {
+    public void updateAttachment(final FileEntry entry, final String text) {
         view.showProgressDialog();
-        subscription.add(IDown.updateAttachment(entry,text,type)
+        subscription.add(IDown.updateAttachment(entry,text)
               .subscribeOn(mSchedulerProvider.io())
                 .observeOn(mSchedulerProvider.ui())
         .subscribe(new Subscriber<String>() {
@@ -216,14 +224,6 @@ public class downPresenter implements downContract.Presenter{
             @Override
             public void onNext(String s) {
                 view.dismissProgressDialog();
-                if (type.equals("1")){
-                    Intent getContentIntent = FileUtils.createGetContentIntent();
-                    Intent intent = Intent.createChooser(getContentIntent, "Select a file");
-                    dbEntry.deleteFileEntry(entry.getFileName());
-                    entries.remove(entry);
-                    view.refreshView();
-                    view.choseFile(intent);
-                }else {
                     String name=entry.getFileName();
                     entry.setFileName(text);
                     long updateTime=System.currentTimeMillis();
@@ -232,16 +232,39 @@ public class downPresenter implements downContract.Presenter{
                         sort();
                         view.refreshView();
                     }
-
-                }
                 view.toastString("保存成功！");
 
             }
         }));
     }
 
+
+    public void filterFile(File file){
+        for(FileEntry entry:entries){
+            if (entry.getFileName().equals(file.getName())){
+                view.showDialog(entry,file);
+                return;
+            }
+        }
+        uploadFile(file);
+    }
+
+
+    public void updateFile(FileEntry entry,File file){
+        entries.remove(entry);
+        deleteAttachment(entry,true,file);
+
+
+    }
+    /**
+     * 1.正常上传 执行下面的方法
+     * 2.更新 先删除之前的，再执行下面的方法
+     *
+     * @param file
+     */
     @Override
     public void uploadFile(File file) {
+
         FileEntry entry = new FileEntry();
             entry.setFileName(file.getName());
             entry.setSaveDirPath(file.getAbsolutePath());
@@ -258,6 +281,12 @@ public class downPresenter implements downContract.Presenter{
             service.uploadFile(entry);
         }
     }
+
+    @Override
+    public void uploadFile(FileEntry entry) {
+        service.uploadFile(entry);
+    }
+
 
     @Override
     public void downloadFile(FileEntry entry) {
@@ -318,38 +347,12 @@ public class downPresenter implements downContract.Presenter{
         view.refreshView();
     }
 
-
+    FileEntry memory;
     @Override
-    public void updateProgress(String name,long completed) {
-
-        view.refreshView();
+    public void setMemory(FileEntry entry) {
+        memory=entry;
     }
 
-    @Override
-    public void completedUpload(FileEntry ent) {
-        L.e(TAG,"上传完成");
-        for (FileEntry entry:entries){
-            if (entry.getFileName().equals(ent.getFileName())){
-                entry=ent;
-            }
-        }
-        view.refreshView();
-    }
-
-    @Override
-    public void completedDownload(FileEntry ent) {
-
-        view.completedDownload(ent);
-        view.refreshView();
-    }
-
-
-
-    @Override
-    public void startDownload(String name, long totalSize) {
-
-        view.refreshView();
-    }
 
     @NonNull
     public IdbFileEntry getDbEntry() {

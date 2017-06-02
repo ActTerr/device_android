@@ -37,12 +37,12 @@ public class FileService extends Service implements IFile {
     public static String PAUSE_DOWN = "pauseDownload";
     public static String PAUSE_UPLOAD = "pauseUpload";
     public static String TRANSFER = "transferring";
-    public static String COMPLETED_DOWN="downloadCompleted";
-    public static String COMPLETED_UPLOAD="uploadCompleted";
+    public static String COMPLETED_DOWN = "downloadCompleted";
+    public static String COMPLETED_UPLOAD = "uploadCompleted";
 
     public static int DOWNLOAD = 1;
     public static int UPLOAD = 2;
-   Context context;
+    Context context;
     String TAG = "FileService";
     long finished;
     Subscription subscribe;
@@ -53,16 +53,32 @@ public class FileService extends Service implements IFile {
     private NotificationManager mNotificationManager;
     private ExecutorService executorService;
     IdbFileEntry idbFileEntry;
-    Timer timer=new Timer();
-    int downCount=0;
-    IServiceListener listener=new IServiceListener() {
+    Timer timer = new Timer();
+    int count = 0;
+    IServiceListener listener = new IServiceListener() {
         @Override
-        public void startDownload() {
+        public void onStartTransfer() {
 
-            downCount+=1;
-            if (downCount==1){
-                L.e(TAG,"start timer");
-                timer.schedule(timerTask,0,200);
+            count += 1;
+            if (count == 1) {
+                L.e(TAG, "start timer");
+                timer = new Timer();
+                timer.schedule(new TimerTask() {
+
+                    @Override
+                    public void run() {
+                        if (count > 0) {
+                            Observable.just("1").observeOn(AndroidSchedulers.mainThread())
+                                    .subscribe(new Action1<String>() {
+                                        @Override
+                                        public void call(String s) {
+                                            L.e(TAG, "timer refresh");
+                                            presenter.refreshView();
+                                        }
+                                    });
+                        }
+                    }
+                }, 0, 200);
             }
         }
 
@@ -76,57 +92,31 @@ public class FileService extends Service implements IFile {
 
         }
 
-        @Override
-        public void onTransferring(String name, long completed) {
-
-        }
 
         @Override
-        public void onCompletedUpload(FileEntry entry) {
-
-        }
-
-        @Override
-        public void onCompletedDownload(FileEntry entry) {
-            downCount-=1;
-            L.e(TAG,"count:"+downCount);
-            if (downCount==0){
-                L.e(TAG,"timer stop");
+        public void onCompletedTransfer() {
+            count -= 1;
+            L.e(TAG, "count:" + count);
+            if (count == 0) {
+                L.e(TAG, "timer stop");
                 timer.cancel();
+                timer = null;
             }
+            presenter.refreshView();
 
         }
 
 
     };
-    public void setPresenter(downPresenter presenter){
-        this.presenter=presenter;
-        idbFileEntry=presenter.getDbEntry();
+
+    public void setPresenter(downPresenter presenter) {
+        this.presenter = presenter;
+        idbFileEntry = presenter.getDbEntry();
 //        EventBus.getDefault().register(this);
-        
+
     }
 
-    TimerTask timerTask=new TimerTask() {
 
-        @Override
-        public void run() {
-            if (downCount > 0) {
-                Observable.just("1").observeOn(AndroidSchedulers.mainThread())
-                        .subscribe(new Action1<String>() {
-                            @Override
-                            public void call(String s) {
-                                L.e(TAG,"timer refresh");
-                                presenter.refreshView();
-                            }
-                        });
-
-
-            }
-        }
-    };
-
-    
-    
 //    IServiceListener listener=new IServiceListener() {
 //        @Override
 //        public void upDateNotification() {
@@ -149,7 +139,7 @@ public class FileService extends Service implements IFile {
 //        }
 //    };
 
-//    private Notification getNotification(boolean complete) {
+    //    private Notification getNotification(boolean complete) {
 //
 ////        if (downTaskCount == 0) {
 ////            downTaskCount = prepareTaskList.size();
@@ -224,11 +214,12 @@ public class FileService extends Service implements IFile {
     }
 
     File file;
+
     @Override
     public void uploadFile(final FileEntry entry) {
-        final FileTask fileTask = new FileTask(entry, context,idbFileEntry,listener);
+        final FileTask fileTask = new FileTask(entry, context, idbFileEntry, listener);
         fileTasks.add(fileTask);
-        L.e("cao","task start");
+        L.e("cao", "task start");
         fileTask.onStartUpload();
 
     }
@@ -237,7 +228,7 @@ public class FileService extends Service implements IFile {
     @Override
     public void downloadFile(FileEntry entry) {
 
-        FileTask fileTask = new FileTask(entry, context,idbFileEntry,listener);
+        FileTask fileTask = new FileTask(entry, context, idbFileEntry, listener);
         fileTasks.add(fileTask);
         fileTask.onStartDownload();
     }
@@ -245,9 +236,9 @@ public class FileService extends Service implements IFile {
     @Override
     public void downloadFiles(ArrayList<FileEntry> entries) {
         for (final FileEntry entry : entries) {
-                    FileTask fileTask = new FileTask(entry, context,idbFileEntry,listener);
-                    fileTasks.add(fileTask);
-                    fileTask.onStartDownload();
+            FileTask fileTask = new FileTask(entry, context, idbFileEntry, listener);
+            fileTasks.add(fileTask);
+            fileTask.onStartDownload();
 
         }
 
@@ -275,8 +266,9 @@ public class FileService extends Service implements IFile {
     public void cancelDownload(FileEntry entry) {
         FileTask task = getTask(entry.getFileName());
         if (task == null) {
-            task=new FileTask(entry,context,idbFileEntry,listener);
+            task = new FileTask(entry, context, idbFileEntry, listener);
             task.onCancelDownload();
+            listener.onCompletedTransfer();
         }
     }
 
@@ -289,12 +281,11 @@ public class FileService extends Service implements IFile {
     }
 
 
-
     @Override
     public void cancelUpload(FileEntry entry) {
         FileTask task = getTask(entry.getFileName());
         if (task == null) {
-            task=new FileTask(entry,context,idbFileEntry,listener);
+            task = new FileTask(entry, context, idbFileEntry, listener);
             task.onCancelUpload();
         }
     }
@@ -305,9 +296,6 @@ public class FileService extends Service implements IFile {
         super.onDestroy();
         L.e(TAG, "destroy");
     }
-
-
-
 
 
 }

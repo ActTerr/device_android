@@ -26,6 +26,7 @@ import mac.yk.devicemanagement.net.downServer;
 import mac.yk.devicemanagement.service.down.FileService;
 import mac.yk.devicemanagement.ui.activity.BaseActivity;
 import mac.yk.devicemanagement.ui.fragment.NoticeDetailFragment;
+import mac.yk.devicemanagement.util.MFGT;
 import mac.yk.devicemanagement.util.schedulers.SchedulerProvider;
 
 /**
@@ -41,7 +42,7 @@ public class NoticeDetailActivity extends BaseActivity {
 
     ViewPagerAdapter viewPagerAdapter;
     @BindView(R.id.checkll)
-    LinearLayout checkll;
+    LinearLayout checkLl;
     public Handler handler;
     public static int open = 1;
     public static int close = 0;
@@ -51,7 +52,7 @@ public class NoticeDetailActivity extends BaseActivity {
     AttachmentFragment attachmentFragment;
     downPresenter presenter;
     long nid;
-
+    boolean isUpdate;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -62,16 +63,13 @@ public class NoticeDetailActivity extends BaseActivity {
             @Override
             public void handleMessage(Message msg) {
                 if (msg.what == open) {
-                    checkll.setVisibility(View.VISIBLE);
+                    checkLl.setVisibility(View.VISIBLE);
                 } else {
-                    checkll.setVisibility(View.GONE);
+                    checkLl.setVisibility(View.GONE);
                 }
             }
         };
-        FileService fileService=new FileService();
-        presenter=new downPresenter(attachmentFragment,new downServer(), dbFile.getInstance(this)
-                ,SchedulerProvider.getInstance(),nid,fileService);
-        fileService.onStartCommand(null,0,0);
+
     }
 
     private void init() {
@@ -93,10 +91,13 @@ public class NoticeDetailActivity extends BaseActivity {
           attachmentFragment = new AttachmentFragment();
             nid=notice.getNid();
             viewPagerAdapter.addFragment(attachmentFragment, "附件");
+            FileService fileService=new FileService();
+            presenter=new downPresenter(attachmentFragment,new downServer(), dbFile.getInstance(this)
+                    ,SchedulerProvider.getInstance(),nid,fileService);
+            fileService.onStartCommand(null,0,0);
         }else {
             itemAttachment.setVisibility(View.GONE);
         }
-
         viewPager.setAdapter(viewPagerAdapter);
     }
 
@@ -106,7 +107,6 @@ public class NoticeDetailActivity extends BaseActivity {
         switch (view.getId()) {
             case R.id.item_notice:
                 viewPager.setCurrentItem(0);
-
                 break;
             case R.id.item_attachment:
                 viewPager.setCurrentItem(1);
@@ -115,20 +115,33 @@ public class NoticeDetailActivity extends BaseActivity {
     }
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        switch (requestCode) {
-            case REQUEST_CHOOSER:
                 if (resultCode == RESULT_OK) {
                     final Uri uri = data.getData();
-
                     // Get the File path from the Uri
                     String path = FileUtils.getPath(this, uri);
                     // Alternatively, use FileUtils.getFile(Context, Uri)
                     if (path != null && FileUtils.isLocal(path)) {
                         File file = new File(path);
-                        presenter.uploadFile(file);
+                        if(requestCode!=REQUEST_CHOOSER){
+                            presenter.deleteAttachment(null,true,file);
+                        }else {
+                            presenter.filterFile(file);
+                        }
                     }
                 }
-                break;
+
+        }
+
+    public void setUpdate(boolean update) {
+        isUpdate = update;
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        MFGT.finish(this);
+        if (isUpdate){
+
         }
     }
 }

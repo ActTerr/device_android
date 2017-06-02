@@ -21,6 +21,7 @@ import android.widget.TextView;
 
 import com.ipaulpro.afilechooser.utils.FileUtils;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Date;
 
@@ -31,7 +32,6 @@ import mac.yk.devicemanagement.I;
 import mac.yk.devicemanagement.R;
 import mac.yk.devicemanagement.application.MyMemory;
 import mac.yk.devicemanagement.bean.FileEntry;
-import mac.yk.devicemanagement.db.dbFile;
 import mac.yk.devicemanagement.service.down.FileService;
 import mac.yk.devicemanagement.ui.fragment.BaseFragment;
 import mac.yk.devicemanagement.ui.holder.AttachmentViewHolder;
@@ -104,7 +104,7 @@ public class AttachmentFragment extends BaseFragment implements downContract.Vie
         switch (view.getId()) {
 
             case R.id.iv_add:
-                selectFile();
+                selectFile(false);
                 break;
             case R.id.btn_down:
                 for (FileEntry entry:downloads){
@@ -116,11 +116,17 @@ public class AttachmentFragment extends BaseFragment implements downContract.Vie
         }
     }
 
-    private void selectFile() {
+    private void selectFile(boolean update) {
         Intent getContentIntent = FileUtils.createGetContentIntent();
         Intent intent = Intent.createChooser(getContentIntent, "Select a file");
         Activity activity = (Activity) context;
-        activity.startActivityForResult(intent, REQUEST_CHOOSER);
+        int requestCode;
+        if (!update){
+            requestCode=REQUEST_CHOOSER;
+        }else{
+            requestCode=11111;
+        }
+        activity.startActivityForResult(intent, requestCode);
     }
 
 
@@ -197,10 +203,23 @@ public class AttachmentFragment extends BaseFragment implements downContract.Vie
     }
 
     @Override
-    public void completedDownload(FileEntry entry) {
-        downloads.remove(entry);
-        L.e(TAG,"comple:"+downloads.size());
+    public void showDialog(final FileEntry entry, final File file) {
+            AlertDialog dialog=new AlertDialog.Builder(context)
+                    .setTitle("该文件已上传,是否更新？")
+                    .setPositiveButton("取消", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialog.dismiss();
+                        }
+                    }).setNegativeButton("确定", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            presenter.updateFile(entry,file);
+                        }
+                    }).create();
+        dialog.show();
     }
+
 
     @Override
     public void setPresenter(downContract.Presenter presenter) {
@@ -266,7 +285,6 @@ public class AttachmentFragment extends BaseFragment implements downContract.Vie
             }
 
             if (admin) {
-                L.e(TAG, "丫不是admin");
                 holder.ivDelete.setVisibility(View.VISIBLE);
                 holder.ivEdit.setVisibility(View.VISIBLE);
                 holder.cbAt.setVisibility(View.GONE);
@@ -293,7 +311,7 @@ public class AttachmentFragment extends BaseFragment implements downContract.Vie
                 holder.ivSave.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        postSave(entry, holder.attachmentName.getText().toString(), "0", holder);
+                        postSave(entry, holder.attachmentName.getText().toString());
                     }
                 });
 
@@ -325,7 +343,6 @@ public class AttachmentFragment extends BaseFragment implements downContract.Vie
                 public void onClick(View v) {
                     L.e(TAG, "点击下载");
                     if (admin) {
-                        L.e("wocao", "丫不是admin啊");
                         showSelectPopupWindow(holder.ivDocument, entry, holder);
                     } else {
                         if (status == I.DOWNLOAD_STATUS.COMPLETED) {
@@ -342,7 +359,7 @@ public class AttachmentFragment extends BaseFragment implements downContract.Vie
                 public void onClick(View v) {
                     if (isStop) {
                         holder.ivControl.setImageResource(R.mipmap.pause);
-                        uploadFile(entry.getFileName());
+                        uploadFile(entry);
                         isStop = false;
                     } else {
                         holder.ivControl.setImageResource(R.mipmap.start);
@@ -419,7 +436,8 @@ public class AttachmentFragment extends BaseFragment implements downContract.Vie
                         break;
                     case R.id.update_file:
                         popupWindow.dismiss();
-                        postSave(entry, "", "1", holder);
+                        presenter.setMemory(entry);
+                        selectFile(true);
                         break;
 
                 }
@@ -427,15 +445,8 @@ public class AttachmentFragment extends BaseFragment implements downContract.Vie
         }
 
 
-        private void uploadFile(String name) {
-            Intent intent = new Intent();
-            intent.setClass(context, FileService.class);
-            intent.putExtra("type", FileService.UPLOAD);
-            L.e(TAG, "name:" + name);
-            FileEntry entry = dbFile.getInstance(context).getFileEntry(name);
-            L.e(TAG, "upload:" + entry.toString());
-            intent.putExtra("entry", entry);
-            context.startService(intent);
+        private void uploadFile(FileEntry entry) {
+            presenter.uploadFile(entry);
         }
 
 
@@ -457,13 +468,13 @@ public class AttachmentFragment extends BaseFragment implements downContract.Vie
         }
 
 
-        private void postSave(final FileEntry entry, String text, final String type, final AttachmentViewHolder holder) {
-            presenter.updateAttachment(entry, text, type, holder);
+        private void postSave(final FileEntry entry, String text) {
+            presenter.updateAttachment(entry, text);
         }
 
 
         private void postDelete(final FileEntry entry) {
-            presenter.deleteAttachment(entry);
+            presenter.deleteAttachment(entry,false,null);
         }
 
         @Override

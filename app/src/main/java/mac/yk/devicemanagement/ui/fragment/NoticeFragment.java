@@ -13,6 +13,10 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
+
 import java.util.ArrayList;
 
 import butterknife.BindView;
@@ -63,7 +67,13 @@ public class NoticeFragment extends BaseFragment {
         pd = new ProgressDialog(context);
         btnDown.setVisibility(View.GONE);
         initData();
+        EventBus.getDefault().register(this);
         return view;
+    }
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void refresh(boolean b){
+        data.clear();
+        initData();
     }
 
     private void showIv() {
@@ -117,4 +127,5 @@ public class NoticeFragment extends BaseFragment {
                 break;
         }
     }
+
 }

@@ -8,7 +8,6 @@ import java.util.ArrayList;
 import mac.yk.devicemanagement.BasePresenter;
 import mac.yk.devicemanagement.BaseView;
 import mac.yk.devicemanagement.bean.FileEntry;
-import mac.yk.devicemanagement.ui.holder.AttachmentViewHolder;
 
 /**
  * Created by mac-yk on 2017/5/25.
@@ -26,7 +25,7 @@ public interface downContract {
         void choseFile(Intent intent);
         void setEntries(ArrayList<FileEntry> entries);
         void startService(FileEntry entry);
-        void completedDownload(FileEntry entry);
+        void showDialog(FileEntry entry,File file);
     }
     interface Presenter extends BasePresenter{
         /**
@@ -34,13 +33,17 @@ public interface downContract {
          */
 
         void getAttachments();
-        void deleteAttachment(FileEntry entry);
-        void updateAttachment(FileEntry entry, String text,  String type,  AttachmentViewHolder holder);
+
+        void deleteAttachment(FileEntry entry,boolean isUpdate, File file);
+        void updateAttachment(FileEntry entry, String text);
 
         /**
          * 调用service
           */
+        void filterFile(File file);
+        void updateFile(FileEntry entry,File file);
         void uploadFile(File file);
+        void uploadFile(FileEntry entry);
         void downloadFile(FileEntry entry);
         void downloadFiles(ArrayList<FileEntry> entries);
         /**
@@ -51,16 +54,16 @@ public interface downContract {
         void selectEntry(String name);
         void deleteEntry(String name);
 
+
+        /**
+         * 数据回调
+         * @param name
+         */
         void stopDownload(String name);
         void cancelDownload(FileEntry entry);
-
         void stopUpload(String name);
         void cancelUpload(FileEntry entry);
-
         void refreshView();
-        void updateProgress(String name,long completed);
-        void completedUpload(FileEntry entry);
-        void completedDownload(FileEntry entry);
-        void startDownload(String name,long totalSize);
+        void setMemory(FileEntry entry);
     }
 }

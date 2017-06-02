@@ -28,10 +28,10 @@ public class downServer implements IDown {
     }
 
     @Override
-    public  Observable<String>  updateAttachment(FileEntry entry, String text, String type) {
+    public  Observable<String>  updateAttachment(FileEntry entry, String text) {
         ApiWrapper<ServerAPI> wrapper = new ApiWrapper<>();
         return wrapper.targetClass(ServerAPI.class).getAPI()
-                .updateAttachment(entry.getAid(),entry.getFileName(),text,type)
+                .updateAttachment(entry.getAid(),entry.getFileName(),text)
                 .compose(wrapper.<String>applySchedulers());
     }
 
