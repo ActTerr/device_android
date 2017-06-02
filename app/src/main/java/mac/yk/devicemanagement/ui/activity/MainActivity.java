@@ -37,7 +37,6 @@ import java.util.ArrayList;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-import cn.jpush.android.api.JPushInterface;
 import mac.yk.devicemanagement.I;
 import mac.yk.devicemanagement.R;
 import mac.yk.devicemanagement.application.MyMemory;
@@ -156,13 +155,10 @@ public class MainActivity extends BaseActivity {
     }
 
 
+
+
     private void isFromNotification() {
-        Intent intent = getIntent();
-        if (null != intent) {
-            Bundle bundle = getIntent().getExtras();
-            if (bundle!=null){
-                String content = bundle.getString(JPushInterface.EXTRA_ALERT,"");
-                if (content.equals("您有一条新公告!")){
+        if(getIntent().getBooleanExtra("fromNtf",false)){
                     L.e("main","切换frag");
                     FragmentManager manager=getSupportFragmentManager();
                     if(fragments.contains(CountFragment)){
@@ -179,8 +175,7 @@ public class MainActivity extends BaseActivity {
                         ActivityUtils.addFragmentToActivity(manager, NoticeFragment,R.id.frame);
                     }
                 }
-            }
-        }
+
     }
 
     private void initActionbar() {

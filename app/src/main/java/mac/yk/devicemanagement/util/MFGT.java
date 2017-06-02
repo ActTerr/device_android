@@ -79,6 +79,7 @@ public class MFGT {
     }
     public static void gotoMainActivity(Context context){
         Intent intent=new Intent(context, MainActivity.class);
+
         startActivity(context,intent);
     }
 

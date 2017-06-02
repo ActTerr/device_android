@@ -90,7 +90,7 @@ public class NoticeFragment extends BaseFragment implements java.util.Observer {
     private void initData() {
         pd.show();
         ApiWrapper<ServerAPI> wrapper = new ApiWrapper<>();
-        wrapper.targetClass(ServerAPI.class).getAPI().getNotice(memory)
+        wrapper.targetClass(ServerAPI.class).getAPI().getNotices(memory)
                 .compose(wrapper.<ArrayList<Notice>>applySchedulers())
                 .subscribe(new Observer<ArrayList<Notice>>() {
                     @Override

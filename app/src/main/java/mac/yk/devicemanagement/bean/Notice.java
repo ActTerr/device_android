@@ -55,4 +55,14 @@ public class Notice implements Serializable {
     public void setCommon(String common) {
         this.common = common;
     }
+
+    @Override
+    public String toString() {
+        return "Notice{" +
+                "nid=" + nid +
+                ", title='" + title + '\'' +
+                ", date=" + date +
+                ", common='" + common + '\'' +
+                '}';
+    }
 }

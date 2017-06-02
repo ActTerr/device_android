@@ -43,7 +43,7 @@ public interface I {
         String CONTROL="control";
         String SAVE="save";
         String LOGOUT="logOut";
-        String SERVER_ROOT="http://192.168.0.2:8080/deviceManagement/";
+        String SERVER_ROOT="http://192.168.1.101:8080/deviceManagement/";
         String CHECK="check";
         String REPAIR="repair";
         String LOGIN="login";
@@ -56,6 +56,7 @@ public interface I {
         String GET_SCRAP_COUNT="getScrapCount";
         String GET_SERVICE_COUNT="getServiceCount";
         String GET_NOTICE="getNotice";
+        String GET_NOTICES="getNotices";
         String DELETE_NOTICE="deleteNotice";
         String UPDATE_NOTICE="updateNotice";
         String GET_ATTACHMENT="getAttachment";

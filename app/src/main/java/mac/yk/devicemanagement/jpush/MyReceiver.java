@@ -12,6 +12,8 @@ import org.json.JSONObject;
 import java.util.Iterator;
 
 import cn.jpush.android.api.JPushInterface;
+import mac.yk.devicemanagement.down.NoticeDetailActivity;
+import mac.yk.devicemanagement.util.L;
 
 /**
  * 自定义接收器
@@ -45,9 +47,21 @@ public class MyReceiver extends BroadcastReceiver {
 
 			} else if (JPushInterface.ACTION_NOTIFICATION_OPENED.equals(intent.getAction())) {
 				Logger.d(TAG, "[MyReceiver] 用户点击打开了通知");
-
+				String content = bundle.getString(JPushInterface.EXTRA_ALERT,"");
+				Intent i=null;
+				if (content.equals("您有一条新公告!")){
+					i= new Intent(context, mac.yk.devicemanagement.ui.activity.MainActivity.class);
+					i.putExtra("fromNtf",true);
+				}else {
+					i=new Intent(context, NoticeDetailActivity.class);
+					i.putExtra("fromNtf",true);
+					String title=content.substring(2,content.lastIndexOf("的"));
+					L.e(TAG,"title:"+title);
+					i.putExtra("title",title);
+				}
 				//打开自定义的Activity
-				Intent i = new Intent(context, mac.yk.devicemanagement.ui.activity.MainActivity.class);
+
+
 				i.putExtras(bundle);
 				//i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 				i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP );

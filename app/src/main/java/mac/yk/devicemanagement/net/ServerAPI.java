@@ -108,14 +108,18 @@ public interface ServerAPI {
     Observable<Result<String>> controlD(@Query(I.CONTROL_BAT.CONTROL_TYPE)String control,@Query(I.DEVICE2.DID) String Did);
 
 
+    @GET(I.REQUEST.PATH+I.REQUEST.GET_NOTICES)
+    Observable<Result<ArrayList<Notice>>> getNotices(@Query(I.MEMORY) int memory);
+
     @GET(I.REQUEST.PATH+I.REQUEST.GET_NOTICE)
-    Observable<Result<ArrayList<Notice>>> getNotice(@Query(I.MEMORY) int memory);
+    Observable<Result<Notice>> getNotice(@Query(I.NOTICE.TITLE) String title);
 
     @GET(I.REQUEST.PATH+I.REQUEST.DELETE_NOTICE)
     Observable<Result<String>> deleteNotice(@Query(I.NOTICE.NID)long  Nid);
 
     @GET(I.REQUEST.PATH+I.REQUEST.UPDATE_NOTICE)
     Observable<Result<String>> updateNotice(@Query(I.NOTICE.NID) long Nid, @Query(I.BEAN) String notice);
+
 
 
     @GET(I.REQUEST.PATH+I.REQUEST.GET_ATTACHMENT)
@@ -149,6 +153,7 @@ public interface ServerAPI {
 
     @GET(I.REQUEST.PATH+I.REQUEST.INACTIVE)
     Observable<Result<String>> inactive(@Query(I.DEVICE2.DID) String did,@Query(I.DEVICE2.USE_POSITION) String usePosition);
+
 
 
 }
