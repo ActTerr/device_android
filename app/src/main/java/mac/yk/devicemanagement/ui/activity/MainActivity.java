@@ -1,6 +1,5 @@
 package mac.yk.devicemanagement.ui.activity;
 
-import android.app.ActivityManager;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Context;
@@ -44,12 +43,13 @@ import mac.yk.devicemanagement.bean.User;
 import mac.yk.devicemanagement.db.dbUser;
 import mac.yk.devicemanagement.net.ApiWrapper;
 import mac.yk.devicemanagement.net.ServerAPI;
-import mac.yk.devicemanagement.service.check.BatteryService;
 import mac.yk.devicemanagement.service.check.GuardService;
+import mac.yk.devicemanagement.service.check.MonitorService;
 import mac.yk.devicemanagement.ui.fragment.CountFragment;
 import mac.yk.devicemanagement.ui.fragment.MainFragment;
 import mac.yk.devicemanagement.ui.fragment.NoticeFragment;
 import mac.yk.devicemanagement.ui.fragment.ScrapCountFragment;
+import mac.yk.devicemanagement.ui.fragment.ScrapFragment;
 import mac.yk.devicemanagement.util.ActivityUtils;
 import mac.yk.devicemanagement.util.ExceptionFilter;
 import mac.yk.devicemanagement.util.L;
@@ -94,49 +94,65 @@ public class MainActivity extends BaseActivity {
         setContentView(R.layout.activity_currency);
         View view = View.inflate(this, R.layout.dialog_warning, null);
         ButterKnife.bind(this);
-        if (SpUtil.getLoginUser(this).equals("")){
-            L.e("main","user null");
-            MFGT.gotoLoginActivity(this);
-        }
+        checkUser();
         EventBus.getDefault().register(this);
+        checkNet();
+        init();
+        initActionbar();
+        setNavView();
+        showWarning(view);
+        isFromNotification();
+        startCheck();
+        initFragment();
+    }
+
+    private void initFragment() {
+        MainFragment mainFragment =new MainFragment();
+        ActivityUtils.addFragmentToActivity(getSupportFragmentManager(), mainFragment, R.id.frame);
+        if (showId!=0){
+            ActivityUtils.changeFragment(getSupportFragmentManager(),mainFragment,fragments.get(showId));
+        }
+    }
+
+    private void showWarning(View view) {
+        if (!SpUtil.getPrompt(this)) {
+            getWarning();
+            dialogHolder = new DialogHolder(view);
+            Adialog = builder.setTitle("预警信息")
+                    .setView(view)
+                    .setPositiveButton("已读以上信息", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialog.dismiss();
+                        }
+                    }).create();
+        }
+    }
+
+    private void checkNet() {
         boolean netConnect = this.isNetConnect();
         if (netConnect) {
             mTv.setVisibility(View.GONE);
         } else {
             mTv.setVisibility(View.VISIBLE);
         }
+    }
 
-        init();
-        initActionbar();
-        dialogHolder = new DialogHolder(view);
-        Adialog = builder.setTitle("预警信息")
-                .setView(view)
-                .setPositiveButton("已读以上信息", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        dialog.dismiss();
-                    }
-                }).create();
-        ActivityUtils.addFragmentToActivity(getSupportFragmentManager(), new MainFragment(), R.id.frame);
-        setNavView();
-        if (!SpUtil.getPrompt(this)) {
-            getYujing();
+    private void checkUser() {
+        if (SpUtil.getLoginUser(this).equals("")){
+            MFGT.gotoLoginActivity(this);
         }
-        isFromNotification();
-        startCheck();
     }
 
     private void startCheck() {
         L.e(TAG,"startService");
-        if(!isServiceWorked(context,BatteryService.class.getPackage()+BatteryService.class.getName())){
-            Intent intent=new Intent(this, BatteryService.class);
+            Intent intent=new Intent(this, MonitorService.class);
             startService(intent);
-        }
 
-        if (!isServiceWorked(context,GuardService.class.getPackage()+GuardService.class.getName())){
             Intent intent2=new Intent(this, GuardService.class);
             startService(intent2);
-        }
+
+            stopService(intent);
 
     }
 
@@ -185,8 +201,25 @@ public class MainActivity extends BaseActivity {
         ab.setDisplayHomeAsUpEnabled(true);
     }
 
+//    CountFragment CountFragment;
+//    ScrapCountFragment ScrapCountFragment;
+//    NoticeFragment NoticeFragment;
     private void init() {
-        fragments=new ArrayList<>();
+        if (fragments==null){
+            fragments=new ArrayList<>();
+        }else {
+            for(Fragment fragment:fragments){
+                if(fragment instanceof CountFragment){
+                    CountFragment= (mac.yk.devicemanagement.ui.fragment.CountFragment) fragment;
+                }else if(fragment instanceof ScrapFragment){
+                    ScrapCountFragment= (mac.yk.devicemanagement.ui.fragment.ScrapCountFragment) fragment;
+                }else {
+                    NoticeFragment= (mac.yk.devicemanagement.ui.fragment.NoticeFragment) fragment;
+                }
+                ActivityUtils.addFragmentToActivity(getSupportFragmentManager(),fragment,R.id.frame);
+            }
+        }
+
         context = this;
         User user = dbUser.getInstance(context).select2(SpUtil.getLoginUser(context));
         MyMemory.getInstance().setUser(user);
@@ -263,7 +296,7 @@ public class MainActivity extends BaseActivity {
                 FragmentManager manager=getSupportFragmentManager();
                 switch (item.getItemId()) {
                     case warning:
-                        getYujing();
+                        getWarning();
                         break;
                     case R.id.tongji:
                             if(fragments.contains(CountFragment)){
@@ -360,7 +393,7 @@ public class MainActivity extends BaseActivity {
     };
 
 
-    private void getYujing() {
+    private void getWarning() {
         progressDialog.show();
         ApiWrapper<ServerAPI> network = new ApiWrapper<>();
         subscription = network.targetClass(ServerAPI.class).
@@ -429,17 +462,30 @@ public class MainActivity extends BaseActivity {
         }
         return super.onMenuOpened(featureId, menu);
     }
-    public static boolean isServiceWorked(Context context, String serviceName) {
-        ActivityManager myManager = (ActivityManager) context.getSystemService(Context.ACTIVITY_SERVICE);
-        ArrayList<ActivityManager.RunningServiceInfo> runningService = (ArrayList<ActivityManager.RunningServiceInfo>) myManager.getRunningServices(Integer.MAX_VALUE);
-        for (int i = 0; i < runningService.size(); i++) {
-            if (runningService.get(i).service.getClassName().toString().equals(serviceName)) {
-                return true;
-            }
-        }
-        return false;
+//    public static boolean isServiceWorked(Context context, String serviceName) {
+//        ActivityManager myManager = (ActivityManager) context.getSystemService(Context.ACTIVITY_SERVICE);
+//        ArrayList<ActivityManager.RunningServiceInfo> runningService = (ArrayList<ActivityManager.RunningServiceInfo>) myManager.getRunningServices(Integer.MAX_VALUE);
+//        for (int i = 0; i < runningService.size(); i++) {
+//            if (runningService.get(i).service.getClassName().toString().equals(serviceName)) {
+//                return true;
+//            }
+//        }
+//        return false;
+//    }
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putInt("showId",showId);
+        outState.putSerializable("fragments",fragments);
     }
 
+    @Override
+    protected void onRestoreInstanceState(Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+        showId=savedInstanceState.getInt("showId");
+//        fragments= (ArrayList<Fragment>) savedInstanceState.getSerializable("fragments");
+
+    }
 }
 
 

@@ -4,7 +4,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 
-import mac.yk.devicemanagement.service.check.BatteryService;
+import mac.yk.devicemanagement.service.check.MonitorService;
 import mac.yk.devicemanagement.util.L;
 
 /**
@@ -18,7 +18,7 @@ public class MyReceiver extends BroadcastReceiver{
         L.e("receiver","get action");
 
         boolean alarm=intent.getBooleanExtra("alarm",false);
-        Intent intent1=new Intent(context, BatteryService.class);
+        Intent intent1=new Intent(context, MonitorService.class);
         intent1.putExtra("alarm",alarm);
         if (intent.getAction()!=null){
             intent1.setAction("check");

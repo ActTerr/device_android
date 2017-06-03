@@ -45,7 +45,9 @@
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".ui.activity.MainActivity">
+        <activity
+            android:configChanges="orientation|screenSize"
+            android:name=".ui.activity.MainActivity">
 
         </activity>
 
@@ -54,24 +56,44 @@
             android:windowSoftInputMode = "adjustPan">
 
         </activity>
-        <activity android:name=".ui.activity.SaveActivity" />
-        <activity android:name=".ui.activity.Splash">
+        <activity
+            android:name=".ui.activity.SaveActivity" />
+        <activity
+            android:configChanges="orientation|screenSize"
+            android:name=".ui.activity.Splash">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".ui.activity.LoginActivity" />
-        <activity android:name=".ui.activity.RecordActivity"></activity>
-        <activity android:name=".ui.activity.UserActivity" />
-        <activity android:name=".ui.activity.GestureActivity"></activity>
-        <activity android:name=".ui.activity.AuxiliaryActivity"></activity>
+        <activity
+            android:configChanges="orientation|screenSize"
+            android:name=".ui.activity.LoginActivity" />
+        <activity
+            android:configChanges="orientation|screenSize"
+            android:name=".ui.activity.RecordActivity">
+
+        </activity>
+        <activity
+            android:configChanges="orientation|screenSize"
+            android:name=".ui.activity.UserActivity" />
+        <activity android:name=".ui.activity.GestureActivity"
+            android:configChanges="orientation|screenSize">
+
+        </activity>
+        <activity
+            android:configChanges="orientation|screenSize"
+            android:name=".ui.activity.AuxiliaryActivity">
+
+        </activity>
         <receiver android:name=".receiver.NetBroadcastReceiver">
             <intent-filter>
                 <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />
             </intent-filter>
         </receiver>
-        <activity android:name=".down.NoticeDetailActivity"/>
+        <activity
+            android:configChanges="orientation|screenSize"
+            android:name=".down.NoticeDetailActivity"/>
 
         <provider
             android:name="com.ianhanniballake.localstorage.LocalStorageProvider"
@@ -85,6 +107,7 @@
             </intent-filter>
         </provider>
         <activity
+            android:configChanges="orientation|screenSize"
             android:name="com.ipaulpro.afilechooser.FileChooserActivity"
             android:icon="@drawable/ic_chooser"
             android:enabled="@bool/use_activity"
@@ -113,16 +136,19 @@
 
             </intent-filter>
         </service>
-        <service android:name=".service.check.BatteryService"
-            android:process="system"
-
-            />
+        <service android:name=".service.check.MonitorService"
+            android:enabled="true"
+            android:process=":monitor">
+        </service>
         <service android:name=".service.check.GuardService"
-            android:process="system"
-            />
-        <activity android:name=".ui.activity.DeviceListActivity"/>
+            android:enabled="true"
+            android:process=":guard">
+        </service>
+        <activity
+            android:configChanges="orientation|screenSize"
+            android:name=".ui.activity.DeviceListActivity"/>
 
-        <!--<service android:name=".service.BatteryService"-->
+        <!--<service android:name=".service.MonitorService"-->
             <!--android:process="check"-->
             <!--&gt;-->
         <!--</service>-->
@@ -134,6 +160,7 @@
             </intent-filter>
         </receiver>
         <activity
+            android:configChanges="orientation|screenSize"
             android:name=".ui.activity.BatteryListActivity"/>
 
 

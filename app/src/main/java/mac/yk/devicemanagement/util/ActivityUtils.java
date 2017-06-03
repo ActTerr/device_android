@@ -43,11 +43,11 @@ public class ActivityUtils {
     }
 
     public static void changeFragment(@NonNull FragmentManager fragmentManager,@NonNull Fragment fragment
-            ,@NonNull Fragment afterfragment){
+            ,@NonNull Fragment oldFragment){
         checkNotNull(fragmentManager);
         checkNotNull(fragment);
         FragmentTransaction transaction=fragmentManager.beginTransaction();
-        transaction.hide(afterfragment).show(fragment).commit();
+        transaction.hide(oldFragment).show(fragment).commit();
     }
 
 

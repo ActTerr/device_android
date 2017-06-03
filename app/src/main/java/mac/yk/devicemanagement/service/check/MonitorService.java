@@ -1,22 +1,25 @@
 package mac.yk.devicemanagement.service.check;
 
-import android.app.AlarmManager;
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
+import android.os.Handler;
 import android.os.IBinder;
+import android.os.Message;
+import android.os.RemoteException;
+import android.os.SystemClock;
 import android.support.annotation.Nullable;
 import android.support.v4.app.NotificationCompat;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.Timer;
-import java.util.TimerTask;
 
 import mac.yk.devicemanagement.R;
+import mac.yk.devicemanagement.StrongService;
 import mac.yk.devicemanagement.bean.Battery;
 import mac.yk.devicemanagement.bean.User;
 import mac.yk.devicemanagement.db.dbUser;
@@ -24,11 +27,11 @@ import mac.yk.devicemanagement.net.ApiWrapper;
 import mac.yk.devicemanagement.net.ServerAPI;
 import mac.yk.devicemanagement.receiver.MyReceiver;
 import mac.yk.devicemanagement.ui.activity.BatteryListActivity;
-import mac.yk.devicemanagement.ui.activity.MainActivity;
 import mac.yk.devicemanagement.util.ExceptionFilter;
 import mac.yk.devicemanagement.util.L;
 import mac.yk.devicemanagement.util.SpUtil;
 import mac.yk.devicemanagement.util.ToastUtil;
+import mac.yk.devicemanagement.util.schedulers.MonitorUtil;
 import rx.Subscriber;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
@@ -37,19 +40,102 @@ import rx.schedulers.Schedulers;
  * Created by mac-yk on 2017/5/18.
  */
 
-public class BatteryService extends Service {
+public class MonitorService extends Service {
     Context context;
-    String TAG = "BatteryService";
+    String TAG = "MonitorService";
+
+
+    private Handler handler = new Handler() {
+        public void handleMessage(android.os.Message msg) {
+            switch (msg.what) {
+                case 1:
+                    startGuard();
+                    break;
+
+                default:
+                    break;
+            }
+
+        };
+    };
+
+    /**
+     * 使用aidl 启动守护Service
+     */
+    private StrongService startGuard = new StrongService.Stub() {
+        @Override
+        public void stopService() throws RemoteException {
+            Intent i = new Intent(getBaseContext(), MonitorService.class);
+            getBaseContext().stopService(i);
+        }
+
+        @Override
+        public void startService() throws RemoteException {
+            Intent i = new Intent(getBaseContext(), MonitorService.class);
+            getBaseContext().startService(i);
+        }
+    };
+
+    /**
+     * 在内存紧张的时候，系统回收内存时，会回调OnTrimMemory， 重写onTrimMemory当系统清理内存时从新启动守护service
+     */
+    @Override
+    public void onTrimMemory(int level) {
+        /*
+         * 启动service2
+         */
+        startGuard();
+
+    }
+
+    @Override
+    public void onCreate() {
+        Toast.makeText(MonitorService.this, "守护service 正在启动...", Toast.LENGTH_SHORT)
+                .show();
+        startGuard();
+        /*
+         * 此线程用监听守护Service的状态
+         */
+        new Thread() {
+            public void run() {
+                while (true) {
+                    boolean isRun = MonitorUtil.isServiceWork(MonitorService.this,
+                            "mac.yk.devicemanagement.service.check.GuardService)");
+                    if (!isRun) {
+                        Message msg = Message.obtain();
+                        msg.what = 1;
+                        handler.sendMessage(msg);
+                    }
+                    try {
+                        Thread.sleep(1);
+                    } catch (InterruptedException e) {
+                        // TODO Auto-generated catch block
+                        e.printStackTrace();
+                    }
+                }
+            };
+        }.start();
+    }
+
+    /**
+     * 判断守护Service是否还在运行，如果不是则启动守护Service
+     */
+    private void startGuard() {
+        boolean isRun = MonitorUtil.isServiceWork(MonitorService.this,
+                "mac.yk.devicemanagement.service.check.GuardService");
+        if (isRun == false) {
+            try {
+                startGuard.startService();
+            } catch (RemoteException e) {
+                e.printStackTrace();
+            }
+        }
+    }
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        if (intent==null){
-            L.e(TAG,"竟然是Null？？？？？");
-        }
+
         check(intent);
-        if(!intent.getAction().equals("check")){
-            thread.start();
-        }
 
         return START_STICKY;
     }
@@ -59,12 +145,10 @@ public class BatteryService extends Service {
      *
      */
     private void check(Intent intent){
-        if (intent==null){
-            L.e(TAG,"竟然是Null？？？？？");
-        }
+
         boolean alarm=intent.getBooleanExtra("alarm",false);
         L.e(TAG, "get intent and start");
-        context = getApplicationContext();
+        context = this;
         final ApiWrapper<ServerAPI> wrapper = new ApiWrapper<>();
         String user = mac.yk.devicemanagement.util.SpUtil.getLoginUser(getApplicationContext());
         long hour=  60*60 * 1000;
@@ -79,8 +163,11 @@ public class BatteryService extends Service {
             }
         }
         int count= (int) (currentTime/hour) +1;
-        long futureTime=count*hour;
+        long futureTime=System.currentTimeMillis()+(hour/120);
+//                count*hour;
 
+        L.e(TAG,!user.equals("")+":"+!rest+":"+alarm);
+        L.e(TAG,"user:"+user);
         if (!user.equals("")&&!rest&&alarm) {
             final User user1 = dbUser.getInstance(getApplicationContext()).select2(user);
 
@@ -126,40 +213,24 @@ public class BatteryService extends Service {
                     });
 
         }
-        AlarmManager manager = (AlarmManager) getSystemService(ALARM_SERVICE);
+        SystemClock.sleep(20000);
+
         Intent i = new Intent(this, MyReceiver.class);
         intent.setAction("check");
-        i.putExtra("alarm",true);
-        PendingIntent pi = PendingIntent.getBroadcast(this, 0, i, 0);
-        long executeTime;
-        if (alarm){
-            executeTime=System.currentTimeMillis()+hour;
-
-        }else {
-            executeTime=futureTime;
-        }
-        manager.set(AlarmManager.RTC_WAKEUP, executeTime, pi);
+        sendBroadcast(i);
+//        AlarmManager manager = (AlarmManager) getSystemService(ALARM_SERVICE);
+//        i.putExtra("alarm",true);
+//        PendingIntent pi = PendingIntent.getBroadcast(this, 0, i, 0);
+//        long executeTime;
+//        if (alarm){
+//            executeTime=System.currentTimeMillis()+(hour/120);
+//
+//        }else {
+//            executeTime=futureTime;
+//        }
+//        manager.set(AlarmManager.RTC_WAKEUP, executeTime, pi);
     }
 
-    Thread thread = new Thread(new Runnable() {
-
-        @Override
-        public void run() {
-            Timer timer = new Timer();
-            TimerTask task = new TimerTask() {
-
-                @Override
-                public void run() {
-                    boolean b = MainActivity.isServiceWorked(BatteryService.this, "mac.yk.devicemanagement.service.check.GuardService");
-                    if(!b) {
-                        Intent service = new Intent(BatteryService.this, GuardService.class);
-                        startService(service);
-                    }
-                }
-            };
-            timer.schedule(task, 0, 1000);
-        }
-    });
 
     @Override
     public void onDestroy() {
@@ -170,6 +241,6 @@ public class BatteryService extends Service {
     @Nullable
     @Override
     public IBinder onBind(Intent intent) {
-        return null;
+        return (IBinder) startGuard;
     }
 }

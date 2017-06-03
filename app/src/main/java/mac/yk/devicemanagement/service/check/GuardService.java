@@ -2,56 +2,118 @@ package mac.yk.devicemanagement.service.check;
 
 import android.app.Service;
 import android.content.Intent;
+import android.os.Handler;
 import android.os.IBinder;
-import android.support.annotation.Nullable;
+import android.os.Message;
+import android.os.RemoteException;
+import android.widget.Toast;
 
-import java.util.Timer;
-import java.util.TimerTask;
-
-import mac.yk.devicemanagement.ui.activity.MainActivity;
-
-/**
- * Created by mac-yk on 2017/5/31.
- */
+import mac.yk.devicemanagement.StrongService;
+import mac.yk.devicemanagement.util.L;
+import mac.yk.devicemanagement.util.schedulers.MonitorUtil;
 
 public class GuardService extends Service {
-    @Nullable
+    private Handler handler = new Handler() {
+        public void handleMessage(android.os.Message msg) {
+            switch (msg.what) {
+                case 1:
+                    startMonitor();
+                    break;
+
+                default:
+                    break;
+            }
+
+        };
+    };
+
+    /**
+     * 使用aidl 启动MonitorService
+     */
+    private StrongService startMonitor = new StrongService.Stub() {
+        @Override
+        public void stopService() throws RemoteException {
+            Intent i = new Intent(getBaseContext(), MonitorService.class);
+            getBaseContext().stopService(i);
+        }
+
+        @Override
+        public void startService() throws RemoteException {
+            Intent i = new Intent(getBaseContext(), MonitorService.class);
+            getBaseContext().startService(i);
+        }
+    };
+
+    /**
+     * 在内存紧张的时候，系统回收内存时，会回调OnTrimMemory， 重写onTrimMemory当系统清理内存时从新启动MonitorService
+     */
     @Override
-    public IBinder onBind(Intent intent) {
-        return null;
+    public void onTrimMemory(int level) {
+        /*
+         * 启动service2
+         */
+        startMonitor();
+
+    }
+
+    @Override
+    public void onCreate() {
+        Toast.makeText(GuardService.this, "MonitorService 正在启动...", Toast.LENGTH_SHORT)
+                .show();
+        startMonitor();
+        /*
+         * 此线程用监听MonitorService的状态
+         */
+        new Thread() {
+            public void run() {
+                while (true) {
+                    boolean isRun = MonitorUtil.isServiceWork(GuardService.this,
+                            "mac.yk.devicemanagement.service.check.MonitorService");
+                    if (!isRun) {
+                        Message msg = Message.obtain();
+                        msg.what = 1;
+                        handler.sendMessage(msg);
+                    }
+                    try {
+                        Thread.sleep(1);
+                    } catch (InterruptedException e) {
+                        // TODO Auto-generated catch block
+                        e.printStackTrace();
+                    }
+                }
+            };
+        }.start();
+    }
+
+    /**
+     * 判断MonitorService是否还在运行，如果不是则启动MonitorService
+     */
+    private void startMonitor() {
+        boolean isRun = MonitorUtil.isServiceWork(GuardService.this,
+                "mac.yk.devicemanagement.service.check.MonitorService");
+        if (isRun == false) {
+            try {
+                startMonitor.startService();
+            } catch (RemoteException e) {
+                e.printStackTrace();
+            }
+        }
     }
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
 
-        thread.start();
         return START_STICKY;
     }
 
-
-    Thread thread = new Thread(new Runnable() {
-
-        @Override
-        public void run() {
-            Timer timer = new Timer();
-            TimerTask task = new TimerTask() {
-
-                @Override
-                public void run() {
-                    boolean b = MainActivity.isServiceWorked(GuardService.this, "mac.yk.devicemanagement.service.check.BatteryService");
-                    if(!b) {
-                        Intent service = new Intent(GuardService.this, BatteryService.class);
-                        startService(service);
-                    }
-                }
-            };
-            timer.schedule(task, 0, 1000);
-        }
-    });
+    @Override
+    public IBinder onBind(Intent intent) {
+        return (IBinder) startMonitor;
+    }
 
     @Override
     public void onDestroy() {
         super.onDestroy();
-
+        L.e("wocao","guard die");
     }
 }
