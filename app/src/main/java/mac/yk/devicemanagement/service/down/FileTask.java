@@ -1,6 +1,6 @@
 package mac.yk.devicemanagement.service.down;
 
-import android.content.Context;
+import android.app.NotificationManager;
 import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
@@ -22,7 +22,6 @@ import mac.yk.devicemanagement.I;
 import mac.yk.devicemanagement.bean.Attachment;
 import mac.yk.devicemanagement.bean.FileEntry;
 import mac.yk.devicemanagement.bean.Result;
-import mac.yk.devicemanagement.db.IdbFileEntry;
 import mac.yk.devicemanagement.db.dbFile;
 import mac.yk.devicemanagement.net.ApiWrapper;
 import mac.yk.devicemanagement.net.ProgressListener;
@@ -31,7 +30,6 @@ import mac.yk.devicemanagement.net.ServerAPI;
 import mac.yk.devicemanagement.net.UploadFileRequestBody;
 import mac.yk.devicemanagement.util.L;
 import mac.yk.devicemanagement.util.OpenFileUtil;
-import mac.yk.devicemanagement.util.ToastUtil;
 import okhttp3.RequestBody;
 import okhttp3.ResponseBody;
 import retrofit2.Response;
@@ -50,28 +48,39 @@ public class FileTask implements FileTaskListener {
     File file;
     long finished;
     Subscription subscribe;
-    Context context;
     dbFile dbfile;
     boolean flag;
     private boolean downFlag = true;
-    boolean start = true;
+     boolean start = true;
 
     IServiceListener listener;
     String TAG = "FileTask";
-
-    public FileTask(FileEntry fileEntry, Context context, IdbFileEntry dbfile, IServiceListener listener) {
+    NotificationManager mNotificationManager;
+    int notificationId ;
+    ServerAPI serverAPI;
+    public FileTask(FileEntry fileEntry, dbFile dbfile, IServiceListener listener, NotificationManager manager) {
+        L.e("caonima","on create "+fileEntry.getFileName());
         entry = fileEntry;
-        this.context = context;
-        this.dbfile = (dbFile) dbfile;
+        L.e("caonima","on create2 "+entry.getFileName());
+        this.dbfile = dbfile;
         this.listener = listener;
+        notificationId= (int) (System.currentTimeMillis()-entry.getAid());
+        mNotificationManager=manager;
+
     }
+
 
 
     Handler handler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
             super.handleMessage(msg);
-            listener.onStartTransfer();
+            if (msg.what==NTF){
+                updateNotification();
+            }else {
+                L.e("caonima","wo kun zha le");
+                listener.onUpdateItem(entry);
+            }
 
         }
     };
@@ -148,35 +157,28 @@ public class FileTask implements FileTaskListener {
 //        e.printStackTrace();
 //    }
 //    }
+    int NTF=11111231;
     @Override
     public void onStartDownload() {
-        new Thread(new Runnable() {
+
+
+        serverAPI= RetrofitUtil.initDown(ServerAPI.class,new ProgressListener(){
+
             @Override
-            public void run() {
-                L.e(Thread.currentThread().toString(), "开始下载");
-                ServerAPI serverAPI = RetrofitUtil.initDown(ServerAPI.class, new ProgressListener() {
-                    @Override
-                    public void onProgress(long hasWrittenLen, long totalLen, boolean hasFinish) {
+            public void onProgress(long hasWrittenLen, long totalLen, boolean hasFinish) {
+                finished = hasWrittenLen;
+                if (start) {
+                    start = false;
+                    entry.setDownloadStatus(I.DOWNLOAD_STATUS.DOWNLOADING);
+                    entry.setToolSize(totalLen);
 
-                        if (start) {
-                            L.e("start", hasWrittenLen + "");
-                            start = false;
-                            entry.setDownloadStatus(I.DOWNLOAD_STATUS.PREPARE);
-                            entry.setToolSize(totalLen);
-                            Message message = handler.obtainMessage();
-                            message.sendToTarget();
-                        } else {
-
-                            entry.setCompletedSize(hasWrittenLen);
-                            entry.setDownloadStatus(I.DOWNLOAD_STATUS.DOWNLOADING);
-
-                            L.e(Thread.currentThread().toString(), "进度:" + hasWrittenLen + "/" + totalLen);
-
-                        }
-
-                    }
-                });
-
+                } else {
+                    entry.setCompletedSize(hasWrittenLen);
+                    Message message = handler.obtainMessage();
+                    message.sendToTarget();
+                }
+            }
+        });
                 serverAPI.downloadFile(entry.getFileName(), entry.getCompletedSize())
                         .subscribeOn(Schedulers.io())
                         .observeOn(AndroidSchedulers.mainThread())
@@ -188,18 +190,18 @@ public class FileTask implements FileTaskListener {
 
                             @Override
                             public void onError(Throwable e) {
-                                ToastUtil.showToast(context, "下载失败！");
+//                                L.e(TAG, "retrofit 下载失败");
+//                               listener.showDownloadDefeat();
                             }
 
                             @Override
                             public void onNext(Response<ResponseBody> response) {
-                                L.e(TAG, "下载成功");
+                                L.e(TAG, "retrofit 下载成功");
                                 writeResponseBodyToDisk(response.body(), entry.getFileName());
                             }
                         });
 
-            }
-        }).start();
+
 
 
     }
@@ -208,7 +210,7 @@ public class FileTask implements FileTaskListener {
         try {
             // todo change the file location/name according to your needs
             file = new File(Environment.getExternalStorageDirectory().getAbsolutePath() + "/Attachment/" + name);
-            L.e(TAG, "放特么这了：" + file.getAbsolutePath());
+
             InputStream inputStream = null;
             OutputStream outputStream = null;
 
@@ -256,7 +258,6 @@ public class FileTask implements FileTaskListener {
 
     @Override
     public void onStartUpload() {
-        L.e("caonima", "执行");
         if (entry.getCompletedSize() != 0) {
             CountDownLatch countdown = new CountDownLatch(1);
             L.e(TAG, "分割文件");
@@ -278,7 +279,7 @@ public class FileTask implements FileTaskListener {
         L.e(TAG, file.getAbsolutePath());
         Map<String, RequestBody> requestBodyMap = new HashMap<>();
         fileRequestBody = new UploadFileRequestBody(file, new DefaultProgressListener(
-                entry.getCompletedSize(),handler));
+                entry.getCompletedSize()));
         requestBodyMap.put("file\"; filename=\"" + entry.getFileName(), fileRequestBody);
         ServerAPI serverAPI = RetrofitUtil.createService(ServerAPI.class);
         subscribe = serverAPI.addAttachment(requestBodyMap, entry.getFileName(), entry.getNid(), entry.getCompletedSize())
@@ -292,7 +293,7 @@ public class FileTask implements FileTaskListener {
 
                     @Override
                     public void onError(Throwable e) {
-
+                        listener.showDownloadDefeat();
                     }
 
                     @Override
@@ -308,18 +309,15 @@ public class FileTask implements FileTaskListener {
 
     @Override
     public void onCompletedDownload() {
-        L.e(TAG, "complete download");
         if (dbfile.updateFileStatus(file.getName(), file.length(), I.DOWNLOAD_STATUS.COMPLETED)) {
             entry.setDownloadStatus(I.DOWNLOAD_STATUS.COMPLETED);
-            L.e(TAG, "complete download listenr");
-            listener.onCompletedTransfer();
+            listener.onUpdateItem(entry);
+            mNotificationManager.cancel(notificationId);
+            L.e("caonima",entry.getFileName()+"下载成功");
         }
     }
 
-//    @Override
-//    public void onTransferring(int i) {
-//        EventBus.getDefault().post(i);
-//    }
+
 
     @Override
     public boolean onPauseUpload() {
@@ -411,17 +409,33 @@ public class FileTask implements FileTaskListener {
                 if (divisionFile.exists()) {
                     divisionFile.delete();
                 }
-               L.e(TAG,"完成上传");
-                listener.onCompletedTransfer();
+               L.e("caonima",entry.getFileName()+"完成上传");
+                listener.onUpdateItem(entry);
             }
-
         }
+        mNotificationManager.cancel(notificationId);
     }
 
 
     @Override
     public void onError(FileTask fileTask, int errorCode) {
 
+    }
+
+    @Override
+    public void cancelNotification() {
+        listener.cancelNotification(notificationId,true,entry);
+
+    }
+
+    @Override
+    public void sendNotification() {
+
+    }
+
+    @Override
+    public void updateNotification() {
+        listener.updateNotification(notificationId,false,entry);
     }
 
 
@@ -467,10 +481,8 @@ public class FileTask implements FileTaskListener {
     class DefaultProgressListener implements ProgressListener {
 
         long completed;
-        Handler handler;
-        public DefaultProgressListener(long completed, Handler handler) {
+        public DefaultProgressListener(long completed) {
             this.completed = completed;
-            this.handler=handler;
         }
 
         @Override
@@ -478,15 +490,20 @@ public class FileTask implements FileTaskListener {
             System.out.println("----the current " + hasWrittenLen + "----" + totalLen + "-----" + (hasWrittenLen * 100 / totalLen));
             if (start){
                 start=false;
+                L.e("caonima",entry.getFileName());
                 entry.setDownloadStatus(I.DOWNLOAD_STATUS.DOWNLOADING);
-                Message message=handler.obtainMessage();
-                message.sendToTarget();
             }
             finished = completed + hasWrittenLen;
             int percent = (int) ((completed + hasWrittenLen) * 100 / (totalLen + completed));
             if (percent > 100) percent = 100;
             if (percent < 0) percent = 0;
             entry.setCompletedSize(finished);
+            updateNotification();
+            Message message=handler.obtainMessage();
+            message.sendToTarget();
         }
     }
+
+
+
 }

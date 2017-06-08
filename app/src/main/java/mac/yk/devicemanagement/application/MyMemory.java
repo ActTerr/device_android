@@ -4,7 +4,6 @@ import android.app.Activity;
 
 import java.util.ArrayList;
 
-import mac.yk.devicemanagement.bean.FileEntry;
 import mac.yk.devicemanagement.bean.Status;
 import mac.yk.devicemanagement.bean.User;
 import mac.yk.devicemanagement.observable.Update;
@@ -84,15 +83,7 @@ public class MyMemory {
         this.subscribe = subscribe;
     }
 
-    private FileEntry entry;
 
-    public FileEntry getEntry() {
-        return entry;
-    }
-
-    public void setEntry(FileEntry entry) {
-        this.entry = entry;
-    }
 
     private boolean check;
 
@@ -113,4 +104,7 @@ public class MyMemory {
     public void setUpdate(Update update) {
         this.update = update;
     }
+
+
+
 }

@@ -1,244 +1,211 @@
 package mac.yk.devicemanagement.service.down;
 
+import android.app.Notification;
 import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.app.Service;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
+import android.os.Binder;
 import android.os.IBinder;
 import android.support.annotation.Nullable;
+import android.support.v4.app.NotificationCompat;
 import android.widget.RemoteViews;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.Timer;
 import java.util.TimerTask;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 
+import mac.yk.devicemanagement.R;
 import mac.yk.devicemanagement.bean.FileEntry;
-import mac.yk.devicemanagement.db.IdbFileEntry;
-import mac.yk.devicemanagement.down.downContract;
-import mac.yk.devicemanagement.down.downPresenter;
-import mac.yk.devicemanagement.ui.holder.AttachmentViewHolder;
+import mac.yk.devicemanagement.db.dbFile;
+import mac.yk.devicemanagement.down.DownContract;
+import mac.yk.devicemanagement.down.DownPresenter;
+import mac.yk.devicemanagement.util.CommonUtils;
 import mac.yk.devicemanagement.util.L;
-import rx.Observable;
+import mac.yk.devicemanagement.util.OpenFileUtil;
+import mac.yk.devicemanagement.util.ToastUtil;
 import rx.Subscription;
-import rx.android.schedulers.AndroidSchedulers;
-import rx.functions.Action1;
+
+import static mac.yk.devicemanagement.service.down.FileTask.showDate;
 
 /**
  * Created by mac-yk on 2017/5/13.
  */
 
 public class FileService extends Service implements IFile {
-    public static String START_DOWN = "startDownload";
-    public static String START_DOWN_FILES = "startDownloadFiles";
-    public static String START_UPLOAD = "startUpload";
-    public static String PAUSE_DOWN = "pauseDownload";
-    public static String PAUSE_UPLOAD = "pauseUpload";
-    public static String TRANSFER = "transferring";
-    public static String COMPLETED_DOWN = "downloadCompleted";
-    public static String COMPLETED_UPLOAD = "uploadCompleted";
+    public static final String START_DOWN = "startDownload";
+    public static final String START_DOWN_FILES = "startDownloadFiles";
+    public static final String START_UPLOAD = "startUpload";
+    public static final String PAUSE_DOWN = "pauseDownload";
+    public static final String PAUSE_UPLOAD = "pauseUpload";
+    public static final String TRANSFER = "transferring";
+    public static final String COMPLETED_DOWN = "downloadCompleted";
+    public static final String COMPLETED_UPLOAD = "uploadCompleted";
 
     public static int DOWNLOAD = 1;
     public static int UPLOAD = 2;
     Context context;
     String TAG = "FileService";
-    long finished;
     Subscription subscribe;
-    downContract.Presenter presenter;
+    DownContract.Presenter presenter;
     ArrayList<FileTask> fileTasks = new ArrayList<>();
-    ArrayList<AttachmentViewHolder> holders = new ArrayList<>();
-    private RemoteViews remoteViews;
+    ArrayList<FileEntry> entries;
     private NotificationManager mNotificationManager;
-    private ExecutorService executorService;
-    IdbFileEntry idbFileEntry;
+    dbFile mdbFile;
     Timer timer = new Timer();
-    int count = 0;
+    TimerTask timerTask;
+    boolean running=false;
     IServiceListener listener = new IServiceListener() {
         @Override
-        public void onStartTransfer() {
+        public void onUpdateItem(FileEntry entry) {
+            presenter.updateItem(entry);
 
-            count += 1;
-            if (count == 1) {
-                L.e(TAG, "start timer");
-                timer = new Timer();
-                timer.schedule(new TimerTask() {
+        }
 
-                    @Override
-                    public void run() {
-                        if (count > 0) {
-                            Observable.just("1").observeOn(AndroidSchedulers.mainThread())
-                                    .subscribe(new Action1<String>() {
-                                        @Override
-                                        public void call(String s) {
-                                            L.e(TAG, "timer refresh");
-                                            presenter.refreshView();
-                                        }
-                                    });
-                        }
-                    }
-                }, 0, 200);
+        boolean isForeground;
+
+        @Override
+        public void updateNotification(int id, boolean b, FileEntry entry) {
+            if (!isForeground) {
+                startForeground(id, getNotification(b, entry));
+                isForeground = true;
+            } else {
+                mNotificationManager.notify(id, getNotification(false, entry));
             }
-        }
-
-        @Override
-        public void upDateNotification() {
-
-        }
-
-        @Override
-        public void cancelNotification() {
 
         }
 
 
         @Override
-        public void onCompletedTransfer() {
-            count -= 1;
-            L.e(TAG, "count:" + count);
-            if (count == 0) {
-                L.e(TAG, "timer stop");
-                timer.cancel();
-                timer = null;
-            }
-            presenter.refreshView();
-
+        public void cancelNotification(int id, boolean b, FileEntry entry) {
+            stopForeground(true);
+            isForeground = false;
+            mNotificationManager.notify(id, getNotification(b, entry));
         }
 
+
+
+
+        @Override
+        public void showDownloadDefeat() {
+            ToastUtil.showToast(context,"下载失败！");
+        }
 
     };
 
-    public void setPresenter(downPresenter presenter) {
+    RemoteViews remoteViews;
+
+    private Notification getNotification(boolean complete, FileEntry entry) {
+
+        remoteViews = new RemoteViews(this.getPackageName(), R.layout.down_notification);
+
+//        PendingIntent pendingIntent = PendingIntent.getActivity(context.getApplicationContext(), 0,
+//                new Intent(context.getApplicationContext(), DownActivity.class), PendingIntent.FLAG_UPDATE_CURRENT);
+
+
+        final Intent nowPlayingIntent = new Intent();
+        nowPlayingIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        nowPlayingIntent.setComponent(new ComponentName("mac.yk.devicemanagement", "mac.yk.devicemanagement.ui.activity.NoticeDetailActivity"));
+        PendingIntent clickIntent = PendingIntent.getActivity(this, 0, nowPlayingIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+        remoteViews.setImageViewResource(R.id.iv_attachment, OpenFileUtil.getPic(entry.getSaveDirPath()));
+        if (complete) {
+            remoteViews.setTextViewText(R.id.title, "remusic");
+            remoteViews.setTextViewText(R.id.text, "下载完成，点击查看");
+            remoteViews.setTextViewText(R.id.time, showDate());
+        } else {
+            remoteViews.setTextViewText(R.id.title, "正在下载：" + entry.getFileName());
+            int i = (int) ((2* 100) / entry.getToolSize());
+            remoteViews.setProgressBar(R.id.pb, 100, i, false);
+            remoteViews.setTextViewText(R.id.time, showDate());
+        }
+
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(this).setContent(remoteViews)
+                .setSmallIcon(R.drawable.ic_notification)
+                .setContentIntent(clickIntent);
+
+        if (CommonUtils.isJellyBeanMR1()) {
+            builder.setShowWhen(false);
+        }
+        return builder.build();
+    }
+
+    public void setPresenter(DownPresenter presenter) {
         this.presenter = presenter;
-        idbFileEntry = presenter.getDbEntry();
-//        EventBus.getDefault().register(this);
+        mdbFile = presenter.getDbEntry();
 
     }
 
+    public void setEntries(ArrayList<FileEntry> entries){
+        this.entries=entries;
+    }
 
-//    IServiceListener listener=new IServiceListener() {
-//        @Override
-//        public void upDateNotification() {
-//
-//            if (!isForeground) {
-//                startForeground(notificationid, getNotification(false));
-//                isForeground = true;
-//            } else {
-//                mNotificationManager.notify(notificationid, getNotification(false));
-//            }
-//        }
-//
-//        @Override
-//        public void cancleNotification() {
-//            stopForeground(true);
-//            isForeground = false;
-//            mNotificationManager.notify(notificationid, getNotification(true));
-//            downTaskCount = 0;
-//            downTaskDownloaded = -1;
-//        }
-//    };
-
-    //    private Notification getNotification(boolean complete) {
-//
-////        if (downTaskCount == 0) {
-////            downTaskCount = prepareTaskList.size();
-////        }
-////        L.d( TAG, "notification downtaskcount = " + downTaskCount);
-////        if (downTaskDownloaded == -1) {
-////            downTaskDownloaded = 0;
-////        }
-//        remoteViews = new RemoteViews(context.getPackageName(), R.layout.down_notification);
-//
-////        PendingIntent pendingIntent = PendingIntent.getActivity(context.getApplicationContext(), 0,
-////                new Intent(context.getApplicationContext(), DownActivity.class), PendingIntent.FLAG_UPDATE_CURRENT);
-//
-//
-//        final Intent nowPlayingIntent = new Intent();
-//        nowPlayingIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-//        nowPlayingIntent.setComponent(new ComponentName("com.wm.remusic", "com.wm.remusic.activity.DownActivity"));
-//        PendingIntent clickIntent = PendingIntent.getActivity(context,0,nowPlayingIntent,PendingIntent.FLAG_UPDATE_CURRENT);
-//        remoteViews.setImageViewResource(R.id.image, R.drawable.placeholder_disk_210);
-//        if(complete){
-//            remoteViews.setTextViewText(R.id.title, "remusic" );
-//            remoteViews.setTextViewText(R.id.text, "下载完成，点击查看" );
-//            remoteViews.setTextViewText(R.id.time, showDate());
-//        }else {
-//            remoteViews.setTextViewText(R.id.title, "下载进度：" + finished + "/" + file.length());
-//            remoteViews.setTextViewText(R.id.text, "正在下载：" + file.getName());
-//            remoteViews.setTextViewText(R.id.time, showDate());
-//        }
-//
-//        NotificationCompat.Builder builder = new NotificationCompat.Builder(context).setContent(remoteViews)
-//                .setSmallIcon(R.drawable.ic_notification)
-//                .setContentIntent(clickIntent);
-//
-////        if (CommonUtils.isJellyBeanMR1()) {
-////            builder.setShowWhen(false);
-////        }
-//        return builder.build();
-//    }
     @Override
     public void onCreate() {
         super.onCreate();
-//        mNotificationManager = (NotificationManager) context.getSystemService(NOTIFICATION_SERVICE);
-        executorService = Executors.newSingleThreadExecutor();
+        L.e(TAG,"service onCreate");
+        context=this;
+        mNotificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
 
     }
 
-//    @Subscribe(threadMode = ThreadMode.MAIN)
-//    public void refreshView(boolean b){
-//        L.e(TAG,"presenter refresh");
-//        presenter.refreshView();
-//    }
 
+
+    private FileBinder fileBinder=new FileBinder();
     @Nullable
     @Override
     public IBinder onBind(Intent intent) {
 
-        return null;
+        return fileBinder;
     }
 
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-//        if (intent.getAction().equals("startDownload")){
-//        };
-        L.e(TAG, "service start");
-//        EventBus.getDefault().register(this);
-        context = this;
-//        int type=intent.getIntExtra("type",0);
-//        FileEntry entry= (FileEntry) intent.getSerializableExtra("entry");
 
-        return super.onStartCommand(intent, flags, startId);
+        L.e(TAG, "service start");
+
+        return START_STICKY;
     }
 
-    File file;
 
     @Override
     public void uploadFile(final FileEntry entry) {
-        final FileTask fileTask = new FileTask(entry, context, idbFileEntry, listener);
+        final FileTask fileTask = new FileTask(entry,  mdbFile, listener, mNotificationManager);
         fileTasks.add(fileTask);
         L.e("cao", "task start");
         fileTask.onStartUpload();
 
     }
 
-
     @Override
-    public void downloadFile(FileEntry entry) {
+    public void downloadFile(final FileEntry entry) {
 
-        FileTask fileTask = new FileTask(entry, context, idbFileEntry, listener);
-        fileTasks.add(fileTask);
-        fileTask.onStartDownload();
+        final FileTask task= new FileTask(entry,  mdbFile, listener, mNotificationManager);
+        fileTasks.add(task);
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                L.e("caonima","点击下载2"+task.entry.getFileName());
+                task.onStartDownload();
+            }
+        }).start();
+
     }
 
     @Override
     public void downloadFiles(ArrayList<FileEntry> entries) {
         for (final FileEntry entry : entries) {
-            FileTask fileTask = new FileTask(entry, context, idbFileEntry, listener);
-            fileTasks.add(fileTask);
-            fileTask.onStartDownload();
+            final FileTask task= new FileTask(entry,  mdbFile, listener, mNotificationManager);
+            fileTasks.add(task);
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    L.e("caonima",entry.getFileName()+"开始下载");
+                    task.onStartDownload();
+                }
+            }).start();
 
         }
 
@@ -266,9 +233,9 @@ public class FileService extends Service implements IFile {
     public void cancelDownload(FileEntry entry) {
         FileTask task = getTask(entry.getFileName());
         if (task == null) {
-            task = new FileTask(entry, context, idbFileEntry, listener);
+            task = new FileTask(entry,  mdbFile, listener, mNotificationManager);
             task.onCancelDownload();
-            listener.onCompletedTransfer();
+            listener.onUpdateItem(entry);
         }
     }
 
@@ -285,7 +252,7 @@ public class FileService extends Service implements IFile {
     public void cancelUpload(FileEntry entry) {
         FileTask task = getTask(entry.getFileName());
         if (task == null) {
-            task = new FileTask(entry, context, idbFileEntry, listener);
+            task = new FileTask(entry,  mdbFile, listener, mNotificationManager);
             task.onCancelUpload();
         }
     }
@@ -297,5 +264,10 @@ public class FileService extends Service implements IFile {
         L.e(TAG, "destroy");
     }
 
+    public class FileBinder extends Binder {
+        public FileService getService(){
+            return FileService.this;
+        }
+    }
 
 }

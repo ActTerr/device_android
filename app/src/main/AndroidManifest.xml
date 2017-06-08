@@ -8,7 +8,6 @@
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE"/>
-
     <!-- Required  一些系统要求的权限，如访问网络等-->
 
     <uses-permission android:name="mac.yk.devicemanagement.permission.JPUSH_MESSAGE" />
@@ -124,17 +123,17 @@
         </activity>
         <service android:name=".service.down.FileService"
             >
-            <intent-filter>
-                <action android:name="startDownload"/>
-                <action android:name="startDownloadFiles"/>
-                <action android:name="startUpload"/>
-                <action android:name="pauseDownload"/>
-                <action android:name="pauseUpload"/>
-                <action android:name="transferring"/>
-                <action android:name="downloadCompleted"/>
-                <action android:name="uploadCompleted"/>
+            <!--<intent-filter>-->
+                <!--<action android:name="startDownload"/>-->
+                <!--<action android:name="startDownloadFiles"/>-->
+                <!--<action android:name="startUpload"/>-->
+                <!--<action android:name="pauseDownload"/>-->
+                <!--<action android:name="pauseUpload"/>-->
+                <!--<action android:name="transferring"/>-->
+                <!--<action android:name="downloadCompleted"/>-->
+                <!--<action android:name="uploadCompleted"/>-->
 
-            </intent-filter>
+            <!--</intent-filter>-->
         </service>
         <service android:name=".service.check.MonitorService"
             android:enabled="true"

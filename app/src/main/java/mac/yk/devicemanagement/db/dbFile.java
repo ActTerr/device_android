@@ -150,11 +150,15 @@ public class dbFile implements db,IdbFileEntry {
 
     @Override
     public boolean updateFileId(long oldId, long newId) {
+        L.e("caonima",oldId+":"+newId);
         SQLiteDatabase db=dbHelper.getWritableDatabase();
         ContentValues contentValues=new ContentValues();
         contentValues.put(I.FILE.AID,newId);
         if (db.isOpen()){
-            return db.update(tableName,contentValues,I.FILE.AID+"=?",new String[]{String.valueOf(oldId)})==1;
+
+            int i=db.update(tableName,contentValues,I.FILE.AID+"=?",new String[]{String.valueOf(oldId)});
+            L.e("caonima","db:"+i);
+            return true;
         }
         return false;
     }

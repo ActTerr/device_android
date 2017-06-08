@@ -8,12 +8,13 @@ import java.util.ArrayList;
 import mac.yk.devicemanagement.BasePresenter;
 import mac.yk.devicemanagement.BaseView;
 import mac.yk.devicemanagement.bean.FileEntry;
+import mac.yk.devicemanagement.db.dbFile;
 
 /**
  * Created by mac-yk on 2017/5/25.
  */
 
-public interface downContract {
+public interface DownContract {
     interface View extends BaseView<Presenter>{
         void refreshView();
 //        void setUnEditStatus(AttachmentViewHolder holder);
@@ -26,6 +27,8 @@ public interface downContract {
         void setEntries(ArrayList<FileEntry> entries);
         void startService(FileEntry entry);
         void showDialog(FileEntry entry,File file);
+
+        void updateItem(FileEntry entry);
     }
     interface Presenter extends BasePresenter{
         /**
@@ -57,13 +60,13 @@ public interface downContract {
 
         /**
          * 数据回调
-         * @param name
          */
-        void stopDownload(String name);
         void cancelDownload(FileEntry entry);
         void stopUpload(String name);
         void cancelUpload(FileEntry entry);
         void refreshView();
         void setMemory(FileEntry entry);
+        void updateItem(FileEntry entry);
+        dbFile getDbEntry();
     }
 }

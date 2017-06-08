@@ -44,7 +44,7 @@ import mac.yk.devicemanagement.util.ToastUtil;
  * Created by mac-yk on 2017/5/9.
  */
 
-public class AttachmentFragment extends BaseFragment implements downContract.View {
+public class AttachmentFragment extends BaseFragment implements DownContract.View {
     public static int REQUEST_CHOOSER = 1234;
     @BindView(R.id.rv)
     RecyclerView rv;
@@ -56,7 +56,7 @@ public class AttachmentFragment extends BaseFragment implements downContract.Vie
     AttachmentAdapter adapter;
     ProgressDialog pd;
     Context context;
-    downContract.Presenter presenter;
+    DownContract.Presenter presenter;
     boolean isEdit;
     String TAG = "AttachmentFragment";
     ArrayList<FileEntry> fileEntries = new ArrayList<>();
@@ -111,6 +111,7 @@ public class AttachmentFragment extends BaseFragment implements downContract.Vie
                     L.e(TAG,"选中："+entry.getFileName());
                 }
                 presenter.downloadFiles(downloads);
+
                 downloads.clear();
                 break;
         }
@@ -220,9 +221,24 @@ public class AttachmentFragment extends BaseFragment implements downContract.Vie
         dialog.show();
     }
 
+    @Override
+    public void updateItem(FileEntry entry) {
+        L.e("caonima","update item1");
+        int position =-1;
+        for(int i=0;i<fileEntries.size();i++){
+            if (fileEntries.get(i)==entry){
+                position=i;
+            }
+        }
+        if (position!=-1){
+            adapter.notifyItemChanged(position);
+            L.e("caonima","update item2");
+        }
+    }
+
 
     @Override
-    public void setPresenter(downContract.Presenter presenter) {
+    public void setPresenter(DownContract.Presenter presenter) {
         this.presenter = presenter;
     }
 
@@ -261,27 +277,31 @@ public class AttachmentFragment extends BaseFragment implements downContract.Vie
 
             final FileEntry entry = fileEntries.get(position);
             final int status = entry.getDownloadStatus();
-            L.e("status",entry.getDownloadStatus()+"");
+
             switch (status){
-                case I.DOWNLOAD_STATUS.PREPARE:
                 case I.DOWNLOAD_STATUS.PAUSE:
                 case I.DOWNLOAD_STATUS.DOWNLOADING:
-                    L.e(entry.getFileName(),"文件准备好");
                     holder.pb.setVisibility(View.VISIBLE);
+                    holder.cbAt.setChecked(false);
                     holder.tvCancel.setVisibility(View.VISIBLE);
                     holder.ivControl.setVisibility(View.VISIBLE);
                     int process = (int) ((entry.getCompletedSize() * 100) / entry.getToolSize());
-                    L.e(entry.getFileName(), entry.getCompletedSize()+"/"+entry.getToolSize()+" process:"+process);
                     holder.pb.setProgress(process);
+                    L.e("caonima",entry.getFileName()+"传输中");
                     break;
                 case I.DOWNLOAD_STATUS.COMPLETED:
                     holder.pb.setVisibility(View.GONE);
                     holder.cbAt.setVisibility(View.GONE);
                     holder.tvCancel.setVisibility(View.GONE);
                     holder.ivControl.setVisibility(View.GONE);
-                    L.e(entry.getFileName(), "完成");
+                    L.e("caonima",entry.getFileName()+ "完成");
                     break;
-
+                case I.DOWNLOAD_STATUS.INIT:
+                    holder.pb.setVisibility(View.GONE);
+                    holder.cbAt.setVisibility(View.VISIBLE);
+                    holder.ivControl.setVisibility(View.GONE);
+                    holder.ivCancel.setVisibility(View.GONE);
+                    L.e("caonima",entry.getFileName()+"闲置");
             }
 
             if (admin) {
@@ -334,14 +354,18 @@ public class AttachmentFragment extends BaseFragment implements downContract.Vie
             holder.cbAt.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    downloads.add(entry);
+                    if (holder.cbAt.isChecked()){
+                        downloads.add(entry);
+                    }else {
+                        downloads.remove(entry);
+                    }
                 }
             });
 
             holder.ivDocument.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    L.e(TAG, "点击下载");
+
                     if (admin) {
                         showSelectPopupWindow(holder.ivDocument, entry, holder);
                     } else {
@@ -349,6 +373,7 @@ public class AttachmentFragment extends BaseFragment implements downContract.Vie
                             L.e(TAG, entry.getSaveDirPath());
                             openFile(entry.getSaveDirPath());
                         } else {
+                            L.e(TAG, "点击下载"+entry.getFileName());
                             downLoadFile(entry);
                         }
                     }

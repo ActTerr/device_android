@@ -1,10 +1,13 @@
 package mac.yk.devicemanagement.down;
 
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
+import android.content.ServiceConnection;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.IBinder;
 import android.os.Message;
 import android.support.annotation.Nullable;
 import android.support.v4.view.ViewPager;
@@ -58,16 +61,32 @@ public class NoticeDetailActivity extends BaseActivity {
     TextView itemAttachment;
     String TAG="NoticeDetailActivity";
     AttachmentFragment attachmentFragment;
-    downPresenter presenter;
+    DownPresenter presenter;
     long nid;
     Context context;
+    FileService mService;
+    ServiceConnection conn=new ServiceConnection() {
+        @Override
+        public void onServiceConnected(ComponentName name, IBinder service) {
+            FileService.FileBinder binder= (FileService.FileBinder) service;
+            mService=binder.getService();
+            if (mService!=null){
+                init();
+            }
+        }
+
+        @Override
+        public void onServiceDisconnected(ComponentName name) {
+            mService= null;
+        }
+    };
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_notice);
         ButterKnife.bind(this);
         context=this;
-        init();
+
         handler = new Handler() {
             @Override
             public void handleMessage(Message msg) {
@@ -80,6 +99,15 @@ public class NoticeDetailActivity extends BaseActivity {
         };
 
     }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        Intent intent=new Intent(this,FileService.class);
+        context.bindService(intent, conn,BIND_AUTO_CREATE);
+
+    }
+
     private void init() {
         viewPagerAdapter = new ViewPagerAdapter(getSupportFragmentManager());
         boolean isFromNtf=getIntent().getBooleanExtra("fromNtf",false);
@@ -103,11 +131,9 @@ public class NoticeDetailActivity extends BaseActivity {
             attachmentFragment = new AttachmentFragment();
             nid=notice.getNid();
             viewPagerAdapter.addFragment(attachmentFragment, "附件");
-            FileService fileService=new FileService();
-            presenter=new downPresenter(attachmentFragment,new downServer(), dbFile.getInstance(this)
-                    ,SchedulerProvider.getInstance(),nid,fileService);
-            fileService.onStartCommand(null,0,0);
-
+            presenter=new DownPresenter(attachmentFragment,new downServer(), dbFile.getInstance(this)
+                    ,SchedulerProvider.getInstance(),nid,context,mService);
+            mService.setPresenter(presenter);
         }else {
             itemAttachment.setVisibility(View.GONE);
         }

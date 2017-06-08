@@ -1,21 +1,19 @@
 package mac.yk.devicemanagement.service.down;
 
+import mac.yk.devicemanagement.bean.FileEntry;
+
 /**
  * Created by mac-yk on 2017/5/28.
  */
 
 interface IServiceListener {
 
-   void onStartTransfer();
+   void onUpdateItem(FileEntry entry);
 
-     void upDateNotification();
+   void updateNotification(int id, boolean b, FileEntry entry);
 
-
-   void cancelNotification();
-
+   void cancelNotification(int id,boolean b,FileEntry entry);
 
 
-   void onCompletedTransfer();
-
-
+   void showDownloadDefeat();
 }

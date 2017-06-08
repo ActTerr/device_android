@@ -122,7 +122,7 @@ public class NoticeFragment extends BaseFragment implements java.util.Observer {
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.add_history:
-                memory += 6;
+                memory += 9;
                 initData();
                 break;
             case R.id.iv_add:

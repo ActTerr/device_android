@@ -43,7 +43,6 @@ import mac.yk.devicemanagement.bean.User;
 import mac.yk.devicemanagement.db.dbUser;
 import mac.yk.devicemanagement.net.ApiWrapper;
 import mac.yk.devicemanagement.net.ServerAPI;
-import mac.yk.devicemanagement.service.check.GuardService;
 import mac.yk.devicemanagement.service.check.MonitorService;
 import mac.yk.devicemanagement.ui.fragment.CountFragment;
 import mac.yk.devicemanagement.ui.fragment.MainFragment;
@@ -149,10 +148,10 @@ public class MainActivity extends BaseActivity {
             Intent intent=new Intent(this, MonitorService.class);
             startService(intent);
 
-            Intent intent2=new Intent(this, GuardService.class);
-            startService(intent2);
+//            Intent intent2=new Intent(this, GuardService.class);
+//            startService(intent2);
 
-            stopService(intent);
+
 
     }
 
@@ -472,20 +471,20 @@ public class MainActivity extends BaseActivity {
 //        }
 //        return false;
 //    }
-    @Override
-    protected void onSaveInstanceState(Bundle outState) {
-        super.onSaveInstanceState(outState);
-        outState.putInt("showId",showId);
-        outState.putSerializable("fragments",fragments);
-    }
-
-    @Override
-    protected void onRestoreInstanceState(Bundle savedInstanceState) {
-        super.onRestoreInstanceState(savedInstanceState);
-        showId=savedInstanceState.getInt("showId");
-//        fragments= (ArrayList<Fragment>) savedInstanceState.getSerializable("fragments");
-
-    }
+//    @Override
+//    protected void onSaveInstanceState(Bundle outState) {
+//        super.onSaveInstanceState(outState);
+//        outState.putInt("showId",showId);
+//        outState.putSerializable("fragments",fragments);
+//    }
+//
+//    @Override
+//    protected void onRestoreInstanceState(Bundle savedInstanceState) {
+//        super.onRestoreInstanceState(savedInstanceState);
+//        showId=savedInstanceState.getInt("showId");
+//       fragments= (ArrayList<Fragment>) savedInstanceState.getSerializable("fragments");
+//
+//    }
 }
 
 

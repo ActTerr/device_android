@@ -1,8 +1,10 @@
 package mac.yk.devicemanagement.down;
 
+import android.content.Context;
 import android.support.annotation.NonNull;
 
 import java.io.File;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -11,7 +13,7 @@ import java.util.List;
 import mac.yk.devicemanagement.I;
 import mac.yk.devicemanagement.bean.Attachment;
 import mac.yk.devicemanagement.bean.FileEntry;
-import mac.yk.devicemanagement.db.IdbFileEntry;
+import mac.yk.devicemanagement.db.dbFile;
 import mac.yk.devicemanagement.net.IDown;
 import mac.yk.devicemanagement.service.down.FileService;
 import mac.yk.devicemanagement.util.L;
@@ -26,23 +28,26 @@ import rx.subscriptions.CompositeSubscription;
  * Created by mac-yk on 2017/5/25.
  */
 
-public class downPresenter implements downContract.Presenter{
-    String TAG="downPresenter";
+public class DownPresenter implements DownContract.Presenter,Serializable{
+    String TAG="DownPresenter";
 
     @NonNull
-    downContract.View view;
+    DownContract.View view;
 
     @NonNull
     IDown IDown;
 
     @NonNull
-    IdbFileEntry dbEntry;
+    dbFile dbEntry;
 
     @NonNull
-    FileService service;
+    Context context;
 
     @NonNull
     private final BaseSchedulerProvider mSchedulerProvider;
+
+    @NonNull
+    FileService service;
 
     @NonNull
     long nid;
@@ -51,18 +56,19 @@ public class downPresenter implements downContract.Presenter{
 
 
     public ArrayList<FileEntry> entries;
-    public downPresenter(@NonNull downContract.View view, @NonNull IDown Down,IdbFileEntry dbEntry
-            ,@NonNull BaseSchedulerProvider mSchedulerProvider,@NonNull long nid, @NonNull
+    public DownPresenter(@NonNull DownContract.View view, @NonNull IDown Down, dbFile dbEntry
+            , @NonNull BaseSchedulerProvider mSchedulerProvider, @NonNull long nid, @NonNull
+                                 Context context, @NonNull
                                  FileService service) {
         this.view = view;
         this.IDown = Down;
         this.mSchedulerProvider = mSchedulerProvider;
         this.nid = nid;
         this.dbEntry=dbEntry;
+        this.context=context;
         this.service=service;
         subscription=new CompositeSubscription();
         view.setPresenter(this);
-        service.setPresenter(this);
     }
 
 
@@ -126,6 +132,7 @@ public class downPresenter implements downContract.Presenter{
     private void showAttachments(List<FileEntry> fileEntries){
         view.dismissProgressDialog();
         entries= (ArrayList<FileEntry>) fileEntries;
+        service.setEntries(entries);
         sort();
         view.setEntries(entries);
         view.refreshView();
@@ -278,25 +285,36 @@ public class downPresenter implements downContract.Presenter{
             sort();
             view.refreshView();
         if (dbEntry.insertFileEntry(entry)){
-            service.uploadFile(entry);
+           uploadFile(entry);
         }
     }
+
 
     @Override
     public void uploadFile(FileEntry entry) {
         service.uploadFile(entry);
+//        Intent intent=new Intent(FileService.START_UPLOAD);
+//        intent.putExtra("entry",entry);
+//        context.startService(intent);
+
     }
 
 
     @Override
     public void downloadFile(FileEntry entry) {
-
-         service.downloadFile(entry);
+        service.downloadFile(entry);
+//        Intent intent=new Intent(FileService.START_DOWN);
+//        MyMemory.getInstance().setEntry(entry);
+//        intent.setPackage("mac.yk.devicemanagement");
+//        context.startService(intent);
     }
 
     @Override
     public void downloadFiles(ArrayList<FileEntry> entries) {
         service.downloadFiles(entries);
+//        Intent intent=new Intent(FileService.START_DOWN_FILES);
+//        intent.putExtra("entry",entries);
+//        context.startService(intent);
     }
 
     @Override
@@ -319,10 +337,7 @@ public class downPresenter implements downContract.Presenter{
 
     }
 
-    @Override
-    public void stopDownload(String name) {
-        service.stopDownload(name);
-    }
+
 
     @Override
     public void cancelDownload(FileEntry entry) {
@@ -353,9 +368,13 @@ public class downPresenter implements downContract.Presenter{
         memory=entry;
     }
 
+    @Override
+    public void updateItem(FileEntry entry) {
+        view.updateItem(entry);
+    }
 
-    @NonNull
-    public IdbFileEntry getDbEntry() {
+
+    public dbFile getDbEntry() {
         return dbEntry;
     }
 

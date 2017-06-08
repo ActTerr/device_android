@@ -3,6 +3,7 @@ package mac.yk.devicemanagement.net;
 import java.util.concurrent.TimeUnit;
 
 import mac.yk.devicemanagement.I;
+import mac.yk.devicemanagement.service.down.FileTask;
 import okhttp3.OkHttpClient;
 import retrofit2.Retrofit;
 import retrofit2.adapter.rxjava.RxJavaCallAdapterFactory;
@@ -36,7 +37,9 @@ public class RetrofitUtil {
 
 
     public static <T> T initDown(Class<T> clazz,ProgressListener listener){
-        if (retrofit==null){
+        if (retrofit!=null){
+            retrofit=null;
+        }
             DownloadProgressInterceptor interceptor=new DownloadProgressInterceptor(listener);
           OkHttpClient  okHttpClient=new OkHttpClient.Builder().addInterceptor(interceptor).build();
             retrofit=new Retrofit.Builder()
@@ -45,7 +48,6 @@ public class RetrofitUtil {
                     .addConverterFactory(GsonConverterFactory.create())
                     .addCallAdapterFactory(RxJavaCallAdapterFactory.create())
                     .build();
-        }
         return retrofit.create(clazz);
     }
 

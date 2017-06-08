@@ -2,6 +2,7 @@ package mac.yk.devicemanagement.net;
 
 import java.io.IOException;
 
+import mac.yk.devicemanagement.service.down.FileTask;
 import okhttp3.MediaType;
 import okhttp3.ResponseBody;
 import okio.Buffer;
