@@ -134,6 +134,8 @@ public class NoticeFragment extends BaseFragment implements java.util.Observer {
     @Override
     public void update(Observable o, Object arg) {
         L.e(TAG,"refresh");
-        refresh();
+        if (update.getType()==Update.updateData){
+            refresh();
+        }
     }
 }

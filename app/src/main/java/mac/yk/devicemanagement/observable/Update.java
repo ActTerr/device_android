@@ -7,14 +7,17 @@ import java.io.Serializable;
  */
 
 public class Update extends java.util.Observable implements Serializable{
-    boolean isUpdate;
+    public final static int updateData=1;
+    public final static int updateItem=2;
 
-    public boolean isUpdate() {
-        return isUpdate;
+    int type;
+
+    public int getType() {
+        return type;
     }
 
-    public void setUpdate(boolean update) {
-        isUpdate = update;
+    public void setType(int type) {
+        this.type = type;
         setChanged();
         notifyObservers();
     }

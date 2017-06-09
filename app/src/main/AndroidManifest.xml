@@ -50,6 +50,7 @@
 
         </activity>
 
+        <receiver android:name=".receiver.NotificationReceiver"/>
 
         <activity android:name=".ui.activity.DeviceDetailActivity"
             android:windowSoftInputMode = "adjustPan">

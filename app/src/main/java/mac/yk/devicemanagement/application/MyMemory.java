@@ -105,6 +105,13 @@ public class MyMemory {
         this.update = update;
     }
 
+    private int visible_status;
 
+    public int getVisible_status() {
+        return visible_status;
+    }
 
+    public void setVisible_status(int visible_status) {
+        this.visible_status = visible_status;
+    }
 }

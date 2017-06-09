@@ -75,12 +75,9 @@ public class FileTask implements FileTaskListener {
         @Override
         public void handleMessage(Message msg) {
             super.handleMessage(msg);
-            if (msg.what==NTF){
                 updateNotification();
-            }else {
                 L.e("caonima","wo kun zha le");
                 listener.onUpdateItem(entry);
-            }
 
         }
     };
@@ -157,11 +154,13 @@ public class FileTask implements FileTaskListener {
 //        e.printStackTrace();
 //    }
 //    }
-    int NTF=11111231;
     @Override
     public void onStartDownload() {
 
-
+        entry.setDownloadStatus(I.DOWNLOAD_STATUS.PREPARE);
+        entry.setToolSize(1L);
+        Message message=handler.obtainMessage();
+        message.sendToTarget();
         serverAPI= RetrofitUtil.initDown(ServerAPI.class,new ProgressListener(){
 
             @Override
@@ -169,14 +168,15 @@ public class FileTask implements FileTaskListener {
                 finished = hasWrittenLen;
                 if (start) {
                     start = false;
-                    entry.setDownloadStatus(I.DOWNLOAD_STATUS.DOWNLOADING);
                     entry.setToolSize(totalLen);
-
+                    entry.setDownloadStatus(I.DOWNLOAD_STATUS.DOWNLOADING);
+                    L.e("caonima","设置成为下载状态");
                 } else {
                     entry.setCompletedSize(hasWrittenLen);
-                    Message message = handler.obtainMessage();
-                    message.sendToTarget();
+
                 }
+                Message message = handler.obtainMessage();
+                message.sendToTarget();
             }
         });
                 serverAPI.downloadFile(entry.getFileName(), entry.getCompletedSize())
@@ -281,6 +281,9 @@ public class FileTask implements FileTaskListener {
         fileRequestBody = new UploadFileRequestBody(file, new DefaultProgressListener(
                 entry.getCompletedSize()));
         requestBodyMap.put("file\"; filename=\"" + entry.getFileName(), fileRequestBody);
+        entry.setDownloadStatus(I.DOWNLOAD_STATUS.PREPARE);
+        Message message=handler.obtainMessage();
+        message.sendToTarget();
         ServerAPI serverAPI = RetrofitUtil.createService(ServerAPI.class);
         subscribe = serverAPI.addAttachment(requestBodyMap, entry.getFileName(), entry.getNid(), entry.getCompletedSize())
                 .subscribeOn(Schedulers.io())
@@ -312,7 +315,7 @@ public class FileTask implements FileTaskListener {
         if (dbfile.updateFileStatus(file.getName(), file.length(), I.DOWNLOAD_STATUS.COMPLETED)) {
             entry.setDownloadStatus(I.DOWNLOAD_STATUS.COMPLETED);
             listener.onUpdateItem(entry);
-            mNotificationManager.cancel(notificationId);
+            listener.cancelNotification(notificationId,true,entry);
             L.e("caonima",entry.getFileName()+"下载成功");
         }
     }
@@ -490,14 +493,17 @@ public class FileTask implements FileTaskListener {
             System.out.println("----the current " + hasWrittenLen + "----" + totalLen + "-----" + (hasWrittenLen * 100 / totalLen));
             if (start){
                 start=false;
-                L.e("caonima",entry.getFileName());
                 entry.setDownloadStatus(I.DOWNLOAD_STATUS.DOWNLOADING);
+                L.e("caonima",entry.getFileName());
+                L.e("caonima","设置成为下载状态");
+            }else {
+
+                finished = completed + hasWrittenLen;
+                int percent = (int) ((completed + hasWrittenLen) * 100 / (totalLen + completed));
+                if (percent > 100) percent = 100;
+                if (percent < 0) percent = 0;
+                entry.setCompletedSize(finished);
             }
-            finished = completed + hasWrittenLen;
-            int percent = (int) ((completed + hasWrittenLen) * 100 / (totalLen + completed));
-            if (percent > 100) percent = 100;
-            if (percent < 0) percent = 0;
-            entry.setCompletedSize(finished);
             updateNotification();
             Message message=handler.obtainMessage();
             message.sendToTarget();

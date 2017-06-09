@@ -11,6 +11,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.SimpleItemAnimator;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -46,6 +47,9 @@ import mac.yk.devicemanagement.util.ToastUtil;
 
 public class AttachmentFragment extends BaseFragment implements DownContract.View {
     public static int REQUEST_CHOOSER = 1234;
+
+
+
     @BindView(R.id.rv)
     RecyclerView rv;
     @BindView(R.id.add_history)
@@ -91,6 +95,8 @@ public class AttachmentFragment extends BaseFragment implements DownContract.Vie
         } else {
             btnDown.setVisibility(View.GONE);
         }
+        //取消动画显示
+        ((SimpleItemAnimator)rv.getItemAnimator()).setSupportsChangeAnimations(false);
     }
 
 
@@ -237,6 +243,7 @@ public class AttachmentFragment extends BaseFragment implements DownContract.Vie
     }
 
 
+
     @Override
     public void setPresenter(DownContract.Presenter presenter) {
         this.presenter = presenter;
@@ -280,14 +287,18 @@ public class AttachmentFragment extends BaseFragment implements DownContract.Vie
 
             switch (status){
                 case I.DOWNLOAD_STATUS.PAUSE:
-                case I.DOWNLOAD_STATUS.DOWNLOADING:
+                case I.DOWNLOAD_STATUS.PREPARE:
+                    L.e("caonima","prepare");
                     holder.pb.setVisibility(View.VISIBLE);
                     holder.cbAt.setChecked(false);
                     holder.tvCancel.setVisibility(View.VISIBLE);
                     holder.ivControl.setVisibility(View.VISIBLE);
+                    break;
+                case I.DOWNLOAD_STATUS.DOWNLOADING:
+                    L.e("caonima",entry.getFileName()+"传输中");
+
                     int process = (int) ((entry.getCompletedSize() * 100) / entry.getToolSize());
                     holder.pb.setProgress(process);
-                    L.e("caonima",entry.getFileName()+"传输中");
                     break;
                 case I.DOWNLOAD_STATUS.COMPLETED:
                     holder.pb.setVisibility(View.GONE);
@@ -401,6 +412,8 @@ public class AttachmentFragment extends BaseFragment implements DownContract.Vie
                 }
             });
         }
+
+
 
         private void showCancelDialog(final FileEntry entry) {
             AlertDialog dialog = new AlertDialog.Builder(context)

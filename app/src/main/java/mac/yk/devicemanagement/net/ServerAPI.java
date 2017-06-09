@@ -112,7 +112,7 @@ public interface ServerAPI {
     Observable<Result<ArrayList<Notice>>> getNotices(@Query(I.MEMORY) int memory);
 
     @GET(I.REQUEST.PATH+I.REQUEST.GET_NOTICE)
-    Observable<Result<Notice>> getNotice(@Query(I.NOTICE.TITLE) String title);
+    Observable<Result<Notice>> getNotice(@Query(I.NOTICE.TITLE) String key,@Query(I.NOTICE.NID) long nid);
 
     @GET(I.REQUEST.PATH+I.REQUEST.DELETE_NOTICE)
     Observable<Result<String>> deleteNotice(@Query(I.NOTICE.NID)long  Nid);

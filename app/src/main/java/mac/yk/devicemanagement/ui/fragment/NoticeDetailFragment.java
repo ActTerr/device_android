@@ -250,7 +250,7 @@ public class NoticeDetailFragment extends BaseFragment {
                         ToastUtil.showToast(context, "保存成功");
                         notice = sn;
                         setUNEditStatus();
-                        update.setUpdate(true);
+                        update.setType(Update.updateData);
                         L.e(TAG,"update position:"+update.toString());
                     }
                 });
