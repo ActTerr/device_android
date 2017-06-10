@@ -18,7 +18,6 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.PopupWindow;
-import android.widget.TextView;
 
 import com.ipaulpro.afilechooser.utils.FileUtils;
 
@@ -52,8 +51,6 @@ public class AttachmentFragment extends BaseFragment implements DownContract.Vie
 
     @BindView(R.id.rv)
     RecyclerView rv;
-    @BindView(R.id.add_history)
-    TextView addHistory;
     @BindView(R.id.iv_add)
     ImageView ivAdd;
 
@@ -82,8 +79,8 @@ public class AttachmentFragment extends BaseFragment implements DownContract.Vie
         return view;
     }
 
+
     private void initView() {
-        addHistory.setVisibility(View.GONE);
         context = getContext();
         pd = new ProgressDialog(context);
         adapter = new AttachmentAdapter(context);
@@ -278,7 +275,7 @@ public class AttachmentFragment extends BaseFragment implements DownContract.Vie
             AttachmentViewHolder holder = new AttachmentViewHolder(view);
             return holder;
         }
-
+        boolean isMark=false;
         @Override
         public void onBindViewHolder(final AttachmentViewHolder holder, int position) {
 
@@ -315,36 +312,50 @@ public class AttachmentFragment extends BaseFragment implements DownContract.Vie
                     L.e("caonima",entry.getFileName()+"闲置");
             }
 
-            if (admin) {
-                holder.ivDelete.setVisibility(View.VISIBLE);
-                holder.ivEdit.setVisibility(View.VISIBLE);
-                holder.cbAt.setVisibility(View.GONE);
 
-                holder.ivEdit.setOnClickListener(new View.OnClickListener() {
+            /**
+             * 添加图标抖动效果和背景凸显
+             */
+            if (admin) {
+                holder.itemView.setOnLongClickListener(new View.OnLongClickListener() {
                     @Override
-                    public void onClick(View v) {
-                        setEditStatus(holder);
+                    public boolean onLongClick(View v) {
+                        isMark=true;
+                        holder.itemView.setBackgroundResource(R.drawable.long_click_bg);
+                        holder.ivDelete.setVisibility(View.VISIBLE);
+                        holder.ivEdit.setVisibility(View.VISIBLE);
+                        holder.cbAt.setVisibility(View.GONE);
+
+                        holder.ivEdit.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                setEditStatus(holder);
+                            }
+                        });
+                        holder.ivDelete.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                postDelete(entry);
+                            }
+                        });
+                        holder.ivCancel.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                setUnEditStatus(holder);
+                                holder.attachmentName.setText(entry.getFileName());
+                            }
+                        });
+                        holder.ivSave.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                postSave(entry, holder.attachmentName.getText().toString());
+                                holder.itemView.setBackgroundResource(R.color.gray2);
+                            }
+                        });
+                        return false;
                     }
                 });
-                holder.ivDelete.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        postDelete(entry);
-                    }
-                });
-                holder.ivCancel.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        setUnEditStatus(holder);
-                        holder.attachmentName.setText(entry.getFileName());
-                    }
-                });
-                holder.ivSave.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        postSave(entry, holder.attachmentName.getText().toString());
-                    }
-                });
+
 
                 if (isEdit) {
                     setEditStatus(holder);
@@ -519,7 +530,6 @@ public class AttachmentFragment extends BaseFragment implements DownContract.Vie
         public int getItemCount() {
             return fileEntries.size();
         }
-
 
     }
 

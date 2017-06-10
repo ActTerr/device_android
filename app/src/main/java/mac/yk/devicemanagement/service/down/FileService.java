@@ -143,10 +143,10 @@ public class FileService extends Service implements IFile {
 //              0);
         PendingIntent clickPendingIntent = PendingIntent.getBroadcast(this, 0, clickIntent,
                 0);
-        PendingIntent dismissPendingIntent = PendingIntent.getBroadcast(this, 0, dismissIntent,
-                0);
+//        PendingIntent dismissPendingIntent = PendingIntent.getBroadcast(this, 0, dismissIntent,
+//                0);
         mBuilder.setContentIntent(clickPendingIntent);
-        mBuilder.setDeleteIntent(dismissPendingIntent);
+//        mBuilder.setDeleteIntent(dismissPendingIntent);
 
         return mBuilder.build();
     }
