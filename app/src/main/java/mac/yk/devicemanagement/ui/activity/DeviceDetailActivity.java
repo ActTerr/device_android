@@ -3,13 +3,17 @@ package mac.yk.devicemanagement.ui.activity;
 import android.app.Activity;
 import android.app.Dialog;
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
+import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.MenuItem;
@@ -29,19 +33,18 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import mac.yk.devicemanagement.I;
-import mac.yk.devicemanagement.application.MyMemory;
 import mac.yk.devicemanagement.R;
-import mac.yk.devicemanagement.bean.Status;
+import mac.yk.devicemanagement.adapter.DetailAdapter;
+import mac.yk.devicemanagement.application.MyMemory;
 import mac.yk.devicemanagement.bean.User;
 import mac.yk.devicemanagement.net.ApiWrapper;
 import mac.yk.devicemanagement.net.ServerAPI;
-import mac.yk.devicemanagement.ui.fragment.DeviceDetailFragment;
-import mac.yk.devicemanagement.util.ActivityUtils;
 import mac.yk.devicemanagement.util.ConvertUtils;
 import mac.yk.devicemanagement.util.ExceptionFilter;
 import mac.yk.devicemanagement.util.L;
 import mac.yk.devicemanagement.util.MFGT;
 import mac.yk.devicemanagement.util.ToastUtil;
+import mac.yk.devicemanagement.widget.loodView;
 import rx.Observer;
 import rx.Subscriber;
 import rx.android.schedulers.AndroidSchedulers;
@@ -50,19 +53,26 @@ import rx.schedulers.Schedulers;
 
 public class DeviceDetailActivity extends BaseActivity {
     ProgressDialog progressDialog;
-    String[] data;
-    Activity context;
     boolean isBattery = false;
-    DeviceDetailFragment fragD;
-    @BindView(R.id.toolBar)
-    Toolbar toolBar;
     @BindView(R.id.nav_view)
     NavigationView navView;
     @BindView(R.id.drawLayout)
     DrawerLayout drawLayout;
 
+    @BindView(R.id.loodView)
+    loodView lllView;
+    @BindView(R.id.rv)
+    RecyclerView rv;
+    String[] data;
+
+
+    DetailAdapter adapter;
+
+    @BindView(R.id.collapsing_toolbar)
+    CollapsingToolbarLayout collapsingToolbar;
+
+    Context context;
     Dialog dialog;
-    Status mStatus;
     /**
      * progressDialog
      */
@@ -76,29 +86,63 @@ public class DeviceDetailActivity extends BaseActivity {
 
     boolean isFromList;
     boolean backToRecord;
+    String status;
+    @BindView(R.id.testbar)
+    Toolbar toolBar;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Fresco.initialize(this);
-        setContentView(R.layout.activity_currency);
+        setContentView(R.layout.activity_device_detail);
         ButterKnife.bind(this);
+        init();
+
+
+        Log.e("main", "setArgument执行");
+    }
+
+    private void initView() {
+        setTitle("设备详情");
+        status = data[11];
+        id = String.valueOf(data[0]);
+        if (data[2].contains("电池")) {
+            isBattery = true;
+            MyMemory.getInstance().setFlag(true);
+        }
+        if (status.equals("报废")) {
+            isScrap = true;
+        }
+        setSupportActionBar(toolBar);
+        ActionBar ab = getSupportActionBar();
+        ab.setDisplayHomeAsUpEnabled(true);
+        ab.setHomeAsUpIndicator(R.drawable.ic_menu);
+        initNav();
+        adapter = new DetailAdapter(context, data);
+        rv.setAdapter(adapter);
+        rv.setLayoutManager(new GridLayoutManager(context, 1));
+        collapsingToolbar.setTitle("设备状态："+status);
+
+    }
+
+
+    private void init() {
         user = MyMemory.getInstance().getUser();
         context = this;
         dialog = new Dialog(context);
         progressDialog = new ProgressDialog(context);
         String did = getIntent().getStringExtra("Did");
         isFromList = getIntent().getBooleanExtra("isFromList", false);
-        backToRecord=getIntent().getBooleanExtra("isBack",false);
-        if(backToRecord){
-            data=MyMemory.getInstance().getData();
-            if(data!=null){
+        backToRecord = getIntent().getBooleanExtra("isBack", false);
+        if (backToRecord) {
+            data = MyMemory.getInstance().getData();
+            if (data != null) {
                 initView();
             }
         } else {
             getDevice(did);
         }
-
-        Log.e("main", "setArgument执行");
     }
 
     private int getMenu() {
@@ -116,29 +160,15 @@ public class DeviceDetailActivity extends BaseActivity {
         return 0;
     }
 
-    private void initView() {
-        MyMemory.getInstance().setData(data);
-        mStatus = new Status(data[0], data[11]);
-        MyMemory.getInstance().setStatus(mStatus);
-        id = String.valueOf(data[0]);
-        if (data[2].contains("电池")) {
-            isBattery = true;
-            MyMemory.getInstance().setFlag(true);
-        }
-        if (mStatus.getStatus().equals("报废")) {
-            isScrap = true;
-        }
 
-        setTitle("设备详情");
-        setSupportActionBar(toolBar);
-        ActionBar ab = getSupportActionBar();
-        ab.setHomeAsUpIndicator(R.drawable.ic_menu);
-        ab.setDisplayHomeAsUpEnabled(true);
-        fragD = new DeviceDetailFragment();
-        Bundle bundle = new Bundle();
-        bundle.putStringArray("data", data);
-        fragD.setArguments(bundle);
-        ActivityUtils.addFragmentToActivity(getSupportFragmentManager(), fragD, R.id.frame);
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        lllView.destory();
+    }
+
+    private void initNav() {
+
         if (navView != null) {
             navView.inflateMenu(getMenu());
             setUpNavView(navView);
@@ -153,6 +183,7 @@ public class DeviceDetailActivity extends BaseActivity {
             });
         }
     }
+
 
     private void getDevice(String id) {
         progressDialog.show();
@@ -178,8 +209,11 @@ public class DeviceDetailActivity extends BaseActivity {
 
                     @Override
                     public void onNext(String[] devices) {
-                        data = devices;
                         progressDialog.dismiss();
+                        data = devices;
+                        lllView.initCount(data[2]);
+                        L.e("caonima", "devName:" + data[2]);
+
                         MyMemory.getInstance().setData(devices);
                         initView();
                     }
@@ -205,63 +239,63 @@ public class DeviceDetailActivity extends BaseActivity {
                 }
                 switch (item.getItemId()) {
                     case R.id.spare:
-                        if (!mStatus.getStatus().equals("运行")) {
+                        if (!status.equals("运行")) {
                             ToastUtil.showcannotControl(context);
                         } else {
                             postControl("备用");
                         }
                         break;
                     case R.id.inactive:
-                        if (!mStatus.getStatus().equals("备用")) {
+                        if (!status.equals("备用")) {
                             ToastUtil.showcannotControl(context);
                         } else {
                             showDaiyong();
                         }
                         break;
                     case R.id.function:
-                        if (!mStatus.getStatus().equals("待用")) {
+                        if (!status.equals("待用")) {
                             ToastUtil.showcannotControl(context);
                         } else {
                             postControl("运行");
                         }
                         break;
                     case R.id.check:
-                        if (!mStatus.getStatus().equals("备用")) {
+                        if (!status.equals("备用")) {
                             ToastUtil.showcannotControl(context);
                         } else {
                             showCheckDialog();
                         }
                         break;
                     case R.id.repair:
-                        if (!mStatus.getStatus().equals("维修")) {
+                        if (!status.equals("维修")) {
                             ToastUtil.showcannotControl(context);
                         } else {
                             showXiujunDialog();
                         }
                         break;
                     case R.id.record:
-                        MFGT.gotoRecordActivity(context, mStatus.getDid());
-                        MFGT.finish(context);
+                        MFGT.gotoRecordActivity(context, data[0]);
+                        MFGT.finish((Activity) context);
                         break;
                     case R.id.scrap:
                         postScrap();
                         break;
                     case R.id.using:
-                        if (mStatus.getStatus().equals("使用")) {
+                        if (status.equals("使用")) {
                             ToastUtil.showcannotControl(context);
                         } else {
                             postControlD(I.CONTROL_BAT.USING);
                         }
                         break;
                     case R.id.bat_inactive:
-                        if (mStatus.getStatus().equals("待用")) {
+                        if (status.equals("待用")) {
                             ToastUtil.showcannotControl(context);
                         } else {
                             postControlD(I.CONTROL_BAT.BAT_INACTIVE);
                         }
                         break;
                     case R.id.service:
-                        if (!mStatus.getStatus().equals("待修")) {
+                        if (!status.equals("待修")) {
                             ToastUtil.showcannotControl(context);
                         } else {
                             postControl("维修");
@@ -328,17 +362,28 @@ public class DeviceDetailActivity extends BaseActivity {
                     public void onNext(String s) {
                         ToastUtil.showControlSuccess(context);
                         progressDialog.dismiss();
-                        mStatus.setStatus(s);
-                        fragD.refreshUsePosition(s, local);
+                        data[11] = s;
                     }
                 });
+    }
+
+    public void refreshStatus(String status) {
+        data[11] = status;
+        adapter.notifyDataSetChanged();
+    }
+
+
+    public void refreshUsePosition(String status, String local) {
+        data[11] = status;
+        data[8] = local;
+        adapter.notifyDataSetChanged();
     }
 
 
     private void postControlD(String s) {
         progressDialog.show();
         ApiWrapper<ServerAPI> wrapper = new ApiWrapper<>();
-        wrapper.targetClass(ServerAPI.class).getAPI().controlD(s, mStatus.getDid())
+        wrapper.targetClass(ServerAPI.class).getAPI().controlD(s, data[0])
                 .compose(wrapper.<String>applySchedulers())
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
@@ -360,8 +405,8 @@ public class DeviceDetailActivity extends BaseActivity {
                     public void onNext(String s) {
                         ToastUtil.showControlSuccess(context);
                         progressDialog.dismiss();
-                        mStatus.setStatus(s);
-                        fragD.refreshStatus(s);
+                        data[11] = s;
+                        refreshStatus(s);
                     }
                 });
     }
@@ -432,9 +477,9 @@ public class DeviceDetailActivity extends BaseActivity {
                         @Override
                         public void onNext(String s) {
                             progressDialog.dismiss();
-                            mStatus.setStatus(s);
+                            data[11] = s;
                             ToastUtil.showControlSuccess(context);
-                            fragD.refreshStatus(s);
+                            refreshStatus(s);
                         }
                     });
         }
@@ -475,9 +520,9 @@ public class DeviceDetailActivity extends BaseActivity {
         @Override
         public void onNext(String s) {
             progressDialog.dismiss();
-            mStatus.setStatus(s);
+            data[11] = s;
             ToastUtil.showControlSuccess(context);
-            fragD.refreshStatus(s);
+            refreshStatus(s);
 
         }
     };
@@ -766,9 +811,9 @@ public class DeviceDetailActivity extends BaseActivity {
                     @Override
                     public void onNext(String s) {
                         progressDialog.dismiss();
-                        mStatus.setStatus(s);
+                        data[11] = s;
                         ToastUtil.showControlSuccess(context);
-                        fragD.refreshStatus(s);
+                        refreshStatus(s);
                     }
                 });
     }
@@ -806,9 +851,9 @@ public class DeviceDetailActivity extends BaseActivity {
                     @Override
                     public void onNext(String s) {
                         progressDialog.dismiss();
-                        mStatus.setStatus(s);
+                        data[11] = s;
                         ToastUtil.showControlSuccess(context);
-                        fragD.refreshStatus(s);
+                        refreshStatus(s);
                     }
                 });
 
@@ -817,6 +862,6 @@ public class DeviceDetailActivity extends BaseActivity {
     @Override
     public void onBackPressed() {
         MFGT.gotoMainActivity(context);
-        MFGT.finish(context);
+        MFGT.finish((Activity) context);
     }
 }

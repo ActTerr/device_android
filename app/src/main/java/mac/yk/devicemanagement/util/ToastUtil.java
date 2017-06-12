@@ -1,6 +1,5 @@
 package mac.yk.devicemanagement.util;
 
-import android.app.Activity;
 import android.content.Context;
 import android.widget.Toast;
 
@@ -19,7 +18,7 @@ public class ToastUtil {
         Toast.makeText(context, "不能执行当前操作！", Toast.LENGTH_SHORT).show();
     }
 
-    public static void showControlSuccess(Activity context) {
+    public static void showControlSuccess(Context context) {
         Toast.makeText(context, "操作成功！", Toast.LENGTH_SHORT).show();
     }
 

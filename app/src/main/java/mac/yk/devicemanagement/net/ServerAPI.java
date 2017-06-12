@@ -96,7 +96,7 @@ public interface ServerAPI {
 
 
     @GET(I.REQUEST.PATH+I.REQUEST.GET_PIC_COUNT)
-    Observable<Result<Integer>> getPicCount(@Query(I.DEVICE2.CATEGROY )int dName,@Query(I.PIC.TYPE) String type);
+    Observable<Result<Integer>> getPicCount(@Query(I.DEVICE2.CATEGROY )String dName);
 
     @POST(I.REQUEST.PATH+I.REQUEST.UPLOAD_UNCAUGHT)
     @Multipart

@@ -41,11 +41,9 @@ import java.util.concurrent.TimeUnit;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import mac.yk.devicemanagement.I;
-import mac.yk.devicemanagement.application.MyMemory;
 import mac.yk.devicemanagement.R;
 import mac.yk.devicemanagement.net.ApiWrapper;
 import mac.yk.devicemanagement.net.ServerAPI;
-import mac.yk.devicemanagement.util.ConvertUtils;
 import mac.yk.devicemanagement.util.ExceptionFilter;
 import mac.yk.devicemanagement.util.L;
 import mac.yk.devicemanagement.util.ToastUtil;
@@ -97,14 +95,14 @@ public class loodView extends FrameLayout {
     View vDot7;
 
 
-    int devName;
+    String devName;
     private ScheduledExecutorService scheduledExecutorService;
 
     public loodView(@NonNull Context context, @Nullable AttributeSet attrs, @AttrRes int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         this.context = context;
-        devName= ConvertUtils.getdevName(MyMemory.getInstance().getData()[2]);
-        initCount();
+
+
     }
     public loodView(Context context) {
         super(context);
@@ -115,9 +113,12 @@ public class loodView extends FrameLayout {
         this(context, attributeSet, 0);
         this.context = context;
     }
-    private void initCount() {
+
+
+    public void initCount(String devName) {
+        this.devName=devName;
         ApiWrapper<ServerAPI> wrapper = new ApiWrapper<>();
-        subscription = wrapper.targetClass(ServerAPI.class).getAPI().getPicCount(devName, I.PIC.DEVICE)
+        subscription = wrapper.targetClass(ServerAPI.class).getAPI().getPicCount(devName)
                 .compose(wrapper.<Integer>applySchedulers())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(AndroidSchedulers.mainThread())
@@ -163,7 +164,7 @@ public class loodView extends FrameLayout {
                 field.setAccessible(true);
                 View view= (View) field.get(this);
                 indicator.add(view);
-                if (i>count+1){
+                if (i>count){
                     view.setVisibility(GONE);
                 }
             }
@@ -182,11 +183,11 @@ public class loodView extends FrameLayout {
         ButterKnife.bind(this,view);
         initIndicator();
         for (int i = 0; i < count; i++) {
-
-            String imagesUrl = I.REQUEST.SERVER_ROOT + I.REQUEST.PATH + "?request=" + I.REQUEST.DOWN_PIC + "&" + I.DEVICE2.CATEGROY+ "=" +
-                    devName + "&" + I.PIC.PID + "=" + i + "&" + I.PIC.TYPE + "=" + I.PIC.DEVICE;
-            L.e("TAG", imagesUrl);
-            Uri uri = Uri.parse(imagesUrl);
+            StringBuilder imagesUrl=new StringBuilder().append(I.REQUEST.SERVER_ROOT).append(I.REQUEST.PATH)
+                    .append( I.REQUEST.DOWN_PIC).append( "&").append(I.DEVICE2.CATEGROY).append( "=").append(devName)
+                    .append("&").append(I.PIC.PID).append( "=").append(i);
+            L.e("TAG", imagesUrl.toString());
+            Uri uri = Uri.parse(imagesUrl.toString());
             //facebook的View控件
             final SimpleDraweeView mAlbumArt = new SimpleDraweeView(context);
             //facebook的控制监听

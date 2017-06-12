@@ -43,7 +43,7 @@ public interface I {
         String CONTROL="control";
         String SAVE="save";
         String LOGOUT="logOut";
-        String SERVER_ROOT="http://192.168.1.101:8080/deviceManagement/";
+        String SERVER_ROOT="http://192.168.0.2:8080/deviceManagement/";
         String CHECK="check";
         String REPAIR="repair";
         String LOGIN="login";
@@ -77,7 +77,6 @@ public interface I {
 
     interface PIC{
         String AVATAR_SUFFIX_JPG="JPG";
-        String DEVICE="DeviceOld";
         String PID="pId";
         String TYPE="picType";
     }
