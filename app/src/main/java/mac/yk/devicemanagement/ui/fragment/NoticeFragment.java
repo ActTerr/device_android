@@ -57,7 +57,6 @@ public class NoticeFragment extends BaseFragment implements java.util.Observer {
     String TAG = "NoticeFragment";
     Update update = new Update();
     boolean isMore = true;
-
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -141,6 +140,19 @@ public class NoticeFragment extends BaseFragment implements java.util.Observer {
         }
     }
 
+    int mark;
+    RecyclerView.ViewHolder memoryHolder;
+
+    private void setUnMark(){
+        if (memoryHolder!=null){
+            memoryHolder.itemView.setBackgroundResource(R.color.gray2);
+            NoticeAdapter.NoticeViewHolder holder= (NoticeAdapter.NoticeViewHolder) memoryHolder;
+            holder.ivDelete.setVisibility(View.GONE);
+            holder.ivEdit.setVisibility(View.GONE);
+            memoryHolder=null;
+        }
+        mark=-1;
+    }
     public class NoticeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         Context context;
         String TAG = "NoticeAdapter";
@@ -157,6 +169,7 @@ public class NoticeFragment extends BaseFragment implements java.util.Observer {
             this.context = context;
             this.list = list;
             dialog = new ProgressDialog(context);
+            user = MyMemory.getInstance().getUser();
         }
 
         @Override
@@ -173,43 +186,57 @@ public class NoticeFragment extends BaseFragment implements java.util.Observer {
         }
 
         @Override
-        public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
+        public void onBindViewHolder(final RecyclerView.ViewHolder holder, final int position) {
             if (holder.getItemViewType() == footer) {
                 return;
             }
-            NoticeViewHolder nHolder = (NoticeViewHolder) holder;
+
+            final NoticeViewHolder nHolder = (NoticeViewHolder) holder;
             final Notice notice = list.get(position);
-            user = MyMemory.getInstance().getUser();
+
             if (user.getGrade() == 0) {
-                nHolder.ivDelete.setVisibility(View.VISIBLE);
-                nHolder.ivDelete.setOnClickListener(new View.OnClickListener() {
+                holder.itemView.setOnLongClickListener(new View.OnLongClickListener() {
                     @Override
-                    public void onClick(View v) {
-                        AlertDialog dialog = new AlertDialog.Builder(context)
-                                .setTitle("确定删除该条公告吗？")
-                                .setPositiveButton("确定", new DialogInterface.OnClickListener() {
-                                    @Override
-                                    public void onClick(DialogInterface dialog, int which) {
-                                        postDelete(notice);
-                                        dialog.dismiss();
-                                    }
-                                })
-                                .setNegativeButton("取消", new DialogInterface.OnClickListener() {
-                                    @Override
-                                    public void onClick(DialogInterface dialog, int which) {
-                                        dialog.dismiss();
-                                    }
-                                }).create();
-                        dialog.show();
+                    public boolean onLongClick(View v) {
+                        if (mark!=-1){
+                            setUnMark();
+                        }
+                        mark=position;
+                        memoryHolder=holder;
+                        holder.itemView.setBackgroundResource(R.drawable.long_click_bg);
+                        nHolder.ivDelete.setVisibility(View.VISIBLE);
+                        nHolder.ivDelete.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                AlertDialog dialog = new AlertDialog.Builder(context)
+                                        .setTitle("确定删除该条公告吗？")
+                                        .setPositiveButton("确定", new DialogInterface.OnClickListener() {
+                                            @Override
+                                            public void onClick(DialogInterface dialog, int which) {
+                                                postDelete(notice);
+                                                dialog.dismiss();
+                                            }
+                                        })
+                                        .setNegativeButton("取消", new DialogInterface.OnClickListener() {
+                                            @Override
+                                            public void onClick(DialogInterface dialog, int which) {
+                                                dialog.dismiss();
+                                            }
+                                        }).create();
+                                dialog.show();
+                            }
+                        });
+                        nHolder.ivEdit.setVisibility(View.VISIBLE);
+                        nHolder.ivEdit.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                MFGT.gotoNoticeDetail(context, true, notice);
+                            }
+                        });
+                        return true;
                     }
                 });
-                nHolder.ivEdit.setVisibility(View.VISIBLE);
-                nHolder.ivEdit.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        MFGT.gotoNoticeDetail(context, true, notice);
-                    }
-                });
+
             }
             nHolder.noticePosition.setText(position + 1 + ".");
             nHolder.noticeTitle.setText(notice.getTitle());
@@ -217,7 +244,12 @@ public class NoticeFragment extends BaseFragment implements java.util.Observer {
             nHolder.itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    MFGT.gotoNoticeDetail(context, false, notice);
+                    if (mark!=-1){
+                        if (mark!=position){
+                            setUnMark();
+                    }} else {
+                        MFGT.gotoNoticeDetail(context, false, notice);
+                    }
                 }
             });
         }

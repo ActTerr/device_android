@@ -66,7 +66,8 @@ public class AttachmentFragment extends BaseFragment implements DownContract.Vie
     @BindView(R.id.btn_down)
     Button btnDown;
     private boolean admin;
-
+    int mark=-1;
+    AttachmentViewHolder  memoryHolder;
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -153,6 +154,7 @@ public class AttachmentFragment extends BaseFragment implements DownContract.Vie
         holder.attachmentName.setFocusable(false);
         holder.attachmentName.setFocusableInTouchMode(false);
         isEdit = false;
+
     }
 
     private void setEditStatus(AttachmentViewHolder holder) {
@@ -246,12 +248,13 @@ public class AttachmentFragment extends BaseFragment implements DownContract.Vie
         this.presenter = presenter;
     }
 
+
     public class AttachmentAdapter extends RecyclerView.Adapter<AttachmentViewHolder> {
 
 
         Context context;
         String TAG = "AttachmentAdapter";
-        boolean isEdit;
+        boolean isEdit=false;
 
         //已选中要下载的
 
@@ -275,10 +278,18 @@ public class AttachmentFragment extends BaseFragment implements DownContract.Vie
             AttachmentViewHolder holder = new AttachmentViewHolder(view);
             return holder;
         }
-        boolean isMark=false;
-        @Override
-        public void onBindViewHolder(final AttachmentViewHolder holder, int position) {
 
+        @Override
+        public void onBindViewHolder(final AttachmentViewHolder holder, final int position) {
+            holder.itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    L.e(TAG,"on short Click");
+                    if (mark!=position){
+                        setUnMark();
+                    }
+                }
+            });
             final FileEntry entry = fileEntries.get(position);
             final int status = entry.getDownloadStatus();
 
@@ -314,13 +325,19 @@ public class AttachmentFragment extends BaseFragment implements DownContract.Vie
 
 
             /**
-             * 添加图标抖动效果和背景凸显
+             * 添加背景凸显
              */
             if (admin) {
                 holder.itemView.setOnLongClickListener(new View.OnLongClickListener() {
                     @Override
                     public boolean onLongClick(View v) {
-                        isMark=true;
+                        L.e(TAG,"onLongClick");
+                        if (mark!=-1){
+                            setUnMark();
+                        }
+                        mark=position;
+                        memoryHolder=holder;
+                        setEditStatus(holder);
                         holder.itemView.setBackgroundResource(R.drawable.long_click_bg);
                         holder.ivDelete.setVisibility(View.VISIBLE);
                         holder.ivEdit.setVisibility(View.VISIBLE);
@@ -336,6 +353,7 @@ public class AttachmentFragment extends BaseFragment implements DownContract.Vie
                             @Override
                             public void onClick(View v) {
                                 postDelete(entry);
+                                mark=-1;
                             }
                         });
                         holder.ivCancel.setOnClickListener(new View.OnClickListener() {
@@ -349,19 +367,15 @@ public class AttachmentFragment extends BaseFragment implements DownContract.Vie
                             @Override
                             public void onClick(View v) {
                                 postSave(entry, holder.attachmentName.getText().toString());
-                                holder.itemView.setBackgroundResource(R.color.gray2);
+                                setUnMark();
                             }
                         });
-                        return false;
+
+                        return true;
                     }
                 });
 
 
-                if (isEdit) {
-                    setEditStatus(holder);
-                } else {
-                    setUnEditStatus(holder);
-                }
 
             } else {
                 holder.attachmentName.setFocusable(false);
@@ -424,6 +438,15 @@ public class AttachmentFragment extends BaseFragment implements DownContract.Vie
             });
         }
 
+        private void setUnMark(){
+            if (memoryHolder!=null){
+                memoryHolder.itemView.setBackgroundResource(R.color.gray2);
+                setUnEditStatus(memoryHolder);
+                memoryHolder=null;
+            }
+
+            mark=-1;
+        }
 
 
         private void showCancelDialog(final FileEntry entry) {
