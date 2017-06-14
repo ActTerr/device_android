@@ -29,6 +29,7 @@ public interface DownContract {
         void showDialog(FileEntry entry,File file);
 
         void updateItem(FileEntry entry);
+        void setUnMark();
     }
     interface Presenter extends BasePresenter{
         /**

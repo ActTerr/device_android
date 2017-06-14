@@ -13,6 +13,6 @@ import rx.Observable;
 public interface IDown {
     Observable<ArrayList<Attachment>> getAttachments(long nid);
     Observable<String> deleteAttachment(FileEntry entry);
-    Observable<String>  updateAttachment(FileEntry entry, String text);
+    Observable<Long>  updateAttachment(FileEntry entry, String text);
 
 }

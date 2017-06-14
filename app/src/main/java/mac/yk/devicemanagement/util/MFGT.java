@@ -37,7 +37,7 @@ public class MFGT {
         intent.putExtra("unit",unit);
         intent.putExtra("category",category);
         intent.putExtra("status",status);
-        intent.putExtra("gsType",sType);
+        intent.putExtra("sType",sType);
         startActivity(context,intent);
     }
 

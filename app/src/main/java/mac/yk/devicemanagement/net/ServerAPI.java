@@ -126,7 +126,7 @@ public interface ServerAPI {
     Observable<Result<ArrayList<Attachment>>> getAttachment(@Query(I.ATTACHMENT.NID) long Nid);
 
     @GET(I.REQUEST.PATH+I.REQUEST.UPDATE_ATTACHMENT)
-    Observable<Result<String>> updateAttachment(@Query(I.ATTACHMENT.AID) long Aid,@Query(I.ATTACHMENT.NAME) String name,
+    Observable<Result<Long>> updateAttachment(@Query(I.ATTACHMENT.AID) long Aid,@Query(I.ATTACHMENT.NAME) String name,
                                                 @Query(I.ATTACHMENT.NEW_NAME) String newName);
 
     @GET(I.REQUEST.PATH+I.REQUEST.DELETE_ATTACHMENT)

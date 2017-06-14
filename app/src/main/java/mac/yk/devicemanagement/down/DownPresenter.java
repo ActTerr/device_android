@@ -146,6 +146,7 @@ public class DownPresenter implements DownContract.Presenter,Serializable{
      *
      */
     private FileEntry changeEntry(Attachment a) {
+        L.e(TAG,"aid:"+a.getAid());
         FileEntry fileEntry = dbEntry.getFileEntry(a.getName());
         if (fileEntry == null) {
             fileEntry = new FileEntry(a.getAid(),0L, 0L,
@@ -216,7 +217,7 @@ public class DownPresenter implements DownContract.Presenter,Serializable{
         subscription.add(IDown.updateAttachment(entry,text)
               .subscribeOn(mSchedulerProvider.io())
                 .observeOn(mSchedulerProvider.ui())
-        .subscribe(new Subscriber<String>() {
+        .subscribe(new Subscriber<Long>() {
             @Override
             public void onCompleted() {
 
@@ -229,15 +230,17 @@ public class DownPresenter implements DownContract.Presenter,Serializable{
             }
 
             @Override
-            public void onNext(String s) {
-                view.dismissProgressDialog();
+            public void onNext(Long s) {
+                    L.e(TAG,"服务器时间:"+s);
+                     view.dismissProgressDialog();
                     String name=entry.getFileName();
                     entry.setFileName(text);
-                    long updateTime=System.currentTimeMillis();
-                    entry.setAid(updateTime);
-                    if (dbEntry.updateFileName(name,text,updateTime)){
-                        sort();
-                        view.refreshView();
+//                    long updateTime=System.currentTimeMillis();
+                    entry.setAid(s);
+                    if (dbEntry.updateFileName(name,text,s)){
+                        view.setUnMark();
+                        L.e(TAG,"unMark");
+//                        view.refreshView();
                     }
                 view.toastString("保存成功！");
 

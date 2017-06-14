@@ -247,14 +247,31 @@ public class AttachmentFragment extends BaseFragment implements DownContract.Vie
     public void setPresenter(DownContract.Presenter presenter) {
         this.presenter = presenter;
     }
+    @Override
+    public void setUnMark(){
+        if (memoryHolder!=null){
+            if (isEdit) {
+                L.e(TAG, "setUnEdit");
+                setUnEditStatus(memoryHolder);
+            }
+            memoryHolder.ivCancel.setVisibility(View.GONE);
+            memoryHolder.ivSave.setVisibility(View.GONE);
+                memoryHolder.ivEdit.setVisibility(View.GONE);
+                memoryHolder.ivDelete.setVisibility(View.GONE);
+                memoryHolder.cbAt.setVisibility(View.GONE);
 
+            memoryHolder.itemView.setBackgroundResource(R.color.gray2);
+            memoryHolder=null;
+        }
+
+        mark=-1;
+    }
 
     public class AttachmentAdapter extends RecyclerView.Adapter<AttachmentViewHolder> {
 
 
         Context context;
         String TAG = "AttachmentAdapter";
-        boolean isEdit=false;
 
         //已选中要下载的
 
@@ -285,7 +302,7 @@ public class AttachmentFragment extends BaseFragment implements DownContract.Vie
                 @Override
                 public void onClick(View v) {
                     L.e(TAG,"on short Click");
-                    if (mark!=position){
+                    if (mark!=position&&mark!=-1){
                         setUnMark();
                     }
                 }
@@ -321,67 +338,68 @@ public class AttachmentFragment extends BaseFragment implements DownContract.Vie
                     holder.ivControl.setVisibility(View.GONE);
                     holder.ivCancel.setVisibility(View.GONE);
                     L.e("caonima",entry.getFileName()+"闲置");
+                    break;
             }
-
 
             /**
              * 添加背景凸显
              */
             if (admin) {
+                holder.cbAt.setVisibility(View.GONE);
                 holder.itemView.setOnLongClickListener(new View.OnLongClickListener() {
                     @Override
                     public boolean onLongClick(View v) {
                         L.e(TAG,"onLongClick");
-                        if (mark!=-1){
+                        if (mark!=-1&&mark!=position){
                             setUnMark();
-                        }
-                        mark=position;
-                        memoryHolder=holder;
-                        setEditStatus(holder);
-                        holder.itemView.setBackgroundResource(R.drawable.long_click_bg);
-                        holder.ivDelete.setVisibility(View.VISIBLE);
-                        holder.ivEdit.setVisibility(View.VISIBLE);
-                        holder.cbAt.setVisibility(View.GONE);
+                        }else if(mark==position){
 
-                        holder.ivEdit.setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View v) {
-                                setEditStatus(holder);
-                            }
-                        });
-                        holder.ivDelete.setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View v) {
-                                postDelete(entry);
-                                mark=-1;
-                            }
-                        });
-                        holder.ivCancel.setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View v) {
-                                setUnEditStatus(holder);
-                                holder.attachmentName.setText(entry.getFileName());
-                            }
-                        });
-                        holder.ivSave.setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View v) {
-                                postSave(entry, holder.attachmentName.getText().toString());
-                                setUnMark();
-                            }
-                        });
+                        } else {
+                            L.e(TAG,"mark");
+                            mark=position;
+                            memoryHolder=holder;
+                            holder.itemView.setBackgroundResource(R.drawable.long_click_bg);
+                            holder.ivDelete.setVisibility(View.VISIBLE);
+                            holder.ivEdit.setVisibility(View.VISIBLE);
+
+                            holder.ivEdit.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    setEditStatus(holder);
+                                }
+                            });
+                            holder.ivDelete.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    postDelete(entry);
+                                    mark=-1;
+                                    memoryHolder=null;
+                                }
+                            });
+                            holder.ivCancel.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    setUnEditStatus(holder);
+                                    holder.attachmentName.setText(entry.getFileName());
+                                }
+                            });
+                            holder.ivSave.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    L.e(TAG,"aid:"+entry.getAid());
+                                    postSave(entry, holder.attachmentName.getText().toString());
+
+                                }
+                            });
+                        }
+
 
                         return true;
                     }
                 });
-
-
-
-            } else {
-                holder.attachmentName.setFocusable(false);
-                holder.attachmentName.setFocusableInTouchMode(false);
             }
-
+            holder.attachmentName.setFocusable(false);
+            holder.attachmentName.setFocusableInTouchMode(false);
 
             holder.attachmentName.setText(entry.getFileName());
             holder.uploadTime.setText(ConvertUtils.Date2String(new Date(entry.getAid())));
@@ -438,15 +456,6 @@ public class AttachmentFragment extends BaseFragment implements DownContract.Vie
             });
         }
 
-        private void setUnMark(){
-            if (memoryHolder!=null){
-                memoryHolder.itemView.setBackgroundResource(R.color.gray2);
-                setUnEditStatus(memoryHolder);
-                memoryHolder=null;
-            }
-
-            mark=-1;
-        }
 
 
         private void showCancelDialog(final FileEntry entry) {

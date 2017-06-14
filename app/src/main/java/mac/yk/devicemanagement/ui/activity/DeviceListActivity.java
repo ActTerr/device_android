@@ -79,8 +79,10 @@ public class DeviceListActivity extends BaseActivity {
         String type;
         if (category.equals("固定机控器")){
             type="数字固定";
+            category="机控器";
         }else if (category.equals("移动机控器")){
             type="数字移动";
+            category="机控器";
         }else {
             type=null;
         }

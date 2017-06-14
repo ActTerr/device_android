@@ -140,7 +140,7 @@ public class NoticeFragment extends BaseFragment implements java.util.Observer {
         }
     }
 
-    int mark;
+    int mark=-1;
     RecyclerView.ViewHolder memoryHolder;
 
     private void setUnMark(){
@@ -198,6 +198,7 @@ public class NoticeFragment extends BaseFragment implements java.util.Observer {
                 holder.itemView.setOnLongClickListener(new View.OnLongClickListener() {
                     @Override
                     public boolean onLongClick(View v) {
+                        L.e("attachment","long click");
                         if (mark!=-1){
                             setUnMark();
                         }
@@ -244,6 +245,7 @@ public class NoticeFragment extends BaseFragment implements java.util.Observer {
             nHolder.itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+                    L.e("attachment","short click");
                     if (mark!=-1){
                         if (mark!=position){
                             setUnMark();
