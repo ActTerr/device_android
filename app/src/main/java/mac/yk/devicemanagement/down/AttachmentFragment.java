@@ -237,7 +237,7 @@ public class AttachmentFragment extends BaseFragment implements DownContract.Vie
         }
         if (position!=-1){
             adapter.notifyItemChanged(position);
-            L.e("caonima","update item2");
+            L.e("caonima","update item position"+position);
         }
     }
 
@@ -298,6 +298,7 @@ public class AttachmentFragment extends BaseFragment implements DownContract.Vie
 
         @Override
         public void onBindViewHolder(final AttachmentViewHolder holder, final int position) {
+
             holder.itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -313,15 +314,12 @@ public class AttachmentFragment extends BaseFragment implements DownContract.Vie
             switch (status){
                 case I.DOWNLOAD_STATUS.PAUSE:
                 case I.DOWNLOAD_STATUS.PREPARE:
-                    L.e("caonima","prepare");
+                case I.DOWNLOAD_STATUS.DOWNLOADING:
+                    L.e("caonima",entry.getFileName()+"传输中");
                     holder.pb.setVisibility(View.VISIBLE);
                     holder.cbAt.setChecked(false);
                     holder.tvCancel.setVisibility(View.VISIBLE);
                     holder.ivControl.setVisibility(View.VISIBLE);
-                    break;
-                case I.DOWNLOAD_STATUS.DOWNLOADING:
-                    L.e("caonima",entry.getFileName()+"传输中");
-
                     int process = (int) ((entry.getCompletedSize() * 100) / entry.getToolSize());
                     holder.pb.setProgress(process);
                     break;

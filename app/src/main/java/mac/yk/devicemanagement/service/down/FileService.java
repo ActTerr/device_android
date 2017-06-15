@@ -13,8 +13,6 @@ import android.support.v7.app.NotificationCompat;
 import android.widget.RemoteViews;
 
 import java.util.ArrayList;
-import java.util.Timer;
-import java.util.TimerTask;
 
 import mac.yk.devicemanagement.R;
 import mac.yk.devicemanagement.bean.FileEntry;
@@ -53,13 +51,13 @@ public class FileService extends Service implements IFile {
     ArrayList<FileEntry> entries;
     private NotificationManager mNotificationManager;
     dbFile mdbFile;
-    Timer timer = new Timer();
-    TimerTask timerTask;
-    boolean running = false;
     IServiceListener listener = new IServiceListener() {
         @Override
         public void onUpdateItem(FileEntry entry) {
             presenter.updateItem(entry);
+//            if (entry.getCompletedSize()== I.DOWNLOAD_STATUS.COMPLETED){
+//                presenter.refreshView();
+//            }
 
         }
 
@@ -194,10 +192,16 @@ public class FileService extends Service implements IFile {
 
     @Override
     public void uploadFile(final FileEntry entry) {
+
         final FileTask fileTask = new FileTask(entry, mdbFile, listener, mNotificationManager);
         fileTasks.add(fileTask);
         L.e("cao", "task start");
-        fileTask.onStartUpload();
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                fileTask.onStartUpload();
+            }
+        }).start();
 
     }
 

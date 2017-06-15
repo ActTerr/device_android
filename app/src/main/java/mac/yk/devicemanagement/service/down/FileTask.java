@@ -76,7 +76,7 @@ public class FileTask implements FileTaskListener {
         public void handleMessage(Message msg) {
             super.handleMessage(msg);
                 updateNotification();
-                L.e("caonima","wo kun zha le");
+                L.e("caonima","更新item");
                 listener.onUpdateItem(entry);
 
         }
@@ -159,8 +159,7 @@ public class FileTask implements FileTaskListener {
 
         entry.setDownloadStatus(I.DOWNLOAD_STATUS.PREPARE);
         entry.setToolSize(1L);
-        Message message=handler.obtainMessage();
-        message.sendToTarget();
+
         serverAPI= RetrofitUtil.initDown(ServerAPI.class,new ProgressListener(){
 
             @Override
@@ -279,11 +278,8 @@ public class FileTask implements FileTaskListener {
         L.e(TAG, file.getAbsolutePath());
         Map<String, RequestBody> requestBodyMap = new HashMap<>();
         fileRequestBody = new UploadFileRequestBody(file, new DefaultProgressListener(
-                entry.getCompletedSize()));
+                entry.getCompletedSize(),handler));
         requestBodyMap.put("file\"; filename=\"" + entry.getFileName(), fileRequestBody);
-        entry.setDownloadStatus(I.DOWNLOAD_STATUS.PREPARE);
-        Message message=handler.obtainMessage();
-        message.sendToTarget();
         ServerAPI serverAPI = RetrofitUtil.createService(ServerAPI.class);
         subscribe = serverAPI.addAttachment(requestBodyMap, entry.getFileName(), entry.getNid(), entry.getCompletedSize())
                 .subscribeOn(Schedulers.io())
@@ -484,8 +480,10 @@ public class FileTask implements FileTaskListener {
     class DefaultProgressListener implements ProgressListener {
 
         long completed;
-        public DefaultProgressListener(long completed) {
+        Handler handler;
+        public DefaultProgressListener(long completed,Handler handler) {
             this.completed = completed;
+            this.handler=handler;
         }
 
         @Override
@@ -503,6 +501,7 @@ public class FileTask implements FileTaskListener {
                 if (percent > 100) percent = 100;
                 if (percent < 0) percent = 0;
                 entry.setCompletedSize(finished);
+                L.e("caonima","完成:"+finished);
             }
             updateNotification();
             Message message=handler.obtainMessage();

@@ -285,7 +285,7 @@ public class DownPresenter implements DownContract.Presenter,Serializable{
             entry.setToolSize(file.length());
             L.e(TAG, String.valueOf(file.length()));
             entries.add(entry);
-            sort();
+//            sort();
             view.refreshView();
         if (dbEntry.insertFileEntry(entry)){
            uploadFile(entry);
