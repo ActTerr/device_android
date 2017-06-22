@@ -1,2 +1,2 @@
-include ':app',':libzxing', ':gesture'
+include ':app', ':libzxing', ':gesture',  ':customdialog'
 include ':aFileChooser'

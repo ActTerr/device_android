@@ -1,7 +1,7 @@
 package mac.yk.devicemanagement.ui.fragment;
 
 import android.app.AlertDialog;
-import android.app.ProgressDialog;
+import mac.yk.customdialog.CustomDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
@@ -16,6 +16,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.Observable;
 
 import butterknife.BindView;
@@ -28,6 +29,7 @@ import mac.yk.devicemanagement.bean.User;
 import mac.yk.devicemanagement.net.ApiWrapper;
 import mac.yk.devicemanagement.net.ServerAPI;
 import mac.yk.devicemanagement.observable.Update;
+import mac.yk.devicemanagement.util.ConvertUtils;
 import mac.yk.devicemanagement.util.ExceptionFilter;
 import mac.yk.devicemanagement.util.L;
 import mac.yk.devicemanagement.util.MFGT;
@@ -48,7 +50,7 @@ public class NoticeFragment extends BaseFragment implements java.util.Observer {
     Context context;
     NoticeAdapter adapter;
     ArrayList<Notice> data;
-    ProgressDialog pd;
+    CustomDialog pd;
     int memory;
 
     @BindView(R.id.btn_down)
@@ -70,7 +72,7 @@ public class NoticeFragment extends BaseFragment implements java.util.Observer {
         adapter = new NoticeAdapter(context, data);
         rv.setAdapter(adapter);
         rv.setLayoutManager(new LinearLayoutManager(context));
-        pd = new ProgressDialog(context);
+        pd = new CustomDialog(context);
         btnDown.setVisibility(View.GONE);
         initData();
         return view;
@@ -159,7 +161,7 @@ public class NoticeFragment extends BaseFragment implements java.util.Observer {
         ArrayList<Notice> list;
 
         User user;
-        ProgressDialog dialog;
+        CustomDialog dialog;
 
 
         private int footer = 1;
@@ -168,7 +170,7 @@ public class NoticeFragment extends BaseFragment implements java.util.Observer {
         public NoticeAdapter(Context context, ArrayList<Notice> list) {
             this.context = context;
             this.list = list;
-            dialog = new ProgressDialog(context);
+            dialog = new CustomDialog(context);
             user = MyMemory.getInstance().getUser();
         }
 
@@ -241,7 +243,7 @@ public class NoticeFragment extends BaseFragment implements java.util.Observer {
             }
             nHolder.noticePosition.setText(position + 1 + ".");
             nHolder.noticeTitle.setText(notice.getTitle());
-            nHolder.noticeTime.setText(notice.getDate().toString());
+            nHolder.noticeTime.setText(ConvertUtils.Date2String(new Date(notice.getNid())));
             nHolder.itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {

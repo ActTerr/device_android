@@ -39,7 +39,7 @@ public class ConvertUtils {
     }
 
     public static Date String2Date(String s) {
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH-mm-ss");
         try {
             return sdf.parse(s);
         } catch (ParseException e) {
@@ -51,7 +51,7 @@ public class ConvertUtils {
 
     public static String Date2String(Date date) {
         if (date!=null){
-            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
             return sdf.format(date);
         }
         return "";

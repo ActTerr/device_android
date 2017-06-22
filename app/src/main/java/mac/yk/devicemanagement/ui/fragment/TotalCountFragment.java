@@ -1,6 +1,6 @@
 package mac.yk.devicemanagement.ui.fragment;
 
-import android.app.ProgressDialog;
+import mac.yk.customdialog.CustomDialog;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
@@ -47,7 +47,7 @@ public class TotalCountFragment extends BaseFragment {
     int zoneController;
 
     String year = "all";
-    ProgressDialog dialog;
+    CustomDialog dialog;
     @BindView(R.id.add_from)
     Button addFrom;
 
@@ -59,7 +59,7 @@ public class TotalCountFragment extends BaseFragment {
         View view = inflater.inflate(R.layout.frag_count, container, false);
         ButterKnife.bind(this, view);
         L.e("cao", "onCreate");
-        dialog = new ProgressDialog(getContext());
+        dialog = new CustomDialog(getContext());
         setHasOptionsMenu(true);
         user=MyMemory.getInstance().getUser();
 

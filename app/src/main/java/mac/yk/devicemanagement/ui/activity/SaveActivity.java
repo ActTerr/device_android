@@ -52,7 +52,7 @@ public class SaveActivity extends BaseActivity implements View.OnClickListener {
 //    public void onSave(View view) {
 //
 //        L.e("main", "save:" + name.getText().toString());
-//        final ProgressDialog progressDialog = new ProgressDialog(this);
+//        final CustomDialog progressDialog = CustomDialog.create(context,"加载中...",false,null);
 //        progressDialog.show();
 //
 //        ApiWrapper<ServerAPI> wrapper=new ApiWrapper<>();

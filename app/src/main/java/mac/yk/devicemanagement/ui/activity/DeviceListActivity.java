@@ -1,6 +1,6 @@
 package mac.yk.devicemanagement.ui.activity;
 
-import android.app.ProgressDialog;
+import mac.yk.customdialog.CustomDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -31,7 +31,7 @@ public class DeviceListActivity extends BaseActivity {
     boolean isMore=true;
     int page=0;
     Context context;
-    ProgressDialog pd;
+    CustomDialog pd;
     RecyclerView rv;
     GridLayoutManager gl;
     @Override
@@ -40,7 +40,7 @@ public class DeviceListActivity extends BaseActivity {
         setContentView(R.layout.activity_list);
         rv= (RecyclerView) findViewById(R.id.rv);
         context=this;
-        pd=new ProgressDialog(context);
+        pd=new CustomDialog(context);
         Intent intent=getIntent();
         String unit= String.valueOf(intent.getIntExtra("unit",0));
         String category=intent.getStringExtra("category");

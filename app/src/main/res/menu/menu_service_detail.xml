@@ -1,13 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <item android:id="@+id/check"
+        android:icon="@drawable/check"
         android:title="巡检"/>
     <item android:id="@+id/service"
+        android:icon="@drawable/service"
         android:title="维修"/>
     <item android:id="@+id/repair"
+        android:icon="@drawable/repair"
         android:title="修竣"/>
     <item android:id="@+id/scrap"
+        android:icon="@drawable/scrap"
         android:title="报废"/>
     <item android:id="@+id/record"
+        android:icon="@drawable/record"
         android:title="记录"/>
 </menu>

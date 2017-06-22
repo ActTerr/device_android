@@ -1,0 +1,8 @@
+<shape xmlns:android="http://schemas.android.com/apk/res/android"
+    android:shape="ring"
+    android:useLevel="false">
+    <gradient
+        android:centerColor="@color/white"
+        android:endColor="@color/gray"
+        android:startColor="@color/white"/>
+</shape>

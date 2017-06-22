@@ -2,7 +2,6 @@ package mac.yk.devicemanagement.down;
 
 import android.app.Activity;
 import android.app.AlertDialog;
-import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -28,6 +27,7 @@ import java.util.Date;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import mac.yk.customdialog.CustomDialog;
 import mac.yk.devicemanagement.I;
 import mac.yk.devicemanagement.R;
 import mac.yk.devicemanagement.application.MyMemory;
@@ -55,7 +55,7 @@ public class AttachmentFragment extends BaseFragment implements DownContract.Vie
     ImageView ivAdd;
 
     AttachmentAdapter adapter;
-    ProgressDialog pd;
+    CustomDialog pd;
     Context context;
     DownContract.Presenter presenter;
     boolean isEdit;
@@ -83,7 +83,7 @@ public class AttachmentFragment extends BaseFragment implements DownContract.Vie
 
     private void initView() {
         context = getContext();
-        pd = new ProgressDialog(context);
+        pd = new CustomDialog(context);
         adapter = new AttachmentAdapter(context);
         rv.setAdapter(adapter);
         rv.setLayoutManager(new LinearLayoutManager(context));
@@ -169,12 +169,12 @@ public class AttachmentFragment extends BaseFragment implements DownContract.Vie
     }
 
     @Override
-    public void showProgressDialog() {
+    public void showCustomDialog() {
         pd.show();
     }
 
     @Override
-    public void dismissProgressDialog() {
+    public void dismissCustomDialog() {
         pd.dismiss();
     }
 
@@ -220,7 +220,9 @@ public class AttachmentFragment extends BaseFragment implements DownContract.Vie
                     }).setNegativeButton("确定", new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
+                            presenter.setMemory(entry);
                             presenter.updateFile(entry,file);
+
                         }
                     }).create();
         dialog.show();
@@ -516,6 +518,7 @@ public class AttachmentFragment extends BaseFragment implements DownContract.Vie
                     case R.id.update_file:
                         popupWindow.dismiss();
                         presenter.setMemory(entry);
+                        L.e(TAG,"");
                         selectFile(true);
                         break;
 

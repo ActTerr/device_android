@@ -1,7 +1,7 @@
 package mac.yk.devicemanagement.ui.fragment;
 
 import android.app.Activity;
-import android.app.ProgressDialog;
+import mac.yk.customdialog.CustomDialog;
 import android.content.Context;
 import android.os.Bundle;
 import android.os.Handler;
@@ -85,7 +85,7 @@ public class RecordFragment extends BaseFragment {
     CheckAdapter CheckAdapter;
     ServiceAdapter ServiceAdapter;
     LinearLayoutManager llm;
-    ProgressDialog pd;
+    CustomDialog pd;
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -100,7 +100,7 @@ public class RecordFragment extends BaseFragment {
     }
 
     private void init() {
-        pd=new ProgressDialog(context);
+        pd=new CustomDialog(context);
         id=getArguments().getString("id");
         if (id==null){
             Activity a= (Activity) context;

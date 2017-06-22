@@ -1,7 +1,7 @@
 package mac.yk.devicemanagement.ui.fragment;
 
 
-import android.app.ProgressDialog;
+import mac.yk.customdialog.CustomDialog;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -51,7 +51,7 @@ public class ScrapFragment extends BaseFragment {
     ScrapAdapter scrapAdapter;
     GridLayoutManager gridLayoutManager;
     boolean isMore = true;
-    ProgressDialog pd;
+    CustomDialog pd;
     Integer[] tongji;
     ArrayList<Scrap> diantais = new ArrayList<>();
     ArrayList<Scrap> dianchis = new ArrayList<>();
@@ -73,7 +73,7 @@ public class ScrapFragment extends BaseFragment {
         context = getContext();
         scrapAdapter = new ScrapAdapter(context);
         gridLayoutManager = new GridLayoutManager(context, 1);
-        pd = new ProgressDialog(context);
+        pd = new CustomDialog(context);
         rv.setAdapter(scrapAdapter);
         rv.setLayoutManager(gridLayoutManager);
         btnTop.setVisibility(View.GONE);

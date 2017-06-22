@@ -1,7 +1,6 @@
 package mac.yk.devicemanagement.ui.activity;
 
 import android.app.AlertDialog;
-import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -36,6 +35,7 @@ import java.util.ArrayList;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import mac.yk.customdialog.CustomDialog;
 import mac.yk.devicemanagement.I;
 import mac.yk.devicemanagement.R;
 import mac.yk.devicemanagement.application.MyMemory;
@@ -59,12 +59,10 @@ import rx.Observer;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 
-import static mac.yk.devicemanagement.R.drawable.warning;
-
 
 public class MainActivity extends BaseActivity {
     String id;
-    ProgressDialog progressDialog;
+    CustomDialog progressDialog;
 
     AlertDialog.Builder builder;
     AlertDialog Adialog;
@@ -91,7 +89,7 @@ public class MainActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_currency);
-        View view = View.inflate(this, R.layout.dialog_warning, null);
+
         ButterKnife.bind(this);
         checkUser();
         EventBus.getDefault().register(this);
@@ -99,7 +97,7 @@ public class MainActivity extends BaseActivity {
         init();
         initActionbar();
         setNavView();
-        showWarning(view);
+        showWarning();
         isFromNotification();
         startCheck();
         initFragment();
@@ -113,18 +111,11 @@ public class MainActivity extends BaseActivity {
         }
     }
 
-    private void showWarning(View view) {
+    private void showWarning() {
         if (!SpUtil.getPrompt(this)) {
-            getWarning();
-            dialogHolder = new DialogHolder(view);
-            Adialog = builder.setTitle("预警信息")
-                    .setView(view)
-                    .setPositiveButton("已读以上信息", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            dialog.dismiss();
-                        }
-                    }).create();
+            View view = View.inflate(this, R.layout.dialog_warning, null);
+            getWarning(view);
+
         }
     }
 
@@ -223,7 +214,7 @@ public class MainActivity extends BaseActivity {
         User user = dbUser.getInstance(context).select2(SpUtil.getLoginUser(context));
         MyMemory.getInstance().setUser(user);
         builder = new AlertDialog.Builder(this);
-        progressDialog = new ProgressDialog(this);
+        progressDialog = CustomDialog.create(context,"加载中...",false,null);
     }
 
     private void setNavView() {
@@ -294,10 +285,13 @@ public class MainActivity extends BaseActivity {
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
                 FragmentManager manager=getSupportFragmentManager();
                 switch (item.getItemId()) {
-                    case warning:
-                        getWarning();
+                    case R.id.warning:
+                        View view = View.inflate(context, R.layout.dialog_warning, null);
+                        getWarning(view);
+                        L.e(TAG,"执行warning");
+
                         break;
-                    case R.id.tongji:
+                    case R.id.record:
                             if(fragments.contains(CountFragment)){
                                 ActivityUtils.changeFragment(manager, CountFragment,fragments.get(showId));
                                 for(int i=0;i<fragments.size();i++){
@@ -314,7 +308,7 @@ public class MainActivity extends BaseActivity {
                             toolBar.setTitle("设备统计");
 
                         break;
-                    case R.id.bf_tongji:
+                    case R.id.scrap_record:
                         if(fragments.contains(ScrapCountFragment)){
                             ActivityUtils.changeFragment(manager, ScrapCountFragment,fragments.get(showId));
                             for(int i=0;i<fragments.size();i++){
@@ -370,7 +364,7 @@ public class MainActivity extends BaseActivity {
         }
     }
 
-    Observer<String> observerYujing = new Observer<String>() {
+    Observer<String> observerWarning = new Observer<String>() {
         @Override
         public void onCompleted() {
         }
@@ -392,7 +386,17 @@ public class MainActivity extends BaseActivity {
     };
 
 
-    private void getWarning() {
+    private void getWarning(View view) {
+        dialogHolder = new DialogHolder(view);
+        Adialog = builder.setTitle("预警信息")
+                .setView(view)
+                .setPositiveButton("已读以上信息", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                }).create();
+        L.e(TAG,"执行warning");
         progressDialog.show();
         ApiWrapper<ServerAPI> network = new ApiWrapper<>();
         subscription = network.targetClass(ServerAPI.class).
@@ -400,7 +404,7 @@ public class MainActivity extends BaseActivity {
                 .compose(network.<String>applySchedulers())
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(observerYujing);
+                .subscribe(observerWarning);
     }
 
     class DialogHolder {

@@ -1,6 +1,6 @@
 package mac.yk.devicemanagement.ui.fragment;
 
-import android.app.ProgressDialog;
+import mac.yk.customdialog.CustomDialog;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
@@ -30,7 +30,6 @@ import rx.Subscriber;
  */
 
 public class StatusCountFragment extends BaseFragment {
-    ProgressDialog dialog;
     String year = "all";
     ArrayList<ArrayList<String>> data;
     int memory = 0;
@@ -42,17 +41,20 @@ public class StatusCountFragment extends BaseFragment {
     String TAG = "StatusCountFragment";
     @BindView(R.id.add_from)
     Button addFrom;
-    boolean isTotal=false;
+    boolean isTotal = false;
+    CustomDialog dialog;
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.frag_count, container, false);
         ButterKnife.bind(this, view);
         setHasOptionsMenu(true);
-        if (MyMemory.getInstance().getUser().getGrade()==0){
-            isTotal=true;
+        if (MyMemory.getInstance().getUser().getGrade() == 0) {
+            isTotal = true;
         }
-        dialog = new ProgressDialog(getContext());
+        dialog=new CustomDialog(getContext());
+        dialog.setContentView(R.layout.progress_dialog);
         data = new ArrayList<>();
         adapter = new FormStatusAdapter(getContext(), data);
         lv.setAdapter(adapter);
@@ -66,7 +68,7 @@ public class StatusCountFragment extends BaseFragment {
             @Override
             public void onScrollStateChanged(AbsListView view, int scrollState) {
                 int lastPosition = lv.getLastVisiblePosition();
-                if (scrollState == AbsListView.OnScrollListener.SCROLL_STATE_IDLE && lastPosition == adapter.getCount() - 1 && memory != 20 && !isAdding&&isTotal) {
+                if (scrollState == AbsListView.OnScrollListener.SCROLL_STATE_IDLE && lastPosition == adapter.getCount() - 1 && memory != 20 && !isAdding && isTotal) {
                     initData();
                     L.e(TAG, "add");
                 }
@@ -107,7 +109,7 @@ public class StatusCountFragment extends BaseFragment {
 
 
     private void initData() {
-        dialog.show();
+
         isAdding = true;
         ApiWrapper<ServerAPI> wrapper = new ApiWrapper<>();
         wrapper.targetClass(ServerAPI.class).getAPI().getStatusCount(MyMemory.getInstance().getUser().getUnit(), year, memory)

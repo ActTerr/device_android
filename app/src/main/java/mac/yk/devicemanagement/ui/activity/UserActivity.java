@@ -1,7 +1,7 @@
 package mac.yk.devicemanagement.ui.activity;
 
 import android.app.Activity;
-import android.app.ProgressDialog;
+import mac.yk.customdialog.CustomDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -42,7 +42,7 @@ public class UserActivity extends BaseActivity {
     ImageView rightBtn;
 
     Context context;
-    ProgressDialog pd;
+    CustomDialog pd;
     @BindView(R.id.netView)
     TextView netView;
     @BindView(R.id.open)
@@ -67,7 +67,7 @@ public class UserActivity extends BaseActivity {
         setContentView(R.layout.activity_set);
         ButterKnife.bind(this);
         context = this;
-        pd = new ProgressDialog(context);
+        pd = new CustomDialog(context);
         User u=MyMemory.getInstance().getUser();
         user.setText(u.getName());
         String station;

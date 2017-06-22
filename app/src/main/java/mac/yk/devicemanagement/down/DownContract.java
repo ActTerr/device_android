@@ -19,8 +19,8 @@ public interface DownContract {
         void refreshView();
 //        void setUnEditStatus(AttachmentViewHolder holder);
 //        void setEditStatus(AttachmentViewHolder holder);
-        void showProgressDialog();
-        void dismissProgressDialog();
+        void showCustomDialog();
+        void dismissCustomDialog();
         void toastException();
         void toastString(String s);
         void choseFile(Intent intent);

@@ -1,7 +1,6 @@
 package mac.yk.devicemanagement.ui.activity;
 
 import android.app.Activity;
-import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -11,8 +10,9 @@ import android.widget.Toast;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import mac.yk.devicemanagement.application.MyMemory;
+import mac.yk.customdialog.CustomDialog;
 import mac.yk.devicemanagement.R;
+import mac.yk.devicemanagement.application.MyMemory;
 import mac.yk.devicemanagement.bean.User;
 import mac.yk.devicemanagement.db.DBHelper;
 import mac.yk.devicemanagement.db.dbUser;
@@ -34,7 +34,7 @@ public class LoginActivity extends BaseActivity{
     @BindView(R.id.passwd)
     EditText passwd;
 
-    ProgressDialog progressDialog;
+    CustomDialog progressDialog;
 
     String TAG="LoginActivity";
     @Override
@@ -43,8 +43,7 @@ public class LoginActivity extends BaseActivity{
         setContentView(R.layout.activity_login);
         ButterKnife.bind(this);
         context = this;
-        progressDialog = new ProgressDialog(context);
-
+        progressDialog= CustomDialog.create(context,"登录中...",false,null);
     }
      Observer<User> observer=new Observer<User>() {
          @Override

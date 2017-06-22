@@ -1,6 +1,6 @@
 package mac.yk.devicemanagement.ui.fragment;
 
-import android.app.ProgressDialog;
+import mac.yk.customdialog.CustomDialog;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
@@ -34,7 +34,7 @@ import static android.content.ContentValues.TAG;
 public class ServiceCountFragment extends BaseFragment {
     @BindView(R.id.list)
     ListView lv;
-    ProgressDialog dialog;
+    CustomDialog dialog;
 
     ArrayList<ArrayList<String>> data;
     @BindView(R.id.add_from)
@@ -48,7 +48,7 @@ public class ServiceCountFragment extends BaseFragment {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.frag_count, container, false);
         ButterKnife.bind(this, view);
-        dialog = new ProgressDialog(getContext());
+        dialog = new CustomDialog(getContext());
         data = new ArrayList<>();
         adapter = new FormServiceAdapter(getContext(), data);
         lv.setAdapter(adapter);

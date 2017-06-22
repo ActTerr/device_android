@@ -1,6 +1,6 @@
 package mac.yk.devicemanagement.ui.fragment;
 
-import android.app.ProgressDialog;
+import mac.yk.customdialog.CustomDialog;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
@@ -45,7 +45,7 @@ public class ScrapCountFragment extends BaseFragment {
     int qukongqi;
 
     String year = "all";
-    ProgressDialog dialog;
+    CustomDialog dialog;
     @BindView(R.id.add_from)
     Button addFrom;
 
@@ -55,7 +55,7 @@ public class ScrapCountFragment extends BaseFragment {
         View view = inflater.inflate(R.layout.frag_count, container, false);
         ButterKnife.bind(this, view);
         addFrom.setVisibility(View.GONE);
-        dialog = new ProgressDialog(getContext());
+        dialog = new CustomDialog(getContext());
         initView();
         setHasOptionsMenu(true);
         return view;

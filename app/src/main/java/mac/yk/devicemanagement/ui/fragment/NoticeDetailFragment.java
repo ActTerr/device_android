@@ -2,7 +2,7 @@ package mac.yk.devicemanagement.ui.fragment;
 
 import android.app.Activity;
 import android.app.AlertDialog;
-import android.app.ProgressDialog;
+import mac.yk.customdialog.CustomDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
@@ -56,7 +56,7 @@ public class NoticeDetailFragment extends BaseFragment {
     ImageView ivEdit;
 
     String TAG = "NoticeDetailFragment";
-    ProgressDialog dialog;
+    CustomDialog dialog;
     Notice notice;
     boolean isEdit;
     Context context;
@@ -78,7 +78,7 @@ public class NoticeDetailFragment extends BaseFragment {
         NoticeDetailActivity activity = (NoticeDetailActivity) getActivity();
         handler = activity.handler;
         context = getContext();
-        dialog = new ProgressDialog(context);
+        dialog = new CustomDialog(context);
         getBundle();
         initView();
         setViewStatus();

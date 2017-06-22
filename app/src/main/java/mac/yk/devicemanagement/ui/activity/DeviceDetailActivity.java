@@ -2,7 +2,7 @@ package mac.yk.devicemanagement.ui.activity;
 
 import android.app.Activity;
 import android.app.Dialog;
-import android.app.ProgressDialog;
+import mac.yk.customdialog.CustomDialog;
 import android.content.Context;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
@@ -52,7 +52,7 @@ import rx.schedulers.Schedulers;
 
 
 public class DeviceDetailActivity extends BaseActivity {
-    ProgressDialog progressDialog;
+    CustomDialog progressDialog;
     boolean isBattery = false;
     @BindView(R.id.nav_view)
     NavigationView navView;
@@ -131,7 +131,7 @@ public class DeviceDetailActivity extends BaseActivity {
         user = MyMemory.getInstance().getUser();
         context = this;
         dialog = new Dialog(context);
-        progressDialog = new ProgressDialog(context);
+        progressDialog = new CustomDialog(context);
         String did = getIntent().getStringExtra("Did");
         isFromList = getIntent().getBooleanExtra("isFromList", false);
         backToRecord = getIntent().getBooleanExtra("isBack", false);
@@ -362,14 +362,17 @@ public class DeviceDetailActivity extends BaseActivity {
                     public void onNext(String s) {
                         ToastUtil.showControlSuccess(context);
                         progressDialog.dismiss();
-                        data[11] = s;
+                        refreshStatus(s);
+
                     }
                 });
     }
 
     public void refreshStatus(String status) {
-        data[11] = status;
+        this.status = status;
+        data[11]=status;
         adapter.notifyDataSetChanged();
+        collapsingToolbar.setTitle("设备状态："+status);
     }
 
 
@@ -405,7 +408,6 @@ public class DeviceDetailActivity extends BaseActivity {
                     public void onNext(String s) {
                         ToastUtil.showControlSuccess(context);
                         progressDialog.dismiss();
-                        data[11] = s;
                         refreshStatus(s);
                     }
                 });
@@ -477,7 +479,6 @@ public class DeviceDetailActivity extends BaseActivity {
                         @Override
                         public void onNext(String s) {
                             progressDialog.dismiss();
-                            data[11] = s;
                             ToastUtil.showControlSuccess(context);
                             refreshStatus(s);
                         }
@@ -520,7 +521,6 @@ public class DeviceDetailActivity extends BaseActivity {
         @Override
         public void onNext(String s) {
             progressDialog.dismiss();
-            data[11] = s;
             ToastUtil.showControlSuccess(context);
             refreshStatus(s);
 
@@ -538,7 +538,7 @@ public class DeviceDetailActivity extends BaseActivity {
     }
 
 
-    public class repairHoler {
+    public class repairHolder {
         @BindView(R.id.cb_no)
         CheckBox cbNo;
         @BindView(R.id.cb_yes)
@@ -556,15 +556,15 @@ public class DeviceDetailActivity extends BaseActivity {
         PopupWindow popupWindow;
         boolean translate = false;
 
-        public repairHoler() {
+        public repairHolder() {
             v = View.inflate(context, R.layout.dialog_currency, null);
             ButterKnife.bind(this, v);
-            initPopuWindow();
+            initPopupWindow();
         }
 
-        private void initPopuWindow() {
+        private void initPopupWindow() {
             View view = View.inflate(context, getViewId(), null);
-            initpopuHolder(view, showSelect);
+            initPopupHolder(view, showSelect);
             popupWindow = new PopupWindow(view, ConvertUtils.dp2px(context, 50),
                     ConvertUtils.dp2px(context, ConvertUtils.dp2px(context, 100)));
 
@@ -575,7 +575,7 @@ public class DeviceDetailActivity extends BaseActivity {
 
         }
 
-        private void initpopuHolder(View v, ImageView iv) {
+        private void initPopupHolder(View v, ImageView iv) {
             switch (data[2]) {
                 case "手持台":
                     new shouchitaiHolder(v, iv);
@@ -779,7 +779,7 @@ public class DeviceDetailActivity extends BaseActivity {
 
     private void showXiujunDialog() {
         if (!isBattery) {
-            repairHoler repairHoler = new repairHoler();
+            repairHolder repairHoler = new repairHolder();
             dialog.setContentView(repairHoler.getV());
             dialog.setTitle(null);
             dialog.show();
@@ -811,7 +811,6 @@ public class DeviceDetailActivity extends BaseActivity {
                     @Override
                     public void onNext(String s) {
                         progressDialog.dismiss();
-                        data[11] = s;
                         ToastUtil.showControlSuccess(context);
                         refreshStatus(s);
                     }
@@ -822,7 +821,7 @@ public class DeviceDetailActivity extends BaseActivity {
         if (!isBattery) {
             checkHolder checkHolder = new checkHolder();
             dialog.setContentView(checkHolder.getV());
-            dialog.setTitle(null);
+//            dialog.setTitle();
             dialog.show();
         }
     }
@@ -851,7 +850,6 @@ public class DeviceDetailActivity extends BaseActivity {
                     @Override
                     public void onNext(String s) {
                         progressDialog.dismiss();
-                        data[11] = s;
                         ToastUtil.showControlSuccess(context);
                         refreshStatus(s);
                     }

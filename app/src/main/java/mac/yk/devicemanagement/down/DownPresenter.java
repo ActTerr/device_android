@@ -86,7 +86,7 @@ public class DownPresenter implements DownContract.Presenter,Serializable{
 
     @Override
     public void getAttachments() {
-        view.showProgressDialog();
+        view.showCustomDialog();
         subscription.add(IDown
                 .getAttachments(nid)
                 .subscribeOn(mSchedulerProvider.io())
@@ -111,7 +111,7 @@ public class DownPresenter implements DownContract.Presenter,Serializable{
 
                     @Override
                     public void onError(Throwable e) {
-                        view.dismissProgressDialog();
+                        view.dismissCustomDialog();
                         view.toastException();
                     }
 
@@ -124,13 +124,13 @@ public class DownPresenter implements DownContract.Presenter,Serializable{
 //                        // onNext
 //                        this::showAttachments,
 //                        // onError
-//                        throwable -> {view.dismissProgressDialog();
+//                        throwable -> {view.dismissCustomDialog();
 //                                        view.toastException();}
 //                        ));
 
     }
     private void showAttachments(List<FileEntry> fileEntries){
-        view.dismissProgressDialog();
+        view.dismissCustomDialog();
         entries= (ArrayList<FileEntry>) fileEntries;
         service.setEntries(entries);
         sort();
@@ -174,7 +174,8 @@ public class DownPresenter implements DownContract.Presenter,Serializable{
         }else {
             deleteEntry=entry;
         }
-        view.showProgressDialog();
+        L.e(TAG,"删除："+deleteEntry.getFileName());
+        view.showCustomDialog();
         subscription.add(IDown.deleteAttachment(deleteEntry)
                 .subscribeOn(mSchedulerProvider.io())
         .observeOn(mSchedulerProvider.ui())
@@ -186,13 +187,13 @@ public class DownPresenter implements DownContract.Presenter,Serializable{
 
             @Override
             public void onError(Throwable e) {
-                view.dismissProgressDialog();
+                view.dismissCustomDialog();
                 view.toastException();
             }
 
             @Override
             public void onNext(String s) {
-                view.dismissProgressDialog();
+                view.dismissCustomDialog();
                 if (dbEntry.deleteFileEntry(deleteEntry.getFileName())){
                     entries.remove(deleteEntry);
                     sort();
@@ -213,7 +214,7 @@ public class DownPresenter implements DownContract.Presenter,Serializable{
 
     @Override
     public void updateAttachment(final FileEntry entry, final String text) {
-        view.showProgressDialog();
+        view.showCustomDialog();
         subscription.add(IDown.updateAttachment(entry,text)
               .subscribeOn(mSchedulerProvider.io())
                 .observeOn(mSchedulerProvider.ui())
@@ -225,14 +226,14 @@ public class DownPresenter implements DownContract.Presenter,Serializable{
 
             @Override
             public void onError(Throwable e) {
-                view.dismissProgressDialog();
+                view.dismissCustomDialog();
                 view.toastException();
             }
 
             @Override
             public void onNext(Long s) {
                     L.e(TAG,"服务器时间:"+s);
-                     view.dismissProgressDialog();
+                     view.dismissCustomDialog();
                     String name=entry.getFileName();
                     entry.setFileName(text);
 //                    long updateTime=System.currentTimeMillis();
@@ -262,6 +263,7 @@ public class DownPresenter implements DownContract.Presenter,Serializable{
 
     public void updateFile(FileEntry entry,File file){
         entries.remove(entry);
+
         deleteAttachment(entry,true,file);
 
 
