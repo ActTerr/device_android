@@ -32,6 +32,12 @@ public class MFGT {
         startActivity(context,intent);
     }
 
+    public static void gotoLineDetail(Context context,int id){
+        Intent intent=new Intent(context,DeviceDetailActivity.class);
+        intent.putExtra("id",id);
+        startActivity(context,intent);
+    }
+
     public static void gotoDeviceListActivity(Context context,String sType,int unit,String category,String status){
         Intent intent=new Intent(context,DeviceListActivity.class);
         intent.putExtra("unit",unit);
@@ -48,7 +54,7 @@ public class MFGT {
     }
     public static void startActivity(Context context,Intent intent){
         context.startActivity(intent);
-        ((Activity)context).overridePendingTransition(R.anim.push_left_in,R.anim.push_left_out);
+        ((Activity)context).overridePendingTransition(R.anim.push_left_in, R.anim.push_left_out);
     }
     public static void gotoLoginActivity(Context context) {
         Intent intent=new Intent(context, LoginActivity.class);
@@ -86,7 +92,7 @@ public class MFGT {
 
     public static void finish(Activity activity){
         activity.finish();
-        activity.overridePendingTransition(R.anim.push_right_in,R.anim.push_right_out);
+        activity.overridePendingTransition(R.anim.push_right_in, R.anim.push_right_out);
     }
     public static void gotoNoticeDetail(Context context, boolean isEdit, Notice notice){
         Intent intent=new Intent(context, NoticeDetailActivity.class);

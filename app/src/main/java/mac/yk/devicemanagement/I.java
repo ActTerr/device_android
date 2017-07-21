@@ -9,7 +9,8 @@ public interface I {
     String BEAN="bean";
     String PAGE="page";
     String STATION_TYPE="sType";
-
+    String RANGE="range";
+    String SIZE="size";
 
     interface DEVICE_RESUME{
         String USE_DATE="USE_DATE";
@@ -43,7 +44,7 @@ public interface I {
         String CONTROL="control";
         String SAVE="save";
         String LOGOUT="logOut";
-        String SERVER_ROOT="http://192.168.0.2:8080/deviceManagement/";
+        String SERVER_ROOT="http://192.168.0.37:8080/deviceManagement/";
         String CHECK="check";
         String REPAIR="repair";
         String LOGIN="login";
@@ -67,6 +68,8 @@ public interface I {
         String GET_DEVICE_RESUME="getDeviceResume";
         String INACTIVE="inactive";
         String DELETE_FILE="deleteFile";
+        String GET_LINE_TOTAL="getLineTotal";
+        String GET_LINE_DETAIL="getLineDetail";
     }
     interface CONTROL_BAT{
         String CONTROL_TYPE="control_type";
@@ -230,5 +233,15 @@ public interface I {
         public static final int ERROR = 4;
         public static final int COMPLETED = 5;
         public static final int PAUSE = 6;
+    }
+
+    interface END_LINE{
+        String UNIT="UNIT";
+        String NUMBER="NUMBER";
+        String TEMPERATURE="TEMPERATURE";
+        String SENSOR="SENSOR";
+        String RADIO_STATION="RADIO_STATION";
+        String TIME="TIME";
+        String BATTERY="BATTERY";
     }
 }

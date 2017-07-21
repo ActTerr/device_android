@@ -45,6 +45,7 @@ import mac.yk.devicemanagement.net.ApiWrapper;
 import mac.yk.devicemanagement.net.ServerAPI;
 import mac.yk.devicemanagement.service.check.MonitorService;
 import mac.yk.devicemanagement.ui.fragment.CountFragment;
+import mac.yk.devicemanagement.ui.fragment.EndLineFragment;
 import mac.yk.devicemanagement.ui.fragment.MainFragment;
 import mac.yk.devicemanagement.ui.fragment.NoticeFragment;
 import mac.yk.devicemanagement.ui.fragment.ScrapCountFragment;
@@ -78,9 +79,10 @@ public class MainActivity extends BaseActivity {
     @BindView(R.id.netView)
     TextView mTv;
 
-    CountFragment CountFragment;
-    ScrapCountFragment ScrapCountFragment;
-    NoticeFragment NoticeFragment;
+    CountFragment countFragment;
+    ScrapCountFragment scrapCountFragment;
+    NoticeFragment noticeFragment;
+    EndLineFragment endLineFragment;
 
     ArrayList<Fragment> fragments;
     int showId;
@@ -157,7 +159,7 @@ public class MainActivity extends BaseActivity {
     @Subscribe(threadMode =ThreadMode.BACKGROUND)
     public void refresh(boolean b){
         L.e(TAG,"get refresh message");
-        NoticeFragment.refresh();
+        noticeFragment.refresh();
     }
 
 
@@ -167,18 +169,18 @@ public class MainActivity extends BaseActivity {
         if(getIntent().getBooleanExtra("fromNtf",false)){
                     L.e("main","切换frag");
                     FragmentManager manager=getSupportFragmentManager();
-                    if(fragments.contains(CountFragment)){
-                        ActivityUtils.changeFragment(manager, NoticeFragment,fragments.get(showId));
+                    if(fragments.contains(countFragment)){
+                        ActivityUtils.changeFragment(manager, noticeFragment,fragments.get(showId));
                         for(int i=0;i<fragments.size();i++){
-                            if(fragments.get(i)== NoticeFragment){
+                            if(fragments.get(i)== noticeFragment){
                                 showId=i;
                             }
                         }
                     }else {
-                        NoticeFragment =new NoticeFragment();
+                        noticeFragment =new NoticeFragment();
                         showId=fragments.size();
-                        fragments.add(fragments.size(), NoticeFragment);
-                        ActivityUtils.addFragmentToActivity(manager, NoticeFragment,R.id.frame);
+                        fragments.add(fragments.size(), noticeFragment);
+                        ActivityUtils.addFragmentToActivity(manager, noticeFragment, R.id.frame);
                     }
                 }
 
@@ -200,13 +202,13 @@ public class MainActivity extends BaseActivity {
         }else {
             for(Fragment fragment:fragments){
                 if(fragment instanceof CountFragment){
-                    CountFragment= (mac.yk.devicemanagement.ui.fragment.CountFragment) fragment;
+                    countFragment= (mac.yk.devicemanagement.ui.fragment.CountFragment) fragment;
                 }else if(fragment instanceof ScrapFragment){
-                    ScrapCountFragment= (mac.yk.devicemanagement.ui.fragment.ScrapCountFragment) fragment;
+                    scrapCountFragment= (mac.yk.devicemanagement.ui.fragment.ScrapCountFragment) fragment;
                 }else {
-                    NoticeFragment= (mac.yk.devicemanagement.ui.fragment.NoticeFragment) fragment;
+                    noticeFragment= (mac.yk.devicemanagement.ui.fragment.NoticeFragment) fragment;
                 }
-                ActivityUtils.addFragmentToActivity(getSupportFragmentManager(),fragment,R.id.frame);
+                ActivityUtils.addFragmentToActivity(getSupportFragmentManager(),fragment, R.id.frame);
             }
         }
 
@@ -275,7 +277,8 @@ public class MainActivity extends BaseActivity {
     }
 
     /**
-     * 设置navView的监听
+     * 设置navView的监听,
+     * 实现fragments的懒加载
      *
      * @param navView
      */
@@ -292,53 +295,70 @@ public class MainActivity extends BaseActivity {
 
                         break;
                     case R.id.record:
-                            if(fragments.contains(CountFragment)){
-                                ActivityUtils.changeFragment(manager, CountFragment,fragments.get(showId));
+                            if(fragments.contains(countFragment)){
+                                ActivityUtils.changeFragment(manager, countFragment,fragments.get(showId));
                                 for(int i=0;i<fragments.size();i++){
-                                    if(fragments.get(i)== CountFragment){
+                                    if(fragments.get(i)== countFragment){
                                        showId=i;
                                     }
                                 }
                             }else {
-                                CountFragment =new CountFragment();
+                                countFragment =new CountFragment();
                                 showId=fragments.size();
-                                fragments.add(fragments.size(), CountFragment);
-                                ActivityUtils.addFragmentToActivity(manager, CountFragment,R.id.frame);
+                                fragments.add(fragments.size(), countFragment);
+                                ActivityUtils.addFragmentToActivity(manager, countFragment, R.id.frame);
                             }
                             toolBar.setTitle("设备统计");
 
                         break;
                     case R.id.scrap_record:
-                        if(fragments.contains(ScrapCountFragment)){
-                            ActivityUtils.changeFragment(manager, ScrapCountFragment,fragments.get(showId));
+
+                        if(fragments.contains(scrapCountFragment)){
+                            ActivityUtils.changeFragment(manager, scrapCountFragment,fragments.get(showId));
                             for(int i=0;i<fragments.size();i++){
-                                if(fragments.get(i)== ScrapCountFragment){
+                                if(fragments.get(i)== countFragment){
                                     showId=i;
                                 }
                             }
                         }else {
-                            ScrapCountFragment =new ScrapCountFragment();
+                            scrapCountFragment =new ScrapCountFragment();
                             showId=fragments.size();
-                            fragments.add(fragments.size(), ScrapCountFragment);
-                            ActivityUtils.addFragmentToActivity(manager, ScrapCountFragment,R.id.frame);
+                            fragments.add(fragments.size(), scrapCountFragment);
+                            ActivityUtils.addFragmentToActivity(manager, scrapCountFragment, R.id.frame);
                         }
                         toolBar.setTitle("报废统计");
                         break;
                     case R.id.notice:
-                        if(fragments.contains(NoticeFragment)){
-                            ActivityUtils.changeFragment(manager, NoticeFragment,fragments.get(showId));
+                        if(fragments.contains(noticeFragment)){
+                            ActivityUtils.changeFragment(manager, noticeFragment,fragments.get(showId));
                             for(int i=0;i<fragments.size();i++){
-                                if(fragments.get(i)== NoticeFragment){
+                                if(fragments.get(i)== noticeFragment){
                                     showId=i;
                                 }
                             }
                         }else {
-                            NoticeFragment =new NoticeFragment();
+                            noticeFragment =new NoticeFragment();
                             showId=fragments.size();
-                            fragments.add(fragments.size(), NoticeFragment);
-                            ActivityUtils.addFragmentToActivity(manager, NoticeFragment,R.id.frame);
+                            fragments.add(fragments.size(), noticeFragment);
+                            ActivityUtils.addFragmentToActivity(manager, noticeFragment, R.id.frame);
                         }
                         toolBar.setTitle("公告");
+                        break;
+                    case R.id.end_line:
+                        if(fragments.contains(endLineFragment)){
+                            ActivityUtils.changeFragment(manager, endLineFragment,fragments.get(showId));
+                            for(int i=0;i<fragments.size();i++){
+                                if(fragments.get(i)== endLineFragment){
+                                    showId=i;
+                                }
+                            }
+                        }else {
+                            endLineFragment =new EndLineFragment();
+                            showId=fragments.size();
+                            fragments.add(fragments.size(), endLineFragment);
+                            ActivityUtils.addFragmentToActivity(manager, endLineFragment, R.id.frame);
+                        }
+                        toolBar.setTitle("终点线状态");
                         break;
                 }
                 item.setChecked(true);
@@ -347,6 +367,23 @@ public class MainActivity extends BaseActivity {
             }
         });
     }
+
+//    private void changeFragment(BaseFragment fragment,T t){
+//        FragmentManager manager=getSupportFragmentManager();
+//        if(fragments.contains(fragment)){
+//            ActivityUtils.changeFragment(manager, fragment,fragments.get(showId));
+//            for(int i=0;i<fragments.size();i++){
+//                if(fragments.get(i)== fragment){
+//                    showId=i;
+//                }
+//            }
+//        }else {
+//            Fragment fragment1 =new c();
+//            showId=fragments.size();
+//            fragments.add(fragments.size(), ScrapCountFragment);
+//            ActivityUtils.addFragmentToActivity(manager, ScrapCountFragment,R.id.frame);
+//        }
+//    }
 
 
     @Override
