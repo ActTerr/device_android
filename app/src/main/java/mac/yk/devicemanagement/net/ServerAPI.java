@@ -156,7 +156,7 @@ public interface ServerAPI {
     Observable<Result<String>> inactive(@Query(I.DEVICE2.DID) String did, @Query(I.DEVICE2.USE_POSITION) String usePosition);
 
     @GET(I.REQUEST.PATH+ I.REQUEST.GET_LINE_DETAIL)
-    Observable<Result<ArrayList<EndLine>>> getLineDetail(@Query(I.UNIT) String unit, @Query(I.END_LINE.TIME) String time);
+    Observable<Result<ArrayList<EndLine>>> getLineDetail(@Query(I.UNIT) int unit,@Query(I.END_LINE.LINE_ID)int number, @Query(I.RANGE) int range,@Query(I.PAGE) int page,@Query(I.SIZE) int size);
 
 
     @GET(I.REQUEST.PATH+ I.REQUEST.GET_LINE_TOTAL)

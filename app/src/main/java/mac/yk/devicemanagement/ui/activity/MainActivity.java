@@ -45,6 +45,7 @@ import mac.yk.devicemanagement.net.ApiWrapper;
 import mac.yk.devicemanagement.net.ServerAPI;
 import mac.yk.devicemanagement.service.check.MonitorService;
 import mac.yk.devicemanagement.ui.fragment.CountFragment;
+import mac.yk.devicemanagement.ui.fragment.LineDetailFragment;
 import mac.yk.devicemanagement.ui.fragment.EndLineFragment;
 import mac.yk.devicemanagement.ui.fragment.MainFragment;
 import mac.yk.devicemanagement.ui.fragment.NoticeFragment;
@@ -83,6 +84,7 @@ public class MainActivity extends BaseActivity {
     ScrapCountFragment scrapCountFragment;
     NoticeFragment noticeFragment;
     EndLineFragment endLineFragment;
+    LineDetailFragment lineDetailFragment;
 
     ArrayList<Fragment> fragments;
     int showId;
@@ -367,6 +369,29 @@ public class MainActivity extends BaseActivity {
             }
         });
     }
+
+    public void gotoLineDetail(int number){
+        FragmentManager manager=getSupportFragmentManager();
+        if(fragments.contains(lineDetailFragment)){
+            ActivityUtils.changeFragment(manager, lineDetailFragment,fragments.get(showId));
+            for(int i=0;i<fragments.size();i++){
+                if(fragments.get(i)== endLineFragment){
+                    showId=i;
+                }
+            }
+        }else {
+            lineDetailFragment=new LineDetailFragment();
+            showId=fragments.size();
+            fragments.add(fragments.size(), lineDetailFragment);
+            Bundle bundle=new Bundle();
+            bundle.putInt("number",number);
+            lineDetailFragment.setArguments(bundle);
+            ActivityUtils.addFragmentToActivity(manager, lineDetailFragment, R.id.frame);
+        }
+
+        toolBar.setTitle("终点线状态");
+    }
+
 
 //    private void changeFragment(BaseFragment fragment,T t){
 //        FragmentManager manager=getSupportFragmentManager();

@@ -32,11 +32,7 @@ public class MFGT {
         startActivity(context,intent);
     }
 
-    public static void gotoLineDetail(Context context,int id){
-        Intent intent=new Intent(context,DeviceDetailActivity.class);
-        intent.putExtra("id",id);
-        startActivity(context,intent);
-    }
+
 
     public static void gotoDeviceListActivity(Context context,String sType,int unit,String category,String status){
         Intent intent=new Intent(context,DeviceListActivity.class);

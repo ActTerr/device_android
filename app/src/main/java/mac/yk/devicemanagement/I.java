@@ -44,7 +44,7 @@ public interface I {
         String CONTROL="control";
         String SAVE="save";
         String LOGOUT="logOut";
-        String SERVER_ROOT="http://192.168.0.37:8080/deviceManagement/";
+        String SERVER_ROOT="http://192.168.1.104:8080/deviceManagement/";
         String CHECK="check";
         String REPAIR="repair";
         String LOGIN="login";
@@ -237,7 +237,7 @@ public interface I {
 
     interface END_LINE{
         String UNIT="UNIT";
-        String NUMBER="NUMBER";
+        String LINE_ID="LINE_ID";
         String TEMPERATURE="TEMPERATURE";
         String SENSOR="SENSOR";
         String RADIO_STATION="RADIO_STATION";
