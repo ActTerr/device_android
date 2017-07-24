@@ -1,6 +1,5 @@
 package mac.yk.devicemanagement.ui.activity;
 
-import mac.yk.customdialog.CustomDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -10,6 +9,7 @@ import android.support.v7.widget.RecyclerView;
 
 import java.util.ArrayList;
 
+import mac.yk.customdialog.CustomDialog;
 import mac.yk.devicemanagement.R;
 import mac.yk.devicemanagement.adapter.DeviceResumeAdapter;
 import mac.yk.devicemanagement.bean.DeviceResume;
@@ -40,7 +40,7 @@ public class DeviceListActivity extends BaseActivity {
         setContentView(R.layout.activity_list);
         rv= (RecyclerView) findViewById(R.id.rv);
         context=this;
-        pd=new CustomDialog(context);
+        pd= CustomDialog.create(context,"加载中...",false,null);
         Intent intent=getIntent();
         String unit= String.valueOf(intent.getIntExtra("unit",0));
         String category=intent.getStringExtra("category");

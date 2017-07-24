@@ -100,7 +100,7 @@ public class RecordFragment extends BaseFragment {
     }
 
     private void init() {
-        pd=new CustomDialog(context);
+        pd=CustomDialog.create(getContext(),"加载中...",false,null);
         id=getArguments().getString("id");
         if (id==null){
             Activity a= (Activity) context;

@@ -54,7 +54,7 @@ public class LineDetailAdapter extends BaseAdapter {
         // TODO Auto-generated method stub
         EndLine endLine = lists.get(index);
         if(view == null){
-            view = inflater.inflate(R.layout.item_total_form, null);
+            view = inflater.inflate(R.layout.item_end_line_form, null);
         }
         TextView textView1 = (TextView) view.findViewById(R.id.text1);
         TextView textView2 = (TextView) view.findViewById(R.id.text2);

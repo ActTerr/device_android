@@ -1,6 +1,5 @@
 package mac.yk.devicemanagement.ui.fragment;
 
-import mac.yk.customdialog.CustomDialog;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
@@ -19,6 +18,7 @@ import java.util.concurrent.TimeUnit;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import mac.yk.customdialog.CustomDialog;
 import mac.yk.devicemanagement.R;
 import mac.yk.devicemanagement.adapter.FormTotalAdapter;
 import mac.yk.devicemanagement.application.MyMemory;
@@ -55,7 +55,7 @@ public class ScrapCountFragment extends BaseFragment {
         View view = inflater.inflate(R.layout.frag_count, container, false);
         ButterKnife.bind(this, view);
         addFrom.setVisibility(View.GONE);
-        dialog = new CustomDialog(getContext());
+        dialog= CustomDialog.create(getContext(),"加载中...",false,null);
         initView();
         setHasOptionsMenu(true);
         return view;

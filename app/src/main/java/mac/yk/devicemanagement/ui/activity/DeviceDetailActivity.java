@@ -131,7 +131,7 @@ public class DeviceDetailActivity extends BaseActivity {
         user = MyMemory.getInstance().getUser();
         context = this;
         dialog = new Dialog(context);
-        progressDialog = new CustomDialog(context);
+        progressDialog = CustomDialog.create(context,"加载中...",false,null);
         String did = getIntent().getStringExtra("Did");
         isFromList = getIntent().getBooleanExtra("isFromList", false);
         backToRecord = getIntent().getBooleanExtra("isBack", false);

@@ -83,7 +83,7 @@ public class AttachmentFragment extends BaseFragment implements DownContract.Vie
 
     private void initView() {
         context = getContext();
-        pd = new CustomDialog(context);
+        pd = CustomDialog.create(getContext(),"加载中...",false,null);
         adapter = new AttachmentAdapter(context);
         rv.setAdapter(adapter);
         rv.setLayoutManager(new LinearLayoutManager(context));

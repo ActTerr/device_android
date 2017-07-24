@@ -1,6 +1,5 @@
 package mac.yk.devicemanagement.ui.fragment;
 
-import mac.yk.customdialog.CustomDialog;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
@@ -16,6 +15,7 @@ import java.util.concurrent.TimeUnit;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import mac.yk.customdialog.CustomDialog;
 import mac.yk.devicemanagement.R;
 import mac.yk.devicemanagement.adapter.FormServiceAdapter;
 import mac.yk.devicemanagement.application.MyMemory;
@@ -48,7 +48,7 @@ public class ServiceCountFragment extends BaseFragment {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.frag_count, container, false);
         ButterKnife.bind(this, view);
-        dialog = new CustomDialog(getContext());
+        dialog= CustomDialog.create(getContext(),"加载中...",false,null);
         data = new ArrayList<>();
         adapter = new FormServiceAdapter(getContext(), data);
         lv.setAdapter(adapter);

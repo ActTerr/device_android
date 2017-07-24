@@ -73,7 +73,7 @@ public class ScrapFragment extends BaseFragment {
         context = getContext();
         scrapAdapter = new ScrapAdapter(context);
         gridLayoutManager = new GridLayoutManager(context, 1);
-        pd = new CustomDialog(context);
+        pd = CustomDialog.create(getContext(),"加载中...",false,null);
         rv.setAdapter(scrapAdapter);
         rv.setLayoutManager(gridLayoutManager);
         btnTop.setVisibility(View.GONE);

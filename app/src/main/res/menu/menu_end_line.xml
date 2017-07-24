@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:title="最近一天"
+        android:id="@+id/one_day"/>
+    <item android:title="最近两天"
+        android:id="@+id/twice_day"/>
+    <item android:title="最近三天"
+        android:id="@+id/three_day"/>
+</menu>

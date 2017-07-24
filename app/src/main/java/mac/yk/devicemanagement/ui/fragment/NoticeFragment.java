@@ -1,7 +1,6 @@
 package mac.yk.devicemanagement.ui.fragment;
 
 import android.app.AlertDialog;
-import mac.yk.customdialog.CustomDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
@@ -22,6 +21,7 @@ import java.util.Observable;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import mac.yk.customdialog.CustomDialog;
 import mac.yk.devicemanagement.R;
 import mac.yk.devicemanagement.application.MyMemory;
 import mac.yk.devicemanagement.bean.Notice;
@@ -72,7 +72,7 @@ public class NoticeFragment extends BaseFragment implements java.util.Observer {
         adapter = new NoticeAdapter(context, data);
         rv.setAdapter(adapter);
         rv.setLayoutManager(new LinearLayoutManager(context));
-        pd = new CustomDialog(context);
+        pd = CustomDialog.create(getContext(),"加载中...",false,null);
         btnDown.setVisibility(View.GONE);
         initData();
         return view;
@@ -170,7 +170,7 @@ public class NoticeFragment extends BaseFragment implements java.util.Observer {
         public NoticeAdapter(Context context, ArrayList<Notice> list) {
             this.context = context;
             this.list = list;
-            dialog = new CustomDialog(context);
+            dialog= CustomDialog.create(getContext(),"加载中...",false,null);
             user = MyMemory.getInstance().getUser();
         }
 

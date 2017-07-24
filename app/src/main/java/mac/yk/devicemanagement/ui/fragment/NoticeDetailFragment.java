@@ -2,7 +2,6 @@ package mac.yk.devicemanagement.ui.fragment;
 
 import android.app.Activity;
 import android.app.AlertDialog;
-import mac.yk.customdialog.CustomDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
@@ -23,6 +22,7 @@ import java.util.Date;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import mac.yk.customdialog.CustomDialog;
 import mac.yk.devicemanagement.R;
 import mac.yk.devicemanagement.application.MyMemory;
 import mac.yk.devicemanagement.bean.Notice;
@@ -78,7 +78,7 @@ public class NoticeDetailFragment extends BaseFragment {
         NoticeDetailActivity activity = (NoticeDetailActivity) getActivity();
         handler = activity.handler;
         context = getContext();
-        dialog = new CustomDialog(context);
+        dialog= CustomDialog.create(getContext(),"加载中...",false,null);
         getBundle();
         initView();
         setViewStatus();

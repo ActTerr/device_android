@@ -1,7 +1,6 @@
 package mac.yk.devicemanagement.ui.activity;
 
 import android.app.Activity;
-import mac.yk.customdialog.CustomDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -16,8 +15,9 @@ import android.widget.Toast;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-import mac.yk.devicemanagement.application.MyMemory;
+import mac.yk.customdialog.CustomDialog;
 import mac.yk.devicemanagement.R;
+import mac.yk.devicemanagement.application.MyMemory;
 import mac.yk.devicemanagement.bean.User;
 import mac.yk.devicemanagement.net.ApiWrapper;
 import mac.yk.devicemanagement.net.ServerAPI;
@@ -67,7 +67,7 @@ public class UserActivity extends BaseActivity {
         setContentView(R.layout.activity_set);
         ButterKnife.bind(this);
         context = this;
-        pd = new CustomDialog(context);
+        pd = CustomDialog.create(context,"加载中...",false,null);
         User u=MyMemory.getInstance().getUser();
         user.setText(u.getName());
         String station;

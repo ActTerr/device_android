@@ -1,6 +1,5 @@
 package mac.yk.devicemanagement.ui.fragment;
 
-import mac.yk.customdialog.CustomDialog;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
@@ -16,6 +15,7 @@ import java.util.concurrent.TimeUnit;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import mac.yk.customdialog.CustomDialog;
 import mac.yk.devicemanagement.R;
 import mac.yk.devicemanagement.adapter.FormStatusAdapter;
 import mac.yk.devicemanagement.application.MyMemory;
@@ -53,8 +53,7 @@ public class StatusCountFragment extends BaseFragment {
         if (MyMemory.getInstance().getUser().getGrade() == 0) {
             isTotal = true;
         }
-        dialog=new CustomDialog(getContext());
-        dialog.setContentView(R.layout.progress_dialog);
+        dialog= CustomDialog.create(getContext(),"加载中...",false,null);
         data = new ArrayList<>();
         adapter = new FormStatusAdapter(getContext(), data);
         lv.setAdapter(adapter);
@@ -109,7 +108,7 @@ public class StatusCountFragment extends BaseFragment {
 
 
     private void initData() {
-
+        dialog.show();
         isAdding = true;
         ApiWrapper<ServerAPI> wrapper = new ApiWrapper<>();
         wrapper.targetClass(ServerAPI.class).getAPI().getStatusCount(MyMemory.getInstance().getUser().getUnit(), year, memory)

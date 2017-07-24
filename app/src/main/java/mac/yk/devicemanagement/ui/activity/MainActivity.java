@@ -318,7 +318,7 @@ public class MainActivity extends BaseActivity {
                         if(fragments.contains(scrapCountFragment)){
                             ActivityUtils.changeFragment(manager, scrapCountFragment,fragments.get(showId));
                             for(int i=0;i<fragments.size();i++){
-                                if(fragments.get(i)== countFragment){
+                                if(fragments.get(i)== scrapCountFragment){
                                     showId=i;
                                 }
                             }
@@ -498,17 +498,31 @@ public class MainActivity extends BaseActivity {
     public boolean onKeyUp(int keyCode, KeyEvent event) {
         switch (keyCode) {
             case KeyEvent.KEYCODE_BACK:
-                long SecondTime = System.currentTimeMillis();
-                if (SecondTime - FirstTime > 2000) {
-                    ToastUtil.showToast(context, "再按一次退出应用");
-                    FirstTime = SecondTime;
+                if (fragments.get(showId).equals(lineDetailFragment)){
+                    backToEndLine();
                     return true;
-                } else {
-                    System.exit(0);
+                }else{
+                    long SecondTime = System.currentTimeMillis();
+                    if (SecondTime - FirstTime > 2000) {
+                        ToastUtil.showToast(context, "再按一次退出应用");
+                        FirstTime = SecondTime;
+                        return true;
+                    } else {
+                        System.exit(0);
+                    }
                 }
                 break;
         }
         return super.onKeyUp(keyCode, event);
+    }
+
+    private void backToEndLine() {
+        for(int i=0;i<fragments.size();i++) {
+            if (fragments.get(i) == endLineFragment) {
+                showId = i;
+            }
+        }
+        ActivityUtils.changeFragment(getSupportFragmentManager(),endLineFragment,lineDetailFragment);
     }
 
     @Override
