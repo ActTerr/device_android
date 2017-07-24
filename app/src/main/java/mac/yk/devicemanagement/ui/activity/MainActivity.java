@@ -298,10 +298,12 @@ public class MainActivity extends BaseActivity {
                         break;
                     case R.id.record:
                             if(fragments.contains(countFragment)){
+                                L.e("cao","showid1:"+showId);
                                 ActivityUtils.changeFragment(manager, countFragment,fragments.get(showId));
                                 for(int i=0;i<fragments.size();i++){
                                     if(fragments.get(i)== countFragment){
                                        showId=i;
+                                        L.e("cao","showid2:"+showId);
                                     }
                                 }
                             }else {
@@ -314,12 +316,13 @@ public class MainActivity extends BaseActivity {
 
                         break;
                     case R.id.scrap_record:
-
                         if(fragments.contains(scrapCountFragment)){
+                            L.e("cao","showid1:"+showId);
                             ActivityUtils.changeFragment(manager, scrapCountFragment,fragments.get(showId));
                             for(int i=0;i<fragments.size();i++){
                                 if(fragments.get(i)== scrapCountFragment){
                                     showId=i;
+                                    L.e("cao","showid2:"+showId);
                                 }
                             }
                         }else {
@@ -348,10 +351,12 @@ public class MainActivity extends BaseActivity {
                         break;
                     case R.id.end_line:
                         if(fragments.contains(endLineFragment)){
+                            L.e("cao","showid1:"+showId);
                             ActivityUtils.changeFragment(manager, endLineFragment,fragments.get(showId));
                             for(int i=0;i<fragments.size();i++){
                                 if(fragments.get(i)== endLineFragment){
                                     showId=i;
+                                    L.e("cao","showid2:"+showId);
                                 }
                             }
                         }else {
@@ -373,15 +378,18 @@ public class MainActivity extends BaseActivity {
     public void gotoLineDetail(int number){
         FragmentManager manager=getSupportFragmentManager();
         if(fragments.contains(lineDetailFragment)){
+            L.e("cao","showid1:"+showId);
             ActivityUtils.changeFragment(manager, lineDetailFragment,fragments.get(showId));
             for(int i=0;i<fragments.size();i++){
-                if(fragments.get(i)== endLineFragment){
+                if(fragments.get(i)== lineDetailFragment){
                     showId=i;
+                    L.e("cao","showid2:"+showId);
                 }
             }
         }else {
             lineDetailFragment=new LineDetailFragment();
             showId=fragments.size();
+
             fragments.add(fragments.size(), lineDetailFragment);
             Bundle bundle=new Bundle();
             bundle.putInt("number",number);

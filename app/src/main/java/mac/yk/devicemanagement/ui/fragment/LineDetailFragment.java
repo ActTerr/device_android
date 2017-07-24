@@ -14,10 +14,13 @@ import android.widget.Button;
 import android.widget.ListView;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
+import mac.yk.customdialog.CustomDialog;
 import mac.yk.devicemanagement.R;
 import mac.yk.devicemanagement.adapter.LineDetailAdapter;
 import mac.yk.devicemanagement.application.MyMemory;
@@ -28,8 +31,6 @@ import mac.yk.devicemanagement.util.ExceptionFilter;
 import mac.yk.devicemanagement.util.L;
 import mac.yk.devicemanagement.util.ToastUtil;
 import rx.Subscriber;
-
-import static mac.yk.devicemanagement.ui.fragment.ScrapFragment.TAG;
 
 /**
  * Created by mac-yk on 2017/7/19.
@@ -49,6 +50,8 @@ public class LineDetailFragment extends BaseFragment {
     boolean isMore=true;
     int range=0;
     int page;
+    CustomDialog dialog;
+    ArrayList<EndLine> memory=new ArrayList<>();
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -56,6 +59,8 @@ public class LineDetailFragment extends BaseFragment {
         View view = inflater.inflate(R.layout.frag_count, container, false);
         unbinder = ButterKnife.bind(this, view);
         context=getContext();
+        dialog=CustomDialog.create(context,"加载中...",false,null);
+        setHasOptionsMenu(true);
         initView();
         initForm();
         initData();
@@ -69,9 +74,11 @@ public class LineDetailFragment extends BaseFragment {
             @Override
             public void onScrollStateChanged(AbsListView view, int scrollState) {
                 int lastPosition = lv.getLastVisiblePosition();
-                if (scrollState == AbsListView.OnScrollListener.SCROLL_STATE_IDLE && lastPosition == adapter.getCount() - 1 && isMore && !isAdding) {
+                L.e("cao",lastPosition+"："+scrollState+":"+isMore+":"+!isAdding);
+                if (scrollState == AbsListView.OnScrollListener.SCROLL_STATE_IDLE && lastPosition == adapter.getCount()-1  && isMore && !isAdding) {
+                    L.e("cao", "add");
                     initData();
-                    L.e(TAG, "add");
+
                 }
             }
 
@@ -83,7 +90,7 @@ public class LineDetailFragment extends BaseFragment {
     }
 
     private void initForm() {
-        lines.add(null);
+        lines.add(new EndLine());
     }
 
     private void initView() {
@@ -93,10 +100,12 @@ public class LineDetailFragment extends BaseFragment {
     }
 
     private void initData() {
+        dialog.show();
+        isAdding=true;
         number=getArguments().getInt("number");
         ApiWrapper<ServerAPI> wrapper = new ApiWrapper<>();
         wrapper.targetClass(ServerAPI.class).getAPI().getLineDetail(MyMemory.getInstance().getUser().getUnit(),
-                number, range, page, 10)
+                number, range, page, 18)
                 .compose(wrapper.<ArrayList<EndLine>>applySchedulers())
                 .subscribe(new Subscriber<ArrayList<EndLine>>() {
                     @Override
@@ -106,6 +115,8 @@ public class LineDetailFragment extends BaseFragment {
 
                     @Override
                     public void onError(Throwable e) {
+                        dialog.dismiss();
+                        isAdding=false;
                         if(ExceptionFilter.filter(context,e)){
                             ToastUtil.showException(context);
                         }
@@ -113,14 +124,35 @@ public class LineDetailFragment extends BaseFragment {
 
                     @Override
                     public void onNext(ArrayList<EndLine> endLines) {
-                        if (endLines.size()<10){
+                        dialog.dismiss();
+                        isAdding=false;
+                        if (endLines.size()<18){
                             isMore=false;
                         }
                         lines.addAll(endLines);
+                        sort(lines);
+                        L.e("cao",lines.size()+"size");
                         adapter.notifyDataSetChanged();
                         page++;
                     }
                 });
+    }
+
+    private void sort(ArrayList<EndLine> endLines){
+        Collections.sort(endLines,new MyComparator());
+    }
+
+    class MyComparator implements Comparator<EndLine> {
+
+        public MyComparator() {
+
+        }
+
+
+        @Override
+        public int compare(EndLine o1, EndLine o2) {
+            return (int) (o2.getTime()-o1.getTime());
+        }
     }
 
     @Override
@@ -148,7 +180,8 @@ public class LineDetailFragment extends BaseFragment {
 
     private void resetData() {
         lines.clear();
-        lines.add(null);
+        adapter.notifyDataSetChanged();
+        lines.add(new EndLine());
         isMore=true;
         page=0;
         initData();

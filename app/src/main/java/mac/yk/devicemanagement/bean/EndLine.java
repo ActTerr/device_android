@@ -91,4 +91,7 @@ public class EndLine {
                 ", time=" + time +
                 '}';
     }
+
+    public EndLine() {
+    }
 }

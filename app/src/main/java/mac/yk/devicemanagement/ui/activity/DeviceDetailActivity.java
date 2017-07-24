@@ -2,7 +2,6 @@ package mac.yk.devicemanagement.ui.activity;
 
 import android.app.Activity;
 import android.app.Dialog;
-import mac.yk.customdialog.CustomDialog;
 import android.content.Context;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
@@ -32,6 +31,7 @@ import com.facebook.drawee.backends.pipeline.Fresco;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import mac.yk.customdialog.CustomDialog;
 import mac.yk.devicemanagement.I;
 import mac.yk.devicemanagement.R;
 import mac.yk.devicemanagement.adapter.DetailAdapter;

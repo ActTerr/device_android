@@ -1,7 +1,6 @@
 package mac.yk.devicemanagement.ui.fragment;
 
 import android.app.Activity;
-import mac.yk.customdialog.CustomDialog;
 import android.content.Context;
 import android.os.Bundle;
 import android.os.Handler;
@@ -27,9 +26,10 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import mac.yk.customdialog.CustomDialog;
 import mac.yk.devicemanagement.R;
-import mac.yk.devicemanagement.adapter.ServiceAdapter;
 import mac.yk.devicemanagement.adapter.CheckAdapter;
+import mac.yk.devicemanagement.adapter.ServiceAdapter;
 import mac.yk.devicemanagement.bean.Check;
 import mac.yk.devicemanagement.bean.Service;
 import mac.yk.devicemanagement.net.ApiWrapper;

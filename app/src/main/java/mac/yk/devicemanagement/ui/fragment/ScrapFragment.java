@@ -1,7 +1,6 @@
 package mac.yk.devicemanagement.ui.fragment;
 
 
-import mac.yk.customdialog.CustomDialog;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -21,6 +20,7 @@ import java.util.ArrayList;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import mac.yk.customdialog.CustomDialog;
 import mac.yk.devicemanagement.I;
 import mac.yk.devicemanagement.R;
 import mac.yk.devicemanagement.adapter.ScrapAdapter;

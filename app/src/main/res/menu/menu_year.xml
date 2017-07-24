@@ -1,6 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
-<menu xmlns:android="http://schemas.android.com/apk/res/android">
-<item android:id="@+id/all"
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item
+        android:id="@+id/action_capture"
+        android:title="scan"
+        android:orderInCategory="100"
+        android:icon="@drawable/ic_action_scan"
+        android:visible="true"
+        app:showAsAction="always"/>
+
+    <item android:id="@+id/all"
     android:title="all"/>
     <item android:id="@+id/y2017"
         android:title="2017"/>
