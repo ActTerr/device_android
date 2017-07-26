@@ -10,7 +10,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
-import android.widget.Button;
 import android.widget.ListView;
 
 import java.util.ArrayList;
@@ -41,8 +40,7 @@ public class LineDetailFragment extends BaseFragment {
     int number;
     LineDetailAdapter adapter;
     ArrayList<EndLine> lines = new ArrayList<>();
-    @BindView(R.id.add_from)
-    Button addFrom;
+
     @BindView(R.id.list)
     ListView lv;
     Context context;
@@ -51,18 +49,16 @@ public class LineDetailFragment extends BaseFragment {
     int range=0;
     int page;
     CustomDialog dialog;
-    ArrayList<EndLine> memory=new ArrayList<>();
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 
-        View view = inflater.inflate(R.layout.frag_count, container, false);
+        View view = inflater.inflate(R.layout.frag_line_detail, container, false);
         unbinder = ButterKnife.bind(this, view);
         context=getContext();
         dialog=CustomDialog.create(context,"加载中...",false,null);
         setHasOptionsMenu(true);
         initView();
-        initForm();
         initData();
         setListener();
         return view;
@@ -89,12 +85,9 @@ public class LineDetailFragment extends BaseFragment {
         });
     }
 
-    private void initForm() {
-        lines.add(new EndLine());
-    }
+
 
     private void initView() {
-        addFrom.setVisibility(View.GONE);
         adapter = new LineDetailAdapter(getContext(), lines);
         lv.setAdapter(adapter);
     }
@@ -130,8 +123,9 @@ public class LineDetailFragment extends BaseFragment {
                             isMore=false;
                         }
                         lines.addAll(endLines);
+                        L.e("cao",endLines.size()+"size1");
                         sort(lines);
-                        L.e("cao",lines.size()+"size");
+                        L.e("cao",lines.size()+"size2");
                         adapter.notifyDataSetChanged();
                         page++;
                     }
@@ -181,7 +175,6 @@ public class LineDetailFragment extends BaseFragment {
     private void resetData() {
         lines.clear();
         adapter.notifyDataSetChanged();
-        lines.add(new EndLine());
         isMore=true;
         page=0;
         initData();

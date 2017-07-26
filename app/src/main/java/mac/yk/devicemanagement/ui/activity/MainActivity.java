@@ -365,7 +365,7 @@ public class MainActivity extends BaseActivity {
                             fragments.add(fragments.size(), endLineFragment);
                             ActivityUtils.addFragmentToActivity(manager, endLineFragment, R.id.frame);
                         }
-                        toolBar.setTitle("终点线状态");
+                        toolBar.setTitle("尽头线状态");
                         break;
                 }
                 item.setChecked(true);
