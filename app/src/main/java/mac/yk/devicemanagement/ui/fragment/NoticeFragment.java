@@ -134,6 +134,12 @@ public class NoticeFragment extends BaseFragment implements java.util.Observer {
         }
     }
 
+//    @Override
+//    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+//        super.onCreateOptionsMenu(menu, inflater);
+//        menu.clear();
+//    }
+
     @Override
     public void update(Observable o, Object arg) {
         L.e(TAG, "refresh");

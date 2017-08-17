@@ -8,6 +8,8 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
@@ -18,6 +20,7 @@ import android.widget.TextView;
 import com.google.gson.Gson;
 
 import java.util.Date;
+import java.util.concurrent.TimeUnit;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -83,6 +86,7 @@ public class NoticeDetailFragment extends BaseFragment {
         initView();
         setViewStatus();
         update=MyMemory.getInstance().getUpdate();
+        setHasOptionsMenu(true);
         return view;
     }
 
@@ -162,6 +166,12 @@ public class NoticeDetailFragment extends BaseFragment {
         }
     }
 
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        super.onCreateOptionsMenu(menu, inflater);
+        menu.clear();
+    }
+
     private void showDeleteDialog() {
         AlertDialog dialog = new AlertDialog.Builder(context)
                 .setTitle("确定删除该条公告吗？")
@@ -187,6 +197,7 @@ public class NoticeDetailFragment extends BaseFragment {
         ApiWrapper<ServerAPI> wrapper = new ApiWrapper<>();
         wrapper.targetClass(ServerAPI.class).getAPI().deleteNotice(notice.getNid())
                 .compose(wrapper.<String>applySchedulers())
+                .timeout(10, TimeUnit.SECONDS)
                 .subscribe(new Subscriber<String>() {
                     @Override
                     public void onCompleted() {
@@ -229,6 +240,7 @@ public class NoticeDetailFragment extends BaseFragment {
         wrapper.targetClass(ServerAPI.class).getAPI().updateNotice(nid, json)
                 .compose(wrapper.<String>applySchedulers())
                 .subscribeOn(Schedulers.io())
+                .timeout(10, TimeUnit.SECONDS)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Subscriber<String>() {
                     @Override

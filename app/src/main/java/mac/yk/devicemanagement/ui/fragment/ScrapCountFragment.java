@@ -75,7 +75,9 @@ public class ScrapCountFragment extends BaseFragment {
         }
         if (item.getItemId() == R.id.all) {
             year = "all";
-        } else {
+        } else if(item.getItemId()==android.R.id.home){
+            return true;
+        }else {
             year = String.valueOf(item.getTitle());
         }
         L.e(TAG,"select"+year);

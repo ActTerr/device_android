@@ -3,11 +3,16 @@ package mac.yk.devicemanagement.ui.fragment;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
 import android.widget.Button;
 import android.widget.ListView;
+
+import org.greenrobot.eventbus.EventBus;
 
 import java.util.ArrayList;
 import java.util.concurrent.TimeUnit;
@@ -80,31 +85,36 @@ public class StatusCountFragment extends BaseFragment {
         });
     }
 
-//    @Override
-//    public boolean onOptionsItemSelected(MenuItem item) {
-//        if (item.getItemId()==android.R.id.home){
-//            return true;
-//        }
-//        if (item.getItemId() == R.id.all) {
-//            year = "all";
-//        } else {
-//            year = String.valueOf(item.getTitle());
-//        }
-//        L.e(TAG,"select"+year);
-//        if (data.size()>0){
-//            data.clear();
-//        }
-//        EventBus.getDefault().post("状态统计");
-//        addFrom.setVisibility(View.GONE);
-//        initData();
-//        return true;
-//    }
+
+        @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId()==android.R.id.home){
+            return true;
+        }
+        if (item.getItemId() == R.id.all) {
+            year = "all";
+        } else if(item.getItemId()==android.R.id.home){
+            return true;
+        }else {
+            year = String.valueOf(item.getTitle());
+        }
+        L.e(TAG,"select"+year);
+        if (data.size()>0){
+            data.clear();
+        }
+        EventBus.getDefault().post("状态统计");
+        addFrom.setVisibility(View.GONE);
+        initData();
+        return true;
+    }
 //
-//    @Override
-//    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-//        super.onCreateOptionsMenu(menu, inflater);
-//        inflater.inflate(R.menu.menu_year,menu);
-//    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        super.onCreateOptionsMenu(menu, inflater);
+        menu.clear();
+        inflater.inflate(R.menu.menu_year,menu);
+    }
 
 
     private void initData() {
@@ -122,7 +132,7 @@ public class StatusCountFragment extends BaseFragment {
 
                     @Override
                     public void onError(Throwable e) {
-
+                        dialog.dismiss();
                     }
 
                     @Override

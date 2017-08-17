@@ -31,6 +31,7 @@ import org.greenrobot.eventbus.ThreadMode;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
+import java.util.concurrent.TimeUnit;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -45,8 +46,8 @@ import mac.yk.devicemanagement.net.ApiWrapper;
 import mac.yk.devicemanagement.net.ServerAPI;
 import mac.yk.devicemanagement.service.check.MonitorService;
 import mac.yk.devicemanagement.ui.fragment.CountFragment;
-import mac.yk.devicemanagement.ui.fragment.LineDetailFragment;
 import mac.yk.devicemanagement.ui.fragment.EndLineFragment;
+import mac.yk.devicemanagement.ui.fragment.LineDetailFragment;
 import mac.yk.devicemanagement.ui.fragment.MainFragment;
 import mac.yk.devicemanagement.ui.fragment.NoticeFragment;
 import mac.yk.devicemanagement.ui.fragment.ScrapCountFragment;
@@ -471,6 +472,7 @@ public class MainActivity extends BaseActivity {
         ApiWrapper<ServerAPI> network = new ApiWrapper<>();
         subscription = network.targetClass(ServerAPI.class).
                 getAPI().getWarning()
+                .timeout(10, TimeUnit.SECONDS)
                 .compose(network.<String>applySchedulers())
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())

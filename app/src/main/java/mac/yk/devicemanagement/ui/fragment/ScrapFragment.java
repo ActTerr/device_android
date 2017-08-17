@@ -211,6 +211,8 @@ public class ScrapFragment extends BaseFragment {
         }
         if (item.getItemId() == R.id.action_capture) {
             return true;
+        }else if(item.getItemId()==android.R.id.home){
+            return true;
         }
         page = pages.get(selected);
         isMore = mores.get(selected);

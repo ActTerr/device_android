@@ -12,6 +12,8 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.util.concurrent.TimeUnit;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
@@ -113,6 +115,7 @@ public class UserActivity extends BaseActivity {
                 subscription = wrapper.targetClass(ServerAPI.class).getAPI().logOut(MyMemory.getInstance().getUser().getName())
                         .compose(wrapper.<String>applySchedulers())
                         .subscribeOn(Schedulers.io())
+                        .timeout(10, TimeUnit.SECONDS)
                         .observeOn(AndroidSchedulers.mainThread())
                         .subscribe(new Subscriber<String>() {
                             @Override

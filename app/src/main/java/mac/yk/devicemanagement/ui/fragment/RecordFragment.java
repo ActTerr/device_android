@@ -22,6 +22,7 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.Iterator;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -156,7 +157,9 @@ public class RecordFragment extends BaseFragment {
             isDesc=true;
             item.setIcon(R.drawable.recent_selected);
             itemReverse.setIcon(R.drawable.reverse);
-        }else {
+        }else if(item.getItemId()==android.R.id.home){
+            return true;
+        } else {
             L.e("reverse");
             itemRecent.setIcon(R.drawable.recent);
             item.setIcon(R.drawable.reverse_selected);
@@ -325,6 +328,7 @@ public class RecordFragment extends BaseFragment {
         subscription = wrapper.targetClass(ServerAPI.class).getAPI()
                 .downloadCheck(id, page, 10)
                 .subscribeOn(Schedulers.io())
+                .timeout(10, TimeUnit.SECONDS)
                 .observeOn(AndroidSchedulers.mainThread())
                 .compose(wrapper.<Check[]>applySchedulers())
                 .subscribe(new Subscriber<Check[]>() {
@@ -382,6 +386,7 @@ public class RecordFragment extends BaseFragment {
         subscription = wrapper.targetClass(ServerAPI.class).getAPI().downLoadService(id, page, 10)
                 .compose(wrapper.<Service[]>applySchedulers())
                 .subscribeOn(Schedulers.io())
+                .timeout(10, TimeUnit.SECONDS)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Subscriber<Service[]>() {
                     @Override

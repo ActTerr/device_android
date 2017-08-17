@@ -5,7 +5,7 @@ package mac.yk.devicemanagement.bean;
  */
 
 public class EndLine {
-    String station;
+    int station;
     int number;
     int temperature;
     int sensor;
@@ -13,7 +13,7 @@ public class EndLine {
     long time;
     int battery;
 
-    public EndLine(String station, int number, int temperature, int sensor, int radio_station, long time, int battery) {
+    public EndLine(int station, int number, int temperature, int sensor, int radio_station, long time, int battery) {
         this.station = station;
         this.number = number;
         this.temperature = temperature;
@@ -39,11 +39,11 @@ public class EndLine {
         this.battery = battery;
     }
 
-    public String getStation() {
+    public int getStation() {
         return station;
     }
 
-    public void setStation(String station) {
+    public void setStation(int station) {
         this.station = station;
     }
 

@@ -73,7 +73,9 @@ public class TotalCountFragment extends BaseFragment {
         }
         if (item.getItemId() == R.id.all) {
             year = "all";
-        } else {
+        } else if(item.getItemId()==android.R.id.home){
+            return true;
+        }else {
             year = String.valueOf(item.getTitle());
         }
         L.e(TAG,"select"+year);
@@ -89,6 +91,7 @@ public class TotalCountFragment extends BaseFragment {
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        super.onCreateOptionsMenu(menu, inflater);
         menu.clear();
         inflater.inflate(R.menu.menu_year,menu);
     }

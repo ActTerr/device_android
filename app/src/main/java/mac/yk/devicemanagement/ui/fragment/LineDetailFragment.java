@@ -13,8 +13,7 @@ import android.widget.AbsListView;
 import android.widget.ListView;
 
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
+import java.util.concurrent.TimeUnit;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -57,6 +56,7 @@ public class LineDetailFragment extends BaseFragment {
         unbinder = ButterKnife.bind(this, view);
         context=getContext();
         dialog=CustomDialog.create(context,"加载中...",false,null);
+        L.e("cao","onCreate");
         setHasOptionsMenu(true);
         initView();
         initData();
@@ -100,6 +100,7 @@ public class LineDetailFragment extends BaseFragment {
         wrapper.targetClass(ServerAPI.class).getAPI().getLineDetail(MyMemory.getInstance().getUser().getUnit(),
                 number, range, page, 18)
                 .compose(wrapper.<ArrayList<EndLine>>applySchedulers())
+                .timeout(10, TimeUnit.SECONDS)
                 .subscribe(new Subscriber<ArrayList<EndLine>>() {
                     @Override
                     public void onCompleted() {
@@ -122,32 +123,32 @@ public class LineDetailFragment extends BaseFragment {
                         if (endLines.size()<18){
                             isMore=false;
                         }
+                        if(page==0){
+                            lines.add(new EndLine(1,27,1,1,1,System.currentTimeMillis(),1));
+                        }
                         lines.addAll(endLines);
-                        L.e("cao",endLines.size()+"size1");
-                        sort(lines);
-                        L.e("cao",lines.size()+"size2");
                         adapter.notifyDataSetChanged();
                         page++;
                     }
                 });
     }
 
-    private void sort(ArrayList<EndLine> endLines){
-        Collections.sort(endLines,new MyComparator());
-    }
+//    private void sort(ArrayList<EndLine> endLines){
+//        Collections.sort(endLines,new MyComparator());
+//    }
 
-    class MyComparator implements Comparator<EndLine> {
-
-        public MyComparator() {
-
-        }
-
-
-        @Override
-        public int compare(EndLine o1, EndLine o2) {
-            return (int) (o2.getTime()-o1.getTime());
-        }
-    }
+//    class MyComparator implements Comparator<EndLine> {
+//
+//        public MyComparator() {
+//
+//        }
+//
+//
+//        @Override
+//        public int compare(EndLine o1, EndLine o2) {
+//            return (int) (o2.getTime()-o1.getTime());
+//        }
+//    }
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
@@ -168,7 +169,10 @@ public class LineDetailFragment extends BaseFragment {
                 range=3;
                 break;
         }
-        resetData();
+        if(item.getItemId()!=android.R.id.home&&item.getItemId()!=R.id.action_capture){
+            resetData();
+        }
+
         return true;
     }
 

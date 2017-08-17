@@ -8,6 +8,8 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import java.util.concurrent.TimeUnit;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import mac.yk.customdialog.CustomDialog;
@@ -86,6 +88,7 @@ public class LoginActivity extends BaseActivity{
         subscription= ApiWrapper.targetClass(ServerAPI.class).getAPI().login(name.getText().toString(),
                 passwd.getText().toString()).compose(ApiWrapper.<User>applySchedulers())
                 .subscribeOn(Schedulers.io())
+                .timeout(10, TimeUnit.SECONDS)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(observer);
 

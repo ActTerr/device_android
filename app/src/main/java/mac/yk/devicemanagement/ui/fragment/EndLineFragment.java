@@ -7,10 +7,13 @@ import android.support.v4.view.GestureDetectorCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import java.util.ArrayList;
+import java.util.concurrent.TimeUnit;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -46,7 +49,7 @@ public class EndLineFragment extends BaseFragment {
         ButterKnife.bind(this, view);
         context=getContext();
         initData(MyMemory.getInstance().getUser().getUnit());
-
+        setHasOptionsMenu(true);
         return view;
     }
 
@@ -55,12 +58,18 @@ public class EndLineFragment extends BaseFragment {
         activity.gotoLineDetail(number);
     }
 
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        super.onCreateOptionsMenu(menu, inflater);
+        menu.clear();
+    }
 
     private void initData(int uId) {
         ApiWrapper<ServerAPI> wrapper=new ApiWrapper<>();
         wrapper.targetClass(ServerAPI.class).getAPI().getLineTotal(String.valueOf(uId))
                 .compose(wrapper.<ArrayList<EndLine>>applySchedulers())
                 .subscribeOn(Schedulers.io())
+                .timeout(10, TimeUnit.SECONDS)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Subscriber<ArrayList<EndLine>>() {
                     @Override

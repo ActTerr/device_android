@@ -28,6 +28,8 @@ import android.widget.Toast;
 
 import com.facebook.drawee.backends.pipeline.Fresco;
 
+import java.util.concurrent.TimeUnit;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
@@ -192,6 +194,7 @@ public class DeviceDetailActivity extends BaseActivity {
                 getAPI().check(id)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
+                .timeout(10, TimeUnit.SECONDS)
                 .compose(network.<String[]>applySchedulers())
                 .subscribe(new Observer<String[]>() {
                     @Override
@@ -343,6 +346,7 @@ public class DeviceDetailActivity extends BaseActivity {
         wrapper.targetClass(ServerAPI.class).getAPI().inactive(id, local)
                 .compose(wrapper.<String>applySchedulers())
                 .subscribeOn(Schedulers.io())
+                .timeout(10, TimeUnit.SECONDS)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Subscriber<String>() {
                     @Override
