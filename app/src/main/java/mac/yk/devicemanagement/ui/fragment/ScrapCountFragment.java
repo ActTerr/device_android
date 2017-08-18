@@ -54,6 +54,7 @@ public class ScrapCountFragment extends BaseFragment {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.frag_count, container, false);
         ButterKnife.bind(this, view);
+        L.e("cao","scrap on create");
         addFrom.setVisibility(View.GONE);
         dialog= CustomDialog.create(getContext(),"加载中...",false,null);
         initView();
@@ -75,7 +76,7 @@ public class ScrapCountFragment extends BaseFragment {
         }
         if (item.getItemId() == R.id.all) {
             year = "all";
-        } else if(item.getItemId()==android.R.id.home){
+        } else if(item.getItemId()==android.R.id.home||item.getItemId()==R.id.action_capture){
             return true;
         }else {
             year = String.valueOf(item.getTitle());

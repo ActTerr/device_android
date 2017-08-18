@@ -2,6 +2,7 @@ package mac.yk.devicemanagement.adapter;
 
 import android.content.Context;
 import android.graphics.Color;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -54,19 +55,18 @@ public class LineDetailAdapter extends BaseAdapter {
         if (view == null) {
             view = inflater.inflate(R.layout.item_end_line_form, null);
         }
+        Log.e("cao",endLine.toString());
         TextView textView1 = (TextView) view.findViewById(R.id.text1);
         TextView textView2 = (TextView) view.findViewById(R.id.text2);
         TextView textView3 = (TextView) view.findViewById(R.id.text3);
         TextView textView4 = (TextView) view.findViewById(R.id.text4);
         TextView textView5 = (TextView) view.findViewById(R.id.text5);
-        TextView textView6 = (TextView) view.findViewById(R.id.text6);
 
-        textView1.setText(String.valueOf(endLine.getNumber()));
-        textView2.setText(String.valueOf(endLine.getTemperature()));
-        textView3.setText(convert(endLine.getSensor()));
-        textView4.setText(convert(endLine.getRadio_station()));
-        textView5.setText(convert(endLine.getBattery()));
-        textView6.setText(ConvertUtils.Date2String(new Date(endLine.getTime())));
+        textView1.setText(String.valueOf(endLine.getTemperature()));
+        textView2.setText(convert(endLine.getSensor()));
+        textView3.setText(convert(endLine.getRadio_station()));
+        textView4.setText(convert(endLine.getBattery()));
+        textView5.setText(ConvertUtils.Date2String(new Date(endLine.getTime())));
 
 
         view.setBackgroundResource(R.color.gray2);
@@ -75,7 +75,6 @@ public class LineDetailAdapter extends BaseAdapter {
         textView3.setTextColor(Color.WHITE);
         textView4.setTextColor(Color.WHITE);
         textView5.setTextColor(Color.WHITE);
-        textView6.setTextColor(Color.WHITE);
 
 
         return view;

@@ -179,6 +179,7 @@ public class ScrapFragment extends BaseFragment {
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        menu.clear();
         menu.findItem(R.id.dianchi).setVisible(true);
         menu.findItem(R.id.qukongqi).setVisible(true);
         menu.findItem(R.id.jikongqi).setVisible(true);
@@ -211,7 +212,7 @@ public class ScrapFragment extends BaseFragment {
         }
         if (item.getItemId() == R.id.action_capture) {
             return true;
-        }else if(item.getItemId()==android.R.id.home){
+        }else if(item.getItemId()==android.R.id.home||item.getItemId()==R.id.action_capture){
             return true;
         }
         page = pages.get(selected);

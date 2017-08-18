@@ -21,6 +21,8 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 
+import mac.yk.devicemanagement.R;
+
 import static com.google.gson.internal.$Gson$Preconditions.checkNotNull;
 
 /**
@@ -47,7 +49,8 @@ public class ActivityUtils {
         checkNotNull(fragmentManager);
         checkNotNull(fragment);
         FragmentTransaction transaction=fragmentManager.beginTransaction();
-        transaction.hide(oldFragment).show(fragment).commit();
+        transaction.replace(R.id.frame,fragment).commit();
+//        transaction.hide(oldFragment).show(fragment).commit();
     }
 
 

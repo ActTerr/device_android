@@ -51,10 +51,14 @@ public class ConvertUtils {
 
     public static String Date2String(Date date) {
         if (date!=null){
+            L.e("cao",date.toString());
             SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-            return sdf.format(date);
+            String s=sdf.format(date);
+            L.e("cao",s);
+            return s;
+        }else{
+            return "";
         }
-        return "";
     }
 
     public static String getdevName(int devName) {

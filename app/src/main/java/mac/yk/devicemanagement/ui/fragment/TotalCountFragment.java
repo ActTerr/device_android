@@ -73,7 +73,7 @@ public class TotalCountFragment extends BaseFragment {
         }
         if (item.getItemId() == R.id.all) {
             year = "all";
-        } else if(item.getItemId()==android.R.id.home){
+        } else if(item.getItemId()==android.R.id.home||item.getItemId()==R.id.action_capture){
             return true;
         }else {
             year = String.valueOf(item.getTitle());

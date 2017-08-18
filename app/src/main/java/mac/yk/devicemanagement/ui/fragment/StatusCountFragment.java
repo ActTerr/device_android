@@ -58,7 +58,8 @@ public class StatusCountFragment extends BaseFragment {
         if (MyMemory.getInstance().getUser().getGrade() == 0) {
             isTotal = true;
         }
-        dialog= CustomDialog.create(getContext(),"加载中...",false,null);
+        setHasOptionsMenu(true);
+        dialog = CustomDialog.create(getContext(), "加载中...", false, null);
         data = new ArrayList<>();
         adapter = new FormStatusAdapter(getContext(), data);
         lv.setAdapter(adapter);
@@ -86,20 +87,20 @@ public class StatusCountFragment extends BaseFragment {
     }
 
 
-        @Override
+    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        if (item.getItemId()==android.R.id.home){
+        if (item.getItemId() == android.R.id.home) {
             return true;
         }
         if (item.getItemId() == R.id.all) {
             year = "all";
-        } else if(item.getItemId()==android.R.id.home){
+        } else if (item.getItemId() == android.R.id.home||item.getItemId()==R.id.action_capture) {
             return true;
-        }else {
+        } else {
             year = String.valueOf(item.getTitle());
         }
-        L.e(TAG,"select"+year);
-        if (data.size()>0){
+        L.e(TAG, "select" + year);
+        if (data.size() > 0) {
             data.clear();
         }
         EventBus.getDefault().post("状态统计");
@@ -109,13 +110,13 @@ public class StatusCountFragment extends BaseFragment {
     }
 //
 
+
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
         menu.clear();
         inflater.inflate(R.menu.menu_year,menu);
     }
-
 
     private void initData() {
         dialog.show();

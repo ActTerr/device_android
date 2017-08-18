@@ -8,6 +8,8 @@ import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -64,20 +66,31 @@ public class NoticeFragment extends BaseFragment implements java.util.Observer {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.frag_notice, container, false);
         ButterKnife.bind(this, view);
+        initView();
+        initData();
+        return view;
+    }
+
+    private void initView() {
         update.addObserver(this);
         MyMemory.getInstance().setUpdate(update);
         context = getContext();
         showIv();
+        setHasOptionsMenu(true);
         data = new ArrayList<>();
         adapter = new NoticeAdapter(context, data);
         rv.setAdapter(adapter);
         rv.setLayoutManager(new LinearLayoutManager(context));
         pd = CustomDialog.create(getContext(),"加载中...",false,null);
         btnDown.setVisibility(View.GONE);
-        initData();
-        return view;
     }
 
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        super.onCreateOptionsMenu(menu, inflater);
+        menu.clear();
+        inflater.inflate(R.menu.menu_name, menu);
+    }
 
     private void showIv() {
         if (MyMemory.getInstance().getUser().getGrade() == 0) {
@@ -134,11 +147,9 @@ public class NoticeFragment extends BaseFragment implements java.util.Observer {
         }
     }
 
-//    @Override
-//    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-//        super.onCreateOptionsMenu(menu, inflater);
-//        menu.clear();
-//    }
+
+
+
 
     @Override
     public void update(Observable o, Object arg) {

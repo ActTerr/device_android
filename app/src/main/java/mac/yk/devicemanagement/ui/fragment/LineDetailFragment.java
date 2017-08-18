@@ -12,6 +12,8 @@ import android.view.ViewGroup;
 import android.widget.AbsListView;
 import android.widget.ListView;
 
+import org.greenrobot.eventbus.EventBus;
+
 import java.util.ArrayList;
 import java.util.concurrent.TimeUnit;
 
@@ -57,7 +59,6 @@ public class LineDetailFragment extends BaseFragment {
         context=getContext();
         dialog=CustomDialog.create(context,"加载中...",false,null);
         L.e("cao","onCreate");
-        setHasOptionsMenu(true);
         initView();
         initData();
         setListener();
@@ -88,6 +89,9 @@ public class LineDetailFragment extends BaseFragment {
 
 
     private void initView() {
+        setHasOptionsMenu(true);
+        number=getArguments().getInt("number");
+        EventBus.getDefault().post(number+"号尽头线数据");
         adapter = new LineDetailAdapter(getContext(), lines);
         lv.setAdapter(adapter);
     }
@@ -95,7 +99,8 @@ public class LineDetailFragment extends BaseFragment {
     private void initData() {
         dialog.show();
         isAdding=true;
-        number=getArguments().getInt("number");
+
+
         ApiWrapper<ServerAPI> wrapper = new ApiWrapper<>();
         wrapper.targetClass(ServerAPI.class).getAPI().getLineDetail(MyMemory.getInstance().getUser().getUnit(),
                 number, range, page, 18)
@@ -124,7 +129,7 @@ public class LineDetailFragment extends BaseFragment {
                             isMore=false;
                         }
                         if(page==0){
-                            lines.add(new EndLine(1,27,1,1,1,System.currentTimeMillis(),1));
+                            lines.add(new EndLine(1,1,27,1,1,System.currentTimeMillis(),1));
                         }
                         lines.addAll(endLines);
                         adapter.notifyDataSetChanged();

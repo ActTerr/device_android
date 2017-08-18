@@ -48,26 +48,24 @@ public class CountFragment extends BaseFragment {
         ButterKnife.bind(this, view);
         user = MyMemory.getInstance().getUser();
         setUpViewPager();
+        L.e("cao", "count on create");
         return view;
     }
 
     private void setUpViewPager() {
         L.e(TAG, "set pager");
         ViewPagerAdapter = new ViewPagerAdapter(getChildFragmentManager());
-        if (user.getGrade() == 2) {
-            ViewPagerAdapter.addFragment(new ServiceCountFragment(), "维修统计");
+        if (user.getGrade() == 2 || user.getGrade() == 0) {
+            ServiceCountFragment = new ServiceCountFragment();
+            ViewPagerAdapter.addFragment(ServiceCountFragment, "维修点统计");
             selectL.setVisibility(View.GONE);
-        } else {
+        } else if (user.getGrade() != 2) {
             TotalCountFragment = new TotalCountFragment();
             StatusCountFragment = new StatusCountFragment();
             ViewPagerAdapter.addFragment(TotalCountFragment, "统计分析");
             ViewPagerAdapter.addFragment(StatusCountFragment, "状态统计");
             serviceCount.setVisibility(View.GONE);
-            if (user.getGrade() == 0) {
-                ServiceCountFragment = new ServiceCountFragment();
-                ViewPagerAdapter.addFragment(ServiceCountFragment, "维修点统计");
-                serviceCount.setVisibility(View.VISIBLE);
-            }
+            selectL.setVisibility(View.VISIBLE);
         }
         vp.setAdapter(ViewPagerAdapter);
     }
@@ -89,7 +87,6 @@ public class CountFragment extends BaseFragment {
                 break;
         }
     }
-
 
 
 }

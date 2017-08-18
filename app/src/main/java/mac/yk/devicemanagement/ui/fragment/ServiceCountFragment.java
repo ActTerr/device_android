@@ -53,7 +53,6 @@ public class ServiceCountFragment extends BaseFragment {
         adapter = new FormServiceAdapter(getContext(), data);
         lv.setAdapter(adapter);
         setListener();
-
         return view;
     }
 
@@ -114,5 +113,6 @@ public class ServiceCountFragment extends BaseFragment {
         addFrom.setVisibility(View.GONE);
         initData();
     }
+
 
 }

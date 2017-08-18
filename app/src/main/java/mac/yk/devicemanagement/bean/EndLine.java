@@ -83,9 +83,9 @@ public class EndLine {
     @Override
     public String toString() {
         return "EndLine{" +
-                "station='" + station + '\'' +
+                "station=" + station  +
                 ", number=" + number +
-                ", tempreture=" + temperature +
+                ", temperature=" + temperature +
                 ", sensor=" + sensor +
                 ", radio_station=" + radio_station +
                 ", time=" + time +

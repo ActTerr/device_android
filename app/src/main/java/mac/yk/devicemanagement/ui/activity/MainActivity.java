@@ -51,7 +51,6 @@ import mac.yk.devicemanagement.ui.fragment.LineDetailFragment;
 import mac.yk.devicemanagement.ui.fragment.MainFragment;
 import mac.yk.devicemanagement.ui.fragment.NoticeFragment;
 import mac.yk.devicemanagement.ui.fragment.ScrapCountFragment;
-import mac.yk.devicemanagement.ui.fragment.ScrapFragment;
 import mac.yk.devicemanagement.util.ActivityUtils;
 import mac.yk.devicemanagement.util.ExceptionFilter;
 import mac.yk.devicemanagement.util.L;
@@ -89,12 +88,13 @@ public class MainActivity extends BaseActivity {
 
     ArrayList<Fragment> fragments;
     int showId;
-    String TAG="main";
+    String TAG = "main";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_currency);
-
+        L.e("cao","activit oncreate");
         ButterKnife.bind(this);
         checkUser();
         EventBus.getDefault().register(this);
@@ -109,10 +109,10 @@ public class MainActivity extends BaseActivity {
     }
 
     private void initFragment() {
-        MainFragment mainFragment =new MainFragment();
+        MainFragment mainFragment = new MainFragment();
         ActivityUtils.addFragmentToActivity(getSupportFragmentManager(), mainFragment, R.id.frame);
-        if (showId!=0){
-            ActivityUtils.changeFragment(getSupportFragmentManager(),mainFragment,fragments.get(showId));
+        if (showId != 0) {
+            ActivityUtils.changeFragment(getSupportFragmentManager(), mainFragment, fragments.get(showId));
         }
     }
 
@@ -134,58 +134,55 @@ public class MainActivity extends BaseActivity {
     }
 
     private void checkUser() {
-        if (SpUtil.getLoginUser(this).equals("")){
+        if (SpUtil.getLoginUser(this).equals("")) {
             MFGT.gotoLoginActivity(this);
         }
     }
 
     private void startCheck() {
-        L.e(TAG,"startService");
-            Intent intent=new Intent(this, MonitorService.class);
-            startService(intent);
+        L.e(TAG, "startService");
+        Intent intent = new Intent(this, MonitorService.class);
+        startService(intent);
 
 //            Intent intent2=new Intent(this, GuardService.class);
 //            startService(intent2);
 
 
-
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
-    public void getTitle(String title){
-        if (title.contains("all年")){
-            title="总"+title.substring(4);
+    public void getTitle(String title) {
+        if (title.contains("all年")) {
+            title = "总" + title.substring(4);
         }
-            toolBar.setTitle(title);
+        toolBar.setTitle(title);
     }
 
-    @Subscribe(threadMode =ThreadMode.BACKGROUND)
-    public void refresh(boolean b){
-        L.e(TAG,"get refresh message");
+    @Subscribe(threadMode = ThreadMode.BACKGROUND)
+    public void refresh(boolean b) {
+        L.e(TAG, "get refresh message");
         noticeFragment.refresh();
     }
 
 
-
-
     private void isFromNotification() {
-        if(getIntent().getBooleanExtra("fromNtf",false)){
-                    L.e("main","切换frag");
-                    FragmentManager manager=getSupportFragmentManager();
-                    if(fragments.contains(countFragment)){
-                        ActivityUtils.changeFragment(manager, noticeFragment,fragments.get(showId));
-                        for(int i=0;i<fragments.size();i++){
-                            if(fragments.get(i)== noticeFragment){
-                                showId=i;
-                            }
-                        }
-                    }else {
-                        noticeFragment =new NoticeFragment();
-                        showId=fragments.size();
-                        fragments.add(fragments.size(), noticeFragment);
-                        ActivityUtils.addFragmentToActivity(manager, noticeFragment, R.id.frame);
+        if (getIntent().getBooleanExtra("fromNtf", false)) {
+            L.e("main", "切换frag");
+            FragmentManager manager = getSupportFragmentManager();
+            if (fragments.contains(noticeFragment)) {
+                ActivityUtils.changeFragment(manager, noticeFragment, fragments.get(showId));
+                for (int i = 0; i < fragments.size(); i++) {
+                    if (fragments.get(i) == noticeFragment) {
+                        showId = i;
                     }
                 }
+            } else {
+                noticeFragment = new NoticeFragment();
+                showId = fragments.size();
+                fragments.add(fragments.size(), noticeFragment);
+                ActivityUtils.addFragmentToActivity(manager, noticeFragment, R.id.frame);
+            }
+        }
 
     }
 
@@ -196,22 +193,28 @@ public class MainActivity extends BaseActivity {
         ab.setDisplayHomeAsUpEnabled(true);
     }
 
-//    CountFragment CountFragment;
+    //    CountFragment CountFragment;
 //    ScrapCountFragment ScrapCountFragment;
 //    NoticeFragment NoticeFragment;
+
+    /**
+     * 重新加载的问题
+     */
     private void init() {
-        if (fragments==null){
-            fragments=new ArrayList<>();
-        }else {
-            for(Fragment fragment:fragments){
-                if(fragment instanceof CountFragment){
-                    countFragment= (mac.yk.devicemanagement.ui.fragment.CountFragment) fragment;
-                }else if(fragment instanceof ScrapFragment){
-                    scrapCountFragment= (mac.yk.devicemanagement.ui.fragment.ScrapCountFragment) fragment;
-                }else {
-                    noticeFragment= (mac.yk.devicemanagement.ui.fragment.NoticeFragment) fragment;
+        if (fragments == null) {
+            fragments = new ArrayList<>();
+        } else {
+            for (Fragment fragment : fragments) {
+                if (fragment instanceof CountFragment) {
+                    countFragment = (mac.yk.devicemanagement.ui.fragment.CountFragment) fragment;
+                } else if (fragment instanceof ScrapCountFragment) {
+                    scrapCountFragment = (mac.yk.devicemanagement.ui.fragment.ScrapCountFragment) fragment;
+                } else if (fragment instanceof EndLineFragment)
+                {   endLineFragment= (EndLineFragment) fragment;
+                } else {
+                    noticeFragment = (mac.yk.devicemanagement.ui.fragment.NoticeFragment) fragment;
                 }
-                ActivityUtils.addFragmentToActivity(getSupportFragmentManager(),fragment, R.id.frame);
+                ActivityUtils.addFragmentToActivity(getSupportFragmentManager(), fragment, R.id.frame);
             }
         }
 
@@ -219,7 +222,7 @@ public class MainActivity extends BaseActivity {
         User user = dbUser.getInstance(context).select2(SpUtil.getLoginUser(context));
         MyMemory.getInstance().setUser(user);
         builder = new AlertDialog.Builder(this);
-        progressDialog = CustomDialog.create(context,"加载中...",false,null);
+        progressDialog = CustomDialog.create(context, "加载中...", false, null);
     }
 
     private void setNavView() {
@@ -289,80 +292,81 @@ public class MainActivity extends BaseActivity {
         navView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-                FragmentManager manager=getSupportFragmentManager();
+                FragmentManager manager = getSupportFragmentManager();
                 switch (item.getItemId()) {
                     case R.id.warning:
                         View view = View.inflate(context, R.layout.dialog_warning, null);
                         getWarning(view);
-                        L.e(TAG,"执行warning");
+                        L.e(TAG, "执行warning");
 
                         break;
                     case R.id.record:
-                            if(fragments.contains(countFragment)){
-                                L.e("cao","showid1:"+showId);
-                                ActivityUtils.changeFragment(manager, countFragment,fragments.get(showId));
-                                for(int i=0;i<fragments.size();i++){
-                                    if(fragments.get(i)== countFragment){
-                                       showId=i;
-                                        L.e("cao","showid2:"+showId);
-                                    }
+                        if (fragments.contains(countFragment)) {
+                            L.e("cao", "showid1:" + showId);
+                            ActivityUtils.changeFragment(manager, countFragment, fragments.get(showId));
+                            for (int i = 0; i < fragments.size(); i++) {
+                                if (fragments.get(i) == countFragment) {
+                                    showId = i;
+                                    L.e("cao", "showid2:" + showId);
                                 }
-                            }else {
-                                countFragment =new CountFragment();
-                                showId=fragments.size();
-                                fragments.add(fragments.size(), countFragment);
-                                ActivityUtils.addFragmentToActivity(manager, countFragment, R.id.frame);
                             }
-                            toolBar.setTitle("设备统计");
+                        } else {
+                            L.e("cao","new count");
+                            countFragment = new CountFragment();
+                            showId = fragments.size();
+                            fragments.add(fragments.size(), countFragment);
+                            ActivityUtils.addFragmentToActivity(manager, countFragment, R.id.frame);
+                        }
+                        toolBar.setTitle("设备统计");
 
                         break;
                     case R.id.scrap_record:
-                        if(fragments.contains(scrapCountFragment)){
-                            L.e("cao","showid1:"+showId);
-                            ActivityUtils.changeFragment(manager, scrapCountFragment,fragments.get(showId));
-                            for(int i=0;i<fragments.size();i++){
-                                if(fragments.get(i)== scrapCountFragment){
-                                    showId=i;
-                                    L.e("cao","showid2:"+showId);
+                        if (fragments.contains(scrapCountFragment)) {
+                            L.e("cao", "showid1:" + showId);
+                            ActivityUtils.changeFragment(manager, scrapCountFragment, fragments.get(showId));
+                            for (int i = 0; i < fragments.size(); i++) {
+                                if (fragments.get(i) == scrapCountFragment) {
+                                    showId = i;
+                                    L.e("cao", "showid2:" + showId);
                                 }
                             }
-                        }else {
-                            scrapCountFragment =new ScrapCountFragment();
-                            showId=fragments.size();
+                        } else {
+                            scrapCountFragment = new ScrapCountFragment();
+                            showId = fragments.size();
                             fragments.add(fragments.size(), scrapCountFragment);
                             ActivityUtils.addFragmentToActivity(manager, scrapCountFragment, R.id.frame);
                         }
                         toolBar.setTitle("报废统计");
                         break;
                     case R.id.notice:
-                        if(fragments.contains(noticeFragment)){
-                            ActivityUtils.changeFragment(manager, noticeFragment,fragments.get(showId));
-                            for(int i=0;i<fragments.size();i++){
-                                if(fragments.get(i)== noticeFragment){
-                                    showId=i;
+                        if (fragments.contains(noticeFragment)) {
+                            ActivityUtils.changeFragment(manager, noticeFragment, fragments.get(showId));
+                            for (int i = 0; i < fragments.size(); i++) {
+                                if (fragments.get(i) == noticeFragment) {
+                                    showId = i;
                                 }
                             }
-                        }else {
-                            noticeFragment =new NoticeFragment();
-                            showId=fragments.size();
+                        } else {
+                            noticeFragment = new NoticeFragment();
+                            showId = fragments.size();
                             fragments.add(fragments.size(), noticeFragment);
                             ActivityUtils.addFragmentToActivity(manager, noticeFragment, R.id.frame);
                         }
                         toolBar.setTitle("公告");
                         break;
                     case R.id.end_line:
-                        if(fragments.contains(endLineFragment)){
-                            L.e("cao","showid1:"+showId);
-                            ActivityUtils.changeFragment(manager, endLineFragment,fragments.get(showId));
-                            for(int i=0;i<fragments.size();i++){
-                                if(fragments.get(i)== endLineFragment){
-                                    showId=i;
-                                    L.e("cao","showid2:"+showId);
+                        if (fragments.contains(endLineFragment)) {
+                            L.e("cao", "showid1:" + showId);
+                            ActivityUtils.changeFragment(manager, endLineFragment, fragments.get(showId));
+                            for (int i = 0; i < fragments.size(); i++) {
+                                if (fragments.get(i) == endLineFragment) {
+                                    showId = i;
+                                    L.e("cao", "showid2:" + showId);
                                 }
                             }
-                        }else {
-                            endLineFragment =new EndLineFragment();
-                            showId=fragments.size();
+                        } else {
+                            endLineFragment = new EndLineFragment();
+                            showId = fragments.size();
                             fragments.add(fragments.size(), endLineFragment);
                             ActivityUtils.addFragmentToActivity(manager, endLineFragment, R.id.frame);
                         }
@@ -376,24 +380,24 @@ public class MainActivity extends BaseActivity {
         });
     }
 
-    public void gotoLineDetail(int number){
-        FragmentManager manager=getSupportFragmentManager();
-        if(fragments.contains(lineDetailFragment)){
-            L.e("cao","showid1:"+showId);
-            ActivityUtils.changeFragment(manager, lineDetailFragment,fragments.get(showId));
-            for(int i=0;i<fragments.size();i++){
-                if(fragments.get(i)== lineDetailFragment){
-                    showId=i;
-                    L.e("cao","showid2:"+showId);
+    public void gotoLineDetail(int number) {
+        FragmentManager manager = getSupportFragmentManager();
+        if (fragments.contains(lineDetailFragment)) {
+            L.e("cao", "showid1:" + showId);
+            ActivityUtils.changeFragment(manager, lineDetailFragment, fragments.get(showId));
+            for (int i = 0; i < fragments.size(); i++) {
+                if (fragments.get(i) == lineDetailFragment) {
+                    showId = i;
+                    L.e("cao", "showid2:" + showId);
                 }
             }
-        }else {
-            lineDetailFragment=new LineDetailFragment();
-            showId=fragments.size();
+        } else {
+            lineDetailFragment = new LineDetailFragment();
+            showId = fragments.size();
 
             fragments.add(fragments.size(), lineDetailFragment);
-            Bundle bundle=new Bundle();
-            bundle.putInt("number",number);
+            Bundle bundle = new Bundle();
+            bundle.putInt("number", number);
             lineDetailFragment.setArguments(bundle);
             ActivityUtils.addFragmentToActivity(manager, lineDetailFragment, R.id.frame);
         }
@@ -428,7 +432,7 @@ public class MainActivity extends BaseActivity {
             Bundle bundle = data.getExtras();
             if (bundle != null) {
                 id = (bundle.getString("result"));
-                MFGT.gotoDetailActivity(context,false,false,id);
+                MFGT.gotoDetailActivity(context, false, false, id);
                 finish();
             }
 
@@ -467,7 +471,7 @@ public class MainActivity extends BaseActivity {
                         dialog.dismiss();
                     }
                 }).create();
-        L.e(TAG,"执行warning");
+        L.e(TAG, "执行warning");
         progressDialog.show();
         ApiWrapper<ServerAPI> network = new ApiWrapper<>();
         subscription = network.targetClass(ServerAPI.class).
@@ -508,10 +512,10 @@ public class MainActivity extends BaseActivity {
     public boolean onKeyUp(int keyCode, KeyEvent event) {
         switch (keyCode) {
             case KeyEvent.KEYCODE_BACK:
-                if (fragments.get(showId).equals(lineDetailFragment)){
+                if (fragments.get(showId).equals(lineDetailFragment)) {
                     backToEndLine();
                     return true;
-                }else{
+                } else {
                     long SecondTime = System.currentTimeMillis();
                     if (SecondTime - FirstTime > 2000) {
                         ToastUtil.showToast(context, "再按一次退出应用");
@@ -527,12 +531,12 @@ public class MainActivity extends BaseActivity {
     }
 
     private void backToEndLine() {
-        for(int i=0;i<fragments.size();i++) {
+        for (int i = 0; i < fragments.size(); i++) {
             if (fragments.get(i) == endLineFragment) {
                 showId = i;
             }
         }
-        ActivityUtils.changeFragment(getSupportFragmentManager(),endLineFragment,lineDetailFragment);
+        ActivityUtils.changeFragment(getSupportFragmentManager(), endLineFragment, lineDetailFragment);
     }
 
     @Override
