@@ -55,6 +55,7 @@ public class EndLineFragment extends BaseFragment {
 
     private void gotoDetail(int number) {
         MainActivity activity= (MainActivity) context;
+        L.e("cao",number+"");
         activity.gotoLineDetail(number);
     }
 

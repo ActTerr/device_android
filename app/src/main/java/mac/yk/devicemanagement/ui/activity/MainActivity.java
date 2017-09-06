@@ -382,16 +382,16 @@ public class MainActivity extends BaseActivity {
 
     public void gotoLineDetail(int number) {
         FragmentManager manager = getSupportFragmentManager();
-        if (fragments.contains(lineDetailFragment)) {
-            L.e("cao", "showid1:" + showId);
-            ActivityUtils.changeFragment(manager, lineDetailFragment, fragments.get(showId));
-            for (int i = 0; i < fragments.size(); i++) {
-                if (fragments.get(i) == lineDetailFragment) {
-                    showId = i;
-                    L.e("cao", "showid2:" + showId);
-                }
-            }
-        } else {
+//        if (fragments.contains(lineDetailFragment)) {
+//            L.e("cao", "showid1:" + showId);
+//            ActivityUtils.changeFragment(manager, lineDetailFragment, fragments.get(showId));
+//            for (int i = 0; i < fragments.size(); i++) {
+//                if (fragments.get(i) == lineDetailFragment) {
+//                    showId = i;
+//                    L.e("cao", "showid2:" + showId);
+//                }
+//            }
+//        } else {
             lineDetailFragment = new LineDetailFragment();
             showId = fragments.size();
 
@@ -400,7 +400,6 @@ public class MainActivity extends BaseActivity {
             bundle.putInt("number", number);
             lineDetailFragment.setArguments(bundle);
             ActivityUtils.addFragmentToActivity(manager, lineDetailFragment, R.id.frame);
-        }
 
         toolBar.setTitle("终点线状态");
     }

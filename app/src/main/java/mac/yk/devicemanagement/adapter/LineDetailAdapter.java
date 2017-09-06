@@ -2,7 +2,6 @@ package mac.yk.devicemanagement.adapter;
 
 import android.content.Context;
 import android.graphics.Color;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -55,7 +54,6 @@ public class LineDetailAdapter extends BaseAdapter {
         if (view == null) {
             view = inflater.inflate(R.layout.item_end_line_form, null);
         }
-        Log.e("cao",endLine.toString());
         TextView textView1 = (TextView) view.findViewById(R.id.text1);
         TextView textView2 = (TextView) view.findViewById(R.id.text2);
         TextView textView3 = (TextView) view.findViewById(R.id.text3);

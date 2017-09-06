@@ -51,10 +51,8 @@ public class ConvertUtils {
 
     public static String Date2String(Date date) {
         if (date!=null){
-            L.e("cao",date.toString());
             SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
             String s=sdf.format(date);
-            L.e("cao",s);
             return s;
         }else{
             return "";
@@ -100,7 +98,7 @@ public class ConvertUtils {
     public static String getUnitName(int i) {
         switch (i) {
             case 1:
-                return "哈尔滨站";
+                return "玉泉站";
             case 2:
                 return "哈尔滨东站";
             case 3:

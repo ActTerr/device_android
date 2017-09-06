@@ -47,7 +47,7 @@ public class LineDetailFragment extends BaseFragment {
     Context context;
     boolean isAdding = false;
     boolean isMore=true;
-    int range=0;
+    int range=10;
     int page;
     CustomDialog dialog;
     @Nullable
@@ -128,9 +128,6 @@ public class LineDetailFragment extends BaseFragment {
                         if (endLines.size()<18){
                             isMore=false;
                         }
-                        if(page==0){
-                            lines.add(new EndLine(1,1,27,1,1,System.currentTimeMillis(),1));
-                        }
                         lines.addAll(endLines);
                         adapter.notifyDataSetChanged();
                         page++;
@@ -167,11 +164,14 @@ public class LineDetailFragment extends BaseFragment {
             case R.id.one_day:
                 range=1;
                 break;
-            case R.id.twice_day:
-                range=2;
-                break;
-            case R.id.three_day:
+            case R.id.three_days:
                 range=3;
+                break;
+            case R.id.seven_days:
+                range=7;
+                break;
+            case R.id.ten_days:
+                range=10;
                 break;
         }
         if(item.getItemId()!=android.R.id.home&&item.getItemId()!=R.id.action_capture){
@@ -193,6 +193,7 @@ public class LineDetailFragment extends BaseFragment {
     @Override
     public void onDestroyView() {
         super.onDestroyView();
+        adapter=null;
         unbinder.unbind();
     }
 }

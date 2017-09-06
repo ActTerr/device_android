@@ -88,5 +88,9 @@ public class CountFragment extends BaseFragment {
         }
     }
 
-
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        ViewPagerAdapter=null;
+    }
 }
