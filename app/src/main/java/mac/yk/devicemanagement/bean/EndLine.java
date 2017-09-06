@@ -1,97 +1,89 @@
 package mac.yk.devicemanagement.bean;
 
-/**
- * Created by mac-yk on 2017/7/19.
- */
-
 public class EndLine {
     int station;
-    int number;
+    int line_id;
     int temperature;
-    int sensor;
+    int s1;
+    int s2;
     int radio_station;
     long time;
-    int battery;
+    double battery;
 
-    public EndLine(int station, int number, int temperature, int sensor, int radio_station, long time, int battery) {
+    public EndLine(int station, int line_id, int s1, int s2, int radio_station,int temperature,	double battery,  long time
+    ) {
+        super();
         this.station = station;
-        this.number = number;
+        this.line_id = line_id;
         this.temperature = temperature;
-        this.sensor = sensor;
+        this.s1 = s1;
+        this.s2 = s2;
         this.radio_station = radio_station;
         this.time = time;
-        this.battery = battery;
-    }
-
-    public int getTemperature() {
-        return temperature;
-    }
-
-    public void setTemperature(int temperature) {
-        this.temperature = temperature;
-    }
-
-    public int getBattery() {
-        return battery;
-    }
-
-    public void setBattery(int battery) {
         this.battery = battery;
     }
 
     public int getStation() {
         return station;
     }
-
     public void setStation(int station) {
         this.station = station;
     }
-
-    public int getNumber() {
-        return number;
+    public int getLine_id() {
+        return line_id;
     }
-
-    public void setNumber(int number) {
-        this.number = number;
+    public void setLine_id(int line_id) {
+        this.line_id = line_id;
     }
-
-
-    public int getSensor() {
-        return sensor;
+    public int getTemperature() {
+        return temperature;
     }
-
-    public void setSensor(int sensor) {
-        this.sensor = sensor;
+    public void setTemperature(int temperature) {
+        this.temperature = temperature;
     }
-
+    public int getS1() {
+        return s1;
+    }
+    public void setS1(int s1) {
+        this.s1 = s1;
+    }
+    public int getS2() {
+        return s2;
+    }
+    public void setS2(int s2) {
+        this.s2 = s2;
+    }
     public int getRadio_station() {
         return radio_station;
     }
-
     public void setRadio_station(int radio_station) {
         this.radio_station = radio_station;
     }
-
     public long getTime() {
         return time;
     }
-
     public void setTime(long time) {
         this.time = time;
     }
 
-    @Override
-    public String toString() {
-        return "EndLine{" +
-                "station=" + station  +
-                ", number=" + number +
-                ", temperature=" + temperature +
-                ", sensor=" + sensor +
-                ", radio_station=" + radio_station +
-                ", time=" + time +
-                '}';
+
+    public double getBattery() {
+        return battery;
+    }
+
+    public void setBattery(double battery) {
+        this.battery = battery;
     }
 
     public EndLine() {
+        super();
     }
+
+    @Override
+    public String toString() {
+        return "EndLine [station=" + station + ", line_id=" + line_id + ", temperature=" + temperature + ", s1=" + s1
+                + ", s2=" + s2 + ", radio_station=" + radio_station + ", time=" + time + ", battery=" + battery + "]";
+    }
+
+
 }

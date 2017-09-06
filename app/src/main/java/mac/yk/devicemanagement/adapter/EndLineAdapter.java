@@ -45,21 +45,23 @@ public class EndLineAdapter extends RecyclerView.Adapter<EndLineAdapter.LineHold
     public void onBindViewHolder(LineHolder holder, int position) {
 
         EndLine line = lines.get(position);
-            if (checkStatus(line) == false) {
-                L.e("cao", "red");
-                holder.ll.setBackgroundColor(context.getResources().getColor(R.color.red));
-            }
+        if (checkStatus(line) == false) {
+            L.e("cao", "red");
+            holder.ll.setBackgroundColor(context.getResources().getColor(R.color.red));
+        }
 
         holder.id.setText(position + 1 + "");
-        holder.sensor.setText(convert(line.getSensor()));
-        holder.battery.setText(convert(line.getBattery()));
-        holder.time.setText("数据上传时间:" + ConvertUtils.Date2String(new Date(line.getTime())));
+        holder.sensor1.setText(convert(line.getS1()));
+        holder.sensor2.setText(convert(line.getS2()));
+        holder.battery.setText(String.valueOf(line.getBattery()));
+
+        holder.time.setText(ConvertUtils.Date2String(new Date(line.getTime())));
         holder.radio.setText(convert(line.getRadio_station()));
         holder.temperature.setText(line.getTemperature() + "");
     }
 
     private boolean checkStatus(EndLine line) {
-        if (line.getBattery() == 0 || line.getSensor() == 0 || line.getRadio_station() == 0) {
+        if (line.getBattery() == 0 || line.getS1() == 0 || line.getRadio_station() == 0 || line.getS2() == 0||line.getBattery()<12.5) {
             L.e("cao", "false");
             return false;
         } else {
@@ -85,18 +87,22 @@ public class EndLineAdapter extends RecyclerView.Adapter<EndLineAdapter.LineHold
         public TextView id;
         @BindView(R.id.temperature)
         TextView temperature;
-        @BindView(R.id.sensor)
-        TextView sensor;
         @BindView(R.id.radio)
         TextView radio;
+        @BindView(R.id.sensor1)
+        TextView sensor1;
+        @BindView(R.id.sensor2)
+        TextView sensor2;
         @BindView(R.id.battery)
         TextView battery;
         @BindView(R.id.time)
         TextView time;
-        @BindView(R.id.card)
-        CardView card;
         @BindView(R.id.ll)
         LinearLayout ll;
+        @BindView(R.id.card)
+        CardView card;
+        @BindView(R.id.battery_ll)
+        LinearLayout batteryLl;
 
         public LineHolder(View itemView) {
             super(itemView);

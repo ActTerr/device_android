@@ -59,12 +59,17 @@ public class LineDetailAdapter extends BaseAdapter {
         TextView textView3 = (TextView) view.findViewById(R.id.text3);
         TextView textView4 = (TextView) view.findViewById(R.id.text4);
         TextView textView5 = (TextView) view.findViewById(R.id.text5);
+        TextView textView6 = (TextView) view.findViewById(R.id.text6);
 
         textView1.setText(String.valueOf(endLine.getTemperature()));
-        textView2.setText(convert(endLine.getSensor()));
-        textView3.setText(convert(endLine.getRadio_station()));
-        textView4.setText(convert(endLine.getBattery()));
-        textView5.setText(ConvertUtils.Date2String(new Date(endLine.getTime())));
+        textView2.setText(convert(endLine.getS1()));
+        textView3.setText(convert(endLine.getS2()));
+        textView4.setText(convert(endLine.getRadio_station()));
+        textView5.setText(String.valueOf(endLine.getBattery()));
+        if(endLine.getBattery()<12.5){
+            textView5.setTextColor(Color.RED);
+        }
+        textView6.setText(ConvertUtils.Date2String(new Date(endLine.getTime())));
 
 
         view.setBackgroundResource(R.color.gray2);
@@ -77,6 +82,8 @@ public class LineDetailAdapter extends BaseAdapter {
 
         return view;
     }
+
+
 
     String convert(int i) {
         if (i == 1) {

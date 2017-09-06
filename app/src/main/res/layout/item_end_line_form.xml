@@ -78,10 +78,22 @@
                 android:singleLine="true"
                 />
             <View style="@style/vertical_layout"/>
+            <TextView
+                android:id="@+id/text5"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:textColor="#000000"
+                android:textSize="12dp"
+                android:gravity="center_vertical|center_horizontal"
+
+                android:singleLine="true"
+                />
+            <View style="@style/vertical_layout"/>
 
         </LinearLayout>
         <TextView
-            android:id="@+id/text5"
+            android:id="@+id/text6"
             android:layout_width="125dp"
             android:layout_height="wrap_content"
             android:textColor="@color/white"
