@@ -54,8 +54,9 @@ public class EndLineAdapter extends RecyclerView.Adapter<EndLineAdapter.LineHold
         holder.sensor1.setText(convert(line.getS1()));
         holder.sensor2.setText(convert(line.getS2()));
         holder.battery.setText(String.valueOf(line.getBattery()));
-
-        holder.time.setText(ConvertUtils.Date2String(new Date(line.getTime())));
+        String s=ConvertUtils.Date2String(new Date(line.getTime()));
+        L.e("haonanshou",s);
+        holder.time.setText(s);
         holder.radio.setText(convert(line.getRadio_station()));
         holder.temperature.setText(line.getTemperature() + "");
     }
