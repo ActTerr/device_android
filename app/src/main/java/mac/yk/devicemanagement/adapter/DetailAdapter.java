@@ -19,7 +19,7 @@ public class DetailAdapter extends RecyclerView.Adapter {
     String[] data;
     Context context;
     int count=0;
-    String TAG=getClass().getName();
+    String TAG=getClass().getSimpleName();
     String[] titles = new String[]{
             "设备序号：", "锁版本：","设备分类：","生产厂家：","型号：","出厂日期：","使用日期：","使用单位：","使用地点：","序列号：" +
             "","编码：", "设备运行状态：","备注：","单价：","设备图片：","大类：","所属单位：","创建人：","创建时间：","创建单位：",
