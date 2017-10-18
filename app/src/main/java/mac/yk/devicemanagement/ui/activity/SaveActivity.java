@@ -51,7 +51,7 @@ public class SaveActivity extends BaseActivity implements View.OnClickListener {
 //
 //    public void onSave(View view) {
 //
-//        L.e("main", "save:" + name.getText().toString());
+//        L.e(TAG, "save:" + name.getText().toString());
 //        final CustomDialog progressDialog = CustomDialog.create(context,"加载中...",false,null);
 //        progressDialog.show();
 //
@@ -194,7 +194,7 @@ public class SaveActivity extends BaseActivity implements View.OnClickListener {
 //    private void showStatusWindow(View v2) {
 //        int width= ConvertUtils.dp2px(this, 100);
 //        int height=ConvertUtils.dp2px(this, 140);
-//        L.e("main","w:"+width+" h:"+height);
+//        L.e(TAG,"w:"+width+" h:"+height);
 //        pop = new PopupWindow(v2, width,height);
 //        pop.setOutsideTouchable(true);
 //        pop.setTouchable(true);

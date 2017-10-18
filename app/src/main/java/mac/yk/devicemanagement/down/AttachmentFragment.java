@@ -48,7 +48,6 @@ public class AttachmentFragment extends BaseFragment implements DownContract.Vie
     public static int REQUEST_CHOOSER = 1234;
 
 
-
     @BindView(R.id.rv)
     RecyclerView rv;
     @BindView(R.id.iv_add)
@@ -59,7 +58,7 @@ public class AttachmentFragment extends BaseFragment implements DownContract.Vie
     Context context;
     DownContract.Presenter presenter;
     boolean isEdit;
-    String TAG = "AttachmentFragment";
+    String TAG=getClass().getName();
     ArrayList<FileEntry> fileEntries = new ArrayList<>();
 
     ArrayList<FileEntry> downloads = new ArrayList<>();
@@ -230,7 +229,7 @@ public class AttachmentFragment extends BaseFragment implements DownContract.Vie
 
     @Override
     public void updateItem(FileEntry entry) {
-        L.e("caonima","update item1");
+        L.e(TAG,"update item1");
         int position =-1;
         for(int i=0;i<fileEntries.size();i++){
             if (fileEntries.get(i)==entry){
@@ -239,7 +238,7 @@ public class AttachmentFragment extends BaseFragment implements DownContract.Vie
         }
         if (position!=-1){
             adapter.notifyItemChanged(position);
-            L.e("caonima","update item position"+position);
+            L.e(TAG,"update item position"+position);
         }
     }
 
@@ -317,7 +316,7 @@ public class AttachmentFragment extends BaseFragment implements DownContract.Vie
                 case I.DOWNLOAD_STATUS.PAUSE:
                 case I.DOWNLOAD_STATUS.PREPARE:
                 case I.DOWNLOAD_STATUS.DOWNLOADING:
-                    L.e("caonima",entry.getFileName()+"传输中");
+                    L.e(TAG,entry.getFileName()+"传输中");
                     holder.pb.setVisibility(View.VISIBLE);
                     holder.cbAt.setChecked(false);
                     holder.tvCancel.setVisibility(View.VISIBLE);
@@ -330,14 +329,14 @@ public class AttachmentFragment extends BaseFragment implements DownContract.Vie
                     holder.cbAt.setVisibility(View.GONE);
                     holder.tvCancel.setVisibility(View.GONE);
                     holder.ivControl.setVisibility(View.GONE);
-                    L.e("caonima",entry.getFileName()+ "完成");
+                    L.e(TAG,entry.getFileName()+ "完成");
                     break;
                 case I.DOWNLOAD_STATUS.INIT:
                     holder.pb.setVisibility(View.GONE);
                     holder.cbAt.setVisibility(View.VISIBLE);
                     holder.ivControl.setVisibility(View.GONE);
                     holder.ivCancel.setVisibility(View.GONE);
-                    L.e("caonima",entry.getFileName()+"闲置");
+                    L.e(TAG,entry.getFileName()+"闲置");
                     break;
             }
 

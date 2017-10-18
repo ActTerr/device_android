@@ -49,7 +49,7 @@ public class ServiceAdapter extends RecyclerView.Adapter<ServiceAdapter.ServiceH
         }
 
     public void addwData(ArrayList<Service> list) {
-        L.e("main","add被执行");
+        L.e(TAG,"add被执行");
         for (Service service :list){
             L.e(TAG, service.toString());
         }

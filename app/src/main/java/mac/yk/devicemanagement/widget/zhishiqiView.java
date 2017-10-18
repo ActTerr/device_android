@@ -89,7 +89,7 @@ public class zhishiqiView extends View {
             paint.setColor(color);
             int width=left+(length+space)*(count-1);
             int height=(getHeight()-length)/2;
-            L.e("main","开始绘制");
+            L.e(TAG,"开始绘制");
             canvas.drawRect(width,height,width+length,height+length,paint);
         }
 

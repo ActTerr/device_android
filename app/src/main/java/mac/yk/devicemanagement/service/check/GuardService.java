@@ -114,6 +114,6 @@ public class GuardService extends Service {
     @Override
     public void onDestroy() {
         super.onDestroy();
-        L.e("wocao","guard die");
+        L.e("wodown","guard die");
     }
 }

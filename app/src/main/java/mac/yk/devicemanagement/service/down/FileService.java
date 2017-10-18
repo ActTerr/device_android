@@ -195,7 +195,7 @@ public class FileService extends Service implements IFile {
 
         final FileTask fileTask = new FileTask(entry, mdbFile, listener, mNotificationManager);
         fileTasks.add(fileTask);
-        L.e("cao", "task start");
+        L.e(TAG, "task start");
         new Thread(new Runnable() {
             @Override
             public void run() {
@@ -213,7 +213,7 @@ public class FileService extends Service implements IFile {
         new Thread(new Runnable() {
             @Override
             public void run() {
-                L.e("caonima", "点击下载2" + task.entry.getFileName());
+                L.e(TAG, "点击下载2" + task.entry.getFileName());
                 task.onStartDownload();
             }
         }).start();
@@ -228,7 +228,7 @@ public class FileService extends Service implements IFile {
             new Thread(new Runnable() {
                 @Override
                 public void run() {
-                    L.e("caonima", entry.getFileName() + "开始下载");
+                    L.e(TAG, entry.getFileName() + "开始下载");
                     task.onStartDownload();
                 }
             }).start();

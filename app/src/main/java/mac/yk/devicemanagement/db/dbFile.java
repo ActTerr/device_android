@@ -25,9 +25,7 @@ public class dbFile implements db,IdbFileEntry {
         if (instance==null){
             instance=new dbFile(context);
         }
-        if (context==null){
-            L.e(TAG,"又特么是Null");
-        }
+
        tableName= SpUtil.getLoginUser(context).toUpperCase()+I.FILE.TABLENAME;
         return instance;
     }
@@ -150,14 +148,12 @@ public class dbFile implements db,IdbFileEntry {
 
     @Override
     public boolean updateFileId(long oldId, long newId) {
-        L.e("caonima",oldId+":"+newId);
         SQLiteDatabase db=dbHelper.getWritableDatabase();
         ContentValues contentValues=new ContentValues();
         contentValues.put(I.FILE.AID,newId);
         if (db.isOpen()){
 
             int i=db.update(tableName,contentValues,I.FILE.AID+"=?",new String[]{String.valueOf(oldId)});
-            L.e("caonima","db:"+i);
             return true;
         }
         return false;

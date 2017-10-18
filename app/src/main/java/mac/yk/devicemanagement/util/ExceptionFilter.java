@@ -17,7 +17,7 @@ public class ExceptionFilter {
         boolean flag=false;
         if (e instanceof APIException) {
             APIException exception = (APIException) e;
-            L.e("main","进入error分支");
+            L.e(TAG,"进入error分支");
             if (exception.code== I.RESULT.DEFEAT){
 
                 flag=true;

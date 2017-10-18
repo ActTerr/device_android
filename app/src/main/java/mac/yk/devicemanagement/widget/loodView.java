@@ -186,7 +186,7 @@ public class loodView extends FrameLayout {
             StringBuilder imagesUrl=new StringBuilder().append(I.REQUEST.SERVER_ROOT).append(I.REQUEST.PATH)
                     .append( I.REQUEST.DOWN_PIC).append( "&").append(I.DEVICE2.CATEGROY).append( "=").append(devName)
                     .append("&").append(I.PIC.PID).append( "=").append(i);
-            L.e("TAG", imagesUrl.toString());
+            L.e(TAG, imagesUrl.toString());
             Uri uri = Uri.parse(imagesUrl.toString());
             //facebook的View控件
             final SimpleDraweeView mAlbumArt = new SimpleDraweeView(context);

@@ -58,7 +58,7 @@ public class LineDetailFragment extends BaseFragment {
         unbinder = ButterKnife.bind(this, view);
         context=getContext();
         dialog=CustomDialog.create(context,"加载中...",false,null);
-        L.e("cao","onCreate");
+        L.e(TAG,"onCreate");
         initView();
         initData();
         setListener();
@@ -71,9 +71,9 @@ public class LineDetailFragment extends BaseFragment {
             @Override
             public void onScrollStateChanged(AbsListView view, int scrollState) {
                 int lastPosition = lv.getLastVisiblePosition();
-                L.e("cao",lastPosition+"："+scrollState+":"+isMore+":"+!isAdding);
+                L.e(TAG,lastPosition+"："+scrollState+":"+isMore+":"+!isAdding);
                 if (scrollState == AbsListView.OnScrollListener.SCROLL_STATE_IDLE && lastPosition == adapter.getCount()-1  && isMore && !isAdding) {
-                    L.e("cao", "add");
+                    L.e(TAG, "add");
                     initData();
 
                 }

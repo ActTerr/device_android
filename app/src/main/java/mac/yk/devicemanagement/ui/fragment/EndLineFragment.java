@@ -55,7 +55,7 @@ public class EndLineFragment extends BaseFragment {
 
     private void gotoDetail(int number) {
         MainActivity activity= (MainActivity) context;
-        L.e("cao",number+"");
+        L.e(TAG,number+"");
         activity.gotoLineDetail(number);
     }
 
@@ -105,7 +105,7 @@ public class EndLineFragment extends BaseFragment {
             @Override
             public void onItemClick(Object o) {
                 EndLineAdapter.LineHolder holder= (EndLineAdapter.LineHolder) o;
-                L.e("cao",holder.id.getText().toString());
+                L.e(TAG,holder.id.getText().toString());
                 gotoDetail(Integer.parseInt(holder.id.getText().toString()));
             }
         };

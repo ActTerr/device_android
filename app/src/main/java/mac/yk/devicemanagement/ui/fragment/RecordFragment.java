@@ -94,7 +94,7 @@ public class RecordFragment extends BaseFragment {
         ButterKnife.bind(this, view);
         context= getContext();
         llm=new LinearLayoutManager(context);
-        L.e("TAG","frag解析完布局"+page);
+        L.e(TAG,"frag解析完布局"+page);
         setHasOptionsMenu(true);
         init();
         return view;
@@ -109,7 +109,7 @@ public class RecordFragment extends BaseFragment {
         }
         isService=getArguments().getBoolean("flag");
 
-        L.e("TAG","是否维修:"+isService);
+        L.e(TAG,"是否维修:"+isService);
 
 
 //        srl.setColorSchemeColors(
@@ -261,9 +261,9 @@ public class RecordFragment extends BaseFragment {
                     page++;
                     Download(ACTION_ADD);
 
-                    L.e("TAG","执行ADD");
+                    L.e(TAG,"执行ADD");
                 }else {
-                    L.e("TAG","没有更多数据");
+                    L.e(TAG,"没有更多数据");
                 }
             }
 
@@ -357,7 +357,7 @@ public class RecordFragment extends BaseFragment {
                         L.e("adapter被赋值");
                         CheckAdapter = (CheckAdapter) adapter;
                         ArrayList<Check> checkLists = ConvertUtils.array2List(result);
-                        L.e("TAG", "down size:" + checkLists.size());
+                        L.e(TAG, "down size:" + checkLists.size());
 
                         if (Action == ACTION_ADD) {
                             checkList.addAll(checkLists);
@@ -412,7 +412,7 @@ public class RecordFragment extends BaseFragment {
                         pd.dismiss();
                         ServiceAdapter = (ServiceAdapter) adapter;
                         ArrayList<Service> services = ConvertUtils.array2List(result);
-                        L.e("TAG", "down size:" + services.size());
+                        L.e(TAG, "down size:" + services.size());
                         if (Action == ACTION_ADD) {
                             wxList.addAll(services);
 

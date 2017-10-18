@@ -48,7 +48,7 @@ public class CountFragment extends BaseFragment {
         ButterKnife.bind(this, view);
         user = MyMemory.getInstance().getUser();
         setUpViewPager();
-        L.e("cao", "count on create");
+        L.e(TAG, "count on create");
         return view;
     }
 

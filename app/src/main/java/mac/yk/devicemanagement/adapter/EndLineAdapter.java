@@ -17,7 +17,6 @@ import butterknife.ButterKnife;
 import mac.yk.devicemanagement.R;
 import mac.yk.devicemanagement.bean.EndLine;
 import mac.yk.devicemanagement.util.ConvertUtils;
-import mac.yk.devicemanagement.util.L;
 
 /**
  * Created by mac-yk on 2017/7/18.
@@ -46,7 +45,6 @@ public class EndLineAdapter extends RecyclerView.Adapter<EndLineAdapter.LineHold
 
         EndLine line = lines.get(position);
         if (checkStatus(line) == false) {
-            L.e("cao", "red");
             holder.ll.setBackgroundColor(context.getResources().getColor(R.color.red));
         }
 
@@ -55,7 +53,6 @@ public class EndLineAdapter extends RecyclerView.Adapter<EndLineAdapter.LineHold
         holder.sensor2.setText(convert(line.getS2()));
         holder.battery.setText(String.valueOf(line.getBattery()));
         String s=ConvertUtils.Date2String(new Date(line.getTime()));
-        L.e("haonanshou",s);
         holder.time.setText(s);
         holder.radio.setText(convert(line.getRadio_station()));
         holder.temperature.setText(line.getTemperature() + "");
@@ -63,7 +60,6 @@ public class EndLineAdapter extends RecyclerView.Adapter<EndLineAdapter.LineHold
 
     private boolean checkStatus(EndLine line) {
         if (line.getBattery() == 0 || line.getS1() == 0 || line.getRadio_station() == 0 || line.getS2() == 0||line.getBattery()<12.5) {
-            L.e("cao", "false");
             return false;
         } else {
             return true;

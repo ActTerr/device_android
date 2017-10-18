@@ -68,7 +68,7 @@ public class NoticeDetailActivity extends BaseActivity implements java.util.Obse
     public static int close = 0;
     @BindView(R.id.item_attachment)
     TextView itemAttachment;
-    String TAG="NoticeDetailActivity";
+    String TAG=getClass().getName();
     AttachmentFragment attachmentFragment;
     DownPresenter presenter;
     long nid;

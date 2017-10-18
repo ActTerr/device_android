@@ -206,7 +206,7 @@ public class DeviceDetailActivity extends BaseActivity {
                     public void onError(Throwable e) {
                         progressDialog.dismiss();
                         if (ExceptionFilter.filter(context, e)) {
-                            L.e("main", "gotoSave");
+                            L.e(TAG, "gotoSave");
                         }
                     }
 
@@ -215,7 +215,7 @@ public class DeviceDetailActivity extends BaseActivity {
                         progressDialog.dismiss();
                         data = devices;
                         lllView.initCount(data[2]);
-                        L.e("caonima", "devName:" + data[2]);
+                        L.e(TAG, "devName:" + data[2]);
 
                         MyMemory.getInstance().setData(devices);
                         initView();

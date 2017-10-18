@@ -54,7 +54,7 @@ public class ScrapCountFragment extends BaseFragment {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.frag_count, container, false);
         ButterKnife.bind(this, view);
-        L.e("cao","scrap on create");
+        L.e(TAG,"scrap on create");
         addFrom.setVisibility(View.GONE);
         dialog= CustomDialog.create(getContext(),"加载中...",false,null);
         initView();

@@ -63,7 +63,7 @@ public class unCaught implements IunCaught {
 
     @Override
     public boolean postServer(final Context context, File file) {
-        L.e("main","postserver");
+        L.e(TAG,"postserver");
         RequestBody requestBody = RequestBody.create(MediaType.parse("txt/*"), file);
         ApiWrapper<ServerAPI> wrapper=new ApiWrapper<>();
         wrapper.targetClass(ServerAPI.class).getAPI()

@@ -10,7 +10,6 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.OutputStream;
 import java.io.RandomAccessFile;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -59,9 +58,9 @@ public class FileTask implements FileTaskListener {
     int notificationId ;
     ServerAPI serverAPI;
     public FileTask(FileEntry fileEntry, dbFile dbfile, IServiceListener listener, NotificationManager manager) {
-        L.e("caonima","on create "+fileEntry.getFileName());
+        L.e(TAG,"on create "+fileEntry.getFileName());
         entry = fileEntry;
-        L.e("caonima","on create2 "+entry.getFileName());
+        L.e(TAG,"on create2 "+entry.getFileName());
         this.dbfile = dbfile;
         this.listener = listener;
         notificationId= (int) (System.currentTimeMillis()-entry.getAid());
@@ -76,7 +75,7 @@ public class FileTask implements FileTaskListener {
         public void handleMessage(Message msg) {
             super.handleMessage(msg);
                 updateNotification();
-                L.e("caonima","更新item");
+                L.e(TAG,"更新item");
                 listener.onUpdateItem(entry);
 
         }
@@ -169,7 +168,7 @@ public class FileTask implements FileTaskListener {
                     start = false;
                     entry.setToolSize(totalLen);
                     entry.setDownloadStatus(I.DOWNLOAD_STATUS.DOWNLOADING);
-                    L.e("caonima","设置成为下载状态");
+                    L.e(TAG,"设置成为下载状态");
                 } else {
                     entry.setCompletedSize(hasWrittenLen);
 
@@ -204,14 +203,15 @@ public class FileTask implements FileTaskListener {
 
 
     }
-
+    boolean isPause=false;
     private boolean writeResponseBodyToDisk(ResponseBody body, String name) {
         try {
             // todo change the file location/name according to your needs
             file = new File(Environment.getExternalStorageDirectory().getAbsolutePath() + "/Attachment/" + name);
 
+            RandomAccessFile raf=null;
             InputStream inputStream = null;
-            OutputStream outputStream = null;
+//            OutputStream outputStream = null;
 
             try {
                 byte[] fileReader = new byte[8192];
@@ -220,20 +220,20 @@ public class FileTask implements FileTaskListener {
 //                long fileSizeDownloaded = 0;
 
                 inputStream = body.byteStream();
-                outputStream = new FileOutputStream(file);
+                raf=new RandomAccessFile(file,"rwd");
                 while (downFlag) {
                     int read = inputStream.read(fileReader);
 
                     if (read == -1) {
                         break;
                     }
-
-                    outputStream.write(fileReader, 0, read);
-
+                    raf.write(fileReader,0,read);
+                    if(isPause){
+                        return true;
+                    }
 //                        fileSizeDownloaded += read;
 
                 }
-                outputStream.flush();
                 onCompletedDownload();
 
                 return true;
@@ -244,8 +244,8 @@ public class FileTask implements FileTaskListener {
                     inputStream.close();
                 }
 
-                if (outputStream != null) {
-                    outputStream.close();
+                if (raf!= null) {
+                    raf.close();
                 }
             }
         } catch (IOException e) {
@@ -312,7 +312,7 @@ public class FileTask implements FileTaskListener {
             entry.setDownloadStatus(I.DOWNLOAD_STATUS.COMPLETED);
             listener.onUpdateItem(entry);
             listener.cancelNotification(notificationId,true,entry);
-            L.e("caonima",entry.getFileName()+"下载成功");
+            L.e(TAG,entry.getFileName()+"下载成功");
         }
     }
 
@@ -322,6 +322,7 @@ public class FileTask implements FileTaskListener {
     public boolean onPauseUpload() {
 //        fileRequestBody.pauseWrite();
         L.e(TAG, "已暂停，当前上传：" + finished);
+        isPause=true;
         entry.setCompletedSize(finished);
         entry.setDownloadStatus(I.DOWNLOAD_STATUS.PAUSE);
         if (dbfile.updateFileStatus(entry.getFileName(), finished, I.DOWNLOAD_STATUS.PAUSE)) {
@@ -335,7 +336,7 @@ public class FileTask implements FileTaskListener {
     @Override
     public boolean onPauseDownload() {
         downFlag = false;
-        L.e(TAG, "已暂停，当前上传：" + finished);
+        L.e(TAG, "已暂停，当前下载：" + finished);
         entry.setCompletedSize(finished);
         entry.setDownloadStatus(I.DOWNLOAD_STATUS.PAUSE);
         if (dbfile.updateFileStatus(entry.getFileName(), finished, I.DOWNLOAD_STATUS.PAUSE)) {
@@ -408,7 +409,7 @@ public class FileTask implements FileTaskListener {
                 if (divisionFile.exists()) {
                     divisionFile.delete();
                 }
-               L.e("caonima",entry.getFileName()+"完成上传");
+               L.e(TAG,entry.getFileName()+"完成上传");
                 listener.onUpdateItem(entry);
             }
         }
@@ -492,8 +493,8 @@ public class FileTask implements FileTaskListener {
             if (start){
                 start=false;
                 entry.setDownloadStatus(I.DOWNLOAD_STATUS.DOWNLOADING);
-                L.e("caonima",entry.getFileName());
-                L.e("caonima","设置成为下载状态");
+                L.e(TAG,entry.getFileName());
+                L.e(TAG,"设置成为下载状态");
             }else {
 
                 finished = completed + hasWrittenLen;
@@ -501,7 +502,7 @@ public class FileTask implements FileTaskListener {
                 if (percent > 100) percent = 100;
                 if (percent < 0) percent = 0;
                 entry.setCompletedSize(finished);
-                L.e("caonima","完成:"+finished);
+                L.e(TAG,"完成:"+finished);
             }
             updateNotification();
             Message message=handler.obtainMessage();

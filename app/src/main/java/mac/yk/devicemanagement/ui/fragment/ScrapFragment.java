@@ -96,7 +96,7 @@ public class ScrapFragment extends BaseFragment {
 //        Observable.just(selected).subscribe(new Action1<Integer>() {
 //            @Override
 //            public void call(Integer integer) {
-//                L.e("main", "rx被调用");
+//                L.e(TAG, "rx被调用");
 //                if (integer != 0) {
 //                    Prompt.setVisibility(View.GONE);
 //                    downData();
@@ -168,7 +168,7 @@ public class ScrapFragment extends BaseFragment {
                     public void onNext(Scrap[] scraps) {
                         pd.dismiss();
                         ArrayList<Scrap> list = ConvertUtils.array2List(scraps);
-                        L.e("main", "list" + list.size());
+                        L.e(TAG, "list" + list.size());
                         SetSelectedList(list);
                         if (scraps.length < 10) {
                             isMore = false;
