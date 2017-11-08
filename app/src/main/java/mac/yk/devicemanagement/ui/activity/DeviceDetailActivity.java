@@ -66,7 +66,7 @@ public class DeviceDetailActivity extends BaseActivity {
     @BindView(R.id.rv)
     RecyclerView rv;
     String[] data;
-
+    String TAG=getClass().getName();
 
     DetailAdapter adapter;
 

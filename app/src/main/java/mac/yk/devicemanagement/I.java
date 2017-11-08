@@ -44,7 +44,7 @@ public interface I {
         String CONTROL="control";
         String SAVE="save";
         String LOGOUT="logOut";
-        String SERVER_ROOT="http://1749g135a0.iask.in:14536/deviceManagement/";
+        String SERVER_ROOT="http://192.168.0.15:8080/deviceManagement/";
         String CHECK="check";
         String REPAIR="repair";
         String LOGIN="login";

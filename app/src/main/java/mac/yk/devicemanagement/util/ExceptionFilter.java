@@ -13,6 +13,7 @@ import mac.yk.devicemanagement.net.APIException;
  */
 
 public class ExceptionFilter {
+    static String TAG="ExceptionFilter";
     public static boolean filter(Context context,Throwable e){
         boolean flag=false;
         if (e instanceof APIException) {

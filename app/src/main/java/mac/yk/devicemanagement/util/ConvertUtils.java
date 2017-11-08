@@ -14,6 +14,7 @@ import java.util.List;
 import mac.yk.devicemanagement.I;
 
 public class ConvertUtils {
+    static String TAG="ConvertUtils";
     public static <T> ArrayList<T> array2List(T[] array) {
         List<T> list = Arrays.asList(array);
         ArrayList<T> arrayList = new ArrayList<>(list);

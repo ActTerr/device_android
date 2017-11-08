@@ -50,6 +50,7 @@ public class LineDetailFragment extends BaseFragment {
     int range=10;
     int page;
     CustomDialog dialog;
+    String TAG=getClass().getName();
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {

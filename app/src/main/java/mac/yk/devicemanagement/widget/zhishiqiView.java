@@ -16,6 +16,7 @@ import mac.yk.devicemanagement.util.L;
  */
 
 public class zhishiqiView extends View {
+    String TAG=getClass().getName();
     Paint paint;
     int space;
     int count;

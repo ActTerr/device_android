@@ -42,6 +42,7 @@ public class EndLineFragment extends BaseFragment {
     RecyclerView rv;
     EndLineAdapter endLineAdapter;
     Context context;
+    String TAG=getClass().getName();
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {

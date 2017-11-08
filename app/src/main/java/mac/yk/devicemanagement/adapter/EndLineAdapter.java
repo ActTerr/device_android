@@ -59,7 +59,9 @@ public class EndLineAdapter extends RecyclerView.Adapter<EndLineAdapter.LineHold
     }
 
     private boolean checkStatus(EndLine line) {
-        if (line.getBattery() == 0 || line.getS1() == 0 || line.getRadio_station() == 0 || line.getS2() == 0||line.getBattery()<12.5) {
+        if (line.getS1() == 0 || line.getRadio_station() == 0 || line.getS2() == 0
+//                ||line.getBattery()<12.5
+                ) {
             return false;
         } else {
             return true;

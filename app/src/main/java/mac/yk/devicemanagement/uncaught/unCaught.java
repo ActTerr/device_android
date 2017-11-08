@@ -32,6 +32,7 @@ import rx.schedulers.Schedulers;
  */
 
 public class unCaught implements IunCaught {
+    String TAG=getClass().getName();
 
 //    static final String KEY_REQUEST = "request";
 //    static final String REQUEST_UPLOAD_CRASH = "upload_crash";
