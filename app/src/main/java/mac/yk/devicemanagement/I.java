@@ -44,7 +44,7 @@ public interface I {
         String CONTROL="control";
         String SAVE="save";
         String LOGOUT="logOut";
-        String SERVER_ROOT="http://192.168.0.15:8080/deviceManagement/";
+        String SERVER_ROOT="http://39.106.50.70:8080/lineServer/";
         String CHECK="check";
         String REPAIR="repair";
         String LOGIN="login";

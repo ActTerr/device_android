@@ -1,6 +1,5 @@
 package mac.yk.devicemanagement.down;
 
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -17,8 +16,6 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.PopupWindow;
-
-import com.ipaulpro.afilechooser.utils.FileUtils;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -106,9 +103,9 @@ public class AttachmentFragment extends BaseFragment implements DownContract.Vie
     public void onClick(View view) {
         switch (view.getId()) {
 
-            case R.id.iv_add:
-                selectFile(false);
-                break;
+//            case R.id.iv_add:
+//                selectFile(false);
+//                break;
             case R.id.btn_down:
                 for (FileEntry entry:downloads){
                     L.e(TAG,"选中："+entry.getFileName());
@@ -120,18 +117,18 @@ public class AttachmentFragment extends BaseFragment implements DownContract.Vie
         }
     }
 
-    private void selectFile(boolean update) {
-        Intent getContentIntent = FileUtils.createGetContentIntent();
-        Intent intent = Intent.createChooser(getContentIntent, "Select a file");
-        Activity activity = (Activity) context;
-        int requestCode;
-        if (!update){
-            requestCode=REQUEST_CHOOSER;
-        }else{
-            requestCode=11111;
-        }
-        activity.startActivityForResult(intent, requestCode);
-    }
+//    private void selectFile(boolean update) {
+//        Intent getContentIntent = FileUtils.createGetContentIntent();
+//        Intent intent = Intent.createChooser(getContentIntent, "Select a file");
+//        Activity activity = (Activity) context;
+//        int requestCode;
+//        if (!update){
+//            requestCode=REQUEST_CHOOSER;
+//        }else{
+//            requestCode=11111;
+//        }
+//        activity.startActivityForResult(intent, requestCode);
+//    }
 
 
     @Override
@@ -517,8 +514,8 @@ public class AttachmentFragment extends BaseFragment implements DownContract.Vie
                     case R.id.update_file:
                         popupWindow.dismiss();
                         presenter.setMemory(entry);
-                        L.e(TAG,"");
-                        selectFile(true);
+//                        L.e(TAG,"");
+//                        selectFile(true);
                         break;
 
                 }

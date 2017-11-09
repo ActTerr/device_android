@@ -8,9 +8,10 @@ public class EndLine {
     int s2;
     int radio_station;
     long time;
-    double battery;
+    float battery;
+    float power;
 
-    public EndLine(int station, int line_id, int s1, int s2, int radio_station,int temperature,	double battery,  long time
+    public EndLine(int station, int line_id, int s1, int s2, int radio_station,int temperature,	float battery,float power,  long time
     ) {
         super();
         this.station = station;
@@ -21,6 +22,7 @@ public class EndLine {
         this.radio_station = radio_station;
         this.time = time;
         this.battery = battery;
+        this.power=power;
     }
 
     public int getStation() {
@@ -67,16 +69,24 @@ public class EndLine {
     }
 
 
-    public double getBattery() {
+    public float getBattery() {
         return battery;
     }
 
-    public void setBattery(double battery) {
+    public void setBattery(float battery) {
         this.battery = battery;
     }
 
     public EndLine() {
         super();
+    }
+
+    public float getPower() {
+        return power;
+    }
+
+    public void setPower(float power) {
+        this.power = power;
     }
 
     @Override

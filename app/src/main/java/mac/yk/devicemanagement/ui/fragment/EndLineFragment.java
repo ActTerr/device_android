@@ -19,7 +19,6 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import mac.yk.devicemanagement.R;
 import mac.yk.devicemanagement.adapter.EndLineAdapter;
-import mac.yk.devicemanagement.application.MyMemory;
 import mac.yk.devicemanagement.bean.EndLine;
 import mac.yk.devicemanagement.listener.ItemTouchHelperGestureListener;
 import mac.yk.devicemanagement.listener.OnRecyclerItemClickListener;
@@ -49,7 +48,8 @@ public class EndLineFragment extends BaseFragment {
         View view = inflater.inflate(R.layout.activity_list, container, false);
         ButterKnife.bind(this, view);
         context=getContext();
-        initData(MyMemory.getInstance().getUser().getUnit());
+//        initData(MyMemory.getInstance().getUser().getUnit());
+        initData(1);
         setHasOptionsMenu(true);
         return view;
     }

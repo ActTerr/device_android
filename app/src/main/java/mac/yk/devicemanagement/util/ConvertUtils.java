@@ -28,7 +28,6 @@ public class ConvertUtils {
 
     public static int dp2px(Context context, float dpValue) {
         float scale = context.getResources().getDisplayMetrics().density;
-        L.e(TAG, "scale:" + scale);
         return (int) (dpValue * scale + 0.5f);
     }
 

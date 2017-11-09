@@ -11,7 +11,6 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import mac.yk.devicemanagement.I;
 import mac.yk.devicemanagement.R;
-import mac.yk.devicemanagement.util.MFGT;
 import mac.yk.devicemanagement.util.SpUtil;
 
 public class GestureActivity extends BaseActivity {
@@ -60,7 +59,7 @@ public class GestureActivity extends BaseActivity {
                 SpUtil.setGestureType(this,I.GESTURE.AUTO);
                 break;
             case R.id.reset:
-                MFGT.gotoSetGestureActivity(this);
+//                MFGT.gotoSetGestureActivity(this);
                 break;
         }
     }
@@ -77,9 +76,9 @@ public class GestureActivity extends BaseActivity {
         open.setVisibility(View.INVISIBLE);
         close.setVisibility(View.VISIBLE);
         btnBack.setBackground(getResources().getDrawable(R.drawable.back));
-       String passwd= com.wujay.fund.util.SpUtil.getGesPasswd(this);
-        if (passwd.equals("")){
-            MFGT.gotoSetGestureActivity(this);
-        }
+//       String passwd= com.wujay.fund.util.SpUtil.getGesPasswd(this);
+//        if (passwd.equals("")){
+//            MFGT.gotoSetGestureActivity(this);
+//        }
     }
 }

@@ -4,7 +4,6 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
-import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
@@ -16,9 +15,6 @@ import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.ipaulpro.afilechooser.utils.FileUtils;
-
-import java.io.File;
 import java.util.Observable;
 
 import butterknife.BindView;
@@ -265,24 +261,24 @@ public class NoticeDetailActivity extends BaseActivity implements java.util.Obse
                 break;
         }
     }
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-                if (resultCode == RESULT_OK) {
-                    final Uri uri = data.getData();
-                    // Get the File path from the Uri
-                    String path = FileUtils.getPath(this, uri);
-                    // Alternatively, use FileUtils.getFile(Context, Uri)
-                    if (path != null && FileUtils.isLocal(path)) {
-                        File file = new File(path);
-                        if(requestCode!=REQUEST_CHOOSER){
-                            presenter.deleteAttachment(null,true,file);
-                        }else {
-                            presenter.filterFile(file);
-                        }
-                    }
-                }
-
-        }
+//    @Override
+//    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+//                if (resultCode == RESULT_OK) {
+//                    final Uri uri = data.getData();
+//                    // Get the File path from the Uri
+//                    String path = FileUtils.getPath(this, uri);
+//                    // Alternatively, use FileUtils.getFile(Context, Uri)
+//                    if (path != null && FileUtils.isLocal(path)) {
+//                        File file = new File(path);
+//                        if(requestCode!=REQUEST_CHOOSER){
+//                            presenter.deleteAttachment(null,true,file);
+//                        }else {
+//                            presenter.filterFile(file);
+//                        }
+//                    }
+//                }
+//
+//        }
 
     @Override
     public void onBackPressed() {

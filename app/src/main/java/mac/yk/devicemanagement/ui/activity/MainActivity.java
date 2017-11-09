@@ -22,8 +22,6 @@ import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.xys.libzxing.zxing.activity.CaptureActivity;
-
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
@@ -39,9 +37,6 @@ import butterknife.OnClick;
 import mac.yk.customdialog.CustomDialog;
 import mac.yk.devicemanagement.I;
 import mac.yk.devicemanagement.R;
-import mac.yk.devicemanagement.application.MyMemory;
-import mac.yk.devicemanagement.bean.User;
-import mac.yk.devicemanagement.db.dbUser;
 import mac.yk.devicemanagement.net.ApiWrapper;
 import mac.yk.devicemanagement.net.ServerAPI;
 import mac.yk.devicemanagement.service.check.MonitorService;
@@ -96,16 +91,21 @@ public class MainActivity extends BaseActivity {
         setContentView(R.layout.activity_currency);
         L.e(TAG,"activit oncreate");
         ButterKnife.bind(this);
-        checkUser();
+//        checkUser();
         EventBus.getDefault().register(this);
         checkNet();
         init();
         initActionbar();
         setNavView();
-        showWarning();
-        isFromNotification();
-        startCheck();
-        initFragment();
+//        showWarning();
+//        isFromNotification();
+//        startCheck();
+//        initFragment();
+        selectUnit();
+    }
+
+    private void selectUnit() {
+//        Dialog dialog=new Dialog(Context,R.layout.)
     }
 
     private void initFragment() {
@@ -201,26 +201,27 @@ public class MainActivity extends BaseActivity {
      * 重新加载的问题
      */
     private void init() {
-        if (fragments == null) {
-            fragments = new ArrayList<>();
-        } else {
-            for (Fragment fragment : fragments) {
-                if (fragment instanceof CountFragment) {
-                    countFragment = (mac.yk.devicemanagement.ui.fragment.CountFragment) fragment;
-                } else if (fragment instanceof ScrapCountFragment) {
-                    scrapCountFragment = (mac.yk.devicemanagement.ui.fragment.ScrapCountFragment) fragment;
-                } else if (fragment instanceof EndLineFragment)
-                {   endLineFragment= (EndLineFragment) fragment;
-                } else {
-                    noticeFragment = (mac.yk.devicemanagement.ui.fragment.NoticeFragment) fragment;
-                }
-                ActivityUtils.addFragmentToActivity(getSupportFragmentManager(), fragment, R.id.frame);
-            }
-        }
+//        if (fragments == null) {
+//            fragments = new ArrayList<>();
+//        } else {
+//            for (Fragment fragment : fragments) {
+//                if (fragment instanceof CountFragment) {
+//                    countFragment = (mac.yk.devicemanagement.ui.fragment.CountFragment) fragment;
+//                } else if (fragment instanceof ScrapCountFragment) {
+//                    scrapCountFragment = (mac.yk.devicemanagement.ui.fragment.ScrapCountFragment) fragment;
+//                } else if (fragment instanceof EndLineFragment)
+//                {   endLineFragment= (EndLineFragment) fragment;
+//                } else {
+//                    noticeFragment = (mac.yk.devicemanagement.ui.fragment.NoticeFragment) fragment;
+//                }
+//                ActivityUtils.addFragmentToActivity(getSupportFragmentManager(), fragment, R.id.frame);
+//            }
+//    }
+
 
         context = this;
-        User user = dbUser.getInstance(context).select2(SpUtil.getLoginUser(context));
-        MyMemory.getInstance().setUser(user);
+//        User user = dbUser.getInstance(context).select2(SpUtil.getLoginUser(context));
+//        MyMemory.getInstance().setUser(user);
         builder = new AlertDialog.Builder(this);
         progressDialog = CustomDialog.create(context, "加载中...", false, null);
     }
@@ -233,7 +234,7 @@ public class MainActivity extends BaseActivity {
             ImageView imageView = (ImageView) navView.getHeaderView(0).findViewById(R.id.avatar);
             TextView textView = (TextView) navView.getHeaderView(0).findViewById(R.id.nav_name);
 
-            textView.setText(MyMemory.getInstance().getUser().getName().trim());
+//            textView.setText(MyMemory.getInstance().getUser().getName().trim());
             imageView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -264,7 +265,7 @@ public class MainActivity extends BaseActivity {
     }
 
     public void scan(int id) {
-        startActivityForResult(new Intent(context, CaptureActivity.class), id);
+//        startActivityForResult(new Intent(context, CaptureActivity.class), id);
     }
 
     @Override
@@ -294,82 +295,84 @@ public class MainActivity extends BaseActivity {
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
                 FragmentManager manager = getSupportFragmentManager();
                 switch (item.getItemId()) {
-                    case R.id.warning:
-                        View view = View.inflate(context, R.layout.dialog_warning, null);
-                        getWarning(view);
-                        L.e(TAG, "执行warning");
-
-                        break;
-                    case R.id.record:
-                        if (fragments.contains(countFragment)) {
-                            L.e(TAG, "showid1:" + showId);
-                            ActivityUtils.changeFragment(manager, countFragment, fragments.get(showId));
-                            for (int i = 0; i < fragments.size(); i++) {
-                                if (fragments.get(i) == countFragment) {
-                                    showId = i;
-                                    L.e(TAG, "showid2:" + showId);
-                                }
-                            }
-                        } else {
-                            L.e(TAG,"new count");
-                            countFragment = new CountFragment();
-                            showId = fragments.size();
-                            fragments.add(fragments.size(), countFragment);
-                            ActivityUtils.addFragmentToActivity(manager, countFragment, R.id.frame);
-                        }
-                        toolBar.setTitle("设备统计");
-
-                        break;
-                    case R.id.scrap_record:
-                        if (fragments.contains(scrapCountFragment)) {
-                            L.e(TAG, "showid1:" + showId);
-                            ActivityUtils.changeFragment(manager, scrapCountFragment, fragments.get(showId));
-                            for (int i = 0; i < fragments.size(); i++) {
-                                if (fragments.get(i) == scrapCountFragment) {
-                                    showId = i;
-                                    L.e(TAG, "showid2:" + showId);
-                                }
-                            }
-                        } else {
-                            scrapCountFragment = new ScrapCountFragment();
-                            showId = fragments.size();
-                            fragments.add(fragments.size(), scrapCountFragment);
-                            ActivityUtils.addFragmentToActivity(manager, scrapCountFragment, R.id.frame);
-                        }
-                        toolBar.setTitle("报废统计");
-                        break;
-                    case R.id.notice:
-                        if (fragments.contains(noticeFragment)) {
-                            ActivityUtils.changeFragment(manager, noticeFragment, fragments.get(showId));
-                            for (int i = 0; i < fragments.size(); i++) {
-                                if (fragments.get(i) == noticeFragment) {
-                                    showId = i;
-                                }
-                            }
-                        } else {
-                            noticeFragment = new NoticeFragment();
-                            showId = fragments.size();
-                            fragments.add(fragments.size(), noticeFragment);
-                            ActivityUtils.addFragmentToActivity(manager, noticeFragment, R.id.frame);
-                        }
-                        toolBar.setTitle("公告");
-                        break;
+//                    case R.id.warning:
+//                        View view = View.inflate(context, R.layout.dialog_warning, null);
+//                        getWarning(view);
+//                        L.e(TAG, "执行warning");
+//
+//                        break;
+//                    case R.id.record:
+//                        if (fragments.contains(countFragment)) {
+//                            L.e(TAG, "showid1:" + showId);
+//                            ActivityUtils.changeFragment(manager, countFragment, fragments.get(showId));
+//                            for (int i = 0; i < fragments.size(); i++) {
+//                                if (fragments.get(i) == countFragment) {
+//                                    showId = i;
+//                                    L.e(TAG, "showid2:" + showId);
+//                                }
+//                            }
+//                        } else {
+//                            L.e(TAG,"new count");
+//                            countFragment = new CountFragment();
+//                            showId = fragments.size();
+//                            fragments.add(fragments.size(), countFragment);
+//                            ActivityUtils.addFragmentToActivity(manager, countFragment, R.id.frame);
+//                        }
+//                        toolBar.setTitle("设备统计");
+//
+//                        break;
+//                    case R.id.scrap_record:
+//                        if (fragments.contains(scrapCountFragment)) {
+//                            L.e(TAG, "showid1:" + showId);
+//                            ActivityUtils.changeFragment(manager, scrapCountFragment, fragments.get(showId));
+//                            for (int i = 0; i < fragments.size(); i++) {
+//                                if (fragments.get(i) == scrapCountFragment) {
+//                                    showId = i;
+//                                    L.e(TAG, "showid2:" + showId);
+//                                }
+//                            }
+//                        } else {
+//                            scrapCountFragment = new ScrapCountFragment();
+//                            showId = fragments.size();
+//                            fragments.add(fragments.size(), scrapCountFragment);
+//                            ActivityUtils.addFragmentToActivity(manager, scrapCountFragment, R.id.frame);
+//                        }
+//                        toolBar.setTitle("报废统计");
+//                        break;
+//                    case R.id.notice:
+//                        if (fragments.contains(noticeFragment)) {
+//                            ActivityUtils.changeFragment(manager, noticeFragment, fragments.get(showId));
+//                            for (int i = 0; i < fragments.size(); i++) {
+//                                if (fragments.get(i) == noticeFragment) {
+//                                    showId = i;
+//                                }
+//                            }
+//                        } else {
+//                            noticeFragment = new NoticeFragment();
+//                            showId = fragments.size();
+//                            fragments.add(fragments.size(), noticeFragment);
+//                            ActivityUtils.addFragmentToActivity(manager, noticeFragment, R.id.frame);
+//                        }
+//                        toolBar.setTitle("公告");
+//                        break;
                     case R.id.end_line:
-                        if (fragments.contains(endLineFragment)) {
-                            L.e(TAG, "showid1:" + showId);
-                            ActivityUtils.changeFragment(manager, endLineFragment, fragments.get(showId));
-                            for (int i = 0; i < fragments.size(); i++) {
-                                if (fragments.get(i) == endLineFragment) {
-                                    showId = i;
-                                    L.e(TAG, "showid2:" + showId);
-                                }
-                            }
-                        } else {
-                            endLineFragment = new EndLineFragment();
-                            showId = fragments.size();
-                            fragments.add(fragments.size(), endLineFragment);
-                            ActivityUtils.addFragmentToActivity(manager, endLineFragment, R.id.frame);
-                        }
+//                        if (fragments.contains(endLineFragment)) {
+//                            L.e(TAG, "showid1:" + showId);
+//                            ActivityUtils.changeFragment(manager, endLineFragment, fragments.get(showId));
+//                            for (int i = 0; i < fragments.size(); i++) {
+//                                if (fragments.get(i) == endLineFragment) {
+//                                    showId = i;
+//                                    L.e(TAG, "showid2:" + showId);
+//                                }
+//                            }
+//                        } else {
+//                            endLineFragment = new EndLineFragment();
+//                            showId = fragments.size();
+//                            fragments.add(fragments.size(), endLineFragment);
+//                            ActivityUtils.addFragmentToActivity(manager, endLineFragment, R.id.frame);
+//                        }
+                        endLineFragment=new EndLineFragment();
+                        ActivityUtils.addFragmentToActivity(manager, endLineFragment, R.id.frame);
                         toolBar.setTitle("尽头线状态");
                         break;
                 }
@@ -393,9 +396,9 @@ public class MainActivity extends BaseActivity {
 //            }
 //        } else {
             lineDetailFragment = new LineDetailFragment();
-            showId = fragments.size();
-
-            fragments.add(fragments.size(), lineDetailFragment);
+//            showId = fragments.size();
+//
+//            fragments.add(fragments.size(), lineDetailFragment);
             Bundle bundle = new Bundle();
             bundle.putInt("number", number);
             lineDetailFragment.setArguments(bundle);
@@ -511,8 +514,9 @@ public class MainActivity extends BaseActivity {
     public boolean onKeyUp(int keyCode, KeyEvent event) {
         switch (keyCode) {
             case KeyEvent.KEYCODE_BACK:
-                if (fragments.get(showId).equals(lineDetailFragment)) {
+                if (lineDetailFragment!=null) {
                     backToEndLine();
+                    lineDetailFragment=null;
                     return true;
                 } else {
                     long SecondTime = System.currentTimeMillis();
@@ -530,11 +534,11 @@ public class MainActivity extends BaseActivity {
     }
 
     private void backToEndLine() {
-        for (int i = 0; i < fragments.size(); i++) {
-            if (fragments.get(i) == endLineFragment) {
-                showId = i;
-            }
-        }
+//        for (int i = 0; i < fragments.size(); i++) {
+//            if (fragments.get(i) == endLineFragment) {
+//                showId = i;
+//            }
+//        }
         ActivityUtils.changeFragment(getSupportFragmentManager(), endLineFragment, lineDetailFragment);
     }
 

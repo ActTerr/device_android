@@ -4,9 +4,6 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 
-import com.wujay.fund.GestureEditActivity;
-import com.wujay.fund.GestureVerifyActivity;
-
 import mac.yk.devicemanagement.R;
 import mac.yk.devicemanagement.bean.Notice;
 import mac.yk.devicemanagement.down.NoticeDetailActivity;
@@ -71,14 +68,14 @@ public class MFGT {
         Intent intent=new Intent(context, GestureActivity.class);
         startActivity(context,intent);
     }
-    public static void gotoSetGestureActivity(Context context){
-        Intent intent=new Intent(context,GestureEditActivity.class);
-        startActivity(context,intent);
-    }
-    public static void gotoValidateGestureActivity(Activity context){
-        Intent intent=new Intent(context,GestureVerifyActivity.class);
-        context.startActivityForResult(intent,0);
-    }
+//    public static void gotoSetGestureActivity(Context context){
+//        Intent intent=new Intent(context,GestureEditActivity.class);
+//        startActivity(context,intent);
+//    }
+//    public static void gotoValidateGestureActivity(Activity context){
+//        Intent intent=new Intent(context,GestureVerifyActivity.class);
+//        context.startActivityForResult(intent,0);
+//    }
     public static void gotoMainActivity(Context context){
         Intent intent=new Intent(context, MainActivity.class);
 

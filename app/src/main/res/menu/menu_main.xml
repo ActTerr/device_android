@@ -1,21 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <item android:id="@+id/record"
-        android:icon="@drawable/device"
-        android:title="设备统计"/>
-    <item android:id="@+id/scrap_record"
-        android:icon="@drawable/scrap"
-        android:title="报废统计"/>
+    <!--<item android:id="@+id/record"-->
+        <!--android:icon="@drawable/device"-->
+        <!--android:title="设备统计"/>-->
+    <!--<item android:id="@+id/scrap_record"-->
+        <!--android:icon="@drawable/scrap"-->
+        <!--android:title="报废统计"/>-->
     <item
         android:title="尽头线信息"
         android:id="@+id/end_line"
         android:icon="@drawable/end_line"/>
-    <item android:id="@+id/notice"
-        android:icon="@drawable/notice"
-        android:title="公告信息"/>
-    <item android:id="@+id/warning"
-        android:icon="@drawable/warning"
-        android:title="预警信息"/>
+    <!--<item android:id="@+id/notice"-->
+        <!--android:icon="@drawable/notice"-->
+        <!--android:title="公告信息"/>-->
+    <!--<item android:id="@+id/warning"-->
+        <!--android:icon="@drawable/warning"-->
+        <!--android:title="预警信息"/>-->
     
 </menu>
