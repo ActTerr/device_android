@@ -23,6 +23,7 @@ import butterknife.Unbinder;
 import mac.yk.customdialog.CustomDialog;
 import mac.yk.devicemanagement.R;
 import mac.yk.devicemanagement.adapter.LineDetailAdapter;
+import mac.yk.devicemanagement.application.MyMemory;
 import mac.yk.devicemanagement.bean.EndLine;
 import mac.yk.devicemanagement.net.ApiWrapper;
 import mac.yk.devicemanagement.net.ServerAPI;
@@ -102,7 +103,7 @@ public class LineDetailFragment extends BaseFragment {
 
 
         ApiWrapper<ServerAPI> wrapper = new ApiWrapper<>();
-        wrapper.targetClass(ServerAPI.class).getAPI().getLineDetail(1,
+        wrapper.targetClass(ServerAPI.class).getAPI().getLineDetail(MyMemory.getInstance().getUnit(),
                 number, range, page, 18)
                 .compose(wrapper.<ArrayList<EndLine>>applySchedulers())
                 .timeout(10, TimeUnit.SECONDS)

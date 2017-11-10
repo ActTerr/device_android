@@ -59,4 +59,5 @@
     <color name="greybg">#EEEEEE</color>
     <color name="fontgrey">#999999</color>
     <color name="main_orange">#FF6C2C</color>
+    <color name="gray_white">#CFCFCF</color>
 </resources>

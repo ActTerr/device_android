@@ -1,6 +1,7 @@
 package mac.yk.devicemanagement.ui.activity;
 
 import android.app.AlertDialog;
+import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -20,6 +21,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.CheckBox;
 import android.widget.ImageView;
+import android.widget.ListView;
 import android.widget.TextView;
 
 import org.greenrobot.eventbus.EventBus;
@@ -37,13 +39,14 @@ import butterknife.OnClick;
 import mac.yk.customdialog.CustomDialog;
 import mac.yk.devicemanagement.I;
 import mac.yk.devicemanagement.R;
+import mac.yk.devicemanagement.adapter.UnitAdapter;
+import mac.yk.devicemanagement.application.MyMemory;
 import mac.yk.devicemanagement.net.ApiWrapper;
 import mac.yk.devicemanagement.net.ServerAPI;
 import mac.yk.devicemanagement.service.check.MonitorService;
 import mac.yk.devicemanagement.ui.fragment.CountFragment;
 import mac.yk.devicemanagement.ui.fragment.EndLineFragment;
 import mac.yk.devicemanagement.ui.fragment.LineDetailFragment;
-import mac.yk.devicemanagement.ui.fragment.MainFragment;
 import mac.yk.devicemanagement.ui.fragment.NoticeFragment;
 import mac.yk.devicemanagement.ui.fragment.ScrapCountFragment;
 import mac.yk.devicemanagement.util.ActivityUtils;
@@ -70,7 +73,8 @@ public class MainActivity extends BaseActivity {
     @BindView(R.id.drawLayout)
     DrawerLayout drawLayout;
 
-    DialogHolder dialogHolder;
+    warningHolder warningHolder;
+    dialogHolder dialogHolder;
     Context context;
     @BindView(R.id.netView)
     TextView mTv;
@@ -85,11 +89,14 @@ public class MainActivity extends BaseActivity {
     int showId;
     String TAG = "main";
 
+    int unit;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_currency);
-        L.e(TAG,"activit oncreate");
+        L.e(TAG, "activit oncreate");
         ButterKnife.bind(this);
 //        checkUser();
         EventBus.getDefault().register(this);
@@ -100,20 +107,30 @@ public class MainActivity extends BaseActivity {
 //        showWarning();
 //        isFromNotification();
 //        startCheck();
-//        initFragment();
-        selectUnit();
+        checkUnit();
+
     }
 
-    private void selectUnit() {
-//        Dialog dialog=new Dialog(Context,R.layout.)
+    private void checkUnit() {
+        unit = SpUtil.getUnit(context);
+        MyMemory.getInstance().setUnit(unit);
+        if (unit == 0) {
+            showSelectDialog();
+        }else{
+            initFragment();
+        }
     }
+
 
     private void initFragment() {
-        MainFragment mainFragment = new MainFragment();
-        ActivityUtils.addFragmentToActivity(getSupportFragmentManager(), mainFragment, R.id.frame);
-        if (showId != 0) {
-            ActivityUtils.changeFragment(getSupportFragmentManager(), mainFragment, fragments.get(showId));
-        }
+//        MainFragment mainFragment = new MainFragment();
+//        ActivityUtils.addFragmentToActivity(getSupportFragmentManager(), mainFragment, R.id.frame);
+//        if (showId != 0) {
+//            ActivityUtils.changeFragment(getSupportFragmentManager(), mainFragment, fragments.get(showId));
+//        }
+        endLineFragment = new EndLineFragment();
+        ActivityUtils.addFragmentToActivity(getSupportFragmentManager(), endLineFragment, R.id.frame);
+        toolBar.setTitle("尽头线状态");
     }
 
     private void showWarning() {
@@ -191,6 +208,7 @@ public class MainActivity extends BaseActivity {
         ActionBar ab = getSupportActionBar();
         ab.setHomeAsUpIndicator(R.drawable.ic_menu);
         ab.setDisplayHomeAsUpEnabled(true);
+        toolBar.setTitle("尽头线信息");
     }
 
     //    CountFragment CountFragment;
@@ -238,7 +256,8 @@ public class MainActivity extends BaseActivity {
             imageView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    MFGT.gotoSetActivity(MainActivity.this);
+//                    MFGT.gotoSetActivity(MainActivity.this);
+                    showSelectDialog();
                 }
             });
         }
@@ -371,9 +390,10 @@ public class MainActivity extends BaseActivity {
 //                            fragments.add(fragments.size(), endLineFragment);
 //                            ActivityUtils.addFragmentToActivity(manager, endLineFragment, R.id.frame);
 //                        }
-                        endLineFragment=new EndLineFragment();
-                        ActivityUtils.addFragmentToActivity(manager, endLineFragment, R.id.frame);
-                        toolBar.setTitle("尽头线状态");
+//                        endLineFragment = new EndLineFragment();
+//                        ActivityUtils.addFragmentToActivity(manager, endLineFragment, R.id.frame);
+//                        toolBar.setTitle("尽头线状态");
+                        showSelectDialog();
                         break;
                 }
                 item.setChecked(true);
@@ -395,16 +415,14 @@ public class MainActivity extends BaseActivity {
 //                }
 //            }
 //        } else {
-            lineDetailFragment = new LineDetailFragment();
+        lineDetailFragment = new LineDetailFragment();
 //            showId = fragments.size();
 //
 //            fragments.add(fragments.size(), lineDetailFragment);
-            Bundle bundle = new Bundle();
-            bundle.putInt("number", number);
-            lineDetailFragment.setArguments(bundle);
-            ActivityUtils.addFragmentToActivity(manager, lineDetailFragment, R.id.frame);
-
-        toolBar.setTitle("终点线状态");
+        Bundle bundle = new Bundle();
+        bundle.putInt("number", number);
+        lineDetailFragment.setArguments(bundle);
+        ActivityUtils.addFragmentToActivity(manager, lineDetailFragment, R.id.frame);
     }
 
 
@@ -457,14 +475,14 @@ public class MainActivity extends BaseActivity {
         @Override
         public void onNext(String s) {
             progressDialog.dismiss();
-            dialogHolder.warning.setText(s);
+            warningHolder.warning.setText(s);
             Adialog.show();
         }
     };
 
 
     private void getWarning(View view) {
-        dialogHolder = new DialogHolder(view);
+        warningHolder = new warningHolder(view);
         Adialog = builder.setTitle("预警信息")
                 .setView(view)
                 .setPositiveButton("已读以上信息", new DialogInterface.OnClickListener() {
@@ -485,13 +503,16 @@ public class MainActivity extends BaseActivity {
                 .subscribe(observerWarning);
     }
 
-    class DialogHolder {
+
+
+
+    public class warningHolder {
         @BindView(R.id.warning)
         TextView warning;
         @BindView(R.id.no_prompt)
         CheckBox noPrompt;
 
-        public DialogHolder(View view) {
+        public warningHolder(View view) {
             ButterKnife.bind(this, view);
         }
 
@@ -514,9 +535,9 @@ public class MainActivity extends BaseActivity {
     public boolean onKeyUp(int keyCode, KeyEvent event) {
         switch (keyCode) {
             case KeyEvent.KEYCODE_BACK:
-                if (lineDetailFragment!=null) {
+                if (lineDetailFragment != null) {
                     backToEndLine();
-                    lineDetailFragment=null;
+                    lineDetailFragment = null;
                     return true;
                 } else {
                     long SecondTime = System.currentTimeMillis();
@@ -540,6 +561,7 @@ public class MainActivity extends BaseActivity {
 //            }
 //        }
         ActivityUtils.changeFragment(getSupportFragmentManager(), endLineFragment, lineDetailFragment);
+        toolBar.setTitle("尽头线状态");
     }
 
     @Override
@@ -582,6 +604,49 @@ public class MainActivity extends BaseActivity {
 //       fragments= (ArrayList<Fragment>) savedInstanceState.getSerializable("fragments");
 //
 //    }
+
+    private void showSelectDialog() {
+        Dialog dialog = new Dialog(this);
+        View v = View.inflate(this, R.layout.dialog_select, null);
+        new dialogHolder(v, dialog);
+        dialog.setContentView(v);
+        dialog.setTitle("选择车站");
+        dialog.show();
+        if(unit!=0){
+            dialog.setCanceledOnTouchOutside(true);
+        }
+    }
+
+    public class dialogHolder {
+        @BindView(R.id.lv)
+        ListView lv;
+        Dialog d;
+
+        dialogHolder(View v, final Dialog d) {
+            this.d=d;
+            ButterKnife.bind(this, v);
+            lv.setAdapter(new UnitAdapter(context));
+
+        }
+
+        @OnClick(R.id.sure)
+        public void onViewClicked() {
+            int nUnit=MyMemory.getInstance().getUnit();
+            if (unit ==nUnit) {
+                d.dismiss();
+            }
+            unit=nUnit;
+            if(unit==0){
+                ToastUtil.showToast(context, "请选择车站!");
+            }else{
+                SpUtil.setUnit(context,unit);
+                d.dismiss();
+            }
+        }
+
+    }
+
+
 }
 
 

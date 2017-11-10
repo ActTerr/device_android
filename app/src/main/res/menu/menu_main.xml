@@ -8,7 +8,7 @@
         <!--android:icon="@drawable/scrap"-->
         <!--android:title="报废统计"/>-->
     <item
-        android:title="尽头线信息"
+        android:title="选择车站"
         android:id="@+id/end_line"
         android:icon="@drawable/end_line"/>
     <!--<item android:id="@+id/notice"-->

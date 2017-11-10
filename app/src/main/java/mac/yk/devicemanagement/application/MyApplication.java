@@ -24,7 +24,7 @@ public class MyApplication extends Application {
         super.onCreate();
         instance=this;
         mkdir();
-        JPushInterface.setDebugMode(true); 	// 设置开启日志,发布时请关闭日志
+        JPushInterface.setDebugMode(true); 	// 设置开启日志,发布时关闭日志
         JPushInterface.init(this);
 
     }
