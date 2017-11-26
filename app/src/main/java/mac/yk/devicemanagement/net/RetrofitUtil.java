@@ -3,7 +3,6 @@ package mac.yk.devicemanagement.net;
 import java.util.concurrent.TimeUnit;
 
 import mac.yk.devicemanagement.I;
-import mac.yk.devicemanagement.service.down.FileTask;
 import okhttp3.OkHttpClient;
 import retrofit2.Retrofit;
 import retrofit2.adapter.rxjava.RxJavaCallAdapterFactory;

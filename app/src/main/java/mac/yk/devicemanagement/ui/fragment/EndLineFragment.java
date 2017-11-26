@@ -43,17 +43,20 @@ public class EndLineFragment extends BaseFragment {
     EndLineAdapter endLineAdapter;
     Context context;
     String TAG=getClass().getName();
+    ArrayList<EndLine> lines;
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.activity_list, container, false);
         ButterKnife.bind(this, view);
         context=getContext();
-//        initData(MyMemory.getInstance().getUser().getUnit());
-        int unit=MyMemory.getInstance().getUnit();
-        if(unit!=0){
-            initData(unit);
-        }
+        lines=new ArrayList<>();
+        endLineAdapter=new EndLineAdapter(context,lines);
+        rv.setAdapter(endLineAdapter);
+        rv.setLayoutManager(new LinearLayoutManager(context));
+
+        initData(MyMemory.getInstance().getUser().getUnit());
+
 
         setHasOptionsMenu(true);
         return view;
@@ -70,6 +73,10 @@ public class EndLineFragment extends BaseFragment {
         super.onCreateOptionsMenu(menu, inflater);
         menu.clear();
         inflater.inflate(R.menu.menu_name, menu);
+    }
+
+    public void refreshData(int unit){
+        initData(unit);
     }
 
     private void initData(int uId) {
@@ -95,9 +102,10 @@ public class EndLineFragment extends BaseFragment {
                     @Override
                     public void onNext(ArrayList<EndLine> endLines) {
                         if (endLines.size()>0){
-                            endLineAdapter=new EndLineAdapter(context,endLines);
-                            rv.setAdapter(endLineAdapter);
-                            rv.setLayoutManager(new LinearLayoutManager(context));
+                            lines.clear();
+                            lines.addAll(endLines);
+                            L.e("size",lines.size()+"");
+                            endLineAdapter.notifyDataSetChanged();
                             setListener();
                         }
                     }

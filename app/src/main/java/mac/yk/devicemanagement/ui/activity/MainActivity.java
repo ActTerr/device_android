@@ -47,7 +47,6 @@ import mac.yk.devicemanagement.service.check.MonitorService;
 import mac.yk.devicemanagement.ui.fragment.CountFragment;
 import mac.yk.devicemanagement.ui.fragment.EndLineFragment;
 import mac.yk.devicemanagement.ui.fragment.LineDetailFragment;
-import mac.yk.devicemanagement.ui.fragment.NoticeFragment;
 import mac.yk.devicemanagement.ui.fragment.ScrapCountFragment;
 import mac.yk.devicemanagement.util.ActivityUtils;
 import mac.yk.devicemanagement.util.ExceptionFilter;
@@ -61,6 +60,11 @@ import rx.schedulers.Schedulers;
 
 
 public class MainActivity extends BaseActivity {
+    public final static int OTHER=0;
+    public final static int ATTACHMENT_VISIBLE=1;
+    public final static int ATTACHMENT_INVISIBLE=2;
+    public final static int NOTICE_VISIBLE=3;
+    public final static int NOTICE_INVISIBLE=4;
     String id;
     CustomDialog progressDialog;
 
@@ -81,7 +85,6 @@ public class MainActivity extends BaseActivity {
 
     CountFragment countFragment;
     ScrapCountFragment scrapCountFragment;
-    NoticeFragment noticeFragment;
     EndLineFragment endLineFragment;
     LineDetailFragment lineDetailFragment;
 
@@ -98,28 +101,29 @@ public class MainActivity extends BaseActivity {
         setContentView(R.layout.activity_currency);
         L.e(TAG, "activit oncreate");
         ButterKnife.bind(this);
-//        checkUser();
         EventBus.getDefault().register(this);
         checkNet();
+        checkUser();
         init();
         initActionbar();
         setNavView();
+        initFragment();
 //        showWarning();
 //        isFromNotification();
 //        startCheck();
-        checkUnit();
+//        checkUnit();
 
     }
 
-    private void checkUnit() {
-        unit = SpUtil.getUnit(context);
-        MyMemory.getInstance().setUnit(unit);
-        if (unit == 0) {
-            showSelectDialog();
-        }else{
-            initFragment();
-        }
-    }
+//    private void checkUnit() {
+//        unit = SpUtil.getUnit(context);
+//        MyMemory.getInstance().setUnit(unit);
+//        if (unit == 0) {
+//            showSelectDialog();
+//        }else{
+//            initFragment();
+//        }
+//    }
 
 
     private void initFragment() {
@@ -153,6 +157,8 @@ public class MainActivity extends BaseActivity {
     private void checkUser() {
         if (SpUtil.getLoginUser(this).equals("")) {
             MFGT.gotoLoginActivity(this);
+        }else{
+           unit=MyMemory.getInstance().getUser().getUnit();
         }
     }
 
@@ -175,33 +181,29 @@ public class MainActivity extends BaseActivity {
         toolBar.setTitle(title);
     }
 
-    @Subscribe(threadMode = ThreadMode.BACKGROUND)
-    public void refresh(boolean b) {
-        L.e(TAG, "get refresh message");
-        noticeFragment.refresh();
-    }
 
 
-    private void isFromNotification() {
-        if (getIntent().getBooleanExtra("fromNtf", false)) {
-            L.e(TAG, "切换frag");
-            FragmentManager manager = getSupportFragmentManager();
-            if (fragments.contains(noticeFragment)) {
-                ActivityUtils.changeFragment(manager, noticeFragment, fragments.get(showId));
-                for (int i = 0; i < fragments.size(); i++) {
-                    if (fragments.get(i) == noticeFragment) {
-                        showId = i;
-                    }
-                }
-            } else {
-                noticeFragment = new NoticeFragment();
-                showId = fragments.size();
-                fragments.add(fragments.size(), noticeFragment);
-                ActivityUtils.addFragmentToActivity(manager, noticeFragment, R.id.frame);
-            }
-        }
 
-    }
+//    private void isFromNotification() {
+//        if (getIntent().getBooleanExtra("fromNtf", false)) {
+//            L.e(TAG, "切换frag");
+//            FragmentManager manager = getSupportFragmentManager();
+//            if (fragments.contains(noticeFragment)) {
+//                ActivityUtils.changeFragment(manager, noticeFragment, fragments.get(showId));
+//                for (int i = 0; i < fragments.size(); i++) {
+//                    if (fragments.get(i) == noticeFragment) {
+//                        showId = i;
+//                    }
+//                }
+//            } else {
+//                noticeFragment = new NoticeFragment();
+//                showId = fragments.size();
+//                fragments.add(fragments.size(), noticeFragment);
+//                ActivityUtils.addFragmentToActivity(manager, noticeFragment, R.id.frame);
+//            }
+//        }
+//
+//    }
 
     private void initActionbar() {
         setSupportActionBar(toolBar);
@@ -640,7 +642,9 @@ public class MainActivity extends BaseActivity {
                 ToastUtil.showToast(context, "请选择车站!");
             }else{
                 SpUtil.setUnit(context,unit);
+                L.e(TAG,"unit:"+unit);
                 d.dismiss();
+                endLineFragment.refreshData(unit);
             }
         }
 

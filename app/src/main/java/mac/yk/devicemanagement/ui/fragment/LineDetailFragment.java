@@ -103,7 +103,7 @@ public class LineDetailFragment extends BaseFragment {
 
 
         ApiWrapper<ServerAPI> wrapper = new ApiWrapper<>();
-        wrapper.targetClass(ServerAPI.class).getAPI().getLineDetail(MyMemory.getInstance().getUnit(),
+        wrapper.targetClass(ServerAPI.class).getAPI().getLineDetail(MyMemory.getInstance().getUser().getUnit(),
                 number, range, page, 18)
                 .compose(wrapper.<ArrayList<EndLine>>applySchedulers())
                 .timeout(10, TimeUnit.SECONDS)

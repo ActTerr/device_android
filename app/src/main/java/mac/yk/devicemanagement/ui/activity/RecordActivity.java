@@ -87,7 +87,7 @@ public class RecordActivity extends BaseActivity {
             setUpNavView(navView);
             ImageView imageView= (ImageView) navView.getHeaderView(0).findViewById(R.id.avatar);
             TextView textView= (TextView) navView.getHeaderView(0).findViewById(R.id.nav_name);
-            textView.setText(MyMemory.getInstance().getUser().getName());
+            textView.setText(MyMemory.getInstance().getUser().getAccounts());
             imageView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {

@@ -12,8 +12,6 @@ import org.json.JSONObject;
 import java.util.Iterator;
 
 import cn.jpush.android.api.JPushInterface;
-import mac.yk.devicemanagement.down.NoticeDetailActivity;
-import mac.yk.devicemanagement.util.L;
 
 /**
  * 自定义接收器
@@ -53,11 +51,11 @@ public class MyReceiver extends BroadcastReceiver {
 					i= new Intent(context, mac.yk.devicemanagement.ui.activity.MainActivity.class);
 					i.putExtra("fromNtf",true);
 				}else {
-					i=new Intent(context, NoticeDetailActivity.class);
-					i.putExtra("fromNtf",true);
-					String title=content.substring(2,content.lastIndexOf("的"));
-					L.e(TAG,"title:"+title);
-					i.putExtra("title",title);
+//					i=new Intent(context, NoticeDetailActivity.class);
+//					i.putExtra("fromNtf",true);
+//					String title=content.substring(2,content.lastIndexOf("的"));
+//					L.e(TAG,"title:"+title);
+//					i.putExtra("title",title);
 				}
 				//打开自定义的Activity
 

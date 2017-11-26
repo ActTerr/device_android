@@ -5,35 +5,11 @@ package mac.yk.devicemanagement.bean;
  */
 
 public class User {
-    String name;
-    int authority;
-    int grade;
     int unit;
     String accounts;
+    int authority;
 
-    public String getName() {
-        return name;
-    }
 
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public int getAuthority() {
-        return authority;
-    }
-
-    public void setAuthority(int authority) {
-        this.authority = authority;
-    }
-
-    public int getGrade() {
-        return grade;
-    }
-
-    public void setGrade(int grade) {
-        this.grade = grade;
-    }
 
     public int getUnit() {
         return unit;
@@ -51,14 +27,11 @@ public class User {
         this.accounts = accounts;
     }
 
-    @Override
-    public String toString() {
-        return "User{" +
-                "name='" + name + '\'' +
-                ", authority=" + authority +
-                ", grade=" + grade +
-                ", unit=" + unit +
-                ", accounts='" + accounts + '\'' +
-                '}';
+    public int getAuthority() {
+        return authority;
+    }
+
+    public void setAuthority(int authority) {
+        this.authority = authority;
     }
 }

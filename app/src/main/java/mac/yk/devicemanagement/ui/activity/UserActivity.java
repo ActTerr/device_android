@@ -71,11 +71,11 @@ public class UserActivity extends BaseActivity {
         context = this;
         pd = CustomDialog.create(context,"加载中...",false,null);
         User u=MyMemory.getInstance().getUser();
-        user.setText(u.getName());
+        user.setText(u.getAccounts());
         String station;
-        if (u.getGrade()==1){
+        if (u.getAuthority()==1){
             station= ConvertUtils.getUnitName(u.getUnit());
-        }else if(u.getGrade()==0){
+        }else if(u.getAuthority()==0){
             station="哈尔滨铁路局";
         }else {
             station=ConvertUtils.getServiceStation(u.getUnit());
@@ -112,7 +112,7 @@ public class UserActivity extends BaseActivity {
             case R.id.logOut:
                 pd.show();
                 ApiWrapper<ServerAPI> wrapper = new ApiWrapper<>();
-                subscription = wrapper.targetClass(ServerAPI.class).getAPI().logOut(MyMemory.getInstance().getUser().getName())
+                subscription = wrapper.targetClass(ServerAPI.class).getAPI().logOut(MyMemory.getInstance().getUser().getAccounts())
                         .compose(wrapper.<String>applySchedulers())
                         .subscribeOn(Schedulers.io())
                         .timeout(10, TimeUnit.SECONDS)

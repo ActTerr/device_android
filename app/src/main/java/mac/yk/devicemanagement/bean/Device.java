@@ -146,7 +146,7 @@ public class Device {
         this.price = price;
     }
 
-    public String getGrade() {
+    public String getAuthority() {
         return grade;
     }
 

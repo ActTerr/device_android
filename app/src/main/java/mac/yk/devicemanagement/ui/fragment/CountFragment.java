@@ -55,18 +55,18 @@ public class CountFragment extends BaseFragment {
     private void setUpViewPager() {
         L.e(TAG, "set pager");
         ViewPagerAdapter = new ViewPagerAdapter(getChildFragmentManager());
-        if (user.getGrade() == 2 || user.getGrade() == 0) {
-            ServiceCountFragment = new ServiceCountFragment();
-            ViewPagerAdapter.addFragment(ServiceCountFragment, "维修点统计");
-            selectL.setVisibility(View.GONE);
-        } else if (user.getGrade() != 2) {
-            TotalCountFragment = new TotalCountFragment();
-            StatusCountFragment = new StatusCountFragment();
-            ViewPagerAdapter.addFragment(TotalCountFragment, "统计分析");
-            ViewPagerAdapter.addFragment(StatusCountFragment, "状态统计");
-            serviceCount.setVisibility(View.GONE);
-            selectL.setVisibility(View.VISIBLE);
-        }
+//        if (user.getAuthority() == 2 || user.getAuthority() == 0) {
+//            ServiceCountFragment = new ServiceCountFragment();
+//            ViewPagerAdapter.addFragment(ServiceCountFragment, "维修点统计");
+//            selectL.setVisibility(View.GONE);
+//        } else if (user.getAuthority() != 2) {
+//            TotalCountFragment = new TotalCountFragment();
+//            StatusCountFragment = new StatusCountFragment();
+//            ViewPagerAdapter.addFragment(TotalCountFragment, "统计分析");
+//            ViewPagerAdapter.addFragment(StatusCountFragment, "状态统计");
+//            serviceCount.setVisibility(View.GONE);
+//            selectL.setVisibility(View.VISIBLE);
+//        }
         vp.setAdapter(ViewPagerAdapter);
     }
 

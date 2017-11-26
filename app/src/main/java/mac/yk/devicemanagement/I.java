@@ -105,12 +105,11 @@ public interface I {
     }
 
     interface USER{
-        String TABLENAME="MYUSER";
+        String TABLENAME="USER";
         String NAME="NAME";
-        String PASSWD="MYPASSWD";
+        String PASSWD="PASSWD";
         String ACCOUNTS="ACCOUNTS";
         String UNIT="UNIT";
-        String GRADE="GRADE";
         String AUTHORITY="AUTHORITY";
     }
 

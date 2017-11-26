@@ -91,10 +91,6 @@
                 <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />
             </intent-filter>
         </receiver>
-        <activity
-            android:configChanges="orientation|screenSize"
-            android:name=".down.NoticeDetailActivity"/>
-
 
 
         <service android:name=".service.down.FileService"

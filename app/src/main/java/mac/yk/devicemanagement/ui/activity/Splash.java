@@ -12,7 +12,12 @@ import android.widget.RelativeLayout;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import mac.yk.devicemanagement.R;
+import mac.yk.devicemanagement.application.MyMemory;
+import mac.yk.devicemanagement.bean.User;
+import mac.yk.devicemanagement.db.dbUser;
+import mac.yk.devicemanagement.util.L;
 import mac.yk.devicemanagement.util.MFGT;
+import mac.yk.devicemanagement.util.SpUtil;
 
 public class Splash extends AppCompatActivity {
     Context context;
@@ -38,23 +43,23 @@ public class Splash extends AppCompatActivity {
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
-//                String name = SpUtil.getLoginUser(context);
-//                if (name.equals("")) {
-//                    Intent intent = new Intent(context, LoginActivity.class);
-//                    startActivity(intent);
-//                    MFGT.finish((Activity) context);
-//                } else {
-//                    User user= dbUser.getInstance(context).select2(name);
-//                    MyMemory.getInstance().setUser(user);
-//                    L.e(TAG,user.toString());
+                String name = SpUtil.getLoginUser(context);
+                if (name.equals("")) {
+                    Intent intent = new Intent(context, LoginActivity.class);
+                    startActivity(intent);
+                    MFGT.finish((Activity) context);
+                } else {
+                    User user= dbUser.getInstance(context).select2(name);
+                    MyMemory.getInstance().setUser(user);
+                    L.e(TAG,user.toString());
 //                    boolean gesture = SpUtil.getGesture(context);
 //                    if (gesture) {
 //                        MFGT.gotoValidateGestureActivity((Activity) context);
 //                    } else {
 //
 //                    }
-//                }
-//
+                }
+
                 gotoMainActivity();
             }
         }).start();

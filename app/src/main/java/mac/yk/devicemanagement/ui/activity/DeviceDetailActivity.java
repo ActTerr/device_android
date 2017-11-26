@@ -147,20 +147,20 @@ public class DeviceDetailActivity extends BaseActivity {
         }
     }
 
-    private int getMenu() {
-
-        switch (user.getGrade()) {
-            case 0:
-            case 1:
-                if (isBattery) {
-                    return R.menu.menu_battery_detail;
-                }
-                return R.menu.menu_device_detail;
-            case 2:
-                return R.menu.menu_service_detail;
-        }
-        return 0;
-    }
+//    private int getMenu() {
+//
+//        switch (user.getAuthority()) {
+//            case 0:
+//            case 1:
+//                if (isBattery) {
+//                    return R.menu.menu_battery_detail;
+//                }
+//                return R.menu.menu_device_detail;
+//            case 2:
+//                return R.menu.menu_service_detail;
+//        }
+//        return 0;
+//    }
 
 
     @Override
@@ -172,11 +172,11 @@ public class DeviceDetailActivity extends BaseActivity {
     private void initNav() {
 
         if (navView != null) {
-            navView.inflateMenu(getMenu());
+//            navView.inflateMenu(getMenu());
             setUpNavView(navView);
             ImageView imageView = (ImageView) navView.getHeaderView(0).findViewById(R.id.avatar);
             TextView textView = (TextView) navView.getHeaderView(0).findViewById(R.id.nav_name);
-            textView.setText(MyMemory.getInstance().getUser().getName());
+            textView.setText(ConvertUtils.getUnitName(MyMemory.getInstance().getUser().getUnit()));
             imageView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -461,7 +461,7 @@ public class DeviceDetailActivity extends BaseActivity {
             dialog.dismiss();
             progressDialog.show();
             ApiWrapper<ServerAPI> wrapper = new ApiWrapper<>();
-            subscription = wrapper.targetClass(ServerAPI.class).getAPI().scrap(user.getName(), data[2]
+            subscription = wrapper.targetClass(ServerAPI.class).getAPI().scrap(user.getAccounts(), data[2]
                     , id, remark.getText().toString(), data[16], data[21])
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
@@ -794,7 +794,7 @@ public class DeviceDetailActivity extends BaseActivity {
         progressDialog.show();
         ApiWrapper<ServerAPI> wrapper = new ApiWrapper<>();
         subscription = wrapper.targetClass(ServerAPI.class).getAPI()
-                .repair(user.getName(), id, translate, type, remark)
+                .repair(user.getAccounts(), id, translate, type, remark)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .compose(wrapper.<String>applySchedulers())
@@ -833,7 +833,7 @@ public class DeviceDetailActivity extends BaseActivity {
     private void postCheck(final String status, String remark) {
         ApiWrapper<ServerAPI> wrapper = new ApiWrapper<>();
         subscription = wrapper.targetClass(ServerAPI.class).getAPI()
-                .check(user.getName(), id, status, remark, ConvertUtils.getServiceStation(user.getUnit()))
+                .check(user.getAccounts(), id, status, remark, ConvertUtils.getServiceStation(user.getUnit()))
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .compose(wrapper.<String>applySchedulers())

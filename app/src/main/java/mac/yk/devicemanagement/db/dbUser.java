@@ -46,9 +46,7 @@ public class dbUser implements db {
         sb.append("CREATE TABLE IF NOT EXISTS ")
                 .append(I.USER.TABLENAME).append("(")
                 .append(I.USER.ACCOUNTS).append(" TEXT,")
-                .append(I.USER.NAME).append(" TEXT,")
                 .append(I.USER.AUTHORITY).append(" INT,")
-                .append(I.USER.GRADE).append(" INT,")
                 .append(I.USER.UNIT).append(" INT)");
         db.execSQL(sb.toString());
         L.e(TAG,"create suc");
@@ -58,8 +56,6 @@ public class dbUser implements db {
             ContentValues values=new ContentValues();
             values.put(I.USER.ACCOUNTS,user.getAccounts());
             values.put(I.USER.AUTHORITY,user.getAuthority());
-            values.put(I.USER.GRADE,user.getGrade());
-            values.put(I.USER.NAME,user.getName().trim());
             values.put(I.USER.UNIT,user.getUnit());
         if (database.isOpen()){
             return database.insert(I.USER.TABLENAME,null,values)==1;
@@ -88,9 +84,7 @@ public class dbUser implements db {
         Cursor cursor=database.rawQuery(sql,new String[]{accounts});
         User user=new User();
         if (cursor.moveToNext()){
-            user.setGrade(cursor.getInt(cursor.getColumnIndex(I.USER.GRADE)));
             user.setUnit(cursor.getInt(cursor.getColumnIndex(I.USER.UNIT)));
-            user.setName(cursor.getString(cursor.getColumnIndex(I.USER.NAME)));
             user.setAuthority(cursor.getInt(cursor.getColumnIndex(I.USER.AUTHORITY)));
         }
         return user;

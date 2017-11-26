@@ -140,7 +140,7 @@ public class TotalCountFragment extends BaseFragment {
                             data.add(list);
                         }
 
-                        if(user.getGrade()==0){
+                        if(user.getAuthority()==0){
                             ArrayList<String> list1 = new ArrayList<String>();
                             list1.add("");
                             list1.add("合计");

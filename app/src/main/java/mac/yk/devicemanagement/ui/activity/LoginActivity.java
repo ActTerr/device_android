@@ -38,7 +38,7 @@ public class LoginActivity extends BaseActivity{
 
     CustomDialog progressDialog;
 
-    String TAG=getLocalClassName();
+    String TAG=getClass().getName();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -76,6 +76,7 @@ public class LoginActivity extends BaseActivity{
                  MyMemory.getInstance().setUser(user);
              SpUtil.saveLoginUser(context,user.getAccounts());
              startActivity(intent);
+             L.e(TAG,"change to main");
              MFGT.finish((Activity) context);
              DBHelper.getInstance(context).onCreate(DBHelper.getInstance(context).getWritableDatabase());
          }

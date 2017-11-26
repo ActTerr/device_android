@@ -76,6 +76,10 @@ public class EndLineAdapter extends RecyclerView.Adapter<EndLineAdapter.LineHold
         }
     }
 
+    public void clear(){
+        lines.clear();
+    }
+
     @Override
     public int getItemCount() {
         return lines.size();

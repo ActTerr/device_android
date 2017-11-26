@@ -55,7 +55,7 @@ public class StatusCountFragment extends BaseFragment {
         View view = inflater.inflate(R.layout.frag_count, container, false);
         ButterKnife.bind(this, view);
         setHasOptionsMenu(true);
-        if (MyMemory.getInstance().getUser().getGrade() == 0) {
+        if (MyMemory.getInstance().getUser().getAuthority() == 0) {
             isTotal = true;
         }
         setHasOptionsMenu(true);
