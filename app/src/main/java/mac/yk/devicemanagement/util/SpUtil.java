@@ -10,13 +10,7 @@ import android.preference.PreferenceManager;
 
 public class SpUtil {
 
-    public static int getUnit(Context context){
-        return getDefault(context).getInt("unit",0);
-    }
 
-    public static void setUnit(Context context,int unit){
-        getDefault(context).edit().putInt("unit",unit).apply();
-    }
 
     public static String getLoginUser(Context context){
         return getDefault(context).getString("name","");

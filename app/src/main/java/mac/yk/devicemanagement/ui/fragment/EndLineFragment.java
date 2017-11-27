@@ -56,9 +56,8 @@ public class EndLineFragment extends BaseFragment {
         rv.setLayoutManager(new LinearLayoutManager(context));
 
         initData(MyMemory.getInstance().getUser().getUnit());
-
-
         setHasOptionsMenu(true);
+
         return view;
     }
 
@@ -70,10 +69,19 @@ public class EndLineFragment extends BaseFragment {
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        super.onCreateOptionsMenu(menu, inflater);
         menu.clear();
-        inflater.inflate(R.menu.menu_name, menu);
+        L.e(TAG,"clear");
+        int unit=MyMemory.getInstance().getUser().getUnit();
+        L.e(TAG,"unit:"+unit);
+        if(unit==0){
+            inflater.inflate(R.menu.menu_main,menu);
+        }
+
     }
+
+
+
+
 
     public void refreshData(int unit){
         initData(unit);

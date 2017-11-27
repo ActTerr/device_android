@@ -106,7 +106,7 @@
         </LinearLayout>
         <TextView
             android:id="@+id/text7"
-            android:layout_width="125dp"
+            android:layout_width="110dp"
             android:layout_height="wrap_content"
             android:textColor="@color/white"
             android:text="11111"

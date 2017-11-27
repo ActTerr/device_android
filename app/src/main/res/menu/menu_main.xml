@@ -9,8 +9,8 @@
         <!--android:title="报废统计"/>-->
     <item
         android:title="选择车站"
-        android:id="@+id/end_line"
-        android:icon="@drawable/end_line"/>
+        android:id="@+id/select_unit"
+        />
     <!--<item android:id="@+id/notice"-->
         <!--android:icon="@drawable/notice"-->
         <!--android:title="公告信息"/>-->

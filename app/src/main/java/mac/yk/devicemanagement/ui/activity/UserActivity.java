@@ -12,8 +12,6 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import java.util.concurrent.TimeUnit;
-
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
@@ -21,16 +19,9 @@ import mac.yk.customdialog.CustomDialog;
 import mac.yk.devicemanagement.R;
 import mac.yk.devicemanagement.application.MyMemory;
 import mac.yk.devicemanagement.bean.User;
-import mac.yk.devicemanagement.net.ApiWrapper;
-import mac.yk.devicemanagement.net.ServerAPI;
 import mac.yk.devicemanagement.util.ConvertUtils;
-import mac.yk.devicemanagement.util.ExceptionFilter;
 import mac.yk.devicemanagement.util.MFGT;
 import mac.yk.devicemanagement.util.SpUtil;
-import mac.yk.devicemanagement.util.ToastUtil;
-import rx.Subscriber;
-import rx.android.schedulers.AndroidSchedulers;
-import rx.schedulers.Schedulers;
 
 public class UserActivity extends BaseActivity {
 
@@ -76,7 +67,7 @@ public class UserActivity extends BaseActivity {
         if (u.getAuthority()==1){
             station= ConvertUtils.getUnitName(u.getUnit());
         }else if(u.getAuthority()==0){
-            station="哈尔滨铁路局";
+            station="BOSS";
         }else {
             station=ConvertUtils.getServiceStation(u.getUnit());
         }
@@ -111,36 +102,16 @@ public class UserActivity extends BaseActivity {
                 startActivity(intent);
             case R.id.logOut:
                 pd.show();
-                ApiWrapper<ServerAPI> wrapper = new ApiWrapper<>();
-                subscription = wrapper.targetClass(ServerAPI.class).getAPI().logOut(MyMemory.getInstance().getUser().getAccounts())
-                        .compose(wrapper.<String>applySchedulers())
-                        .subscribeOn(Schedulers.io())
-                        .timeout(10, TimeUnit.SECONDS)
-                        .observeOn(AndroidSchedulers.mainThread())
-                        .subscribe(new Subscriber<String>() {
-                            @Override
-                            public void onCompleted() {
-
-                            }
-
-                            @Override
-                            public void onError(Throwable e) {
-                                pd.dismiss();
-                                if (ExceptionFilter.filter(context, e)) {
-                                    ToastUtil.showToast(context, "请求失败");
-                                }
-
-                            }
-
-                            @Override
-                            public void onNext(String s) {
-                                pd.dismiss();
-                                MyMemory.getInstance().setUser(null);
-                                SpUtil.saveLoginUser(context, null);
-                                MFGT.gotoLoginActivity(context);
-                                MFGT.finish((Activity) context);
-                            }
-                        });
+                try {
+                    Thread.sleep(500);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+                pd.dismiss();
+                MyMemory.getInstance().setUser(null);
+                SpUtil.saveLoginUser(context, null);
+                MFGT.gotoLoginActivity(context);
+                MFGT.finish((Activity) context);
                 break;
             case R.id.open:
                 setCheckOpen();

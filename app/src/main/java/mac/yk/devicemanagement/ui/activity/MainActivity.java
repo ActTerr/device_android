@@ -10,7 +10,6 @@ import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.widget.Toolbar;
@@ -37,7 +36,6 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import mac.yk.customdialog.CustomDialog;
-import mac.yk.devicemanagement.I;
 import mac.yk.devicemanagement.R;
 import mac.yk.devicemanagement.adapter.UnitAdapter;
 import mac.yk.devicemanagement.application.MyMemory;
@@ -49,6 +47,7 @@ import mac.yk.devicemanagement.ui.fragment.EndLineFragment;
 import mac.yk.devicemanagement.ui.fragment.LineDetailFragment;
 import mac.yk.devicemanagement.ui.fragment.ScrapCountFragment;
 import mac.yk.devicemanagement.util.ActivityUtils;
+import mac.yk.devicemanagement.util.ConvertUtils;
 import mac.yk.devicemanagement.util.ExceptionFilter;
 import mac.yk.devicemanagement.util.L;
 import mac.yk.devicemanagement.util.MFGT;
@@ -60,11 +59,11 @@ import rx.schedulers.Schedulers;
 
 
 public class MainActivity extends BaseActivity {
-    public final static int OTHER=0;
-    public final static int ATTACHMENT_VISIBLE=1;
-    public final static int ATTACHMENT_INVISIBLE=2;
-    public final static int NOTICE_VISIBLE=3;
-    public final static int NOTICE_INVISIBLE=4;
+    public final static int OTHER = 0;
+    public final static int ATTACHMENT_VISIBLE = 1;
+    public final static int ATTACHMENT_INVISIBLE = 2;
+    public final static int NOTICE_VISIBLE = 3;
+    public final static int NOTICE_INVISIBLE = 4;
     String id;
     CustomDialog progressDialog;
 
@@ -134,7 +133,7 @@ public class MainActivity extends BaseActivity {
 //        }
         endLineFragment = new EndLineFragment();
         ActivityUtils.addFragmentToActivity(getSupportFragmentManager(), endLineFragment, R.id.frame);
-        toolBar.setTitle("尽头线状态");
+        toolBar.setTitle(ConvertUtils.getUnitName(unit));
     }
 
     private void showWarning() {
@@ -157,8 +156,9 @@ public class MainActivity extends BaseActivity {
     private void checkUser() {
         if (SpUtil.getLoginUser(this).equals("")) {
             MFGT.gotoLoginActivity(this);
-        }else{
-           unit=MyMemory.getInstance().getUser().getUnit();
+        } else {
+            unit = MyMemory.getInstance().getUser().getUnit();
+            MyMemory.getInstance().setUnit(unit);
         }
     }
 
@@ -180,8 +180,6 @@ public class MainActivity extends BaseActivity {
         }
         toolBar.setTitle(title);
     }
-
-
 
 
 //    private void isFromNotification() {
@@ -248,20 +246,20 @@ public class MainActivity extends BaseActivity {
 
     private void setNavView() {
         if (navView != null) {
-            navView.inflateMenu(R.menu.menu_main);
+
             setUpNavView(navView);
 
             ImageView imageView = (ImageView) navView.getHeaderView(0).findViewById(R.id.avatar);
             TextView textView = (TextView) navView.getHeaderView(0).findViewById(R.id.nav_name);
 
-//            textView.setText(MyMemory.getInstance().getUser().getName().trim());
+            textView.setText(ConvertUtils.getUnitName(unit));
             imageView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-//                    MFGT.gotoSetActivity(MainActivity.this);
-                    showSelectDialog();
+                    MFGT.gotoSetActivity(MainActivity.this);
                 }
             });
+
         }
     }
 
@@ -274,14 +272,20 @@ public class MainActivity extends BaseActivity {
      */
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case android.R.id.home:
-                drawLayout.openDrawer(GravityCompat.START);
-                break;
-            case R.id.action_capture:
-                scan(I.CONTROL.START);
+//        switch (item.getItemId()) {
+//            case android.R.id.home:
+//                drawLayout.openDrawer(GravityCompat.START);
+//                break;
+//            case R.id.action_capture:
+//                scan(I.CONTROL.START);
+//                break;
+//        }
+        switch (item.getItemId()){
+            case R.id.select_unit:
+                showSelectDialog();
                 break;
         }
+
         return super.onOptionsItemSelected(item);
     }
 
@@ -292,7 +296,10 @@ public class MainActivity extends BaseActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.menu_name, menu);
+//        if(unit==0){
+//            inflater.inflate(R.menu.menu_main, menu);
+//        }
+
         try {
             Class c = Class.forName("android.view.Menu");
             Field field = c.getField("size");
@@ -376,7 +383,7 @@ public class MainActivity extends BaseActivity {
 //                        }
 //                        toolBar.setTitle("公告");
 //                        break;
-                    case R.id.end_line:
+//                    case R.id.end_line:
 //                        if (fragments.contains(endLineFragment)) {
 //                            L.e(TAG, "showid1:" + showId);
 //                            ActivityUtils.changeFragment(manager, endLineFragment, fragments.get(showId));
@@ -395,8 +402,8 @@ public class MainActivity extends BaseActivity {
 //                        endLineFragment = new EndLineFragment();
 //                        ActivityUtils.addFragmentToActivity(manager, endLineFragment, R.id.frame);
 //                        toolBar.setTitle("尽头线状态");
-                        showSelectDialog();
-                        break;
+//                        showSelectDialog();
+//                        break;
                 }
                 item.setChecked(true);
                 drawLayout.closeDrawers();
@@ -506,8 +513,6 @@ public class MainActivity extends BaseActivity {
     }
 
 
-
-
     public class warningHolder {
         @BindView(R.id.warning)
         TextView warning;
@@ -538,7 +543,7 @@ public class MainActivity extends BaseActivity {
         switch (keyCode) {
             case KeyEvent.KEYCODE_BACK:
                 if (lineDetailFragment != null) {
-                    backToEndLine();
+                    backToEndLineTotal();
                     lineDetailFragment = null;
                     return true;
                 } else {
@@ -556,14 +561,14 @@ public class MainActivity extends BaseActivity {
         return super.onKeyUp(keyCode, event);
     }
 
-    private void backToEndLine() {
+    private void backToEndLineTotal() {
 //        for (int i = 0; i < fragments.size(); i++) {
 //            if (fragments.get(i) == endLineFragment) {
 //                showId = i;
 //            }
 //        }
         ActivityUtils.changeFragment(getSupportFragmentManager(), endLineFragment, lineDetailFragment);
-        toolBar.setTitle("尽头线状态");
+        toolBar.setTitle(ConvertUtils.getUnitName(unit));
     }
 
     @Override
@@ -607,16 +612,14 @@ public class MainActivity extends BaseActivity {
 //
 //    }
 
-    private void showSelectDialog() {
+    public void showSelectDialog() {
         Dialog dialog = new Dialog(this);
         View v = View.inflate(this, R.layout.dialog_select, null);
         new dialogHolder(v, dialog);
         dialog.setContentView(v);
         dialog.setTitle("选择车站");
         dialog.show();
-        if(unit!=0){
-            dialog.setCanceledOnTouchOutside(true);
-        }
+        dialog.setCanceledOnTouchOutside(true);
     }
 
     public class dialogHolder {
@@ -625,7 +628,7 @@ public class MainActivity extends BaseActivity {
         Dialog d;
 
         dialogHolder(View v, final Dialog d) {
-            this.d=d;
+            this.d = d;
             ButterKnife.bind(this, v);
             lv.setAdapter(new UnitAdapter(context));
 
@@ -633,22 +636,27 @@ public class MainActivity extends BaseActivity {
 
         @OnClick(R.id.sure)
         public void onViewClicked() {
-            int nUnit=MyMemory.getInstance().getUnit();
-            if (unit ==nUnit) {
+            int nUnit = MyMemory.getInstance().getUnit();
+            if (unit == nUnit) {
                 d.dismiss();
-            }
-            unit=nUnit;
-            if(unit==0){
-                ToastUtil.showToast(context, "请选择车站!");
-            }else{
-                SpUtil.setUnit(context,unit);
-                L.e(TAG,"unit:"+unit);
+            } else {
+                unit = nUnit;
+                L.e(TAG, "unit:" + unit);
                 d.dismiss();
+                if (lineDetailFragment != null) {
+                    backToEndLineTotal();
+                }
                 endLineFragment.refreshData(unit);
+                toolBar.setTitle(ConvertUtils.getUnitName(unit));
+
             }
+
+
         }
 
     }
+
+
 
 
 }

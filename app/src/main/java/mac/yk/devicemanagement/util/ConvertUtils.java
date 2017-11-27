@@ -97,6 +97,8 @@ public class ConvertUtils {
 
     public static String getUnitName(int i) {
         switch (i) {
+            case 0:
+                return "BOSS";
             case 1:
                 return "玉泉站";
             case 2:

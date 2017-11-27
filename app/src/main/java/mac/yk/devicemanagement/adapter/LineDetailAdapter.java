@@ -83,7 +83,7 @@ public class LineDetailAdapter extends BaseAdapter {
         textView4.setTextColor(Color.WHITE);
         textView5.setTextColor(Color.WHITE);
         textView6.setTextColor(Color.WHITE);
-
+        textView7.setTextColor(Color.WHITE);
         return view;
     }
 

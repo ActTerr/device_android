@@ -44,7 +44,9 @@ public class Splash extends AppCompatActivity {
                     e.printStackTrace();
                 }
                 String name = SpUtil.getLoginUser(context);
+                L.e(TAG,"name:"+name);
                 if (name.equals("")) {
+                    L.e(TAG,"zuile");
                     Intent intent = new Intent(context, LoginActivity.class);
                     startActivity(intent);
                     MFGT.finish((Activity) context);
@@ -52,6 +54,7 @@ public class Splash extends AppCompatActivity {
                     User user= dbUser.getInstance(context).select2(name);
                     MyMemory.getInstance().setUser(user);
                     L.e(TAG,user.toString());
+                    gotoMainActivity();
 //                    boolean gesture = SpUtil.getGesture(context);
 //                    if (gesture) {
 //                        MFGT.gotoValidateGestureActivity((Activity) context);
@@ -60,7 +63,7 @@ public class Splash extends AppCompatActivity {
 //                    }
                 }
 
-                gotoMainActivity();
+
             }
         }).start();
 
