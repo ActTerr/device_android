@@ -38,7 +38,7 @@ public class LoginActivity extends BaseActivity{
 
     CustomDialog progressDialog;
 
-    String TAG=getLocalClassName();
+    String TAG=getClass().getName();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
