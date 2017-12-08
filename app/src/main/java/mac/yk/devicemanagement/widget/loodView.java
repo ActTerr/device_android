@@ -44,6 +44,7 @@ import mac.yk.devicemanagement.I;
 import mac.yk.devicemanagement.R;
 import mac.yk.devicemanagement.net.ApiWrapper;
 import mac.yk.devicemanagement.net.ServerAPI;
+import mac.yk.devicemanagement.util.ConvertUtils;
 import mac.yk.devicemanagement.util.ExceptionFilter;
 import mac.yk.devicemanagement.util.L;
 import mac.yk.devicemanagement.util.ToastUtil;
@@ -118,7 +119,7 @@ public class loodView extends FrameLayout {
     public void initCount(String devName) {
         this.devName=devName;
         ApiWrapper<ServerAPI> wrapper = new ApiWrapper<>();
-        subscription = wrapper.targetClass(ServerAPI.class).getAPI().getPicCount(devName)
+        subscription = wrapper.targetClass(ServerAPI.class).getAPI().getPicCount(ConvertUtils.changeName(devName))
                 .compose(wrapper.<Integer>applySchedulers())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(AndroidSchedulers.mainThread())
@@ -184,7 +185,7 @@ public class loodView extends FrameLayout {
         initIndicator();
         for (int i = 0; i < count; i++) {
             StringBuilder imagesUrl=new StringBuilder().append(I.REQUEST.SERVER_ROOT).append(I.REQUEST.PATH)
-                    .append( I.REQUEST.DOWN_PIC).append( "&").append(I.DEVICE2.CATEGROY).append( "=").append(devName)
+                    .append( I.REQUEST.DOWN_PIC).append( "&").append(I.DEVICE2.CATEGROY).append( "=").append(ConvertUtils.changeName(devName))
                     .append("&").append(I.PIC.PID).append( "=").append(i);
             L.e(TAG, imagesUrl.toString());
             Uri uri = Uri.parse(imagesUrl.toString());

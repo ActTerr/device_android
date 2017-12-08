@@ -69,7 +69,7 @@ public class EndLineFragment extends BaseFragment {
 
     private void initData(int uId) {
         ApiWrapper<ServerAPI> wrapper=new ApiWrapper<>();
-        wrapper.targetClass(ServerAPI.class).getAPI().getLineTotal(String.valueOf(uId))
+        wrapper.targetClass(ServerAPI.class).getAPI2().getLineTotal(String.valueOf(uId))
                 .compose(wrapper.<ArrayList<EndLine>>applySchedulers())
                 .subscribeOn(Schedulers.io())
                 .timeout(10, TimeUnit.SECONDS)

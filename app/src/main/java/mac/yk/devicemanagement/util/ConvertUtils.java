@@ -28,7 +28,6 @@ public class ConvertUtils {
 
     public static int dp2px(Context context, float dpValue) {
         float scale = context.getResources().getDisplayMetrics().density;
-        L.e(TAG, "scale:" + scale);
         return (int) (dpValue * scale + 0.5f);
     }
 
@@ -190,5 +189,19 @@ public class ConvertUtils {
         return null;
     }
 
+    public static   String changeName(String s){
+        switch (s){
+            case "手持台":
+                return "sct";
+            case "电池":
+                return "bat";
+            case "机控器":
+                return "jkq";
+            case "区控器":
+                return "qkq";
+            default:
+                return "";
+        }
+    }
 
 }

@@ -46,16 +46,19 @@ public class EndLineAdapter extends RecyclerView.Adapter<EndLineAdapter.LineHold
         EndLine line = lines.get(position);
         if (checkStatus(line) == false) {
             holder.ll.setBackgroundColor(context.getResources().getColor(R.color.red));
+        }else{
+            holder.ll.setBackgroundColor(context.getResources().getColor(R.color.gray2));
         }
-
+        //float的转换
         holder.id.setText(position + 1 + "");
         holder.sensor1.setText(convert(line.getS1()));
         holder.sensor2.setText(convert(line.getS2()));
         holder.battery.setText(String.valueOf(line.getBattery()));
-        String s=ConvertUtils.Date2String(new Date(line.getTime()));
+        String s= ConvertUtils.Date2String(new Date(line.getTime()));
         holder.time.setText(s);
         holder.radio.setText(convert(line.getRadio_station()));
         holder.temperature.setText(line.getTemperature() + "");
+        holder.power.setText(String.valueOf(line.getPower()));
     }
 
     private boolean checkStatus(EndLine line) {
@@ -74,6 +77,10 @@ public class EndLineAdapter extends RecyclerView.Adapter<EndLineAdapter.LineHold
         } else {
             return "×";
         }
+    }
+
+    public void clear(){
+        lines.clear();
     }
 
     @Override
@@ -102,6 +109,8 @@ public class EndLineAdapter extends RecyclerView.Adapter<EndLineAdapter.LineHold
         CardView card;
         @BindView(R.id.battery_ll)
         LinearLayout batteryLl;
+        @BindView(R.id.power)
+        TextView power;
 
         public LineHolder(View itemView) {
             super(itemView);

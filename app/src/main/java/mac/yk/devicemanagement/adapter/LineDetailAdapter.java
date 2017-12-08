@@ -8,6 +8,7 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Date;
 
@@ -60,16 +61,19 @@ public class LineDetailAdapter extends BaseAdapter {
         TextView textView4 = (TextView) view.findViewById(R.id.text4);
         TextView textView5 = (TextView) view.findViewById(R.id.text5);
         TextView textView6 = (TextView) view.findViewById(R.id.text6);
-
+        TextView textView7 = (TextView) view.findViewById(R.id.text7);
         textView1.setText(String.valueOf(endLine.getTemperature()));
         textView2.setText(convert(endLine.getS1()));
         textView3.setText(convert(endLine.getS2()));
         textView4.setText(convert(endLine.getRadio_station()));
-        textView5.setText(String.valueOf(endLine.getBattery()));
+
+        DecimalFormat decimalFormat=new DecimalFormat("0.0");
+        textView5.setText(decimalFormat.format(cf(endLine.getBattery())));
+        textView6.setText(decimalFormat.format(cf(endLine.getPower())));
         if(endLine.getBattery()<12.5){
             textView5.setTextColor(Color.RED);
         }
-        textView6.setText(ConvertUtils.Date2String(new Date(endLine.getTime())));
+        textView7.setText(ConvertUtils.Date2String(new Date(endLine.getTime())));
 
 
         view.setBackgroundResource(R.color.gray2);
@@ -78,8 +82,8 @@ public class LineDetailAdapter extends BaseAdapter {
         textView3.setTextColor(Color.WHITE);
         textView4.setTextColor(Color.WHITE);
         textView5.setTextColor(Color.WHITE);
-
-
+        textView6.setTextColor(Color.WHITE);
+        textView7.setTextColor(Color.WHITE);
         return view;
     }
 
@@ -92,5 +96,14 @@ public class LineDetailAdapter extends BaseAdapter {
             return "×";
         }
     }
+
+    float cf(float f){
+        if(f<1){
+          return 0f;
+        }
+        return f;
+    }
+
+
 
 }

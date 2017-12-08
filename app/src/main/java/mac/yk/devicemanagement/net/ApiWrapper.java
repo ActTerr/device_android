@@ -36,6 +36,26 @@ public class ApiWrapper<T> {
         return initRetrofit().create(mClazz);
     }
 
+    public T getAPI2(){
+        return initRetrofit2().create(mClazz);
+    }
+
+    private  Retrofit initRetrofit2() {
+        if (retrofit==null){
+            HttpLoggingInterceptor loggingInterceptor = new HttpLoggingInterceptor();
+
+            loggingInterceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
+            okHttpClient=new OkHttpClient.Builder().addInterceptor(loggingInterceptor).build();
+            retrofit=new Retrofit.Builder()
+                    .client(okHttpClient)
+                    .baseUrl(I.REQUEST.SERVER_ROOT2)
+                    .addConverterFactory(gsonConverterFactory)
+                    .addCallAdapterFactory(rxJavaCallAdapterFactory)
+                    .build();
+        }
+        return  retrofit;
+    }
+
 
     private  Retrofit initRetrofit() {
         if (retrofit==null){
