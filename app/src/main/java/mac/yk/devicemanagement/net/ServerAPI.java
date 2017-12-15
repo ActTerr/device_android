@@ -6,13 +6,11 @@ import java.util.Map;
 import mac.yk.devicemanagement.I;
 import mac.yk.devicemanagement.bean.Attachment;
 import mac.yk.devicemanagement.bean.Battery;
-import mac.yk.devicemanagement.bean.Check;
 import mac.yk.devicemanagement.bean.DeviceResume;
 import mac.yk.devicemanagement.bean.EndLine;
+import mac.yk.devicemanagement.bean.EndLine2;
 import mac.yk.devicemanagement.bean.Notice;
 import mac.yk.devicemanagement.bean.Result;
-import mac.yk.devicemanagement.bean.Scrap;
-import mac.yk.devicemanagement.bean.Service;
 import mac.yk.devicemanagement.bean.User;
 import okhttp3.RequestBody;
 import okhttp3.ResponseBody;
@@ -63,37 +61,6 @@ public interface ServerAPI {
     @GET(I.REQUEST.PATH+ I.REQUEST.LOGOUT)
     Observable<Result<String>> logOut(@Query(I.USER.NAME) String name);
 
-    @GET(I.REQUEST.PATH+ I.REQUEST.DOWN_SERVICE)
-    Observable<Result<Service[]>> downLoadService(@Query(I.SERVICE.DID) String did, @Query(I.DOWNLOAD.PAGE) int page,
-                                                  @Query(I.DOWNLOAD.SIZE) int size);
-
-    @GET(I.REQUEST.PATH+ I.REQUEST.DOWN_CHECK)
-    Observable<Result<Check[]>> downloadCheck (@Query(I.CHECK.DID) String did, @Query(I.DOWNLOAD.PAGE) int page,
-                                               @Query(I.DOWNLOAD.SIZE) int size);
-
-    @GET(I.REQUEST.PATH+ I.REQUEST.CHECK)
-    Observable<Result<String>> check(@Query(I.CHECK.USER) String userName
-            , @Query(I.DEVICE2.DID) String did, @Query(I.CHECK.STATUS) String status,
-                                     @Query(I.CHECK.REMARK) String remark, @Query(I.USER.UNIT) String unit);
-
-    @GET(I.REQUEST.PATH+ I.REQUEST.REPAIR)
-    Observable<Result<String>> repair(@Query(I.SERVICE.USER) String userName
-            , @Query(I.DEVICE2.DID) String did, @Query(I.SERVICE.TRANSLATE) boolean translate,
-                                      @Query(I.SERVICE.TYPE) String type,
-                                      @Query(I.SERVICE.REMARK) String remark);
-
-    @GET(I.REQUEST.PATH+ I.REQUEST.SCRAP)
-    Observable<Result<String>> scrap(@Query(I.SCRAP.USER) String name, @Query(I.SCRAP.DNAME) String category
-            , @Query(I.DEVICE2.DID) String Did, @Query(I.SCRAP.REMARK) String remark, @Query(I.SCRAP.STATION) String unit
-            , @Query(I.SCRAP.TYPE) String type);
-
-    @GET(I.REQUEST.PATH+ I.REQUEST.CONTROL)
-    Observable<Result<String>> control(@Query(I.DEVICE2.STATUS) String status, @Query(I.DEVICE2.DID) String Did);
-
-
-    @GET(I.REQUEST.PATH+ I.REQUEST.DOWN_SCRAP)
-    Observable<Result<Scrap[]>> downScrap(@Query(I.DOWNLOAD.PAGE) int page, @Query(I.DOWNLOAD.SIZE) int size,
-                                          @Query(I.SCRAP.DNAME) int dName);
 
 
     @GET(I.REQUEST.PATH+ I.REQUEST.GET_PIC_COUNT)
@@ -156,10 +123,22 @@ public interface ServerAPI {
     Observable<Result<String>> inactive(@Query(I.DEVICE2.DID) String did, @Query(I.DEVICE2.USE_POSITION) String usePosition);
 
     @GET(I.REQUEST.PATH+ I.REQUEST.GET_LINE_DETAIL)
-    Observable<Result<ArrayList<EndLine>>> getLineDetail(@Query(I.UNIT) int unit,@Query(I.END_LINE.LINE_ID)int number, @Query(I.RANGE) int range,@Query(I.PAGE) int page,@Query(I.SIZE) int size);
+    Observable<Result<ArrayList<EndLine>>> getLineDetail(@Query(I.UNIT) String unit, @Query(I.END_LINE.LINE_ID)int number,
+                                                         @Query(I.RANGE) int range, @Query(I.PAGE) int page,
+                                                         @Query(I.SIZE) int size, @Query(I.TYPE)int type);
 
 
     @GET(I.REQUEST.PATH+ I.REQUEST.GET_LINE_TOTAL)
-    Observable<Result<ArrayList<EndLine>>> getLineTotal(@Query(I.UNIT) String unit);
+    Observable<Result<ArrayList<EndLine>>> getLineTotal(@Query(I.UNIT) String unit,@Query(I.TYPE)int type);
+
+    @GET(I.REQUEST.PATH+ I.REQUEST.GET_LINE_DETAIL)
+    Observable<Result<ArrayList<EndLine2>>> getLine2Detail(@Query(I.UNIT) String unit, @Query(I.END_LINE.LINE_ID)int number,
+                                                           @Query(I.RANGE) int range, @Query(I.PAGE) int page,
+                                                           @Query(I.SIZE) int size, @Query(I.TYPE)int type);
+
+
+    @GET(I.REQUEST.PATH+ I.REQUEST.GET_LINE_TOTAL)
+    Observable<Result<ArrayList<EndLine2>>> getLine2Total(@Query(I.UNIT) String unit,@Query(I.TYPE)int type);
+
 
 }

@@ -13,18 +13,18 @@ import java.util.ArrayList;
 import java.util.Date;
 
 import mac.yk.devicemanagement.R;
-import mac.yk.devicemanagement.bean.EndLine;
+import mac.yk.devicemanagement.bean.EndLine2;
 import mac.yk.devicemanagement.util.ConvertUtils;
 
 /**
- * Created by mac-yk on 2017/7/21.
+ * Created by mac-yk on 2017/12/15.
  */
 
-public class LineDetailAdapter extends BaseAdapter {
+public class Line2DetailAdapter extends BaseAdapter {
     private LayoutInflater inflater;
-    private ArrayList<EndLine> lists;
+    private ArrayList<EndLine2> lists;
 
-    public LineDetailAdapter(Context context, ArrayList<EndLine> lists) {
+    public Line2DetailAdapter(Context context, ArrayList<EndLine2> lists) {
         super();
         this.lists = lists;
         inflater = LayoutInflater.from(context);
@@ -51,9 +51,9 @@ public class LineDetailAdapter extends BaseAdapter {
     @Override
     public View getView(int index, View view, ViewGroup arg2) {
         // TODO Auto-generated method stub
-        EndLine endLine = lists.get(index);
+        EndLine2 endLine = lists.get(index);
         if (view == null) {
-            view = inflater.inflate(R.layout.item_endline_detail, null);
+            view = inflater.inflate(R.layout.item_endline2_detail, null);
         }
         TextView textView1 = (TextView) view.findViewById(R.id.text1);
         TextView textView2 = (TextView) view.findViewById(R.id.text2);
@@ -62,18 +62,22 @@ public class LineDetailAdapter extends BaseAdapter {
         TextView textView5 = (TextView) view.findViewById(R.id.text5);
         TextView textView6 = (TextView) view.findViewById(R.id.text6);
         TextView textView7 = (TextView) view.findViewById(R.id.text7);
+        TextView textView8 = (TextView) view.findViewById(R.id.text8);
+        TextView textView9 = (TextView) view.findViewById(R.id.text9);
         textView1.setText(String.valueOf(endLine.getTemperature()));
         textView2.setText(convert(endLine.getS1()));
         textView3.setText(convert(endLine.getS2()));
-        textView4.setText(convert(endLine.getRadio_station()));
+        textView4.setText(convert(endLine.getS3()));
+        textView5.setText(convert(endLine.getS4()));
+        textView6.setText(convert(endLine.getRadio_station()));
 
         DecimalFormat decimalFormat=new DecimalFormat("0.0");
-        textView5.setText(decimalFormat.format(cf(endLine.getBattery())));
-        textView6.setText(decimalFormat.format(cf(endLine.getPower())));
+        textView7.setText(decimalFormat.format(cf(endLine.getBattery())));
+        textView8.setText(decimalFormat.format(cf(endLine.getPower())));
         if(endLine.getBattery()<12.5){
             textView5.setTextColor(Color.RED);
         }
-        textView7.setText(ConvertUtils.Date2String(new Date(endLine.getTime())));
+        textView9.setText(ConvertUtils.Date2String(new Date(endLine.getTime())));
 
 
         view.setBackgroundResource(R.color.gray2);
@@ -84,6 +88,8 @@ public class LineDetailAdapter extends BaseAdapter {
         textView5.setTextColor(Color.WHITE);
         textView6.setTextColor(Color.WHITE);
         textView7.setTextColor(Color.WHITE);
+        textView8.setTextColor(Color.WHITE);
+        textView9.setTextColor(Color.WHITE);
         return view;
     }
 
@@ -99,11 +105,9 @@ public class LineDetailAdapter extends BaseAdapter {
 
     float cf(float f){
         if(f<1){
-          return 0f;
+            return 0f;
         }
         return f;
     }
-
-
 
 }

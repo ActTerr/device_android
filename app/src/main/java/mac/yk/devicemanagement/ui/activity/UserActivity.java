@@ -64,13 +64,7 @@ public class UserActivity extends BaseActivity {
         User u=MyMemory.getInstance().getUser();
         user.setText(u.getAccounts());
         String station;
-        if (u.getAuthority()==1){
-            station= ConvertUtils.getUnitName(u.getUnit());
-        }else if(u.getAuthority()==0){
-            station="BOSS";
-        }else {
-            station=ConvertUtils.getServiceStation(u.getUnit());
-        }
+        station= ConvertUtils.getUnitName(u.getUnit());
         unit.setText(station);
         initNightModeButton();
     }
@@ -95,7 +89,7 @@ public class UserActivity extends BaseActivity {
                 Toast.makeText(this, "账号不可修改", Toast.LENGTH_SHORT).show();
                 break;
             case R.id.rlPasswd:
-                MFGT.gotoGestureActivity(context);
+//                MFGT.gotoGestureActivity(context);
                 break;
             case R.id.auxiliary:
                 Intent intent = new Intent(this, AuxiliaryActivity.class);

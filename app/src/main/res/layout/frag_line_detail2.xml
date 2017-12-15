@@ -7,21 +7,19 @@
         android:id="@+id/form"
         android:paddingTop="5dp"
         android:paddingBottom="5dp"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         >
 
         <LinearLayout
-            android:layout_weight="1"
             android:orientation="horizontal"
-            android:layout_width="0dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content">
 
             <TextView
                 android:id="@+id/text1"
-                android:layout_weight="1"
-                android:layout_width="0dp"
+                android:layout_width="50dp"
                 android:text="温度"
                 android:layout_height="wrap_content"
                 android:textColor="@color/white"
@@ -33,8 +31,8 @@
             <View style="@style/vertical_layout"/>
             <TextView
                 android:id="@+id/text2"
-                android:layout_width="0dp"
-                android:layout_weight="1"
+                android:layout_width="50dp"
+                
                 android:layout_height="wrap_content"
                 android:textColor="@color/white"
                 android:textSize="12dp"
@@ -46,8 +44,8 @@
             <View style="@style/vertical_layout"/>
             <TextView
                 android:id="@+id/text3"
-                android:layout_width="0dp"
-                android:layout_weight="1"
+                android:layout_width="50dp"
+                
                 android:layout_height="wrap_content"
                 android:textColor="@color/white"
                 android:textSize="12dp"
@@ -56,12 +54,32 @@
 
                 android:singleLine="true"
                 />
-         
             <View style="@style/vertical_layout"/>
             <TextView
-                android:layout_weight="1"
+                android:id="@+id/text41"
+                android:layout_width="50dp"
+                
+                android:layout_height="wrap_content"
+                android:textColor="@color/white"
+                android:textSize="12dp"
+                android:gravity="center_vertical|center_horizontal"
+                android:text="传感器3"
+                android:singleLine="true"
+                />
+            <View style="@style/vertical_layout"/>
+            <TextView
+                android:layout_width="50dp"
+                android:layout_height="wrap_content"
+                android:textColor="@color/white"
+                android:textSize="12dp"
+                android:gravity="center_vertical|center_horizontal"
+                android:text="传感器4"
+                android:singleLine="true"
+                />
+            <View style="@style/vertical_layout"/>
+            <TextView
                 android:id="@+id/text4"
-                android:layout_width="0dp"
+                android:layout_width="50dp"
                 android:layout_height="wrap_content"
                 android:textColor="@color/white"
                 android:textSize="12dp"
@@ -72,8 +90,8 @@
             <View style="@style/vertical_layout"/>
             <TextView
                 android:id="@+id/text5"
-                android:layout_width="0dp"
-                android:layout_weight="1"
+                android:layout_width="50dp"
+                
                 android:layout_height="wrap_content"
                 android:textColor="@color/white"
                 android:textSize="12dp"
@@ -84,8 +102,8 @@
             <View style="@style/vertical_layout"/>
             <TextView
                 android:id="@+id/text6"
-                android:layout_width="0dp"
-                android:layout_weight="1"
+                android:layout_width="50dp"
+                
                 android:layout_height="wrap_content"
                 android:textColor="@color/white"
                 android:textSize="12dp"
@@ -97,8 +115,9 @@
 
         </LinearLayout>
         <TextView
+
             android:id="@+id/text7"
-            android:layout_width="110dp"
+            android:layout_width="1150dp"
             android:layout_height="wrap_content"
             android:textColor="@color/white"
             android:text="上传日期"
@@ -107,13 +126,13 @@
             android:singleLine="true"
             />
     </LinearLayout>
-
+    
     <ListView
         android:layout_below="@id/form"
         android:id="@+id/list"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
-
+        
     </ListView>
-
+    
 </RelativeLayout>

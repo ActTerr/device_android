@@ -52,10 +52,6 @@
 
         <receiver android:name=".receiver.NotificationReceiver"/>
 
-        <activity android:name=".ui.activity.DeviceDetailActivity"
-            android:windowSoftInputMode = "adjustPan">
-
-        </activity>
         <activity
             android:name=".ui.activity.SaveActivity" />
         <activity
@@ -71,16 +67,7 @@
             android:name=".ui.activity.LoginActivity" />
         <activity
             android:configChanges="orientation|screenSize"
-            android:name=".ui.activity.RecordActivity">
-
-        </activity>
-        <activity
-            android:configChanges="orientation|screenSize"
             android:name=".ui.activity.UserActivity" />
-        <activity android:name=".ui.activity.GestureActivity"
-            android:configChanges="orientation|screenSize">
-
-        </activity>
         <activity
             android:configChanges="orientation|screenSize"
             android:name=".ui.activity.AuxiliaryActivity">
@@ -115,25 +102,11 @@
             android:enabled="true"
             android:process=":guard">
         </service>
-        <activity
-            android:configChanges="orientation|screenSize"
-            android:name=".ui.activity.DeviceListActivity"/>
 
         <!--<service android:name=".service.MonitorService"-->
             <!--android:process="check"-->
             <!--&gt;-->
         <!--</service>-->
-        <receiver android:name=".receiver.MyReceiver">
-            <intent-filter>
-                <action android:name="android.intent.action.BOOT_COMPLETED"/>
-                <action android:name="check"/>
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </receiver>
-        <activity
-            android:configChanges="orientation|screenSize"
-            android:name=".ui.activity.BatteryListActivity"/>
-
 
 
         <!-- For test only 测试的主程序-->

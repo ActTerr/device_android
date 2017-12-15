@@ -94,6 +94,18 @@ public class ConvertUtils {
     }
 
 
+    public static String getUnitName(String s){
+        switch (s){
+            case "yuquan":
+                return "玉泉站";
+            case "boss":
+                return "BOSS";
+            case "chengdu":
+                return "成都站";
+                default:
+                    return "";
+        }
+    }
 
     public static String getUnitName(int i) {
         switch (i) {

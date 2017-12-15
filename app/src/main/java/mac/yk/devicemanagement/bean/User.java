@@ -5,17 +5,24 @@ package mac.yk.devicemanagement.bean;
  */
 
 public class User {
-    int unit;
+    String unit;
     String accounts;
     int authority;
+    String type;
 
+    public String getType() {
+        return type;
+    }
 
+    public void setType(String type) {
+        this.type = type;
+    }
 
-    public int getUnit() {
+    public String getUnit() {
         return unit;
     }
 
-    public void setUnit(int unit) {
+    public void setUnit(String unit) {
         this.unit = unit;
     }
 
@@ -33,5 +40,15 @@ public class User {
 
     public void setAuthority(int authority) {
         this.authority = authority;
+    }
+
+    @Override
+    public String toString() {
+        return "User{" +
+                "unit='" + unit + '\'' +
+                ", accounts='" + accounts + '\'' +
+                ", authority=" + authority +
+                ", type='" + type + '\'' +
+                '}';
     }
 }

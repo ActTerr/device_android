@@ -47,7 +47,8 @@ public class dbUser implements db {
                 .append(I.USER.TABLENAME).append("(")
                 .append(I.USER.ACCOUNTS).append(" TEXT,")
                 .append(I.USER.AUTHORITY).append(" INT,")
-                .append(I.USER.UNIT).append(" INT)");
+                .append(I.USER.UNIT).append(" TEXT,")
+                .append(I.TYPE).append(" TEXT)");
         db.execSQL(sb.toString());
         L.e(TAG,"create suc");
     }
@@ -57,6 +58,7 @@ public class dbUser implements db {
             values.put(I.USER.ACCOUNTS,user.getAccounts());
             values.put(I.USER.AUTHORITY,user.getAuthority());
             values.put(I.USER.UNIT,user.getUnit());
+            values.put(I.TYPE,user.getType());
         if (database.isOpen()){
             return database.insert(I.USER.TABLENAME,null,values)==1;
         }else {
@@ -84,8 +86,9 @@ public class dbUser implements db {
         Cursor cursor=database.rawQuery(sql,new String[]{accounts});
         User user=new User();
         if (cursor.moveToNext()){
-            user.setUnit(cursor.getInt(cursor.getColumnIndex(I.USER.UNIT)));
+            user.setUnit(cursor.getString(cursor.getColumnIndex(I.USER.UNIT)));
             user.setAuthority(cursor.getInt(cursor.getColumnIndex(I.USER.AUTHORITY)));
+            user.setType(cursor.getString(cursor.getColumnIndex(I.TYPE)));
         }
         return user;
     }

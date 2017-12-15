@@ -42,11 +42,8 @@ import mac.yk.devicemanagement.adapter.UnitAdapter;
 import mac.yk.devicemanagement.application.MyMemory;
 import mac.yk.devicemanagement.net.ApiWrapper;
 import mac.yk.devicemanagement.net.ServerAPI;
-import mac.yk.devicemanagement.service.check.MonitorService;
-import mac.yk.devicemanagement.ui.fragment.CountFragment;
 import mac.yk.devicemanagement.ui.fragment.EndLineFragment;
 import mac.yk.devicemanagement.ui.fragment.LineDetailFragment;
-import mac.yk.devicemanagement.ui.fragment.ScrapCountFragment;
 import mac.yk.devicemanagement.util.ActivityUtils;
 import mac.yk.devicemanagement.util.ConvertUtils;
 import mac.yk.devicemanagement.util.ExceptionFilter;
@@ -83,8 +80,6 @@ public class MainActivity extends BaseActivity {
     @BindView(R.id.netView)
     TextView mTv;
 
-    CountFragment countFragment;
-    ScrapCountFragment scrapCountFragment;
     EndLineFragment endLineFragment;
     LineDetailFragment lineDetailFragment;
 
@@ -92,7 +87,7 @@ public class MainActivity extends BaseActivity {
     int showId;
     String TAG = "main";
 
-    int unit;
+    String unit;
 
 
     @Override
@@ -164,16 +159,7 @@ public class MainActivity extends BaseActivity {
         }
     }
 
-    private void startCheck() {
-        L.e(TAG, "startService");
-        Intent intent = new Intent(this, MonitorService.class);
-        startService(intent);
 
-//            Intent intent2=new Intent(this, GuardService.class);
-//            startService(intent2);
-
-
-    }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void getTitle(String title) {
@@ -299,7 +285,7 @@ public class MainActivity extends BaseActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
-        if(unit==0){
+        if(unit.equals("boss")){
             inflater.inflate(R.menu.menu_main, menu);
         }
 
@@ -415,7 +401,7 @@ public class MainActivity extends BaseActivity {
         });
     }
 
-    public void gotoLineDetail(int number) {
+    public void gotoLineDetail(int number,int type) {
         FragmentManager manager = getSupportFragmentManager();
 //        if (fragments.contains(lineDetailFragment)) {
 //            L.e(TAG, "showid1:" + showId);
@@ -433,6 +419,7 @@ public class MainActivity extends BaseActivity {
 //            fragments.add(fragments.size(), lineDetailFragment);
         Bundle bundle = new Bundle();
         bundle.putInt("number", number);
+        bundle.putInt("type",type);
         lineDetailFragment.setArguments(bundle);
         ActivityUtils.addFragmentToActivity(manager, lineDetailFragment, R.id.frame);
     }
@@ -464,7 +451,6 @@ public class MainActivity extends BaseActivity {
             Bundle bundle = data.getExtras();
             if (bundle != null) {
                 id = (bundle.getString("result"));
-                MFGT.gotoDetailActivity(context, false, false, id);
                 finish();
             }
 
@@ -639,8 +625,8 @@ public class MainActivity extends BaseActivity {
 
         @OnClick(R.id.sure)
         public void onViewClicked() {
-            int nUnit = MyMemory.getInstance().getUnit();
-            if (unit == nUnit) {
+            String nUnit = MyMemory.getInstance().getUnit();
+            if (unit.equals(nUnit)) {
                 d.dismiss();
             } else {
                 unit = nUnit;
@@ -649,7 +635,7 @@ public class MainActivity extends BaseActivity {
                 if (lineDetailFragment != null) {
                     backToEndLineTotal();
                 }
-                endLineFragment.refreshData(unit);
+                endLineFragment.refreshData();
                 toolBar.setTitle(ConvertUtils.getUnitName(unit));
 
             }

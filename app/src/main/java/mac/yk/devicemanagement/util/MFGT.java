@@ -5,12 +5,8 @@ import android.content.Context;
 import android.content.Intent;
 
 import mac.yk.devicemanagement.R;
-import mac.yk.devicemanagement.ui.activity.DeviceDetailActivity;
-import mac.yk.devicemanagement.ui.activity.DeviceListActivity;
-import mac.yk.devicemanagement.ui.activity.GestureActivity;
 import mac.yk.devicemanagement.ui.activity.LoginActivity;
 import mac.yk.devicemanagement.ui.activity.MainActivity;
-import mac.yk.devicemanagement.ui.activity.RecordActivity;
 import mac.yk.devicemanagement.ui.activity.SaveActivity;
 import mac.yk.devicemanagement.ui.activity.UserActivity;
 
@@ -19,24 +15,8 @@ import mac.yk.devicemanagement.ui.activity.UserActivity;
  */
 
 public class MFGT {
-    public static void gotoDetailActivity(Context context, boolean isFromList,boolean isBack,String Did){
-        Intent intent=new Intent(context,DeviceDetailActivity.class);
-        intent.putExtra("isFromList",isFromList);
-        intent.putExtra("isBack",isBack);
-        intent.putExtra("Did",Did);
-        startActivity(context,intent);
-    }
 
 
-
-    public static void gotoDeviceListActivity(Context context,String sType,int unit,String category,String status){
-        Intent intent=new Intent(context,DeviceListActivity.class);
-        intent.putExtra("unit",unit);
-        intent.putExtra("category",category);
-        intent.putExtra("status",status);
-        intent.putExtra("sType",sType);
-        startActivity(context,intent);
-    }
 
     public static void gotoSaveActivity(Context context,String id){
         Intent intent=new Intent(context,SaveActivity.class);
@@ -52,20 +32,13 @@ public class MFGT {
         startActivity(context,intent);
     }
 
-    public static void gotoRecordActivity(Context context,String did){
-        Intent intent=new Intent(context,RecordActivity.class);
-        intent.putExtra("Did",did);
-        startActivity(context,intent);
-    }
+
     public static void gotoSetActivity(Context context){
         Intent intent=new Intent(context, UserActivity.class);
         startActivity(context,intent);
     }
 
-    public static void gotoGestureActivity(Context context){
-        Intent intent=new Intent(context, GestureActivity.class);
-        startActivity(context,intent);
-    }
+
 //    public static void gotoSetGestureActivity(Context context){
 //        Intent intent=new Intent(context,GestureEditActivity.class);
 //        startActivity(context,intent);

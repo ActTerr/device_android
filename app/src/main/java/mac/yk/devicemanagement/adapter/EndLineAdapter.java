@@ -16,7 +16,9 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import mac.yk.devicemanagement.R;
 import mac.yk.devicemanagement.bean.EndLine;
+import mac.yk.devicemanagement.bean.EndLine2;
 import mac.yk.devicemanagement.util.ConvertUtils;
+import mac.yk.devicemanagement.util.L;
 
 /**
  * Created by mac-yk on 2017/7/18.
@@ -25,40 +27,64 @@ import mac.yk.devicemanagement.util.ConvertUtils;
 public class EndLineAdapter extends RecyclerView.Adapter<EndLineAdapter.LineHolder> {
     Context context;
     ArrayList<EndLine> lines;
+    ArrayList<EndLine2> line2s;
 
-
-
-    public EndLineAdapter(Context context, ArrayList<EndLine> lines) {
+    public EndLineAdapter(Context context, ArrayList<EndLine> lines, ArrayList<EndLine2> line2s) {
         this.context = context;
-        this.lines = lines;
+        this.lines=lines;
+        this.line2s=line2s;
     }
 
     @Override
     public LineHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(context).inflate(R.layout.item_end_line, parent, false);
+        View view = LayoutInflater.from(context).inflate(R.layout.item_endline2, parent, false);
         LineHolder holder = new LineHolder(view);
         return holder;
     }
 
+
+
     @Override
     public void onBindViewHolder(LineHolder holder, int position) {
-
-        EndLine line = lines.get(position);
-        if (checkStatus(line) == false) {
-            holder.ll.setBackgroundColor(context.getResources().getColor(R.color.red));
-        }else{
-            holder.ll.setBackgroundColor(context.getResources().getColor(R.color.gray2));
+        if(position==0){
+            L.e("kunsiwole");
+            EndLine line= lines.get(0);
+            if (checkStatus(line) == false) {
+                holder.ll.setBackgroundColor(context.getResources().getColor(R.color.red));
+            }else{
+                holder.ll.setBackgroundColor(context.getResources().getColor(R.color.gray2));
+            }
+            holder.type2_ll.setVisibility(View.GONE);
+            holder.id.setText(position + 1 + "");
+            holder.sensor1.setText(convert(line.getS1()));
+            holder.sensor2.setText(convert(line.getS2()));
+            holder.battery.setText(String.valueOf(line.getBattery()));
+            String s=ConvertUtils.Date2String(new Date(line.getTime()));
+            holder.time.setText(s);
+            holder.radio.setText(convert(line.getRadio_station()));
+            holder.temperature.setText(line.getTemperature() + "");
+            holder.power.setText(String.valueOf(line.getPower()));
+            holder.itemView.setTag(1);
+        }else if(lines.size()!=0&&position>=lines.size()||lines.size()==0){
+            EndLine2 line= line2s.get(0);
+            holder.type2_ll.setVisibility(View.VISIBLE);
+            holder.id.setText(String.valueOf(position+1));
+            holder.sensor1.setText(convert(line.getS1()));
+            holder.sensor2.setText(convert(line.getS2()));
+            holder.sensor3.setText(convert(line.getS3()));
+            holder.sensor4.setText(convert(line.getS4()));
+            holder.battery.setText(String.valueOf(line.getBattery()));
+            String s=ConvertUtils.Date2String(new Date(line.getTime()));
+            holder.time.setText(s);
+            holder.radio.setText(convert(line.getRadio_station()));
+            holder.temperature.setText(line.getTemperature() + "");
+            holder.power.setText(String.valueOf(line.getPower()));
+            holder.itemView.setTag(2);
         }
+
+
         //float的转换
-        holder.id.setText(position + 1 + "");
-        holder.sensor1.setText(convert(line.getS1()));
-        holder.sensor2.setText(convert(line.getS2()));
-        holder.battery.setText(String.valueOf(line.getBattery()));
-        String s=ConvertUtils.Date2String(new Date(line.getTime()));
-        holder.time.setText(s);
-        holder.radio.setText(convert(line.getRadio_station()));
-        holder.temperature.setText(line.getTemperature() + "");
-        holder.power.setText(String.valueOf(line.getPower()));
+
     }
 
     private boolean checkStatus(EndLine line) {
@@ -85,7 +111,7 @@ public class EndLineAdapter extends RecyclerView.Adapter<EndLineAdapter.LineHold
 
     @Override
     public int getItemCount() {
-        return lines.size();
+        return lines.size()+line2s.size();
     }
 
     public class LineHolder extends RecyclerView.ViewHolder {
@@ -99,6 +125,10 @@ public class EndLineAdapter extends RecyclerView.Adapter<EndLineAdapter.LineHold
         TextView sensor1;
         @BindView(R.id.sensor2)
         TextView sensor2;
+        @BindView(R.id.sensor3)
+        TextView sensor3;
+        @BindView(R.id.sensor4)
+        TextView sensor4;
         @BindView(R.id.battery)
         TextView battery;
         @BindView(R.id.time)
@@ -109,6 +139,8 @@ public class EndLineAdapter extends RecyclerView.Adapter<EndLineAdapter.LineHold
         CardView card;
         @BindView(R.id.battery_ll)
         LinearLayout batteryLl;
+        @BindView(R.id.type2_ll)
+        LinearLayout type2_ll;
         @BindView(R.id.power)
         TextView power;
 
@@ -117,5 +149,7 @@ public class EndLineAdapter extends RecyclerView.Adapter<EndLineAdapter.LineHold
             ButterKnife.bind(this, itemView);
         }
     }
+
+
 
 }

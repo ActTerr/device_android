@@ -18,11 +18,11 @@ public class UnitAdapter extends BaseAdapter{
 
     private LayoutInflater inflater;
     String [] units=new String[]{
-            "玉泉站","A","B","C"
+            "yuquan","chengdu","wuhan","C"
     };
     Context context;
 
-    int memory=0;
+    String memory="";
 
     public UnitAdapter(Context context){
         this.context=context;
@@ -51,7 +51,7 @@ public class UnitAdapter extends BaseAdapter{
         }
         final TextView tv= (TextView) convertView;
          tv.setText(units[position]);
-        if((position+1)==memory){
+        if(units[position+1].equals(memory)){
             tv.setBackgroundColor(context.getResources().getColor(R.color.google_yellow));
         }else{
             tv.setBackgroundColor(context.getResources().getColor(R.color.gray_white));
@@ -59,7 +59,7 @@ public class UnitAdapter extends BaseAdapter{
         tv.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                memory=position+1;
+                memory=units[position];
                 notifyDataSetChanged();
                 MyMemory.getInstance().setUnit(memory);
             }

@@ -44,7 +44,7 @@ public interface I {
         String CONTROL="control";
         String SAVE="save";
         String LOGOUT="logOut";
-        String SERVER_ROOT="http://39.106.50.70:8080/lineServer/";
+        String SERVER_ROOT="http://10.0.2.2:8080/lineServer/";
         String CHECK="check";
         String REPAIR="repair";
         String LOGIN="login";
@@ -111,38 +111,11 @@ public interface I {
         String ACCOUNTS="ACCOUNTS";
         String UNIT="UNIT";
         String AUTHORITY="AUTHORITY";
-    }
-
-
-    interface SCRAP{
         String TYPE="TYPE";
-        String TABLENAME="SCRAP";
-        String DID="DID";
-        String DNAME="DNAME";
-        String REMARK="REMARK";
-        String USER="USER";
-        String DATE="DATE";
-        String STATION="STATION";
     }
-    interface SERVICE{
-        String ID="ID";
-        String TABLENAME="SERVICE";
-        String SERVICE_DATE="SERVICE_DATE";
-        String DID="DID";
-        String USER="USER";
-        String TRANSLATE="TRANSLATE";
-        String REMARK="REMARK";
-        String REPAIR_DATE="REPAIR_DATE";
-        String TYPE="WX_TYPE";
-    }
-    interface CHECK{
-        String TABLENAME="CHECK";
-        String DATE="DATE";
-        String STATUS="STATUS";
-        String REMARK="REMARK";
-        String USER="USER";
-        String DID="DID";
-    }
+
+
+
 
 
     interface GESTURE{
@@ -223,16 +196,7 @@ public interface I {
         String NID="Nid";
     }
 
-    interface DOWNLOAD_STATUS{
-        public static final int INIT = -1;
-        public static final int PREPARE = 0;
-        public static final int START = 1;
-        public static final int DOWNLOADING = 2;
-        public static final int CANCEL = 3;
-        public static final int ERROR = 4;
-        public static final int COMPLETED = 5;
-        public static final int PAUSE = 6;
-    }
+
 
     interface END_LINE{
         String UNIT="UNIT";
